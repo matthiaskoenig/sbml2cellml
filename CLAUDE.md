@@ -28,7 +28,7 @@ ruff check
 ruff format
 uvx ty check
 
-uv run zensical build --clean   # docs into site/
+uv run zensical build --clean --strict   # docs into site/
 uv run python scripts/llms_txt.py
 uv run zensical serve
 

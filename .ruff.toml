@@ -6,11 +6,11 @@ indent-width = 4
 target-version = "py313"
 
 # `references/` holds external reference material kept verbatim (a CellML
-# spec example, a libopencor notebook), and `docs/superpowers/` holds the SDD
+# spec example, a libopencor notebook), and `superpowers/` holds the SDD
 # planning docs of this repository; neither is source the package ships, so
 # ruff (which checks and formats markdown and notebooks by default) leaves
 # them alone. `tool.ty.src.include` in pyproject.toml scopes ty the same way.
-extend-exclude = ["references", "docs/superpowers"]
+extend-exclude = ["references", "superpowers"]
 
 [lint]
 # Pyflakes (`F`) and a subset of pycodestyle (`E`), plus:

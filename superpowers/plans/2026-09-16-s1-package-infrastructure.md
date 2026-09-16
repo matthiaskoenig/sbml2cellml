@@ -8,7 +8,7 @@
 
 **Tech Stack:** python 3.13, hatchling, uv, tox-uv, ruff, ty, pytest, pytest-xdist, python-libsbml, libcellml, libopencor (wheel from GitHub releases), pandas, matplotlib, zensical, mkdocstrings.
 
-**Spec:** `docs/superpowers/specs/2026-09-16-s1-package-infrastructure-design.md`
+**Spec:** `superpowers/specs/2026-09-16-s1-package-infrastructure-design.md`
 
 ## Global Constraints
 
@@ -2692,7 +2692,7 @@ git commit -m "Add the zensical documentation
 
 ```
 
-`docs/superpowers/` is already committed and is not in the nav, so zensical ignores it for navigation but still renders it; that is acceptable.
+`superpowers/` is not under `docs/`, so zensical does not render it.
 
 ---
 
@@ -2989,7 +2989,7 @@ Turns the migrated scripts into a releasable package following the conventions o
 - zensical documentation with API reference and roadmap
 - README, CITATION.cff, .zenodo.json, release notes, CLAUDE.md
 
-Spec: `docs/superpowers/specs/2026-09-16-s1-package-infrastructure-design.md`, plan: `docs/superpowers/plans/2026-09-16-s1-package-infrastructure.md`.
+Spec: `superpowers/specs/2026-09-16-s1-package-infrastructure-design.md`, plan: `superpowers/plans/2026-09-16-s1-package-infrastructure.md`.
 
 ## Checklist
 

@@ -166,7 +166,7 @@ The configuration lives in `[tool.ty]` in `pyproject.toml`. Warnings are treated
 
 ## Documentation
 
-The documentation is built with [Zensical](https://zensical.org/), the static site generator of the Material for MkDocs authors. The sources are markdown files in `docs/`, the site is configured in `zensical.toml` in the repository root. Nothing rendered is committed: the site is built by the `documentation` workflow on every push and published to [matthiaskoenig.github.io/sbml2cellml](https://matthiaskoenig.github.io/sbml2cellml) from the `develop` branch.
+The documentation is built with [Zensical](https://zensical.org/), the static site generator of the Material for MkDocs authors. The sources are markdown files in `docs/`, the site is configured in `zensical.toml` in the repository root. Nothing rendered is committed: the site is built by the `documentation` workflow on every push and published to [matthiaskoenig.github.io/sbml2cellml](https://matthiaskoenig.github.io/sbml2cellml) from the `develop` branch. The workflow builds with `--strict`, so a warning such as a broken link fails the `docs` check.
 
 Build the site into `site/`:
 
