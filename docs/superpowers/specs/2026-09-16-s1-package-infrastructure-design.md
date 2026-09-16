@@ -76,14 +76,24 @@ converted `.cellml` files are not committed; tests and examples generate them.
 - `sbml2cellml.cellml`: `read_model(path) -> libcellml.Model`,
   `write_model(model, path) -> None`, `model_to_string(model) -> str`,
   `validate_model(model) -> list[libcellml.Issue]` (validator and analyser
-  issues, no printing), `CellMLValidationError`.
+  issues, no printing), `errors(issues) -> list[libcellml.Issue]` (the
+  issues of level `ERROR`), `format_issue(issue) -> str`,
+  `CellMLValidationError`.
 - `sbml2cellml.mathml`: the three existing helpers, unchanged behaviour, typed
   and documented. The MathML prefix handling stays string based in S1.
 - `sbml2cellml.simulate`: `run_timecourse(cellml_path, start=0.0, end=100.0, steps=100) -> tuple[pd.DataFrame, dict[str, str]]`
   and `plot_timecourse(df, units, show=True) -> Figure`. `libopencor` is
   imported inside `run_timecourse`; an `ImportError` is re-raised with the
   install instruction. `pandas` and `matplotlib` are imported at module level,
-  the module is part of the `simulate` extra.
+  the module is part of the `simulate` extra. The timecourse settings are
+  applied to the `SedUniformTimeCourse` which `libopencor` creates for the
+  file (`document.simulations[0]`), which fixes the "cannot set start, end,
+  steps" issue of the old code (it created a second, unused simulation). The
+  data frame holds the variable of integration, the states and the algebraic
+  variables; the columns are the variable names without the `component/`
+  prefix `libopencor` reports (the converter puts everything in one
+  component). A `libopencor` issue on the file, document or instance raises
+  `SimulationError` with the descriptions of the issues.
 - `sbml2cellml.cli.main(argv: list[str] | None = None) -> int`:
   `sbml2cellml INPUT.xml [-o OUTPUT.cellml] [--no-validate] [-v]`. Without
   `-o` the output is written next to the input with the `.cellml` suffix.
@@ -149,32 +159,45 @@ read from `examples/models/` via `MODELS_DIR` in `tests/conftest.py`. Small
 SBML fixtures are built in test code with `libsbml` where that is cheaper than
 a file; files created for a test go to `tests/data/`.
 
-- `test_sbml2cellml.py`: every glimepiride model converts; the model has one
-  component `sbml`; the variable count equals compartments + parameters +
-  species + 1 (time); the written file is parsed back by `libcellml.Parser`
-  without issues; `Validator` and `Analyser` report no errors. A document
-  without a model raises `SBML2CellMLConversionError`. An event or an initial
+- `test_sbml2cellml.py`: every glimepiride model converts with
+  `validate=False`; the model has one component `sbml`; the variable count
+  equals compartments + parameters + species + 1 (time); the written file is
+  parsed back by `libcellml.Parser` without issues. `Validator` and `Analyser`
+  report no errors for `glimepiride_liver` and `glimepiride_kidney`; the
+  other three models have known conversion gaps of the current converter
+  (`glimepiride_intestine`: a function definition and units on `cn`
+  elements; `glimepiride_body` and `glimepiride_body_flat`: units on `cn`
+  elements) and their validity test is `xfail(strict=True)` with that reason,
+  so S5 flips them by removing the marker. A document without a model raises
+  `SBML2CellMLConversionError`. `convert_sbml2cellml(validate=True)` raises
+  `CellMLValidationError` for `glimepiride_body`. An event or an initial
   assignment logs a warning (`caplog`). A NaN initial value is set to 1.0 with
   a warning. The initial value arithmetic for species in amount and in
   concentration is covered by a small fixture.
 - `test_mathml.py`: `process_mathml_for_cellml` strips the xml header and the
   math element, maps `sbml:units` to `cellml:units`; `mathml_for_diff` and
   `mathml_for_assignment` produce the expected structure.
-- `test_cellml.py`: read and write roundtrip, `validate_model` returns the
-  issues of an invalid model, `convert_sbml2cellml(validate=True)` raises
-  `CellMLValidationError` for a model with an error.
+- `test_cellml.py`: read and write roundtrip of `test_model.cellml`,
+  `validate_model` returns no issues for it and returns the issues of an
+  invalid model (a component whose math references an unknown variable),
+  `read_model` raises `CellMLValidationError` on unparsable text.
 - `test_simulate.py`: `pytest.importorskip("libopencor")`. The timecourse of
-  `test_model.cellml` returns a data frame with columns `t` and `m` and `m`
-  decays monotonically. The glimepiride models simulate without error; the
-  kidney model is marked `xfail(strict=False)` with the known `libopencor`
-  solver failure ("The linear solver's setup function failed in an
-  unrecoverable manner.") as reason, to be revisited in S3.
+  `test_model.cellml` with `end=50.0, steps=10` returns a data frame with 11
+  rows, columns `t` and `m`, `t` ending at 50.0, `m` starting at 10.0 and
+  decaying monotonically, and units `{"t": "second", "m": "kilogram"}`.
+  `glimepiride_liver` simulates without error and its columns include `time`
+  and every species id. `glimepiride_kidney` is underconstrained for
+  `libopencor` (`egfr_healthy`, `f_renal_function`, `egfr`, a conversion gap
+  for S5) and raises `SimulationError`; the test asserts that and is not an
+  xfail, since the behaviour is deterministic.
 - `test_cli.py`: `main(["in.xml", "-o", "out.cellml"])` writes the file and
   returns 0; a missing input file returns 1; the default output path is next
   to the input.
 - `test_examples.py`: each example script runs via `runpy` in a temporary
-  working directory without exception, with the matplotlib `Agg` backend and
-  `show=False`.
+  working directory without exception, with the matplotlib `Agg` backend
+  (`MPLBACKEND=Agg`); the examples convert with `validate=False`, report
+  the issues, and only simulate the models which `libopencor` can run
+  (`test_model`, `glimepiride_liver`). Skipped when `libopencor` is missing.
 
 Tests run in parallel with `pytest-xdist`, need no network, and the coverage is
 not gated.
@@ -222,8 +245,9 @@ teal palette, edit uri on `develop`, copyright 2025-2026). Pages:
 
 - `index.md`: purpose, a short python example, and a table of SBML constructs
   with their conversion status (compartments, parameters, species, assignment
-  rules, rate rules and reactions are supported; unit definitions, events,
-  initial assignments, function definitions and algebraic rules are not yet).
+  rules, rate rules and reactions are supported; unit definitions, units on
+  numbers in formulas, events, initial assignments, function definitions and
+  algebraic rules are not yet).
 - `installation.md`: `pip install sbml2cellml`, the `simulate` extra, and the
   `libopencor` wheel installation from the GitHub release with the URL pattern.
 - `conversion.md`: user guide for the python API and the CLI, what `validate`
