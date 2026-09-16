@@ -108,8 +108,16 @@ converted `.cellml` files are not committed; tests and examples generate them.
   The `verbose` parameter is dropped; scripts enable logging with
   `log.enable_rich_logging()`.
 - `validate_cellml` no longer prints and returns a list of issues.
+- Bug fix: a species in concentration whose SBML gives an initial amount is
+  initialized with `amount / size`; the old code multiplied by the compartment
+  size. A species in amount with an initial concentration was and is
+  `concentration * size`. A species without any initial value gets 1.0 with a
+  warning instead of crashing.
+- Whitespace between MathML elements changes (the old code left trailing
+  spaces after every differential equation); the elements are identical.
 - The TODO and FIXME lists of the module docstring move to `docs/roadmap.md`.
-- Everything else, in particular the generated CellML, is unchanged.
+- Everything else, in particular the MathML of the generated CellML, is
+  unchanged; the implementation plan verifies this against the old script.
 
 ## Section 2: packaging and dependencies
 
@@ -118,7 +126,7 @@ converted `.cellml` files are not committed; tests and examples generate them.
 - hatchling build backend, `dynamic = ["version"]` read from
   `src/sbml2cellml/__init__.py`, `[tool.hatch.build.targets.wheel] packages = ["src/sbml2cellml"]`.
 - `requires-python = ">=3.13"`, classifier for 3.13 only, `Development Status :: 3 - Alpha`.
-- `dependencies`: `python-libsbml>=5.21.1`, `libcellml>=0.6.3`, `numpy>=2.5.3`, `rich>=15.0.0`.
+- `dependencies`: `python-libsbml>=5.21.1`, `libcellml>=0.6.3`, `rich>=15.0.0` (`numpy` is dropped, the NaN check uses `math.isnan`).
 - `[project.optional-dependencies]`:
   - `simulate = ["pandas>=3.0.5", "matplotlib>=3.11.1"]`
   - `dev = ["sbml2cellml[simulate]", "libopencor==1.20260803.0", "bump-my-version>=1.5.1", "ruff>=0.16.6", "pre-commit>=4.6.2", "ty>=0.0.79", "tox>=4.61.2", "tox-uv", "pytest>=9.1.1", "pytest-xdist>=3.8", "zensical>=0.0.60", "mkdocstrings-python>=2.0.8"]`
