@@ -148,7 +148,7 @@ def test_missing_model_raises(tmp_path: Path) -> None:
 
 
 def test_missing_file_raises(tmp_path: Path) -> None:
-    with pytest.raises(SBML2CellMLConversionError):
+    with pytest.raises(SBML2CellMLConversionError, match="does not exist"):
         convert_sbml2cellml(tmp_path / "does_not_exist.xml")
 
 

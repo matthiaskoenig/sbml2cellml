@@ -50,9 +50,12 @@ def convert_sbml2cellml(
         The CellML model.
 
     Raises:
-        SBML2CellMLConversionError: if the file has no model.
+        SBML2CellMLConversionError: if the file does not exist or has no model.
         CellMLValidationError: if `validate` is set and the model has errors.
     """
+    sbml_path = Path(sbml_path)
+    if not sbml_path.is_file():
+        raise SBML2CellMLConversionError(f"SBML file does not exist: '{sbml_path}'.")
     doc: libsbml.SBMLDocument = libsbml.readSBMLFromFile(str(sbml_path))
     model_sbml: libsbml.Model | None = doc.getModel()
     if model_sbml is None:
