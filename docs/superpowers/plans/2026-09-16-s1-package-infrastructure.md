@@ -462,7 +462,6 @@ commits, and add the packaging with hatchling and uv, the ruff, ty, tox,
 pre-commit and bump-my-version configuration, the package logger and the
 test scaffolding.
 
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
 
 If the pre-commit hook rejects the commit, fix what it reports and commit again.
@@ -682,7 +681,6 @@ uv run ruff check && uv run ruff format && uv run ty check
 git add src/sbml2cellml/mathml.py tests/test_mathml.py
 git commit -m "Add the MathML helpers
 
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
 
 ---
@@ -925,7 +923,6 @@ uv run ruff check && uv run ruff format && uv run ty check
 git add src/sbml2cellml/cellml.py tests/test_cellml.py
 git commit -m "Add the libcellml helpers
 
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
 
 If ty reports `libcellml.Logger`, `libcellml.Issue` or `libcellml.Issue.Level` as unresolved attributes (the swig wrapper is plain python, so it should resolve), replace the annotation with `Any` from `typing` for that name only and keep the rest typed.
@@ -1570,7 +1567,6 @@ The converter logs instead of printing, validates the model on request and
 writes the file itself. The generated CellML is identical to the one of the
 migrated script.
 
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
 
 ---
@@ -1821,7 +1817,6 @@ The timecourse settings are applied to the simulation of the SED-ML
 document, which the migrated script did not do, and the results include
 the algebraic variables.
 
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
 
 ---
@@ -2031,7 +2026,6 @@ uv run ruff check && uv run ruff format && uv run ty check
 git add src/sbml2cellml/cli.py tests/test_cli.py
 git commit -m "Add the sbml2cellml command line
 
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
 
 ---
@@ -2268,7 +2262,6 @@ uv run ruff check && uv run ruff format && uv run ty check
 git add examples/__init__.py examples/cellml_example.py examples/glimepiride_example.py tests/test_examples.py
 git commit -m "Move the examples to the top level and run them in the tests
 
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
 
 ---
@@ -2340,7 +2333,6 @@ Tests on linux, windows and macOS with python 3.13, ruff, ty and the
 documentation build as required checks, the PyPI release on a tag through
 trusted publishing, and the rulesets of develop, main and the tags.
 
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
 
 Expected: both validations print `ok`, `grep` prints nothing.
@@ -2698,7 +2690,6 @@ uv run ruff check && uv run ruff format && uv run ty check
 git add zensical.toml docs scripts
 git commit -m "Add the zensical documentation
 
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
 
 `docs/superpowers/` is already committed and is not in the nav, so zensical ignores it for navigation but still renders it; that is acceptable.
@@ -2932,7 +2923,6 @@ uv run zensical build --clean
 git add README.md CITATION.cff .zenodo.json LICENSE release-notes CLAUDE.md
 git commit -m "Add the README, citation, Zenodo metadata, release notes and CLAUDE.md
 
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
 
 Expected: `ok`, `no em dash`, the site builds.
