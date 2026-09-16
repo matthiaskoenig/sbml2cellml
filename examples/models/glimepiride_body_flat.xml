@@ -2619,8 +2619,8 @@ filtration rate (GFR).</p>
             <p>eGFR is often estimated via creatinine clearance, creatinine urinary amount,
 or creatinine plasma amounts.</p>
             <pre>
-              <code>    CKD-EPI Creatinine Equation (2021): This is the most recent and recommended equation for 
-    estimating GFR35. It is more accurate than previous formulas and does not include 
+              <code>    CKD-EPI Creatinine Equation (2021): This is the most recent and recommended equation for
+    estimating GFR35. It is more accurate than previous formulas and does not include
     race as a variable.
 
     MDRD (Modification of Diet in Renal Disease) Study Equation
