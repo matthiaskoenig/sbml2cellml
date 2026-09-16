@@ -47,6 +47,8 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 # adds nothing
 "examples/**" = ["D"]
 "tests/**" = ["D"]
+# the package marker of the scripts directory is intentionally empty
+"scripts/__init__.py" = ["D104"]
 
 [format]
 # Like Black, use double quotes for strings.
