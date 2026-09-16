@@ -53,6 +53,16 @@ def test_invalid_model_written_without_validation(tmp_path: Path) -> None:
     assert out.is_file()
 
 
+def test_missing_output_directory(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    out = tmp_path / "missing_dir" / "out.cellml"
+    code = main([str(MODELS_DIR / "glimepiride_liver.xml"), "-o", str(out)])
+    assert code == 1
+    assert "missing_dir" in capsys.readouterr().err
+    assert not out.exists()
+
+
 def test_verbose_logs(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     out = tmp_path / "liver.cellml"
     assert main([str(MODELS_DIR / "glimepiride_liver.xml"), "-o", str(out), "-v"]) == 0

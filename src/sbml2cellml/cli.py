@@ -50,7 +50,8 @@ def main(argv: list[str] | None = None) -> int:
         argv: arguments without the program name, `sys.argv[1:]` by default.
 
     Returns:
-        0 on success, 1 on a missing input, a conversion or a validation error.
+        0 on success, 1 on a missing input, a conversion, a validation, or an
+        I/O error.
     """
     args = build_parser().parse_args(argv)
     if args.verbose:
@@ -66,7 +67,7 @@ def main(argv: list[str] | None = None) -> int:
         convert_sbml2cellml(
             sbml_path, cellml_path=cellml_path, validate=not args.no_validate
         )
-    except (SBML2CellMLConversionError, CellMLValidationError) as err:
+    except (SBML2CellMLConversionError, CellMLValidationError, OSError) as err:
         print(str(err), file=sys.stderr)
         return 1
 
