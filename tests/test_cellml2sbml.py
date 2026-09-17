@@ -1,0 +1,172 @@
+"""Tests of the CellML to SBML conversion."""
+
+from pathlib import Path
+
+import libsbml
+import pytest
+
+from sbml2cellml import convert_cellml2sbml
+from sbml2cellml.cellml import write_model
+from sbml2cellml.cellml2sbml import CellML2SBMLConversionError, build_document
+from sbml2cellml.sbml import validate_document
+from tests.cellml_models import analyse, multi_component_model, nla_model, reset_model
+from tests.conftest import TEST_MODEL_PATH
+
+DATA_DIR = Path(__file__).parent / "data"
+
+
+def parameters(model: libsbml.Model) -> dict[str, libsbml.Parameter]:
+    return {p.getId(): p for p in model.getListOfParameters()}
+
+
+def rules(model: libsbml.Model) -> dict[str, libsbml.Rule]:
+    return {r.getVariable(): r for r in model.getListOfRules()}
+
+
+def initial_assignments(model: libsbml.Model) -> dict[str, str]:
+    return {
+        ia.getSymbol(): libsbml.formulaToL3String(ia.getMath())
+        for ia in model.getListOfInitialAssignments()
+    }
+
+
+def test_convert_test_model(tmp_path: Path) -> None:
+    sbml_path = tmp_path / "test_model.xml"
+    doc = convert_cellml2sbml(TEST_MODEL_PATH, sbml_path=sbml_path)
+    model = doc.getModel()
+    assert doc.getLevel() == 3
+    assert doc.getVersion() == 2
+    assert model.getId() == "test_model"
+    assert model.getTimeUnits() == "second"
+    assert model.getNumCompartments() == 0
+    assert model.getNumSpecies() == 0
+    p = parameters(model)
+    assert set(p) == {"m", "alpha"}
+    assert p["alpha"].getConstant() and p["alpha"].getValue() == 0.05
+    assert p["alpha"].getUnits() == "per_second"
+    assert not p["m"].getConstant() and p["m"].getValue() == 10.0
+    assert p["m"].getUnits() == "kilogram"
+    r = rules(model)
+    assert set(r) == {"m"}
+    assert r["m"].isRate()
+    assert libsbml.formulaToL3String(r["m"].getMath()) == "-alpha * m"
+    assert model.getUnitDefinition("per_second") is not None
+    assert validate_document(doc) == []
+    assert sbml_path.is_file()
+    assert libsbml.readSBMLFromFile(str(sbml_path)).getModel().getId() == "test_model"
+
+
+def test_convert_multi_component_model(tmp_path: Path) -> None:
+    cellml_path = tmp_path / "multi.cellml"
+    write_model(multi_component_model(), cellml_path)
+    doc = convert_cellml2sbml(cellml_path)
+    model = doc.getModel()
+    assert model.getTimeUnits() == "second"
+    p = parameters(model)
+    assert set(p) == {"k", "cell_x", "x0", "y", "c", "kc", "z", "child_x"}
+    # constants
+    assert (
+        p["k"].getConstant()
+        and p["k"].getValue() == 0.1
+        and p["k"].getUnits() == "per_second"
+    )
+    assert (
+        p["x0"].getConstant()
+        and p["x0"].getValue() == 2.0
+        and p["x0"].getUnits() == "mM"
+    )
+    assert p["kc"].getConstant() and p["kc"].getValue() == 0.5
+    # computed constant: constant parameter with an initial assignment
+    assert p["c"].getConstant() and not p["c"].isSetValue()
+    # states
+    assert not p["cell_x"].getConstant() and not p["cell_x"].isSetValue()
+    assert p["cell_x"].getName() == "x"
+    assert not p["z"].getConstant() and p["z"].getValue() == 1.0
+    # algebraic
+    assert not p["y"].getConstant() and not p["y"].isSetValue()
+    assert not p["child_x"].getConstant()
+    ia = initial_assignments(model)
+    assert ia == {"cell_x": "x0", "c": "2 * k"}
+    r = rules(model)
+    assert set(r) == {"cell_x", "z", "y", "child_x"}
+    assert r["cell_x"].isRate()
+    assert libsbml.formulaToL3String(r["cell_x"].getMath()) == "-k * cell_x"
+    assert r["z"].isRate()
+    assert r["y"].isAssignment()
+    assert libsbml.formulaToL3String(r["y"].getMath()) == "2 * cell_x"
+    assert libsbml.formulaToL3String(r["child_x"].getMath()) == "z"
+    assert validate_document(doc) == []
+
+
+def test_convert_reset_model(tmp_path: Path) -> None:
+    cellml_path = tmp_path / "reset.cellml"
+    write_model(reset_model(), cellml_path)
+    doc = convert_cellml2sbml(cellml_path)
+    model = doc.getModel()
+    assert model.getNumEvents() == 1
+    event = model.getEvent(0)
+    assert event.getId() == "reset_1"
+    assert event.getUseValuesFromTriggerTime()
+    trigger = event.getTrigger()
+    assert trigger.getPersistent() and trigger.getInitialValue()
+    assert libsbml.formulaToL3String(trigger.getMath()) == "m == m_div"
+    assert libsbml.formulaToL3String(event.getPriority().getMath()) == "-0"
+    assert event.getNumEventAssignments() == 1
+    assignment = event.getEventAssignment(0)
+    assert assignment.getVariable() == "m"
+    assert libsbml.formulaToL3String(assignment.getMath()) == "m / 2 dimensionless"
+    assert validate_document(doc) == []
+
+
+def test_convert_nla_model_raises(tmp_path: Path) -> None:
+    cellml_path = tmp_path / "nla.cellml"
+    write_model(nla_model(), cellml_path)
+    with pytest.raises(CellML2SBMLConversionError, match="nla"):
+        convert_cellml2sbml(cellml_path)
+
+
+def test_convert_with_imports() -> None:
+    doc = convert_cellml2sbml(DATA_DIR / "import_parent.cellml")
+    model = doc.getModel()
+    p = parameters(model)
+    assert set(p) == {"m", "k"}
+    assert rules(model)["m"].isRate()
+    assert model.getUnitDefinition("per_second") is not None
+    assert validate_document(doc) == []
+
+
+def test_convert_missing_file(tmp_path: Path) -> None:
+    with pytest.raises(CellML2SBMLConversionError, match="does not exist"):
+        convert_cellml2sbml(tmp_path / "missing.cellml")
+
+
+def test_convert_invalid_cellml_raises(tmp_path: Path) -> None:
+    path = tmp_path / "invalid.cellml"
+    path.write_text(
+        '<?xml version="1.0"?><model xmlns="http://www.cellml.org/cellml/2.0#" name="bad">'
+        '<component name="c"><variable name="x" units="second"/>'
+        '<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><eq/><ci>x</ci><ci>y</ci></apply></math>'
+        "</component></model>"
+    )
+    with pytest.raises(CellML2SBMLConversionError, match="analysed"):
+        convert_cellml2sbml(path)
+
+
+def test_build_document_is_consistent_and_detects_injected_error() -> None:
+    model = reset_model()
+    doc = build_document(model, analyse(model))
+    assert validate_document(doc) == []
+    # an assignment rule on the constant alpha makes the document inconsistent
+    rule = doc.getModel().createAssignmentRule()
+    rule.setVariable("alpha")
+    rule.setMath(libsbml.parseL3Formula("1"))
+    assert validate_document(doc)
+
+
+def test_validate_flag(tmp_path: Path) -> None:
+    """A model the analyser accepts but libsbml rejects does not exist by
+    construction; the flag is exercised through the CLI tests. Here only the
+    unchanged behaviour: validate=False still writes the file."""
+    sbml_path = tmp_path / "out.xml"
+    convert_cellml2sbml(TEST_MODEL_PATH, sbml_path=sbml_path, validate=False)
+    assert sbml_path.is_file()
