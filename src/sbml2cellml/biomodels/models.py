@@ -31,12 +31,14 @@ PAGE_SIZE = 100
 #: timeout (seconds) of every BioModels request
 TIMEOUT = 60.0
 #: namespace declarations of an SBML package, e.g. `xmlns:comp="http://www.
-#: sbml.org/sbml/level3/version1/comp/version1"`; group 2 is the package name
+#: sbml.org/sbml/level3/version1/comp/version1"`; group 1 is the declared
+#: prefix, group 2 is the package name
 _XMLNS = re.compile(
     r'xmlns:(\w+)="http://www\.sbml\.org/sbml/level3/version\d+/(\w+)/version\d+"'
 )
-#: bytes read from the start of an SBML file to find its package namespaces
-_XMLNS_HEAD = 8192
+#: `comp` elements which actually change the model (a `comp:port` alone does
+#: not touch the math, so it is not enough to count the package as used)
+_COMP_ELEMENTS = ("submodel", "modelDefinition", "externalModelDefinition")
 
 
 class BioModelsError(RuntimeError):
@@ -248,7 +250,14 @@ def write_selection(path: Path, ids: list[str]) -> Selection:
 
 
 def packages(sbml_path: Path) -> tuple[str, ...]:
-    """SBML packages an SBML file declares, from the root element's `xmlns`.
+    """SBML packages an SBML file uses, not merely declares.
+
+    A package declared through the root element's `xmlns` counts only when
+    an element with its prefix actually occurs in the file, e.g. `<comp:...`
+    for a `comp` declaration. `comp` is the exception: its `port` elements
+    do not change the math, so it counts only when a `<comp:submodel`,
+    `<comp:modelDefinition` or `<comp:externalModelDefinition` element
+    occurs.
 
     Args:
         sbml_path: SBML file to inspect.
@@ -256,6 +265,14 @@ def packages(sbml_path: Path) -> tuple[str, ...]:
     Returns:
         The package names, sorted and without duplicates.
     """
-    with sbml_path.open("rb") as f_sbml:
-        head = f_sbml.read(_XMLNS_HEAD).decode("utf-8", errors="replace")
-    return tuple(sorted({match.group(2) for match in _XMLNS.finditer(head)}))
+    text = sbml_path.read_text(encoding="utf-8", errors="replace")
+    used: set[str] = set()
+    for prefix, package in {
+        (match.group(1), match.group(2)) for match in _XMLNS.finditer(text)
+    }:
+        if package == "comp":
+            if any(f"<{prefix}:{element}" in text for element in _COMP_ELEMENTS):
+                used.add(package)
+        elif f"<{prefix}:" in text:
+            used.add(package)
+    return tuple(sorted(used))

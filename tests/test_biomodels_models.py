@@ -191,16 +191,21 @@ def test_selection_roundtrip(tmp_path: Path) -> None:
 
 
 def test_packages(tmp_path: Path) -> None:
-    root = tmp_path / "packages.xml"
-    root.write_text(
+    # a package counts only when one of its elements is actually used, not
+    # merely declared: comp is used here (comp:submodel and fbc:objective)
+    used = tmp_path / "used.xml"
+    used.write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" '
         'xmlns:comp="http://www.sbml.org/sbml/level3/version1/comp/version1" '
         'xmlns:fbc="http://www.sbml.org/sbml/level3/version1/fbc/version2" '
-        'level="3" version="1"><model id="m"/></sbml>\n',
+        'level="3" version="1"><model id="m">'
+        '<comp:submodel comp:id="s1" comp:modelRef="m2"/>'
+        '<fbc:objective fbc:id="o1"/>'
+        "</model></sbml>\n",
         encoding="utf-8",
     )
-    assert packages(root) == ("comp", "fbc")
+    assert packages(used) == ("comp", "fbc")
     # a model with no package namespace declares none
     plain = tmp_path / "plain.xml"
     plain.write_text(
@@ -210,3 +215,19 @@ def test_packages(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     assert packages(plain) == ()
+    # fbc is declared but no fbc: element is used, so it does not count
+    declared_only = tmp_path / "declared_only.xml"
+    declared_only.write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" '
+        'xmlns:fbc="http://www.sbml.org/sbml/level3/version1/fbc/version2" '
+        'level="3" version="1"><model id="m"/></sbml>\n',
+        encoding="utf-8",
+    )
+    assert packages(declared_only) == ()
+
+
+def test_packages_liver_model_has_only_ports() -> None:
+    # glimepiride_liver.xml declares xmlns:comp and uses only comp:port
+    # elements, which do not change the math: comp does not count
+    assert packages(LIVER_MODEL) == ()
