@@ -127,7 +127,11 @@ def multi_component_model() -> libcellml.Model:
 
 
 def reset_model() -> libcellml.Model:
-    """Mass growth with a reset halving m when it reaches m_div."""
+    """Mass growth with a reset halving m when it reaches m_div.
+
+    A second reset counts how many times the first one fired: `count` is only
+    ever written by that reset (it has an `initial_value` and no equation).
+    """
     model = libcellml.Model("cell_growth")
     per_second = libcellml.Units("per_second")
     per_second.addUnit("second", -1.0)
@@ -139,6 +143,7 @@ def reset_model() -> libcellml.Model:
     m = variable(component, "m", "kilogram", 1.0)
     variable(component, "alpha", per_second, 1.2)
     variable(component, "m_div", "kilogram", 7.0)
+    count = variable(component, "count", "dimensionless", 0.0)
     component.setMath(
         math(ode("m", "t", "<apply><times/><ci>alpha</ci><ci>m</ci></apply>"))
     )
@@ -152,12 +157,22 @@ def reset_model() -> libcellml.Model:
         math(assignment("m", f"<apply><divide/><ci>m</ci>{cn('2')}</apply>"))
     )
     component.addReset(reset)
+
+    count_reset = libcellml.Reset()
+    count_reset.setOrder(1)
+    count_reset.setVariable(count)
+    count_reset.setTestVariable(m)
+    count_reset.setTestValue(math(assignment("m", "<ci>m_div</ci>")))
+    count_reset.setResetValue(
+        math(assignment("count", f"<apply><plus/><ci>count</ci>{cn('1')}</apply>"))
+    )
+    component.addReset(count_reset)
     return model
 
 
 def nla_model() -> libcellml.Model:
     """Two algebraic variables defined by an implicit system."""
-    model = libcellml.Model("nla")
+    model = libcellml.Model("implicit")
     component = libcellml.Component("main")
     model.addComponent(component)
     variable(component, "x", "dimensionless")

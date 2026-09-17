@@ -124,6 +124,20 @@ class VariableIds:
             for member in equivalence_set(voi.variable()):
                 self._voi.add(variable_key(member))
 
+        self._used = used
+
+    def reserve(self, sid: str) -> str:
+        """Reserve an SId outside the variables, e.g. for the model or an event.
+
+        Args:
+            sid: name to sanitize and reserve.
+
+        Returns:
+            The unique SId, sanitized and made unique among the variable ids
+            and every id reserved before it; added to the used ids.
+        """
+        return unique_sid(sanitize_id(sid), self._used)
+
     def lookup(self, component_name: str, variable_name: str) -> str:
         """SBML id of a variable given by component and name.
 

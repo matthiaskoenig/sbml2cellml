@@ -25,7 +25,7 @@ from sbml2cellml.sbmlmath import (
     variable_node,
 )
 from sbml2cellml.units import UnitsConversionError, add_units, unit_id
-from sbml2cellml.variables import VariableIds, sanitize_id
+from sbml2cellml.variables import VariableIds, variable_key
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +71,7 @@ def convert_cellml2sbml(
     analyser_model = _analyse(model)
     try:
         doc = build_document(model, analyser_model)
-    except (MathConversionError, UnitsConversionError, KeyError) as err:
+    except (MathConversionError, UnitsConversionError) as err:
         raise CellML2SBMLConversionError(
             f"CellML model '{model.name()}' cannot be converted: {err}"
         ) from err
@@ -103,6 +103,11 @@ def _flatten(model: libcellml.Model, base_path: Path) -> libcellml.Model:
             f"'{base_path}':\n{cellml.format_issues(errors)}"
         )
     flat = importer.flattenModel(model)
+    if flat is None:
+        raise CellML2SBMLConversionError(
+            f"CellML model '{model.name()}' could not be flattened:\n"
+            f"{cellml.format_issues(issues)}"
+        )
     logger.info("Resolved and flattened the imports of '%s'", model.name())
     return flat
 
@@ -113,12 +118,17 @@ def _analyse(model: libcellml.Model) -> Any:
     analyser.analyseModel(model)
     issues = [analyser.issue(k) for k in range(analyser.issueCount())]
     errors = cellml.errors(issues)
+    analyser_model = analyser.model()
     if errors:
+        type_name = (
+            libcellml.AnalyserModel.typeAsString(analyser_model.type())
+            if analyser_model is not None
+            else "unknown"
+        )
         raise CellML2SBMLConversionError(
-            f"CellML model '{model.name()}' cannot be analysed:\n"
+            f"CellML model '{model.name()}' cannot be analysed (type '{type_name}'):\n"
             f"{cellml.format_issues(errors)}"
         )
-    analyser_model = analyser.model()
     model_type = analyser_model.type()
     if model_type not in (ModelType.ODE, ModelType.ALGEBRAIC):
         type_name = libcellml.AnalyserModel.typeAsString(model_type)
@@ -140,21 +150,33 @@ def build_document(model: libcellml.Model, analyser_model: Any) -> libsbml.SBMLD
         The SBML document, not validated.
 
     Raises:
-        MathConversionError, UnitsConversionError, KeyError: for constructs
-            which cannot be converted; `convert_cellml2sbml` wraps them.
+        MathConversionError: for a construct which cannot be converted;
+            `convert_cellml2sbml` wraps it.
+        UnitsConversionError: for units which cannot be converted;
+            `convert_cellml2sbml` wraps it.
     """
     doc = libsbml.SBMLDocument(3, 2)
     model_sbml: libsbml.Model = doc.createModel()
     name = model.name() or "model"
-    model_sbml.setId(sanitize_id(name))
-    model_sbml.setName(name)
 
     unit_ids = add_units(model, model_sbml)
     ids = VariableIds(analyser_model)
 
+    model_sbml.setId(ids.reserve(name))
+    model_sbml.setName(name)
+
     voi = analyser_model.voi()
     if voi is not None:
         model_sbml.setTimeUnits(unit_id(voi.variable().units().name(), unit_ids))
+
+    # variables which only a reset writes are not constant, even though the
+    # analyser types them CONSTANT or COMPUTED_CONSTANT (they have an
+    # `initial_value` and no equation)
+    reset_targets = {
+        variable_key(component.reset(k).variable())
+        for component in _components(model)
+        for k in range(component.resetCount())
+    }
 
     for k in range(analyser_model.stateCount()):
         _add_parameter(
@@ -167,9 +189,9 @@ def build_document(model: libcellml.Model, analyser_model: Any) -> libsbml.SBMLD
             raise MathConversionError(
                 f"External variable '{variable.variable().name()}' is not supported."
             )
-        constant = variable_type in (
-            VariableType.CONSTANT,
-            VariableType.COMPUTED_CONSTANT,
+        constant = (
+            variable_type in (VariableType.CONSTANT, VariableType.COMPUTED_CONSTANT)
+            and variable_key(variable.variable()) not in reset_targets
         )
         _add_parameter(model_sbml, variable, ids, unit_ids, constant=constant)
 
@@ -206,7 +228,14 @@ def _add_parameter(
         parameter.setValue(float(initial))
     except ValueError:
         # the initial value is the name of another variable of the same component
-        reference = ids.lookup(initialising.parent().name(), initial)
+        try:
+            reference = ids.lookup(initialising.parent().name(), initial)
+        except KeyError as err:
+            raise MathConversionError(
+                f"Initial value '{initial}' of variable '{variable.name()}' in "
+                f"component '{initialising.parent().name()}' is not a variable of "
+                f"that component."
+            ) from err
         assignment: libsbml.InitialAssignment = model_sbml.createInitialAssignment()
         assignment.setSymbol(sid)
         node = libsbml.ASTNode(libsbml.AST_NAME)
@@ -301,7 +330,7 @@ def _add_reset(
     test_variable = reset.testVariable()
     variable = reset.variable()
     event: libsbml.Event = model_sbml.createEvent()
-    event.setId(f"reset_{index}")
+    event.setId(ids.reserve(f"reset_{index}"))
     event.setUseValuesFromTriggerTime(True)
 
     trigger: libsbml.Trigger = event.createTrigger()

@@ -1,15 +1,23 @@
 """Tests of the CellML to SBML conversion."""
 
 from pathlib import Path
+from typing import Any
 
+import libcellml
 import libsbml
 import pytest
 
-from sbml2cellml import convert_cellml2sbml
+from sbml2cellml import cellml2sbml, convert_cellml2sbml
 from sbml2cellml.cellml import write_model
 from sbml2cellml.cellml2sbml import CellML2SBMLConversionError, build_document
-from sbml2cellml.sbml import validate_document
-from tests.cellml_models import analyse, multi_component_model, nla_model, reset_model
+from sbml2cellml.sbml import SBMLValidationError, validate_document
+from tests.cellml_models import (
+    analyse,
+    math_model,
+    multi_component_model,
+    nla_model,
+    reset_model,
+)
 from tests.conftest import TEST_MODEL_PATH
 
 DATA_DIR = Path(__file__).parent / "data"
@@ -103,7 +111,14 @@ def test_convert_reset_model(tmp_path: Path) -> None:
     write_model(reset_model(), cellml_path)
     doc = convert_cellml2sbml(cellml_path)
     model = doc.getModel()
-    assert model.getNumEvents() == 1
+    assert model.getNumEvents() == 2
+
+    # count is only ever written by the second reset, so it must not be
+    # constant even though the analyser types it CONSTANT
+    p = parameters(model)
+    assert not p["count"].getConstant()
+    assert p["count"].getValue() == 0.0
+
     event = model.getEvent(0)
     assert event.getId() == "reset_1"
     assert event.getUseValuesFromTriggerTime()
@@ -115,13 +130,35 @@ def test_convert_reset_model(tmp_path: Path) -> None:
     assignment = event.getEventAssignment(0)
     assert assignment.getVariable() == "m"
     assert libsbml.formulaToL3String(assignment.getMath()) == "m / 2 dimensionless"
+
+    count_event = model.getEvent(1)
+    assert count_event.getId() == "reset_2"
+    assert count_event.getNumEventAssignments() == 1
+    count_assignment = count_event.getEventAssignment(0)
+    assert count_assignment.getVariable() == "count"
+    assert (
+        libsbml.formulaToL3String(count_assignment.getMath())
+        == "count + 1 dimensionless"
+    )
     assert validate_document(doc) == []
 
 
 def test_convert_nla_model_raises(tmp_path: Path) -> None:
     cellml_path = tmp_path / "nla.cellml"
     write_model(nla_model(), cellml_path)
-    with pytest.raises(CellML2SBMLConversionError, match="nla"):
+    with pytest.raises(
+        CellML2SBMLConversionError, match="cannot be analysed"
+    ) as excinfo:
+        convert_cellml2sbml(cellml_path)
+    assert "x" in str(excinfo.value) and "y" in str(excinfo.value)
+
+
+def test_convert_dae_model_raises(tmp_path: Path) -> None:
+    cellml_path = tmp_path / "dae.cellml"
+    model = math_model({"a": "<ci>x</ci>"})
+    model.component("main").variable("a").setInitialValue(1.0)
+    write_model(model, cellml_path)
+    with pytest.raises(CellML2SBMLConversionError, match="dae"):
         convert_cellml2sbml(cellml_path)
 
 
@@ -152,6 +189,17 @@ def test_convert_invalid_cellml_raises(tmp_path: Path) -> None:
         convert_cellml2sbml(path)
 
 
+def test_convert_model_id_avoids_variable_collision() -> None:
+    model = reset_model()
+    model.setName("m")
+    doc = build_document(model, analyse(model))
+    assert validate_document(doc) == []
+    model_sbml = doc.getModel()
+    assert model_sbml.getId() == "m_2"
+    p = parameters(model_sbml)
+    assert "m" in p
+
+
 def test_build_document_is_consistent_and_detects_injected_error() -> None:
     model = reset_model()
     doc = build_document(model, analyse(model))
@@ -163,10 +211,30 @@ def test_build_document_is_consistent_and_detects_injected_error() -> None:
     assert validate_document(doc)
 
 
-def test_validate_flag(tmp_path: Path) -> None:
-    """A model the analyser accepts but libsbml rejects does not exist by
-    construction; the flag is exercised through the CLI tests. Here only the
-    unchanged behaviour: validate=False still writes the file."""
-    sbml_path = tmp_path / "out.xml"
-    convert_cellml2sbml(TEST_MODEL_PATH, sbml_path=sbml_path, validate=False)
-    assert sbml_path.is_file()
+def test_validate_raises_on_inconsistent_document(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """`convert_cellml2sbml` raises `SBMLValidationError` on an inconsistent
+    document when `validate` is set, but `validate=False` still writes it."""
+    path = tmp_path / "test_model.cellml"
+    path.write_text(TEST_MODEL_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+
+    real_build_document = cellml2sbml.build_document
+
+    def inconsistent_build_document(
+        model: libcellml.Model, analyser_model: Any
+    ) -> libsbml.SBMLDocument:
+        doc = real_build_document(model, analyser_model)
+        rule = doc.getModel().createAssignmentRule()
+        rule.setVariable("alpha")
+        rule.setMath(libsbml.parseL3Formula("1"))
+        return doc
+
+    monkeypatch.setattr(cellml2sbml, "build_document", inconsistent_build_document)
+
+    with pytest.raises(SBMLValidationError):
+        convert_cellml2sbml(path)
+
+    out = tmp_path / "out.xml"
+    convert_cellml2sbml(path, sbml_path=out, validate=False)
+    assert out.is_file()
