@@ -1,5 +1,6 @@
 """Tests of the SBML ids of CellML variables."""
 
+import libcellml
 import pytest
 
 from sbml2cellml.variables import (
@@ -9,6 +10,7 @@ from sbml2cellml.variables import (
     variable_key,
 )
 from tests.cellml_models import analyse, multi_component_model
+from tests.cellml_models import variable as add_variable
 
 
 @pytest.mark.parametrize(
@@ -51,6 +53,32 @@ def test_ids_of_multi_component_model() -> None:
         ids.id_for(model.component("cell").component("child").variable("x"))
         == "child_x"
     )
+
+
+def test_ids_deduplicate_sanitized_collisions() -> None:
+    # "x" clashes between "cell" and "child", so both get a component prefix;
+    # "other.cell_x" is a unique name that happens to equal the resulting
+    # prefixed id "cell_x" of "cell.x". The second one processed must not
+    # silently overwrite the first.
+    model = libcellml.Model("collide")
+    cell = libcellml.Component("cell")
+    child = libcellml.Component("child")
+    other = libcellml.Component("other")
+    model.addComponent(cell)
+    model.addComponent(child)
+    model.addComponent(other)
+    add_variable(cell, "x", "dimensionless", 1.0)
+    add_variable(child, "x", "dimensionless", 2.0)
+    add_variable(other, "cell_x", "dimensionless", 3.0)
+
+    ids = VariableIds(analyse(model))
+    cell_x = ids.lookup("cell", "x")
+    child_x = ids.lookup("child", "x")
+    other_cell_x = ids.lookup("other", "cell_x")
+
+    assert cell_x != other_cell_x
+    assert len({cell_x, child_x, other_cell_x}) == 3
+    assert any(sid.endswith("_2") for sid in (cell_x, child_x, other_cell_x))
 
 
 def test_lookup_unknown_raises() -> None:

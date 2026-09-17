@@ -5,7 +5,7 @@ which the analyser treats as one variable. SBML has one flat id namespace, so
 every equivalence set becomes one parameter. The id is the name of the
 analyser's representative when no other analyser variable has that name,
 otherwise the name is prefixed with the component. Ids are sanitized to SBML
-SIds.
+SIds; a sanitized id which is already taken gets a numeric suffix.
 """
 
 import re
@@ -92,11 +92,20 @@ class VariableIds:
             representatives.append(analyser_model.variable(k).variable())
 
         counts = Counter(v.name() for v in representatives)
+        used: set[str] = set()
         for representative in representatives:
             name = representative.name()
             if counts[name] > 1:
                 name = f"{representative.parent().name()}_{name}"
             sid = sanitize_id(name)
+            if sid in used:
+                n = 2
+                candidate = f"{sid}_{n}"
+                while candidate in used:
+                    n += 1
+                    candidate = f"{sid}_{n}"
+                sid = candidate
+            used.add(sid)
             for member in equivalence_set(representative):
                 self._ids[variable_key(member)] = sid
 
