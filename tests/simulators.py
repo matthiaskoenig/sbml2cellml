@@ -44,7 +44,14 @@ def simulate_sbml(
         capture_output=True,
         text=True,
         check=False,
+        timeout=120,
     )
     if completed.returncode != 0:
         raise RuntimeError(f"roadrunner failed:\n{completed.stderr}")
-    return np.asarray(json.loads(completed.stdout))[:, 1:]
+    try:
+        result = json.loads(completed.stdout)
+    except json.JSONDecodeError as err:
+        raise RuntimeError(
+            f"roadrunner returned no JSON:\n{completed.stdout}\n{completed.stderr}"
+        ) from err
+    return np.asarray(result)[:, 1:]

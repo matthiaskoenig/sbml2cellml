@@ -102,6 +102,14 @@ def test_expand_empty_custom_reference_keeps_factor() -> None:
     ]
 
 
+def test_gram_is_a_unit_kind() -> None:
+    model = libcellml.Model("grams")
+    mg = libcellml.Units("mg")
+    mg.addUnit("gram", "milli")
+    model.addUnits(mg)
+    assert expand_units(mg, model) == [BaseUnit(libsbml.UNIT_KIND_GRAM, 1.0, -3, 1.0)]
+
+
 def test_expand_zero_exponent_first_unit_raises() -> None:
     model = libcellml.Model("zero_exponent")
     zero = libcellml.Units("zero")
@@ -140,6 +148,21 @@ def test_add_units() -> None:
     # standard units are used by name
     assert unit_id("second", ids) == "second"
     assert unit_id("mM", ids) == "mM"
+
+
+def test_add_units_avoids_predefined_unit_names() -> None:
+    """Custom units named like a predefined SBML unit kind (`item`, ...) must
+    not get that name as its definition id: libsbml rejects it."""
+    model = libcellml.Model("items")
+    item = libcellml.Units("item")
+    item.addUnit("mole", "milli")
+    model.addUnits(item)
+    doc = libsbml.SBMLDocument(3, 2)
+    model_sbml = doc.createModel()
+    model_sbml.setId("items")
+    ids = add_units(model, model_sbml)
+    assert ids == {"item": "item_2"}
+    assert validate_document(doc) == []
 
 
 def test_add_units_dedupes_colliding_ids() -> None:

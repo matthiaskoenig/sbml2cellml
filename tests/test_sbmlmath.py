@@ -92,6 +92,15 @@ CASES: dict[str, tuple[str, str]] = {
         f"<true/></apply></piece><otherwise><false/></otherwise></piecewise>",
         "piecewise(1, (x < 1) && (((x > 0) || !(x == 3)) && (xor((x != 4), (k <= 5)) && true)), false)",
     ),
+    "a_piecewise_no_otherwise": (
+        f"<piecewise><piece>{K}{binary('lt', X, cn('1'))}</piece></piecewise>",
+        "piecewise(k, x < 1)",
+    ),
+    "a_piecewise_single": (
+        f"<piecewise><piece>{K}{binary('lt', X, cn('1'))}</piece>"
+        f"<piece>{X}{binary('gt', X, cn('2'))}</piece></piecewise>",
+        "piecewise(k, x < 1, x, x > 2)",
+    ),
 }
 
 

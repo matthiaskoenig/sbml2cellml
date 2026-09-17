@@ -151,7 +151,14 @@ def add_units(
         The SBML unit id by CellML units name, for `unit_id`.
     """
     ids: dict[str, str] = {}
-    used: set[str] = set()
+    # predefined SBML unit kind names (`second`, `item`, `avogadro`, ...) are
+    # rejected as unit definition ids, so a custom units of that name must
+    # get a numeric suffix
+    used: set[str] = {
+        name
+        for kind in range(libsbml.UNIT_KIND_INVALID)
+        if (name := libsbml.UnitKind_toString(kind))
+    }
     for k in range(model_cellml.unitsCount()):
         units = model_cellml.units(k)
         uid = unique_sid(sanitize_id(units.name()), used)
