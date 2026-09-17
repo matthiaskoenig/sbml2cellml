@@ -1,9 +1,113 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "sbml2cellml"
-version = "0.1.0"
-description = "Add your description here"
+dynamic = ["version"]
+description = "sbml2cellml converts SBML models to CellML."
 readme = "README.md"
-requires-python = ">=3.11"
-dependencies = [
-    "rich",
+requires-python = ">=3.13"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+	{name="Matthias König", email="konigmatt@googlemail.com"},
 ]
+maintainers = [
+	{name="Matthias König", email="konigmatt@googlemail.com"},
+]
+classifiers = [
+	"Development Status :: 3 - Alpha",
+	"Intended Audience :: Science/Research",
+	"Operating System :: OS Independent",
+	"Programming Language :: Python :: 3.13",
+	"Programming Language :: Python :: Implementation :: CPython",
+	"Topic :: Scientific/Engineering",
+	"Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+keywords = [
+	"modeling",
+	"standardization",
+	"COMBINE",
+	"SBML",
+	"CellML",
+	"converter",
+]
+dependencies = [
+	# SBML reading and formula parsing
+	"python-libsbml>=5.21.1",
+	# CellML model building, printing and validation
+	"libcellml>=0.6.3",
+	# console output of scripts and the CLI
+	"rich>=15.0.0",
+]
+
+[project.optional-dependencies]
+# timecourse results and plots of `sbml2cellml.simulate`; the simulator itself,
+# libopencor, is not on PyPI, see docs/installation.md
+simulate = [
+	"pandas>=3.0.5",
+	"matplotlib>=3.11.1",
+]
+dev = [
+	"sbml2cellml[simulate]",
+	# wheel from the GitHub release, see [tool.uv.index] below
+	"libopencor==1.20260803.0",
+	"bump-my-version>=1.5.1",
+	"ruff>=0.16.6",
+	"pre-commit>=4.6.2",
+	"ty>=0.0.79",
+	"tox>=4.61.2",
+	"tox-uv>=1.20",
+	"pytest>=9.1.1",
+	"pytest-xdist>=3.8",
+	"zensical>=0.0.60",
+	"mkdocstrings-python>=2.0.8",
+]
+
+[project.scripts]
+sbml2cellml = "sbml2cellml.cli:main"
+
+[project.urls]
+Homepage = "https://matthiaskoenig.github.io/sbml2cellml"
+Documentation = "https://matthiaskoenig.github.io/sbml2cellml"
+Repository = "https://github.com/matthiaskoenig/sbml2cellml"
+Issues = "https://github.com/matthiaskoenig/sbml2cellml/issues"
+Changelog = "https://github.com/matthiaskoenig/sbml2cellml/tree/develop/release-notes"
+Download = "https://pypi.org/project/sbml2cellml"
+
+[tool.hatch.version]
+path = "./src/sbml2cellml/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sbml2cellml"]
+
+# libopencor publishes its wheels on GitHub releases instead of PyPI. The
+# release page is used as a flat index, which only this package is taken from.
+# Bumping libopencor means changing the version here and in the dev extra.
+[[tool.uv.index]]
+name = "libopencor"
+url = "https://github.com/opencor/libopencor/releases/expanded_assets/v1.20260803.0"
+format = "flat"
+explicit = true
+
+[tool.uv.sources]
+libopencor = { index = "libopencor" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# the tests run in parallel (pytest-xdist), `pytest -n 0` runs them in one process
+addopts = "-n auto"
+
+[tool.ty.environment]
+# the package lives in the src layout, the examples and scripts are modules at
+# the root of the repository; the checked python version is inferred from
+# `project.requires-python`
+root = ["./src", "."]
+
+[tool.ty.src]
+include = ["src", "tests", "examples", "scripts"]
+
+[tool.ty.terminal]
+# warnings are failures: keep the codebase free of any diagnostic
+error-on-warning = true

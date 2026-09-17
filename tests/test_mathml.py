@@ -1,0 +1,58 @@
+"""Tests of the MathML helpers."""
+
+import pytest
+
+from sbml2cellml.mathml import (
+    MathMLError,
+    cellml_math,
+    mathml_for_assignment,
+    mathml_for_diff,
+    process_mathml_for_cellml,
+)
+
+
+def test_process_strips_header_and_math_element() -> None:
+    mathml = process_mathml_for_cellml("k1 * S1")
+    assert not mathml.startswith("<?xml")
+    assert "<math" not in mathml
+    assert "</math>" not in mathml
+    assert mathml.startswith("<apply>")
+    assert mathml.endswith("</apply>")
+    assert "k1" in mathml
+    assert "S1" in mathml
+
+
+def test_process_maps_sbml_units_to_cellml_units() -> None:
+    mathml = process_mathml_for_cellml("1.0 dimensionless / V")
+    assert 'cellml:units="dimensionless"' in mathml
+    assert "sbml:units" not in mathml
+
+
+def test_process_raises_on_invalid_formula() -> None:
+    with pytest.raises(MathMLError, match="does not parse"):
+        process_mathml_for_cellml("k1 * (")
+
+
+def test_mathml_for_assignment() -> None:
+    mathml = mathml_for_assignment(vid="x", formula="2 * y")
+    assert mathml.startswith("<apply>\n  <eq/>\n  <ci>x</ci>")
+    assert "y" in mathml
+    assert mathml.rstrip().endswith("</apply>")
+
+
+def test_mathml_for_diff() -> None:
+    mathml = mathml_for_diff(vid="S1", formula="- k1 * S1", ivid="time")
+    assert "<diff/>" in mathml
+    assert "<bvar>\n      <ci>time</ci>\n    </bvar>" in mathml
+    assert "<ci>S1</ci>" in mathml
+
+
+def test_cellml_math_wraps_parts() -> None:
+    parts = [mathml_for_assignment("x", "1"), mathml_for_assignment("y", "2")]
+    math = cellml_math(parts)
+    assert math.startswith(
+        '<math xmlns="http://www.w3.org/1998/Math/MathML" '
+        'xmlns:cellml="http://www.cellml.org/cellml/2.0#">'
+    )
+    assert math.endswith("</math>")
+    assert math.count("<eq/>") == 2

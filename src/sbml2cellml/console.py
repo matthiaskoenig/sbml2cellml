@@ -1,9 +1,8 @@
-"""Rich console for logging."""
+"""Rich console shared by the scripts, examples and the command line."""
 
 from rich import pretty
 from rich.console import Console
 from rich.theme import Theme
-
 
 pretty.install()
 custom_theme = Theme(
@@ -15,4 +14,5 @@ custom_theme = Theme(
     }
 )
 
+#: the console of the package
 console = Console(record=True, theme=custom_theme, log_time=False)
