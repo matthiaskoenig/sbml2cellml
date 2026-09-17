@@ -182,9 +182,15 @@ def parse_model_info(text: str) -> dict[str, list[str]]:
 
     A model file opens with a comment marker on its own line, a blank line,
     the header block of `key: value` pairs, a blank line and then the prose
-    description. Only the header block (its lines up to the first blank
-    line that follows it) is parsed, so prose describing the model later in
-    the file cannot be mistaken for `key: value` pairs.
+    description (a few files carry an extra "Previous version of this
+    file:" comment line before the marker, or wrap a value like `synopsis`
+    onto its own blank-line-separated continuation). Only the header block
+    is parsed: the paragraphs (blocks separated by a blank line) up to and
+    including the first genuine `key: value` paragraph, plus at most one
+    further blank-line gap, so a wrapped value does not cut the header
+    short but prose describing the model later in the file (typically
+    several paragraphs further, e.g. a "Note:" line) is not mistaken for
+    more of it.
 
     Args:
         text: content of the file.
@@ -192,11 +198,23 @@ def parse_model_info(text: str) -> dict[str, list[str]]:
     Returns:
         The values per key, e.g. `testTags`, `componentTags`, `testType`.
     """
+    info: dict[str, str] = {}
+    started = False
+    gap = 0
     for block in re.split(r"\n[ \t]*\n", text):
-        values = _key_values(block)
+        # a header key is a single identifier (e.g. "testType"); a stray
+        # "Previous version of this file:" comment line has spaces in its
+        # key and is dropped rather than mistaken for a header field
+        values = {k: v for k, v in _key_values(block).items() if k.isidentifier()}
         if values:
-            return {key: list(_split(value)) for key, value in values.items()}
-    return {}
+            info.update(values)
+            started = True
+            gap = 0
+        elif started:
+            gap += 1
+            if gap > 1:
+                break
+    return {key: list(_split(value)) for key, value in info.items()}
 
 
 @dataclass(frozen=True)

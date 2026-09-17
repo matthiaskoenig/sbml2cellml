@@ -62,6 +62,8 @@ def test_parse_model_info_ignores_prose_after_header() -> None:
         "\n"
         "This model does something.\n"
         "\n"
+        "It has more than one paragraph of prose.\n"
+        "\n"
         "Note: something that looks like a key but is prose.\n"
         "\n"
         "*)\n"
@@ -69,6 +71,36 @@ def test_parse_model_info_ignores_prose_after_header() -> None:
     info = parse_model_info(text)
     assert info == {"category": ["Test"], "testType": ["TimeCourse"]}
     assert "Note" not in info
+
+
+def test_parse_model_info_tolerates_wrapped_header_value() -> None:
+    # a synopsis wrapped onto its own blank-line-separated continuation
+    # (as seen in some real cases) must not cut the header short
+    text = (
+        "(*\n"
+        "\n"
+        "category:      Test\n"
+        "\n"
+        "synopsis:      A model\n"
+        "\n"
+        "               with a wrapped synopsis.\n"
+        "\n"
+        "componentTags: Compartment\n"
+        "\n"
+        "testTags:      Amount\n"
+        "\n"
+        "testType:      TimeCourse\n"
+        "\n"
+        "\n"
+        "\n"
+        "Note: earlier versions of this test were different.\n"
+        "\n"
+        "*)\n"
+    )
+    info = parse_model_info(text)
+    assert info["testType"] == ["TimeCourse"]
+    assert info["componentTags"] == ["Compartment"]
+    assert info["testTags"] == ["Amount"]
 
 
 def test_load_case() -> None:
