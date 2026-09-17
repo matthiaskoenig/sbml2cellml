@@ -63,6 +63,7 @@ dev = [
 	"pytest-xdist>=3.8",
 	"zensical>=0.0.60",
 	"mkdocstrings-python>=2.0.8",
+	"libroadrunner>=2.10.0",
 ]
 
 [project.scripts]

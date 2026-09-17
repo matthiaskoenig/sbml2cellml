@@ -495,6 +495,24 @@ wheels = [
 ]
 
 [[package]]
+name = "libroadrunner"
+version = "2.10.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b0/4c/5be26c0ad6c9e306a99a41640ec0ef10b01930be3382028faa90f4ae2432/libroadrunner-2.10.0-cp313-cp313-macosx_14_0_arm64.whl", hash = "sha256:f3204b7f0ee207e9d4d8abad0910d5bd2ebb760051c9a864a621f23003a4ee86", size = 34201906, upload-time = "2026-08-05T06:04:39.596Z" },
+    { url = "https://files.pythonhosted.org/packages/94/8b/f800ab9769c989e4d76129a5a5cfee4d22e8f0d8439f02f34aa4b8e849b3/libroadrunner-2.10.0-cp313-cp313-macosx_15_0_x86_64.whl", hash = "sha256:01080024d2aa579cff9b0245dd357669a1d50d57716b3fd5ecb12ed382f7eca5", size = 36620959, upload-time = "2026-08-05T06:04:42.342Z" },
+    { url = "https://files.pythonhosted.org/packages/72/c8/45b1849e48cd83a0e0cec9082e90cd97df7da3232362d320f693e5e3747f/libroadrunner-2.10.0-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:9efc3571fa422dd014d90090150f1baf051863e8f67eece023e6181728d633dd", size = 51162468, upload-time = "2026-08-05T06:04:45.19Z" },
+    { url = "https://files.pythonhosted.org/packages/0a/c9/0c84e343096f5f2b1ab321d712f023f1159b18c263da9313b96ae57ce202/libroadrunner-2.10.0-cp313-cp313-win_amd64.whl", hash = "sha256:b881b6db0d0c92ddf62bd3a95c355d1c0fbbcc683a06f2430e43fdec3fe1875b", size = 24420971, upload-time = "2026-08-05T06:04:47.894Z" },
+    { url = "https://files.pythonhosted.org/packages/1e/40/2d2a221bef074ff54f445c3518781e3e6d2f8f4d82ae03e58df951cffcb6/libroadrunner-2.10.0-cp314-cp314-macosx_14_0_arm64.whl", hash = "sha256:11ce888d5f2fc396a45c885aa647d6cda49cd678848387d8323e8e588c759831", size = 34203182, upload-time = "2026-08-05T06:04:50.915Z" },
+    { url = "https://files.pythonhosted.org/packages/94/5f/b55c2a54132d1e2907e880b07259122a2845a08c56a3458c69c8857564b9/libroadrunner-2.10.0-cp314-cp314-macosx_15_0_x86_64.whl", hash = "sha256:04f1fb5aeace59514a4a10d869acd1bd88c6a9f597f140f18ebd31e67afc485d", size = 36621769, upload-time = "2026-08-05T06:04:53.747Z" },
+    { url = "https://files.pythonhosted.org/packages/17/4e/86592cbba7f6b493aaf8f64849a500464402231e86a9866428fafdb38664/libroadrunner-2.10.0-cp314-cp314-manylinux_2_28_x86_64.whl", hash = "sha256:3481b6c2aa8030e3c35419b216b1036e4c1aee75e2083716353ebc863aced620", size = 51163285, upload-time = "2026-08-05T06:04:56.869Z" },
+    { url = "https://files.pythonhosted.org/packages/d5/64/4c14a855490980d6b7803084778725ac377b388539c8fb4fc8a4c3cf2eba/libroadrunner-2.10.0-cp314-cp314-win_amd64.whl", hash = "sha256:b4d54bc51c78e5be673f1ccc64ee1596125600c4745abcea789e446db7022479", size = 25067406, upload-time = "2026-08-05T06:04:59.631Z" },
+]
+
+[[package]]
 name = "markdown"
 version = "3.10.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1291,6 +1309,7 @@ dependencies = [
 dev = [
     { name = "bump-my-version" },
     { name = "libopencor" },
+    { name = "libroadrunner" },
     { name = "matplotlib" },
     { name = "mkdocstrings-python" },
     { name = "pandas" },
@@ -1313,6 +1332,7 @@ requires-dist = [
     { name = "bump-my-version", marker = "extra == 'dev'", specifier = ">=1.5.1" },
     { name = "libcellml", specifier = ">=0.6.3" },
     { name = "libopencor", marker = "extra == 'dev'", specifier = "==1.20260803.0", index = "https://github.com/opencor/libopencor/releases/expanded_assets/v1.20260803.0" },
+    { name = "libroadrunner", marker = "extra == 'dev'", specifier = ">=2.10.0" },
     { name = "matplotlib", marker = "extra == 'dev'", specifier = ">=3.11.1" },
     { name = "matplotlib", marker = "extra == 'simulate'", specifier = ">=3.11.1" },
     { name = "mkdocstrings-python", marker = "extra == 'dev'", specifier = ">=2.0.8" },
