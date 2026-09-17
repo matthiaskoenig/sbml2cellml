@@ -42,6 +42,16 @@ uv pip install --find-links https://github.com/opencor/libopencor/releases/expan
 
 Wheels exist for python 3.12 to 3.14 on Linux (x86_64, aarch64), macOS (Intel, Apple silicon) and Windows. Without libopencor everything except `sbml2cellml.simulate` works.
 
+## Running the SBML test suite
+
+The `testsuite` extra adds `libroadrunner` and `requests` for the `sbml2cellml-testsuite` command:
+
+```bash
+pip install "sbml2cellml[testsuite]"
+```
+
+Like `simulate`, it needs the libopencor wheel installed separately, see above.
+
 ## Development version
 
 The current state of the `develop` branch is installed from GitHub:

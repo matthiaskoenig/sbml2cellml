@@ -143,7 +143,7 @@ pytest tests/test_cellml.py::test_read_model                 # a single test
 
 The simulation tests and the examples need libopencor and are skipped without it; with `uv sync --extra dev` it is installed.
 
-The roundtrip tests (`tests/test_roundtrip.py`) need roadrunner and are skipped without it. roadrunner and libopencor bundle different LLVM versions and crash once both have JIT-compiled in one process, so roadrunner runs in a subprocess (`tests/simulators.py`).
+The roundtrip tests (`tests/test_roundtrip.py`) need roadrunner and are skipped without it. roadrunner and libopencor bundle different LLVM versions and crash once both have JIT-compiled in one process, so roadrunner runs in a subprocess (`tests/simulators.py`); the same rule shapes the process model of the [SBML test suite](#sbml-test-suite) harness.
 
 ## Linting and formatting
 
@@ -214,6 +214,20 @@ The one-time setup of the GitHub repository, for the record:
 3. the GitHub Pages source is set to GitHub Actions: `gh api -X POST repos/matthiaskoenig/sbml2cellml/pages -f build_type=workflow`
 4. the PyPI trusted publisher is registered on [pypi.org](https://pypi.org/manage/account/publishing/) for the project `sbml2cellml`, owner `matthiaskoenig`, repository `sbml2cellml`, workflow `ci-cd.yml`, environment `pypi` (as a pending publisher before the first release)
 5. the repository is enabled in the [Zenodo GitHub integration](https://zenodo.org/account/settings/github/), so that a GitHub release is archived with a DOI
+
+## SBML test suite { #sbml-test-suite }
+
+`sbml2cellml.testsuite` runs the [SBML test suite](https://github.com/sbmlteam/sbml-test-suite) through both converters and both simulators, so that every conversion gap is measured against a real corpus instead of a handful of examples. Each runnable case goes through five stages: the original SBML is simulated with roadrunner (`reference`), converted to CellML (`sbml2cellml`), the CellML is simulated with libopencor (`libopencor`), converted back to SBML (`cellml2sbml`) and the roundtrip SBML is simulated again with roadrunner (`roundtrip`); every simulation is compared with the expected results of the case using its tolerances. Cases with an SBML package the converters do not support, without a level 3 version 2 file or of a test type other than `TimeCourse` are skipped.
+
+```bash
+uv run sbml2cellml-testsuite run
+```
+
+downloads the suite into `~/.cache/sbml2cellml` on first use (`SBML2CELLML_CACHE` overrides the cache root), runs the pipeline and writes `testsuite/results.json` and `docs/testsuite.md`. `--cases 00001,00002` restricts the run to a subset of case ids and `--suite-dir` points at a local copy of the `semantic/` directory instead of downloading. The comparison uses tight solver tolerances (`1e-9` relative, `1e-12` absolute, passed to every roadrunner and libopencor call) so it measures the conversion rather than the default integrator tolerances, an amendment to the original harness design.
+
+`testsuite/results.json` and `docs/testsuite.md` are generated and committed. `tests/test_testsuite_full.py` (enabled with `SBML2CELLML_TESTSUITE=1`, run with `tox r -e testsuite` and in the linux CI job) reruns the full suite and fails if any case regresses against the committed results or if the rendered report no longer matches `docs/testsuite.md`. To accept an improvement, rerun `uv run sbml2cellml-testsuite run` and commit the updated `testsuite/results.json` and `docs/testsuite.md` together in the same pull request.
+
+roadrunner and libopencor bundle different LLVM versions and crash once both have JIT-compiled in one process (see [Testing](#testing)); the harness therefore runs each simulator in its own worker process (`sbml2cellml.testsuite.worker`) for the whole run, instead of starting a subprocess per call.
 
 ## Release
 
