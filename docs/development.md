@@ -243,6 +243,8 @@ downloads every model into `~/.cache/sbml2cellml/biomodels` on first use (cached
 
 The `biomodels` workflow (`workflow_dispatch`, Actions tab, "biomodels", "Run workflow") runs the check on GitHub Actions and opens a pull request with the regenerated `biomodels/results.json` and `docs/biomodels.md` against `develop`.
 
+The pull request opened with the default token does not trigger the required checks: GitHub does not run workflows for a pull request created by `GITHUB_TOKEN`. Either close and reopen the pull request to start them, or store a fine-grained personal access token with `contents` and `pull-requests` write permission on the repository as the `BIOMODELS_TOKEN` secret, which the workflow prefers over the default token when it is set. Either way, the repository setting "Allow GitHub Actions to create and approve pull requests" (Settings, Actions, General) must be enabled.
+
 Before a release, run `uv run sbml2cellml-biomodels run` locally or trigger the `biomodels` workflow, review the diff of `docs/biomodels.md` for regressions and merge the results before tagging.
 
 ## Release
