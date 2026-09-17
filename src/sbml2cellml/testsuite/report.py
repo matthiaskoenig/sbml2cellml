@@ -120,7 +120,7 @@ def render_report(result: SuiteResult) -> str:
         if mismatch_ids:
             tag_groups: dict[str, list[str]] = defaultdict(list)
             for cid in mismatch_ids:
-                tags = ", ".join(sorted(result.cases[cid].test_tags))
+                tags = ", ".join(sorted(set(result.cases[cid].test_tags)))
                 tag_groups[tags].append(cid)
             lines += ["", "| tags | cases | examples |", "| --- | --- | --- |"]
             for tags, ids in sorted(

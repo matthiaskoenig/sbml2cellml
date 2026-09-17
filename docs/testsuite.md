@@ -73,7 +73,7 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | Amount | 61 | 00026, 00039, 00040, 00041, 00071, 00072, 00073, 00074, 00348, 00349, ... (61 in total) |
 | Amount, BoundaryCondition | 59 | 00007, 00008, 00009, 00011, 00012, 00013, 00016, 00211, 00212, 00213, ... (59 in total) |
 | Amount, InitialValueReassigned | 39 | 00036, 00037, 00469, 00470, 00474, 00476, 00477, 00478, 00481, 00484, ... (39 in total) |
-| Amount, AssignedConstantStoichiometry, InitialValueReassigned, NonUnityStoichiometry | 18 | 00969, 01065, 01066, 01067, 01068, 01069, 01070, 01071, 01072, 01073, ... (18 in total) |
+| Amount, AssignedConstantStoichiometry, InitialValueReassigned, NonUnityStoichiometry | 24 | 00969, 01065, 01066, 01067, 01068, 01069, 01070, 01071, 01072, 01073, ... (24 in total) |
 | Amount, NonUnityStoichiometry | 14 | 00003, 00017, 00266, 00267, 00387, 00390, 00393, 00444, 00447, 00512, ... (14 in total) |
 | Concentration, NonUnityCompartment | 12 | 00374, 00743, 00744, 00745, 00746, 00747, 00748, 00763, 00765, 00766, ... (12 in total) |
 | Amount, EventIsPersistent | 11 | 00406, 00413, 00414, 00420, 00421, 00757, 00758, 00759, 00776, 00887, ... (11 in total) |
@@ -81,7 +81,6 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | Amount, NonUnityCompartment | 10 | 00369, 00370, 00371, 00372, 00373, 00426, 00428, 00429, 00430, 00431 |
 | 0D-Compartment, Amount | 7 | 00362, 00365, 00368, 00419, 00425, 00543, 00546 |
 | Amount, ConstantSpecies | 7 | 00384, 00385, 00386, 00441, 00443, 00555, 00556 |
-| Amount, AssignedConstantStoichiometry, InitialValueReassigned, InitialValueReassigned, NonUnityStoichiometry | 6 | 01077, 01078, 01079, 01080, 01081, 01082 |
 | Amount, InitialValueReassigned, NonUnityStoichiometry | 5 | 00510, 00511, 00513, 00514, 00515 |
 | Amount, NonConstantParameter | 5 | 00944, 01227, 01228, 01229, 01230 |
 | Concentration, InitialValueReassigned | 5 | 00792, 00793, 00797, 00799, 00800 |
@@ -134,7 +133,7 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | Amount | 61 | 00026, 00039, 00040, 00041, 00071, 00072, 00073, 00074, 00348, 00349, ... (61 in total) |
 | Amount, BoundaryCondition | 59 | 00007, 00008, 00009, 00011, 00012, 00013, 00016, 00211, 00212, 00213, ... (59 in total) |
 | Amount, InitialValueReassigned | 39 | 00036, 00037, 00469, 00470, 00474, 00476, 00477, 00478, 00481, 00484, ... (39 in total) |
-| Amount, AssignedConstantStoichiometry, InitialValueReassigned, NonUnityStoichiometry | 18 | 00969, 01065, 01066, 01067, 01068, 01069, 01070, 01071, 01072, 01073, ... (18 in total) |
+| Amount, AssignedConstantStoichiometry, InitialValueReassigned, NonUnityStoichiometry | 24 | 00969, 01065, 01066, 01067, 01068, 01069, 01070, 01071, 01072, 01073, ... (24 in total) |
 | Amount, NonUnityStoichiometry | 14 | 00003, 00017, 00266, 00267, 00387, 00390, 00393, 00444, 00447, 00512, ... (14 in total) |
 | Concentration, NonUnityCompartment | 12 | 00374, 00743, 00744, 00745, 00746, 00747, 00748, 00763, 00765, 00766, ... (12 in total) |
 | Amount, EventIsPersistent | 11 | 00406, 00413, 00414, 00420, 00421, 00757, 00758, 00759, 00776, 00887, ... (11 in total) |
@@ -142,7 +141,6 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | Amount, NonUnityCompartment | 10 | 00369, 00370, 00371, 00372, 00373, 00426, 00428, 00429, 00430, 00431 |
 | 0D-Compartment, Amount | 7 | 00362, 00365, 00368, 00419, 00425, 00543, 00546 |
 | Amount, ConstantSpecies | 7 | 00384, 00385, 00386, 00441, 00443, 00555, 00556 |
-| Amount, AssignedConstantStoichiometry, InitialValueReassigned, InitialValueReassigned, NonUnityStoichiometry | 6 | 01077, 01078, 01079, 01080, 01081, 01082 |
 | Amount, InitialValueReassigned, NonUnityStoichiometry | 5 | 00510, 00511, 00513, 00514, 00515 |
 | Amount, NonConstantParameter | 5 | 00944, 01227, 01228, 01229, 01230 |
 | Concentration, InitialValueReassigned | 5 | 00792, 00793, 00797, 00799, 00800 |

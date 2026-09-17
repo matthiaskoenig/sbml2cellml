@@ -28,7 +28,9 @@ def sample() -> SuiteResult:
         {
             "00001": CaseResult("00001", ["Amount"], ["Compartment", "Species"], ok),
             "00002": CaseResult("00002", ["Amount"], ["Compartment"], bad),
-            "00006": CaseResult("00006", ["Rate"], ["Compartment"], bad2),
+            # a case whose model.m lists a tag twice (e.g. 01077); the tags
+            # key must be deduplicated
+            "00006": CaseResult("00006", ["Rate", "Rate"], ["Compartment"], bad2),
         },
         {"00003": "package comp", "00004": "package comp", "00005": "no L3V2 file"},
     )
@@ -48,7 +50,9 @@ def test_render_report() -> None:
     assert "—" not in text
     # the numerical mismatches of libopencor, grouped by tags
     assert "| Amount | 1 | 00002 |" in text
+    # 00006 has the tag "Rate" twice; the key is deduplicated, not "Rate, Rate"
     assert "| Rate | 1 | 00006 |" in text
+    assert "Rate, Rate" not in text
 
 
 def test_reason_groups_tolerance_messages() -> None:
