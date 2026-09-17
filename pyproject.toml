@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "sbml2cellml"
 dynamic = ["version"]
-description = "sbml2cellml converts SBML models to CellML."
+description = "sbml2cellml converts between SBML and CellML."
 readme = "README.md"
 requires-python = ">=3.13"
 license = "MIT"

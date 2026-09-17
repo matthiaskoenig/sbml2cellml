@@ -86,9 +86,11 @@ CellML has no species, compartments or reactions: every variable becomes a param
 | initial value given as a variable name | initial assignment |
 | standard units | the SBML unit kind of the same name |
 | custom units | unit definition expanded to base kinds |
+| variable written only by a reset | parameter constant="false" (an event assignment needs a non-constant target) |
 | reset | event with the trigger `test_variable == test_value`, priority `-order`, one event assignment |
 | components and connections | one flat namespace; a variable name used by several unconnected variables is prefixed with its component (`cell_x`), the CellML name is kept as `name`; the model id and event ids also get a numeric suffix when they collide with a variable id |
 | imports | resolved and flattened before the conversion |
+| model type other than ODE or algebraic (e.g. DAE) | CellML2SBMLConversionError |
 
 ## Limitations
 

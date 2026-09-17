@@ -1,4 +1,4 @@
-"""sbml2cellml - conversion of SBML models to CellML."""
+"""sbml2cellml - conversion between SBML and CellML."""
 
 import logging
 

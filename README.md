@@ -1,4 +1,4 @@
-# sbml2cellml: conversion of SBML models to CellML
+# sbml2cellml: conversion between SBML and CellML
 [![GitHub Actions CI/CD Status](https://github.com/matthiaskoenig/sbml2cellml/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/matthiaskoenig/sbml2cellml/actions/workflows/ci-cd.yml) [![Documentation](https://img.shields.io/badge/docs-sbml2cellml-008080.svg)](https://matthiaskoenig.github.io/sbml2cellml) [![Version](https://img.shields.io/pypi/v/sbml2cellml.svg)](https://pypi.org/project/sbml2cellml/) [![Python Versions](https://img.shields.io/pypi/pyversions/sbml2cellml.svg)](https://pypi.org/project/sbml2cellml/) [![MIT License](https://img.shields.io/pypi/l/sbml2cellml.svg)](https://opensource.org/licenses/MIT)
 
 `sbml2cellml` converts between the [Systems Biology Markup Language (SBML)](https://sbml.org) and [CellML 2.0](https://cellml.org), with documentation available from [https://matthiaskoenig.github.io/sbml2cellml](https://matthiaskoenig.github.io/sbml2cellml).
@@ -17,7 +17,7 @@ sbml2cellml model.xml -o model.cellml
 cellml2sbml model.cellml -o model.xml
 ```
 
-Units, events, initial assignments, function definitions and algebraic rules are not converted yet, see the [roadmap](https://matthiaskoenig.github.io/sbml2cellml/roadmap/).
+In the SBML to CellML direction units, events, initial assignments, function definitions and algebraic rules are not converted yet, see the [roadmap](https://matthiaskoenig.github.io/sbml2cellml/roadmap/).
 
 If you have any questions or issues please [open an issue](https://github.com/matthiaskoenig/sbml2cellml/issues).
 

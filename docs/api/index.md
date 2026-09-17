@@ -13,6 +13,6 @@ The API reference is generated from the docstrings of the package.
 | [units](units.md) | CellML units to SBML unit definitions |
 | [variables](variables.md) | SBML ids of the CellML variables |
 | [simulate](simulate.md) | Timecourse simulation with libopencor (optional dependency) |
-| [cli](cli.md) | The `sbml2cellml` command |
+| [cli](cli.md) | The `sbml2cellml` and `cellml2sbml` commands |
 | [console](console.md) | Shared rich console |
 | [log](log.md) | Logging of the package |

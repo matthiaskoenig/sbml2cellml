@@ -75,7 +75,8 @@ def validate_document(doc: libsbml.SBMLDocument) -> list[str]:
 
     Runs the libsbml consistency checks (units, identifiers, MathML, SBO,
     modeling practice). Unit problems are reported by libsbml as warnings and
-    are not part of the result.
+    are not part of the result. The error log of the document is cleared
+    before the check.
 
     Args:
         doc: SBML document.
