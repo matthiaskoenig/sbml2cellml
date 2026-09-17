@@ -39,8 +39,15 @@ class Comparison:
 
     @property
     def max_excess(self) -> float:
-        """Largest excess over the tolerance, negative when everything passes."""
+        """Largest excess over the tolerance, negative when everything passes.
+
+        `nan` for a structural failure without variables.
+        """
         return max((v.max_excess for v in self.variables), default=float("nan"))
+
+
+class CompareError(ValueError):
+    """A result cannot be brought into the requested quantity."""
 
 
 def _failed(message: str) -> Comparison:
@@ -63,6 +70,8 @@ def compare(
     """
     if len(result) != len(expected):
         return _failed(f"{len(result)} rows instead of {len(expected)}")
+    if len(expected) == 0:
+        return _failed("no rows")
     if TIME not in result.columns:
         return _failed("no time column")
     if not np.allclose(
@@ -77,8 +86,11 @@ def compare(
             return _failed(f"variable {variable} missing in the result")
         if variable not in expected.columns:
             return _failed(f"variable {variable} missing in the expected results")
-        values = result[variable].to_numpy(dtype=float)
-        target = expected[variable].to_numpy(dtype=float)
+        try:
+            values = result[variable].to_numpy(dtype=float)
+            target = expected[variable].to_numpy(dtype=float)
+        except (ValueError, TypeError):
+            return _failed(f"variable {variable} is not numeric")
         error = np.abs(values - target)
         error = np.where(np.isnan(error), np.inf, error)
         tolerance = settings.absolute + settings.relative * np.abs(target)
@@ -127,6 +139,10 @@ def requested_frame(
         `time` and the settings variables, species converted between amount
         and concentration with their compartment column when needed. A
         variable missing in `df` is left out (the comparison reports it).
+
+    Raises:
+        CompareError: a variable needs converting between amount and
+            concentration and its compartment column is missing from `df`.
     """
     out = pd.DataFrame({TIME: df[TIME]})
     for variable in settings.variables:
@@ -136,7 +152,13 @@ def requested_frame(
         if variable in quantities:
             in_amount, compartment = quantities[variable]
             want_amount = variable in settings.amount
-            if compartment in df.columns:
+            needs_conversion = in_amount != want_amount
+            if needs_conversion and compartment not in df.columns:
+                raise CompareError(
+                    f"compartment {compartment} of {variable} missing, "
+                    "cannot convert between amount and concentration"
+                )
+            if needs_conversion:
                 size = df[compartment]
                 if in_amount and not want_amount:
                     values = values / size

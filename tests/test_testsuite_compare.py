@@ -7,6 +7,7 @@ import pytest
 
 from sbml2cellml.testsuite.cases import Settings
 from sbml2cellml.testsuite.compare import (
+    CompareError,
     compare,
     requested_frame,
     species_quantities,
@@ -76,6 +77,21 @@ def test_compare_nan_fails() -> None:
     assert not compare(result, expected(), SETTINGS).passed
 
 
+def test_compare_zero_rows() -> None:
+    empty = pd.DataFrame({"time": [], "S1": [], "S2": []})
+    comparison = compare(empty, empty.copy(), SETTINGS)
+    assert comparison.passed is False
+    assert "no rows" in comparison.message
+
+
+def test_compare_non_numeric() -> None:
+    result = expected()
+    result["S1"] = ["a", "b", "c"]
+    comparison = compare(result, expected(), SETTINGS)
+    assert not comparison.passed
+    assert "S1" in comparison.message
+
+
 def test_species_quantities_and_requested_frame() -> None:
     doc = libsbml.SBMLDocument(3, 2)
     model = doc.createModel()
@@ -107,6 +123,33 @@ def test_species_quantities_and_requested_frame() -> None:
     converted = requested_frame(df, quantities, swapped)
     assert converted["S1"].tolist() == [2.0, 1.0]
     assert converted["S2"].tolist() == [2.0, 6.0]
+
+
+def test_requested_frame_missing_compartment_raises() -> None:
+    doc = libsbml.SBMLDocument(3, 2)
+    model = doc.createModel()
+    c = model.createCompartment()
+    c.setId("cell")
+    c.setSize(2.0)
+    c.setConstant(True)
+    for sid, amount in [("S1", True), ("S2", False)]:
+        s = model.createSpecies()
+        s.setId(sid)
+        s.setCompartment("cell")
+        s.setHasOnlySubstanceUnits(amount)
+        s.setConstant(False)
+        s.setBoundaryCondition(False)
+    quantities = species_quantities(model)
+    df = pd.DataFrame({"time": [0.0, 1.0], "S1": [4.0, 2.0], "S2": [1.0, 3.0]})
+    # no conversion needed: the missing compartment column is irrelevant
+    same = requested_frame(df, quantities, SETTINGS)
+    assert same["S1"].tolist() == [4.0, 2.0] and same["S2"].tolist() == [1.0, 3.0]
+    # swapped requests need a conversion, and the compartment is missing
+    swapped = Settings(
+        0.0, 1.0, 1, ("S1", "S2"), 0, 0, frozenset({"S2"}), frozenset({"S1"})
+    )
+    with pytest.raises(CompareError, match="cell"):
+        requested_frame(df, quantities, swapped)
 
 
 def test_strip_brackets() -> None:
