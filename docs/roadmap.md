@@ -24,5 +24,5 @@ The failure reasons of the [SBML test suite report](testsuite.md#failure-reasons
 
 1. **CellML to SBML** converter: done, see [Conversion](conversion.md#cellml-to-sbml).
 2. **SBML test suite roundtrip**: done, see [SBML test suite](testsuite.md).
-3. **BioModels check** of the curated models before every release.
+3. **BioModels check** of the curated models before every release: done, see [BioModels](biomodels.md).
 4. The conversion gaps above, driven by the failures of the test suite.

@@ -229,6 +229,22 @@ downloads the suite into `~/.cache/sbml2cellml` on first use (`SBML2CELLML_CACHE
 
 roadrunner and libopencor bundle different LLVM versions and crash once both have JIT-compiled in one process (see [Testing](#testing)); the harness therefore runs each simulator in its own worker process (`sbml2cellml.testsuite.worker`) for the whole run, instead of starting a subprocess per call.
 
+## BioModels check { #biomodels-check }
+
+`sbml2cellml.biomodels` runs the manually curated SBML models of [BioModels](https://www.biomodels.org) (about 1075) through the same pipeline as the [SBML test suite](#sbml-test-suite), reusing `sbml2cellml.testsuite`. These models have no expected results, so the `reference` stage simulates the original SBML with roadrunner over a generic timecourse (0 to 100 time units, 100 steps) and its frame becomes the expected results the `libopencor` and `roundtrip` simulations are compared with, using the same tolerances as the test suite (`1e-3` relative, `1e-6` absolute). A `reference` failure means roadrunner cannot simulate the model, it says nothing about the converters; models with an SBML package or without species are skipped.
+
+```bash
+uv run sbml2cellml-biomodels run
+```
+
+downloads every model into `~/.cache/sbml2cellml/biomodels` on first use (cached for later runs), runs the pipeline and writes `biomodels/results.json` and `docs/biomodels.md`. `--ids BIOMD0000000001,BIOMD0000000012` and `--count N` restrict the run to a subset or the first N ids of the selection, for a quick local check.
+
+`uv run sbml2cellml-biomodels update` refreshes the committed selection `biomodels/models.json` (the date, the search query and the sorted ids) from the current BioModels search; it is run occasionally, not on every check.
+
+The `biomodels` workflow (`workflow_dispatch`, Actions tab, "biomodels", "Run workflow") runs the check on GitHub Actions and opens a pull request with the regenerated `biomodels/results.json` and `docs/biomodels.md` against `develop`.
+
+Before a release, run `uv run sbml2cellml-biomodels run` locally or trigger the `biomodels` workflow, review the diff of `docs/biomodels.md` for regressions and merge the results before tagging.
+
 ## Release
 
 A release is made from `develop`. Since `develop` only accepts pull requests,
@@ -236,11 +252,12 @@ the release is prepared on a branch and tagged once that pull request is merged:
 
 1. branch off `develop`: `git switch -c release/x.y.z develop`
 2. write the release notes for the version in `release-notes/x.y.z.md`
-3. make sure everything passes: `tox run-parallel`, `ruff check`, `tox r -e ty`
-4. check the version bump: `uvx bump-my-version bump [major|minor|patch] --dry-run -vv`
-5. bump the version: `uvx bump-my-version bump [major|minor|patch]`, which updates `src/sbml2cellml/__init__.py` and `CITATION.cff` and commits. It does not create the tag; a squash or rebase merge would rewrite the commit and leave the tag behind on a commit which is not part of `develop`
-6. push the branch, open the pull request against `develop` and merge it once the checks are green
-7. tag the merged commit on `develop` and push the tag:
+3. run the [BioModels check](#biomodels-check) or trigger the `biomodels` workflow, review the diff of `docs/biomodels.md` for regressions and merge the results before tagging
+4. make sure everything passes: `tox run-parallel`, `ruff check`, `tox r -e ty`
+5. check the version bump: `uvx bump-my-version bump [major|minor|patch] --dry-run -vv`
+6. bump the version: `uvx bump-my-version bump [major|minor|patch]`, which updates `src/sbml2cellml/__init__.py` and `CITATION.cff` and commits. It does not create the tag; a squash or rebase merge would rewrite the commit and leave the tag behind on a commit which is not part of `develop`
+7. push the branch, open the pull request against `develop` and merge it once the checks are green
+8. tag the merged commit on `develop` and push the tag:
 
     ```bash
     git switch develop
@@ -255,11 +272,11 @@ the release is prepared on a branch and tagged once that pull request is merged:
     Check the version before pushing, a tag cannot be moved or deleted
     afterwards.
 
-8. test the installation from pypi in a fresh environment:
+9. test the installation from pypi in a fresh environment:
 
     ```bash
     uv venv --python 3.13
     uv pip install sbml2cellml
     ```
 
-9. once Zenodo has archived the release, update the citation information, i.e., `date-released` in `CITATION.cff` and the version, date and version DOI of the release in the citation of `README.md` and `docs/index.md`. `bump-my-version` only updates the version, not the date and the DOI, which are only known after the release. These changes go in through a pull request like everything else
+10. once Zenodo has archived the release, update the citation information, i.e., `date-released` in `CITATION.cff` and the version, date and version DOI of the release in the citation of `README.md` and `docs/index.md`. `bump-my-version` only updates the version, not the date and the DOI, which are only known after the release. These changes go in through a pull request like everything else

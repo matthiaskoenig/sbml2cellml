@@ -31,3 +31,14 @@ The `sbml2cellml-testsuite` command runs the [SBML test suite](https://github.co
 | [testsuite.results](testsuite.results.md) | Results of a suite run: per case and stage, JSON, regressions |
 | [testsuite.report](testsuite.report.md) | Markdown report of a suite run, the page `docs/testsuite.md` |
 | [testsuite.cli](testsuite.cli.md) | The `sbml2cellml-testsuite` command |
+
+## sbml2cellml.biomodels
+
+The `sbml2cellml-biomodels` command runs the curated [BioModels](https://www.biomodels.org) selection through both converters, reusing `sbml2cellml.testsuite`, see [BioModels](../biomodels.md) and [Development](../development.md#biomodels-check).
+
+| module | description |
+| --- | --- |
+| [biomodels.models](biomodels.models.md) | BioModels search, model info and download, the selection file |
+| [biomodels.cases](biomodels.cases.md) | Building a runnable case from a downloaded model |
+| [biomodels.runner](biomodels.runner.md) | Turning a list of model ids into cases and running the suite pipeline |
+| [biomodels.cli](biomodels.cli.md) | The `sbml2cellml-biomodels` command |

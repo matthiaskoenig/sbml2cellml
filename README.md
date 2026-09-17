@@ -11,6 +11,7 @@ Features include
 - timecourse simulation of the CellML with libopencor
 - the `sbml2cellml` and `cellml2sbml` command lines
 - the SBML test suite harness: every semantic case through both converters and both simulators, results on the [SBML test suite](https://matthiaskoenig.github.io/sbml2cellml/testsuite/) page
+- BioModels check: the curated models through both converters, results on the [BioModels](https://matthiaskoenig.github.io/sbml2cellml/biomodels/) page
 
 ```bash
 pip install sbml2cellml

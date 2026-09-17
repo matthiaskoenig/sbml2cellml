@@ -38,6 +38,10 @@ cellml2sbml model.cellml -o model.xml
 
 uv run sbml2cellml-testsuite run        # full SBML test suite, writes testsuite/results.json and docs/testsuite.md
 tox r -e testsuite                      # gating test against the committed results (SBML2CELLML_TESTSUITE=1)
+
+uv run sbml2cellml-biomodels run        # curated BioModels selection, writes biomodels/results.json and docs/biomodels.md
+uv run sbml2cellml-biomodels update     # refresh the committed selection biomodels/models.json
+uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md from a results file
 ```
 
 `develop` is the default branch and takes every change through a pull request;
@@ -99,6 +103,18 @@ on `develop` after the merge.
   case; `results.py` is `SuiteResult` (JSON) with `regressions`/
   `improvements`; `report.py` renders `docs/testsuite.md`; `cli.py` is the
   `sbml2cellml-testsuite` entry point.
+- `biomodels/`: `sbml2cellml-biomodels run|update|report` runs the manually
+  curated SBML models of BioModels through the same pipeline. `models.py`
+  queries and downloads the models through the BioModels REST API, cached on
+  disk, and reads/writes the selection `biomodels/models.json`; `cases.py`
+  builds a case for a downloaded model with the generic timecourse (0 to 100
+  time units, 100 steps); `runner.py` turns a list of ids into cases (skipping
+  a failed download or a model without species) and calls
+  `sbml2cellml.testsuite.runner.run_suite`, whose `reference` stage uses the
+  roadrunner simulation of the original model as the expected results since
+  BioModels has none; `cli.py` is the `sbml2cellml-biomodels` entry point. The
+  `biomodels` workflow (`workflow_dispatch`) runs the check on GitHub Actions
+  and opens a pull request with the regenerated results.
 
 ## Conventions
 
@@ -128,3 +144,6 @@ on `develop` after the merge.
   `sbml2cellml-testsuite run` and committed; the full-suite test
   (`tests/test_testsuite_full.py`) fails on regressions against them; accept
   improvements by regenerating both.
+- `biomodels/models.json`, `biomodels/results.json` and `docs/biomodels.md`
+  are generated (`update` and `run`) and committed; review the check before a
+  release, see `docs/development.md#biomodels-check`.
