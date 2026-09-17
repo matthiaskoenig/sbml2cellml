@@ -4,6 +4,14 @@
 is inherited) which runs the functions of `sbml2cellml.testsuite.simulators`
 on request. Every call has a timeout; a worker which times out or dies is
 replaced, so one bad case never takes the suite down.
+
+Starting a process (spawn context) means importing
+`sbml2cellml.testsuite.simulators` from scratch, which can take a while when
+the machine is busy. To keep that startup cost out of the call timeout, the
+worker process sends a `"ready"` handshake on its connection right before it
+starts serving requests; `SimulatorWorker.start` waits for that handshake
+with its own generous `STARTUP_TIMEOUT`, separate from the per-call timeout
+used by `SimulatorWorker.call`.
 """
 
 import logging
@@ -14,6 +22,8 @@ from typing import Any
 import pandas as pd
 
 logger = logging.getLogger(__name__)
+
+STARTUP_TIMEOUT = 120.0
 
 
 class SimulationFailure(RuntimeError):
@@ -28,6 +38,7 @@ def _serve(connection: Connection) -> None:
     """Loop of the worker process: run the requested functions."""
     from sbml2cellml.testsuite import simulators
 
+    connection.send("ready")
     while True:
         message = connection.recv()
         if message is None:
@@ -57,12 +68,24 @@ class SimulatorWorker:
         self._connection: Connection | None = None
 
     def start(self) -> None:
-        """Start the process."""
+        """Start the process and wait for its ready handshake.
+
+        Raises:
+            SimulationFailure: if the process does not send the `"ready"`
+                handshake within `STARTUP_TIMEOUT`; the process is killed.
+        """
         parent, child = self._context.Pipe()
         self._process = self._context.Process(target=_serve, args=(child,), daemon=True)
         self._process.start()
         child.close()
         self._connection = parent
+        if not parent.poll(STARTUP_TIMEOUT) or parent.recv() != "ready":
+            self._process.kill()
+            self._process.join()
+            self._connection.close()
+            self._process = None
+            self._connection = None
+            raise SimulationFailure(f"{self.name}: worker did not start")
         logger.info("%s worker started (pid %d)", self.name, self._process.pid)
 
     def stop(self) -> None:
