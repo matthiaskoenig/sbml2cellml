@@ -108,6 +108,7 @@ def test_load_case() -> None:
     assert case.id == "00001"
     assert case.sbml_path == FIXTURES / "00001" / "00001-sbml-l3v2.xml"
     assert case.test_type == "TimeCourse"
+    assert case.expected is not None
     assert list(case.expected.columns) == ["time", "S1", "S2"]
     assert len(case.expected) == 51
     assert skip_reason(case) is None
@@ -125,6 +126,7 @@ def test_load_case_renames_time_column(tmp_path: Path) -> None:
     assert text.startswith("time,")
     results.write_text("Time," + text.split(",", 1)[1])
     case = load_case(case_dir)
+    assert case.expected is not None
     assert list(case.expected.columns) == ["time", "S1", "S2"]
 
 

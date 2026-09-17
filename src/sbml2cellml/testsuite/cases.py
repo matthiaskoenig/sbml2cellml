@@ -219,16 +219,23 @@ def parse_model_info(text: str) -> dict[str, list[str]]:
 
 @dataclass(frozen=True)
 class Case:
-    """One semantic test case."""
+    """One semantic test case.
+
+    `expected` is `None` for a case without expected results (e.g. a
+    BioModels model): the reference simulation itself becomes the expected
+    results for the later stages. `name` is a display name (e.g. the model
+    name), empty for the SBML test suite cases.
+    """
 
     id: str
     case_dir: Path
     sbml_path: Path | None
     settings: Settings
-    expected: pd.DataFrame
+    expected: pd.DataFrame | None
     test_tags: tuple[str, ...]
     component_tags: tuple[str, ...]
     test_type: str
+    name: str = ""
 
     @property
     def packages(self) -> tuple[str, ...]:

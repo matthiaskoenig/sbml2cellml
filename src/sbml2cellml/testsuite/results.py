@@ -28,6 +28,7 @@ class CaseResult:
     test_tags: list[str]
     component_tags: list[str]
     stages: dict[str, StageResult]
+    name: str = ""
 
 
 @dataclass
@@ -82,6 +83,7 @@ class SuiteResult:
                 stages={
                     name: StageResult(**stage) for name, stage in case["stages"].items()
                 },
+                name=case.get("name", ""),
             )
             for cid, case in data["cases"].items()
         }

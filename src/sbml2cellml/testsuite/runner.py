@@ -14,6 +14,7 @@ from collections.abc import Callable
 from pathlib import Path
 
 import libsbml
+import pandas as pd
 
 from sbml2cellml import __version__, convert_cellml2sbml, convert_sbml2cellml
 from sbml2cellml.testsuite.cases import SUITE_VERSION, Case, skip_reason
@@ -101,10 +102,24 @@ def run_case(
     Returns:
         The stage results; a stage whose input stage failed is `skip`. Every
         stage is `fail` when the case itself cannot be set up (e.g. an
-        unparsable SBML file).
+        unparsable SBML file). When `case.expected` is `None`, the reference
+        simulation becomes the expected results for `libopencor` and
+        `roundtrip` when it succeeds; when it fails, those two stages are
+        `skip` (`reference failed`) instead of running, and `reference`
+        itself has no `max_excess` (there is nothing to compare it with).
     """
     assert case.sbml_path is not None
     settings = case.settings
+
+    def _result(stages: dict[str, StageResult]) -> CaseResult:
+        return CaseResult(
+            case.id,
+            list(case.test_tags),
+            list(case.component_tags),
+            stages,
+            name=case.name,
+        )
+
     try:
         model = libsbml.readSBMLFromFile(str(case.sbml_path)).getModel()
         if model is None:
@@ -114,13 +129,12 @@ def run_case(
     except Exception as err:
         message = f"setup: {_message(err)}"[:MESSAGE_LENGTH]
         stages = {stage: StageResult("fail", message) for stage in STAGES}
-        return CaseResult(
-            case.id, list(case.test_tags), list(case.component_tags), stages
-        )
+        return _result(stages)
 
     stages: dict[str, StageResult] = {}
 
     # reference
+    expected: pd.DataFrame | None = case.expected
     try:
         result = roadrunner.call(
             "simulate_sbml",
@@ -132,9 +146,12 @@ def run_case(
             relative_tolerance=RELATIVE_TOLERANCE,
             absolute_tolerance=ABSOLUTE_TOLERANCE,
         )
-        stages["reference"] = _stage(
-            compare(strip_brackets(frame(result)), case.expected, settings)
-        )
+        reference = strip_brackets(frame(result))
+        if expected is None:
+            expected = reference
+            stages["reference"] = StageResult("pass")
+        else:
+            stages["reference"] = _stage(compare(reference, expected, settings))
     except Exception as err:
         stages["reference"] = StageResult("fail", _message(err))
 
@@ -147,25 +164,26 @@ def run_case(
         stages["sbml2cellml"] = StageResult("fail", _message(err))
         for stage in ("libopencor", "cellml2sbml", "roundtrip"):
             stages[stage] = StageResult("skip", "sbml2cellml failed")
-        return CaseResult(
-            case.id, list(case.test_tags), list(case.component_tags), stages
-        )
+        return _result(stages)
 
     # libopencor
-    try:
-        result = libopencor.call(
-            "simulate_cellml",
-            cellml_path=str(cellml_path),
-            start=settings.start,
-            end=settings.end,
-            steps=settings.steps,
-            relative_tolerance=RELATIVE_TOLERANCE,
-            absolute_tolerance=ABSOLUTE_TOLERANCE,
-        )
-        df = requested_frame(frame(result), quantities, settings)
-        stages["libopencor"] = _stage(compare(df, case.expected, settings))
-    except Exception as err:
-        stages["libopencor"] = StageResult("fail", _message(err))
+    if expected is None:
+        stages["libopencor"] = StageResult("skip", "reference failed")
+    else:
+        try:
+            result = libopencor.call(
+                "simulate_cellml",
+                cellml_path=str(cellml_path),
+                start=settings.start,
+                end=settings.end,
+                steps=settings.steps,
+                relative_tolerance=RELATIVE_TOLERANCE,
+                absolute_tolerance=ABSOLUTE_TOLERANCE,
+            )
+            df = requested_frame(frame(result), quantities, settings)
+            stages["libopencor"] = _stage(compare(df, expected, settings))
+        except Exception as err:
+            stages["libopencor"] = StageResult("fail", _message(err))
 
     # cellml2sbml
     roundtrip_path = work_dir / f"{case.id}-roundtrip.xml"
@@ -175,29 +193,30 @@ def run_case(
     except Exception as err:
         stages["cellml2sbml"] = StageResult("fail", _message(err))
         stages["roundtrip"] = StageResult("skip", "cellml2sbml failed")
-        return CaseResult(
-            case.id, list(case.test_tags), list(case.component_tags), stages
-        )
+        return _result(stages)
 
     # roundtrip
-    try:
-        selections = list(dict.fromkeys([*settings.variables, *compartments]))
-        result = roadrunner.call(
-            "simulate_sbml",
-            sbml=roundtrip_path.read_text(encoding="utf-8"),
-            selections=selections,
-            start=settings.start,
-            end=settings.end,
-            steps=settings.steps,
-            relative_tolerance=RELATIVE_TOLERANCE,
-            absolute_tolerance=ABSOLUTE_TOLERANCE,
-        )
-        df = requested_frame(frame(result), quantities, settings)
-        stages["roundtrip"] = _stage(compare(df, case.expected, settings))
-    except Exception as err:
-        stages["roundtrip"] = StageResult("fail", _message(err))
+    if expected is None:
+        stages["roundtrip"] = StageResult("skip", "reference failed")
+    else:
+        try:
+            selections = list(dict.fromkeys([*settings.variables, *compartments]))
+            result = roadrunner.call(
+                "simulate_sbml",
+                sbml=roundtrip_path.read_text(encoding="utf-8"),
+                selections=selections,
+                start=settings.start,
+                end=settings.end,
+                steps=settings.steps,
+                relative_tolerance=RELATIVE_TOLERANCE,
+                absolute_tolerance=ABSOLUTE_TOLERANCE,
+            )
+            df = requested_frame(frame(result), quantities, settings)
+            stages["roundtrip"] = _stage(compare(df, expected, settings))
+        except Exception as err:
+            stages["roundtrip"] = StageResult("fail", _message(err))
 
-    return CaseResult(case.id, list(case.test_tags), list(case.component_tags), stages)
+    return _result(stages)
 
 
 def run_suite(

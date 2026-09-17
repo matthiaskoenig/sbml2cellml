@@ -128,6 +128,50 @@ def test_run_suite_setup_failure(tmp_path: Path) -> None:
         assert stage.message.startswith("setup:"), stage.message
 
 
+def test_run_suite_without_expected_uses_reference(tmp_path: Path) -> None:
+    """A case without expected results is compared against the reference."""
+    import dataclasses
+
+    case = load_cases(FIXTURES, ids=["00001"])[0]
+    case = dataclasses.replace(case, expected=None, name="first case")
+    result = run_suite([case], tmp_path)
+    stages = result.cases["00001"].stages
+    assert (
+        stages["reference"].status == "pass" and stages["reference"].max_excess is None
+    )
+    for stage in ("sbml2cellml", "libopencor", "cellml2sbml", "roundtrip"):
+        assert stages[stage].status == "pass", (stage, stages[stage].message)
+    assert result.cases["00001"].name == "first case"
+
+
+def test_run_suite_reference_failure_skips_simulations(tmp_path: Path) -> None:
+    import dataclasses
+    import shutil
+
+    root = tmp_path / "semantic"
+    shutil.copytree(FIXTURES / "00001", root / "00001")
+    sbml = root / "00001" / "00001-sbml-l3v2.xml"
+    # an algebraic rule roadrunner cannot handle, the conversion still runs
+    text = sbml.read_text().replace(
+        "<listOfReactions>",
+        '<listOfRules><algebraicRule><math xmlns="http://www.w3.org/1998/Math/MathML">'
+        "<apply><minus/><ci>S1</ci><ci>S1</ci></apply></math></algebraicRule></listOfRules>"
+        "<listOfReactions>",
+        1,
+    )
+    sbml.write_text(text)
+    case = dataclasses.replace(load_cases(root)[0], expected=None)
+    result = run_suite([case], tmp_path / "work")
+    stages = result.cases["00001"].stages
+    assert stages["reference"].status == "fail"
+    assert (
+        stages["libopencor"].status == "skip"
+        and "reference failed" in stages["libopencor"].message
+    )
+    assert stages["roundtrip"].status == "skip"
+    assert stages["sbml2cellml"].status in ("pass", "fail")
+
+
 def test_run_suite_converts_quantities(tmp_path: Path) -> None:
     """A non-unit compartment exercises the amount/concentration conversion."""
     case_dir = tmp_path / "semantic" / "90001"

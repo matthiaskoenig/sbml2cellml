@@ -1,5 +1,6 @@
 """Tests of the suite results and the regression detection."""
 
+import json
 from pathlib import Path
 
 from sbml2cellml.testsuite.results import (
@@ -35,14 +36,28 @@ def suite(status_00001: str, message: str = "") -> SuiteResult:
 def test_json_roundtrip(tmp_path: Path) -> None:
     path = tmp_path / "results.json"
     original = suite("fail", "S1 exceeds the tolerance")
+    original.cases["00001"].name = "Repressilator"
     original.to_json(path)
     text = path.read_text()
     assert text.startswith("{")
     assert '"00001"' in text and "timestamp" not in text
     loaded = SuiteResult.from_json(path)
     assert loaded == original
+    assert loaded.cases["00001"].name == "Repressilator"
     original.to_json(path)
     assert path.read_text() == text  # deterministic
+
+
+def test_from_json_without_name(tmp_path: Path) -> None:
+    path = tmp_path / "results.json"
+    original = suite("pass")
+    original.to_json(path)
+    data = json.loads(path.read_text())
+    for case in data["cases"].values():
+        case.pop("name", None)
+    path.write_text(json.dumps(data))
+    loaded = SuiteResult.from_json(path)
+    assert loaded.cases["00001"].name == ""
 
 
 def test_json_rounds_max_excess(tmp_path: Path) -> None:
