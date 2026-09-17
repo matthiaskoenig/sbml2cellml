@@ -37,8 +37,16 @@ ABSOLUTE_TOLERANCE = 1e-12
 
 
 def _message(err: BaseException) -> str:
-    """Type and first line of an exception, shortened."""
-    first = str(err).strip().splitlines()[0] if str(err).strip() else ""
+    """Type and first line of an exception, shortened.
+
+    When the first line ends with `:` (e.g. a `CellMLValidationError` whose
+    message continues with the list of issues), the second line is appended
+    too, so the message carries the first issue instead of just the count.
+    """
+    lines = str(err).strip().splitlines()
+    first = lines[0] if lines else ""
+    if first.endswith(":") and len(lines) > 1:
+        first = f"{first} {lines[1].strip()}"
     return f"{type(err).__name__}: {first}"[:MESSAGE_LENGTH]
 
 

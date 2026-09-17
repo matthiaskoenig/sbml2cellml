@@ -68,6 +68,8 @@ def compare(
         The comparison; `passed` when every variable is within the tolerance
         at every time point.
     """
+    if result.columns.duplicated().any() or expected.columns.duplicated().any():
+        return _failed("duplicate column names")
     if len(result) != len(expected):
         return _failed(f"{len(result)} rows instead of {len(expected)}")
     if len(expected) == 0:
@@ -145,9 +147,13 @@ def requested_frame(
         variable missing in `df` is left out (the comparison reports it).
 
     Raises:
-        CompareError: a variable needs converting between amount and
-            concentration and its compartment column is missing from `df`.
+        CompareError: `df` has no time column (an algebraic-only model gives
+            a libopencor result without a variable of integration), or a
+            variable needs converting between amount and concentration and
+            its compartment column is missing from `df`.
     """
+    if TIME not in df.columns:
+        raise CompareError("no time column in the simulation result")
     out = pd.DataFrame({TIME: df[TIME]})
     for variable in settings.variables:
         if variable not in df.columns:

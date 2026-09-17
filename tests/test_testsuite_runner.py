@@ -9,10 +9,31 @@ import libsbml
 from sbml2cellml import __version__
 from sbml2cellml.testsuite.cases import SUITE_VERSION, load_cases
 from sbml2cellml.testsuite.results import STAGES, STATUSES, SuiteResult
-from sbml2cellml.testsuite.runner import reference_selections, run_suite
+from sbml2cellml.testsuite.runner import _message, reference_selections, run_suite
 from tests.sbml_models import simple_model, write_sbml
 
 FIXTURES = Path(__file__).parent / "data" / "testsuite" / "semantic"
+
+
+def test_message_appends_second_line_when_first_ends_with_colon() -> None:
+    class CellMLValidationError(Exception):
+        pass
+
+    err = CellMLValidationError(
+        "CellML model 'x' converted from '/some/path' has 4 errors:\n"
+        "  - the first issue\n"
+        "  - the second issue"
+    )
+    message = _message(err)
+    assert message.startswith("CellMLValidationError: ")
+    assert "has 4 errors:" in message
+    assert "the first issue" in message
+    assert "the second issue" not in message
+
+
+def test_message_single_line_unchanged() -> None:
+    err = ValueError("no time column")
+    assert _message(err) == "ValueError: no time column"
 
 
 def test_reference_selections() -> None:

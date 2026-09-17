@@ -77,6 +77,20 @@ def test_compare_nan_fails() -> None:
     assert not compare(result, expected(), SETTINGS).passed
 
 
+def test_compare_duplicate_columns_fails() -> None:
+    result = expected().copy()
+    result.columns = ["time", "S1", "S1"]
+    comparison = compare(result, expected(), SETTINGS)
+    assert not comparison.passed
+    assert "duplicate column names" in comparison.message
+
+    dup_expected = expected().copy()
+    dup_expected.columns = ["time", "time", "S2"]
+    comparison = compare(expected(), dup_expected, SETTINGS)
+    assert not comparison.passed
+    assert "duplicate column names" in comparison.message
+
+
 def test_compare_zero_rows() -> None:
     empty = pd.DataFrame({"time": [], "S1": [], "S2": []})
     comparison = compare(empty, empty.copy(), SETTINGS)
@@ -150,6 +164,27 @@ def test_requested_frame_missing_compartment_raises() -> None:
     )
     with pytest.raises(CompareError, match="cell"):
         requested_frame(df, quantities, swapped)
+
+
+def test_requested_frame_no_time_column_raises() -> None:
+    doc = libsbml.SBMLDocument(3, 2)
+    model = doc.createModel()
+    c = model.createCompartment()
+    c.setId("cell")
+    c.setSize(2.0)
+    c.setConstant(True)
+    s = model.createSpecies()
+    s.setId("S1")
+    s.setCompartment("cell")
+    s.setHasOnlySubstanceUnits(True)
+    s.setConstant(False)
+    s.setBoundaryCondition(False)
+    quantities = species_quantities(model)
+    # an algebraic-only model: libopencor result without a variable of
+    # integration
+    df = pd.DataFrame({"S1": [4.0, 2.0]})
+    with pytest.raises(CompareError, match="no time column"):
+        requested_frame(df, quantities, SETTINGS)
 
 
 def test_strip_brackets() -> None:

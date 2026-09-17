@@ -48,6 +48,27 @@ def test_parse_model_info() -> None:
     assert info["testType"] == ["TimeCourse"]
     assert "Amount" in info["testTags"]
     assert "Compartment" in info["componentTags"]
+    # the fixture's prose contains a "Note:" line after a blank line, which
+    # must not be parsed as a key
+    assert "Note" not in info
+
+
+def test_parse_model_info_ignores_prose_after_header() -> None:
+    text = (
+        "(*\n"
+        "\n"
+        "category:      Test\n"
+        "testType:      TimeCourse\n"
+        "\n"
+        "This model does something.\n"
+        "\n"
+        "Note: something that looks like a key but is prose.\n"
+        "\n"
+        "*)\n"
+    )
+    info = parse_model_info(text)
+    assert info == {"category": ["Test"], "testType": ["TimeCourse"]}
+    assert "Note" not in info
 
 
 def test_load_case() -> None:
@@ -58,6 +79,21 @@ def test_load_case() -> None:
     assert list(case.expected.columns) == ["time", "S1", "S2"]
     assert len(case.expected) == 51
     assert skip_reason(case) is None
+
+
+def test_load_case_renames_time_column(tmp_path: Path) -> None:
+    import shutil
+
+    case_dir = tmp_path / "10006"
+    shutil.copytree(FIXTURES / "00001", case_dir)
+    for f in list(case_dir.iterdir()):
+        f.rename(case_dir / f.name.replace("00001", "10006"))
+    results = case_dir / "10006-results.csv"
+    text = results.read_text()
+    assert text.startswith("time,")
+    results.write_text("Time," + text.split(",", 1)[1])
+    case = load_case(case_dir)
+    assert list(case.expected.columns) == ["time", "S1", "S2"]
 
 
 def test_load_cases_sorted_and_filtered() -> None:
@@ -145,3 +181,34 @@ def test_ensure_suite_downloads_once(
     assert calls == [cases.SUITE_URL.format(version=cases.SUITE_VERSION)]
     ensure_suite()
     assert len(calls) == 1
+
+
+def test_ensure_suite_corrupt_zip_raises_and_leaves_no_semantic(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    class Response:
+        def __init__(self) -> None:
+            self.content = b"not a zip file"
+
+        def raise_for_status(self) -> None:
+            pass
+
+        def iter_content(self, chunk_size: int):
+            yield self.content
+
+        def __enter__(self) -> "Response":
+            return self
+
+        def __exit__(self, *args: object) -> None:
+            pass
+
+    def fake_get(url: str, stream: bool, timeout: float) -> Response:
+        return Response()
+
+    monkeypatch.setattr(cases.requests, "get", fake_get)
+    monkeypatch.setenv(cases.CACHE_ENV, str(tmp_path))
+    with pytest.raises(TestSuiteError):
+        ensure_suite()
+    root = tmp_path / "sbml-test-suite" / cases.SUITE_VERSION
+    assert not (root / "semantic").exists()
+    assert not (root / "extracting").exists()

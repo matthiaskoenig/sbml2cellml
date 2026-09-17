@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from sbml2cellml.testsuite.cli import main
-from sbml2cellml.testsuite.report import render_report, write_report
+from sbml2cellml.testsuite.report import _reason, render_report, write_report
 from sbml2cellml.testsuite.results import STAGES, CaseResult, StageResult, SuiteResult
 
 FIXTURES = Path(__file__).parent / "data" / "testsuite" / "semantic"
@@ -40,6 +40,65 @@ def test_render_report() -> None:
     assert "| package comp | 2 |" in text
     assert "| 00002 | Compartment | pass | pass | fail | pass | fail |" in text
     assert "—" not in text
+
+
+def test_reason_groups_tolerance_messages() -> None:
+    assert (
+        _reason("S1 exceeds the tolerance by 0.5")
+        == _reason("S1 exceeds the tolerance by 0.7")
+        == "S1 exceeds the tolerance"
+    )
+
+
+def test_reason_groups_cellml_validation_messages() -> None:
+    a = (
+        "CellMLValidationError: CellML model 'case00004' converted from "
+        "'/home/mkoenig/.cache/sbml2cellml/sbml-test-suite/3.5.0/semantic/"
+        "00004/00004-sbml-l3v2.xml' has 8 errors:"
+    )
+    b = (
+        "CellMLValidationError: CellML model 'case00014' converted from "
+        "'/home/mkoenig/.cache/sbml2cellml/sbml-test-suite/3.5.0/semantic/"
+        "00014/00014-sbml-l3v2.xml' has 12 errors:"
+    )
+    assert _reason(a) == _reason(b)
+
+
+def test_render_report_groups_failure_reasons() -> None:
+    ok = {stage: StageResult("pass") for stage in STAGES}
+    variants = [
+        ("00010", "S1 exceeds the tolerance by 0.5"),
+        ("00011", "S1 exceeds the tolerance by 0.7"),
+    ]
+    cases = {}
+    for cid, message in variants:
+        stages = dict(ok)
+        stages["libopencor"] = StageResult("fail", message, 0.5)
+        cases[cid] = CaseResult(cid, ["Amount"], ["Compartment"], stages)
+    validation = [
+        (
+            "00020",
+            "CellMLValidationError: CellML model 'case00020' converted from "
+            "'/a/00020/00020-sbml-l3v2.xml' has 8 errors:",
+        ),
+        (
+            "00021",
+            "CellMLValidationError: CellML model 'case00021' converted from "
+            "'/a/00021/00021-sbml-l3v2.xml' has 12 errors:",
+        ),
+    ]
+    for cid, message in validation:
+        stages = dict(ok)
+        stages["sbml2cellml"] = StageResult("fail", message)
+        for stage in ("libopencor", "cellml2sbml", "roundtrip"):
+            stages[stage] = StageResult("skip", "sbml2cellml failed")
+        cases[cid] = CaseResult(cid, ["Amount"], ["Compartment"], stages)
+    result = SuiteResult("3.5.0", "0.1.0", cases, {})
+    text = render_report(result)
+    assert "| S1 exceeds the tolerance | 2 |" in text
+    assert text.count("S1 exceeds the tolerance") == 1
+    assert "| CellMLValidationError: CellML model '...' converted from" in text
+    assert text.count("CellMLValidationError: CellML model '...' converted from") == 1
 
 
 def test_write_report(tmp_path: Path) -> None:

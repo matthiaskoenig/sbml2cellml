@@ -10,6 +10,7 @@ first use.
 import logging
 import os
 import re
+import shutil
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -87,10 +88,25 @@ def ensure_suite(version: str = SUITE_VERSION, cache: Path | None = None) -> Pat
                     f_zip.write(chunk)
     except requests.RequestException as err:
         raise TestSuiteError(f"Download of {url} failed: {err}") from err
-    with zipfile.ZipFile(zip_path) as archive:
-        archive.extractall(root)
-    if not semantic.is_dir():
+    # extract into a scratch directory next to the target and rename it into
+    # place only once the extraction is complete, so a process killed mid
+    # extraction never leaves a half `semantic/` that a later call returns
+    extracting = root / "extracting"
+    if extracting.is_dir():
+        shutil.rmtree(extracting)
+    try:
+        with zipfile.ZipFile(zip_path) as archive:
+            archive.extractall(extracting)
+    except (zipfile.BadZipFile, OSError) as err:
+        shutil.rmtree(extracting, ignore_errors=True)
+        raise TestSuiteError(f"Could not extract {zip_path}: {err}") from err
+    extracted_semantic = extracting / "semantic"
+    if not extracted_semantic.is_dir():
+        shutil.rmtree(extracting, ignore_errors=True)
         raise TestSuiteError(f"No 'semantic' directory in {zip_path}")
+    os.replace(extracted_semantic, semantic)
+    shutil.rmtree(extracting, ignore_errors=True)
+    zip_path.unlink()
     logger.info("SBML test suite unpacked to %s", semantic)
     return semantic
 
@@ -164,13 +180,23 @@ def parse_settings(text: str) -> Settings:
 def parse_model_info(text: str) -> dict[str, list[str]]:
     """Parse the `key: values` lines of a `NNNNN-model.m` file.
 
+    A model file opens with a comment marker on its own line, a blank line,
+    the header block of `key: value` pairs, a blank line and then the prose
+    description. Only the header block (its lines up to the first blank
+    line that follows it) is parsed, so prose describing the model later in
+    the file cannot be mistaken for `key: value` pairs.
+
     Args:
         text: content of the file.
 
     Returns:
         The values per key, e.g. `testTags`, `componentTags`, `testType`.
     """
-    return {key: list(_split(value)) for key, value in _key_values(text).items()}
+    for block in re.split(r"\n[ \t]*\n", text):
+        values = _key_values(block)
+        if values:
+            return {key: list(_split(value)) for key, value in values.items()}
+    return {}
 
 
 @dataclass(frozen=True)
@@ -214,6 +240,10 @@ def load_case(case_dir: Path) -> Case:
     if sbml_path is not None and not sbml_path.is_file():
         sbml_path = None
     info = parse_model_info((case_dir / f"{cid}-model.m").read_text(encoding="utf-8"))
+    expected = pd.read_csv(case_dir / f"{cid}-results.csv")
+    # the first column is always the variable of integration, named "time"
+    # in most cases but "Time" (or another case) in many of them
+    expected = expected.rename(columns={expected.columns[0]: "time"})
     return Case(
         id=cid,
         case_dir=case_dir,
@@ -221,7 +251,7 @@ def load_case(case_dir: Path) -> Case:
         settings=parse_settings(
             (case_dir / f"{cid}-settings.txt").read_text(encoding="utf-8")
         ),
-        expected=pd.read_csv(case_dir / f"{cid}-results.csv"),
+        expected=expected,
         test_tags=tuple(info.get("testTags", [])),
         component_tags=tuple(info.get("componentTags", [])),
         test_type=(info.get("testType") or [""])[0],
