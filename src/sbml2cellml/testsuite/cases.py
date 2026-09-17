@@ -49,6 +49,8 @@ TIME_COURSE = "TimeCourse"
 class TestSuiteError(RuntimeError):
     """The test suite cannot be obtained or a case cannot be read."""
 
+    __test__ = False  # the name starts with Test, pytest must not collect it
+
 
 def cache_dir() -> Path:
     """Root of the cache, `SBML2CELLML_CACHE` or `~/.cache/sbml2cellml`."""
