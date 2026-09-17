@@ -132,6 +132,10 @@ def _split(value: str) -> tuple[str, ...]:
 def parse_settings(text: str) -> Settings:
     """Parse a settings file.
 
+    Cases of a test type other than `TimeCourse` (e.g. `FluxBalanceSteadyState`)
+    leave `start`, `duration` and `steps` empty; they parse to `0` and are never
+    used because `skip_reason` filters them out before a run.
+
     Args:
         text: content of `NNNNN-settings.txt`.
 
@@ -146,9 +150,9 @@ def parse_settings(text: str) -> Settings:
         if key not in values:
             raise TestSuiteError(f"Settings without '{key}'.")
     return Settings(
-        start=float(values["start"]),
-        duration=float(values["duration"]),
-        steps=int(values["steps"]),
+        start=float(values["start"] or "0"),
+        duration=float(values["duration"] or "0"),
+        steps=int(values["steps"] or "0"),
         variables=_split(values.get("variables", "")),
         absolute=float(values.get("absolute", "0")),
         relative=float(values.get("relative", "0")),

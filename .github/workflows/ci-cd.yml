@@ -48,7 +48,15 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         enable-cache: true
+    - name: Cache the SBML test suite
+      uses: actions/cache@v6
+      with:
+        path: ~/.cache/sbml2cellml
+        key: sbml-test-suite-3.5.0
     - name: Test with tox
+      env:
+        # the complete SBML test suite runs on linux only
+        SBML2CELLML_TESTSUITE: ${{ runner.os == 'Linux' && '1' || '' }}
       run:
         uvx --with tox-uv tox -e py${{ matrix.python-version }}
 

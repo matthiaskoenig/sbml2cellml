@@ -91,10 +91,14 @@ def compare(
             target = expected[variable].to_numpy(dtype=float)
         except (ValueError, TypeError):
             return _failed(f"variable {variable} is not numeric")
-        error = np.abs(values - target)
-        error = np.where(np.isnan(error), np.inf, error)
-        tolerance = settings.absolute + settings.relative * np.abs(target)
-        excess = float(np.max(error - tolerance))
+        # a diverged simulation can produce inf; inf - inf is nan by definition,
+        # which is deliberately turned into "exceeds the tolerance" below rather
+        # than a numpy RuntimeWarning
+        with np.errstate(invalid="ignore"):
+            error = np.abs(values - target)
+            error = np.where(np.isnan(error), np.inf, error)
+            tolerance = settings.absolute + settings.relative * np.abs(target)
+            excess = float(np.max(error - tolerance))
         passed = excess <= 0
         comparisons.append(
             VariableComparison(variable, float(np.max(error)), excess, passed)
