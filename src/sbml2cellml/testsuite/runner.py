@@ -30,6 +30,10 @@ logger = logging.getLogger(__name__)
 
 #: length of a failure message
 MESSAGE_LENGTH = 200
+#: tight solver tolerances so the comparison measures the conversion, not the
+#: integrator; passed to every roadrunner and libopencor simulation
+RELATIVE_TOLERANCE = 1e-9
+ABSOLUTE_TOLERANCE = 1e-12
 
 
 def _message(err: BaseException) -> str:
@@ -90,6 +94,8 @@ def run_case(
             start=settings.start,
             end=settings.end,
             steps=settings.steps,
+            relative_tolerance=RELATIVE_TOLERANCE,
+            absolute_tolerance=ABSOLUTE_TOLERANCE,
         )
         stages["reference"] = _stage(
             compare(strip_brackets(frame(result)), case.expected, settings)
@@ -118,6 +124,8 @@ def run_case(
             start=settings.start,
             end=settings.end,
             steps=settings.steps,
+            relative_tolerance=RELATIVE_TOLERANCE,
+            absolute_tolerance=ABSOLUTE_TOLERANCE,
         )
         df = requested_frame(frame(result), quantities, settings)
         stages["libopencor"] = _stage(compare(df, case.expected, settings))
@@ -146,6 +154,8 @@ def run_case(
             start=settings.start,
             end=settings.end,
             steps=settings.steps,
+            relative_tolerance=RELATIVE_TOLERANCE,
+            absolute_tolerance=ABSOLUTE_TOLERANCE,
         )
         df = requested_frame(frame(result), quantities, settings)
         stages["roundtrip"] = _stage(compare(df, case.expected, settings))

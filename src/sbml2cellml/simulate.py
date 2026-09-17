@@ -61,7 +61,12 @@ def _scalar(value: Any) -> float:
 
 
 def run_timecourse(
-    cellml_path: Path, start: float = 0.0, end: float = 100.0, steps: int = 100
+    cellml_path: Path,
+    start: float = 0.0,
+    end: float = 100.0,
+    steps: int = 100,
+    relative_tolerance: float | None = None,
+    absolute_tolerance: float | None = None,
 ) -> tuple[pd.DataFrame, dict[str, str]]:
     """Run a uniform timecourse of a CellML model.
 
@@ -70,6 +75,10 @@ def run_timecourse(
         start: start time of the output.
         end: end time of the output.
         steps: number of steps, the output has `steps + 1` rows.
+        relative_tolerance: relative tolerance of the ODE solver, the
+            libopencor default when `None`.
+        absolute_tolerance: absolute tolerance of the ODE solver, the
+            libopencor default when `None`.
 
     Returns:
         The timecourse with the variable of integration in the first column
@@ -97,6 +106,10 @@ def run_timecourse(
     simulation.output_start_time = start
     simulation.output_end_time = end
     simulation.number_of_steps = steps
+    if relative_tolerance is not None:
+        simulation.ode_solver.relative_tolerance = relative_tolerance
+    if absolute_tolerance is not None:
+        simulation.ode_solver.absolute_tolerance = absolute_tolerance
 
     instance = document.instantiate()
     _raise_on_issues("instance", instance.issues)

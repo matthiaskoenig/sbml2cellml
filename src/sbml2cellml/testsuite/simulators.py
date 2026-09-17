@@ -12,7 +12,13 @@ from typing import Any
 
 
 def simulate_sbml(
-    sbml: str, selections: list[str], start: float, end: float, steps: int
+    sbml: str,
+    selections: list[str],
+    start: float,
+    end: float,
+    steps: int,
+    relative_tolerance: float | None = None,
+    absolute_tolerance: float | None = None,
 ) -> dict[str, Any]:
     """Uniform timecourse of an SBML model with roadrunner.
 
@@ -22,6 +28,10 @@ def simulate_sbml(
         start: start time.
         end: end time.
         steps: number of intervals, the result has `steps + 1` rows.
+        relative_tolerance: relative tolerance of the integrator, the
+            roadrunner default when `None`.
+        absolute_tolerance: absolute tolerance of the integrator, the
+            roadrunner default when `None`.
 
     Returns:
         `columns` (the selections with `time` first) and `rows`.
@@ -30,6 +40,10 @@ def simulate_sbml(
 
     roadrunner.Logger.setLevel(roadrunner.Logger.LOG_ERROR)
     rr = roadrunner.RoadRunner(sbml)
+    if relative_tolerance is not None:
+        rr.integrator.setValue("relative_tolerance", relative_tolerance)
+    if absolute_tolerance is not None:
+        rr.integrator.setValue("absolute_tolerance", absolute_tolerance)
     rr.timeCourseSelections = ["time", *selections]
     result = rr.simulate(start, end, steps + 1)
     return {
@@ -39,7 +53,12 @@ def simulate_sbml(
 
 
 def simulate_cellml(
-    cellml_path: str, start: float, end: float, steps: int
+    cellml_path: str,
+    start: float,
+    end: float,
+    steps: int,
+    relative_tolerance: float | None = None,
+    absolute_tolerance: float | None = None,
 ) -> dict[str, Any]:
     """Uniform timecourse of a CellML model with libopencor.
 
@@ -48,13 +67,24 @@ def simulate_cellml(
         start: start time.
         end: end time.
         steps: number of intervals.
+        relative_tolerance: relative tolerance of the ODE solver, the
+            libopencor default when `None`.
+        absolute_tolerance: absolute tolerance of the ODE solver, the
+            libopencor default when `None`.
 
     Returns:
         `columns` (`time` first, then every variable) and `rows`.
     """
     from sbml2cellml.simulate import run_timecourse
 
-    df, _ = run_timecourse(Path(cellml_path), start=start, end=end, steps=steps)
+    df, _ = run_timecourse(
+        Path(cellml_path),
+        start=start,
+        end=end,
+        steps=steps,
+        relative_tolerance=relative_tolerance,
+        absolute_tolerance=absolute_tolerance,
+    )
     return {"columns": list(df.columns), "rows": df.to_numpy().tolist()}
 
 

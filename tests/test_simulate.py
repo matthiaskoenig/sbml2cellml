@@ -60,6 +60,19 @@ def test_run_timecourse_missing_file(tmp_path: Path) -> None:
         run_timecourse(tmp_path / "missing.cellml")
 
 
+def test_run_timecourse_tolerances() -> None:
+    default_df, _ = run_timecourse(TEST_MODEL_PATH, start=0.0, end=50.0, steps=10)
+    tight_df, _ = run_timecourse(
+        TEST_MODEL_PATH,
+        start=0.0,
+        end=50.0,
+        steps=10,
+        relative_tolerance=1e-9,
+        absolute_tolerance=1e-12,
+    )
+    assert np.allclose(tight_df["m"].to_numpy(), default_df["m"].to_numpy(), rtol=1e-6)
+
+
 def test_plot_timecourse() -> None:
     df, units = run_timecourse(TEST_MODEL_PATH, end=10.0, steps=5)
     fig = plot_timecourse(df, units, show=False)
