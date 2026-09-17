@@ -38,28 +38,13 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 
 | reason | cases | examples |
 | --- | --- | --- |
-| CellMLValidationError: Math cn element with the value '...' does not have a valid cellml:units attribute. CellML ident | 210 | 00004, 00021, 00029, 00030, 00031, 00032, 00051, 00052, 00053, 00054, ... (210 in total) |
+| CellMLValidationError: Math cn element with the value '...' does not have a valid cellml:units attribute. CellML identifiers must contain one or more basic Lati | 514 | 00004, 00014, 00021, 00029, 00030, 00031, 00032, 00033, 00051, 00052, ... (514 in total) |
+| CellMLValidationError: MathML ci element has the child text '...' which does not correspond with any variable names present in component '...'. | 192 | 00025, 00027, 00034, 00035, 00057, 00078, 00079, 00080, 00084, 00085, ... (192 in total) |
 | CellMLValidationError: The type of variable '...' in component '...' is unknown. | 145 | 00920, 00921, 00922, 00930, 00931, 00934, 00935, 00949, 00950, 00952, ... (145 in total) |
 | CellMLValidationError: Math has a '...' element that is not a supported MathML element. | 144 | 00028, 00173, 00851, 00852, 00853, 00854, 00855, 00856, 00857, 00858, ... (144 in total) |
-| CellMLValidationError: Math cn element with the value '...' does not have a valid cellml:units attribute. CellML iden | 110 | 00014, 00065, 00105, 00106, 00165, 00166, 00167, 00168, 00169, 00170, ... (110 in total) |
-| CellMLValidationError: Math cn element with the value '...' does not have a valid cellml:units attribute. CellML id | 104 | 00081, 00148, 00149, 00150, 00319, 00320, 00321, 00329, 00616, 00617, ... (104 in total) |
-| CellMLValidationError: Math cn element with the value '...' does not have a valid cellml:units attribute. CellML ide | 77 | 00033, 00067, 00083, 00177, 00194, 00310, 00311, 00312, 00313, 00314, ... (77 in total) |
-| CellMLValidationError: MathML ci element has the child text '...' which does not correspond with any variable n | 68 | 00025, 00034, 00078, 00079, 00084, 00085, 00095, 00096, 00097, 00098, ... (68 in total) |
-| CellMLValidationError: MathML ci element has the child text '...' which does not correspond with any variable | 60 | 00035, 00086, 00101, 00102, 00103, 00109, 00110, 00111, 00112, 00121, ... (60 in total) |
-| CellMLValidationError: MathML ci element has the child text '...' which does not correspond with any variable names | 25 | 00122, 00123, 00124, 00712, 00713, 00714, 00740, 00741, 00742, 00751, ... (25 in total) |
-| CellMLValidationError: MathML ci element has the child text '...' which does not correspond with any variable names p | 19 | 00389, 00392, 00395, 00446, 00449, 00452, 00522, 00523, 00524, 00566, ... (19 in total) |
 | MathMLError: Formula does not parse: '...': Error when parsing input '...' at position N: NULL input. | 11 | 01235, 01236, 01416, 01461, 01464, 01465, 01552, 01553, 01555, 01556, ... (11 in total) |
-| CellMLValidationError: Math cn element with the value '...' does not have a valid cellml:units attribute. CellML | 9 | 00066, 00333, 00343, 00344, 00345, 00346, 00347, 00711, 01008 |
-| CellMLValidationError: MathML ci element has the child text '...' which does not correspond with any variable name | 6 | 00080, 00669, 00739, 01498, 01650, 01741 |
-| CellMLValidationError: Math cn element with the value '...' does not have a valid cellml:units attribute. CellML i | 4 | 00843, 01043, 01627, 01774 |
-| CellMLValidationError: MathML ci element has the child text '...' which does not correspond with any variable na | 4 | 01449, 01450, 01451, 01486 |
-| CellMLValidationError: MathML ci element has the child text '...' which does not correspond with any variable names pr | 3 | 00027, 00057, 00595 |
-| CellMLValidationError: Component '...' contains multiple variables with the name '...'. Valid variable names must | 2 | 01820, 01821 |
-| CellMLValidationError: MathML ci element has the child text '...' which does not correspond with any varia | 2 | 01492, 01493 |
-| CellMLValidationError: MathML ci element has the child text '...' which does not correspond with any variabl | 2 | 01563, 01566 |
-| CellMLValidationError: MathML ci element has the child text '...' which does not correspond with any variable nam | 2 | 01452, 01453 |
-| CellMLValidationError: MathML ci element has the child text '...' which does not correspond with any variab | 1 | 01478 |
-| CellMLValidationError: Variable '...' in component '...' has an invalid initial value '...'. Initial values must be | 1 | 00951 |
+| CellMLValidationError: Component '...' contains multiple variables with the name '...'. Valid variable names must be unique to their component. | 2 | 01820, 01821 |
+| CellMLValidationError: Variable '...' in component '...' has an invalid initial value '...'. Initial values must be a real number string or a variable reference | 1 | 00951 |
 
 ### libopencor
 
