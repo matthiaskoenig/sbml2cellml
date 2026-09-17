@@ -40,7 +40,10 @@ def _reason(message: str) -> str:
     """
     if "[ERROR]" in message:
         exception_type = message.split(":", 1)[0]
-        after = message.split("[ERROR] ", 1)[1]
+        # split on "[ERROR]" without the trailing space and strip instead,
+        # so a message that ends exactly with "[ERROR]" (no text after)
+        # does not raise IndexError
+        after = message.split("[ERROR]", 1)[1].strip()
         after = _QUOTED.sub("'...'", after)
         after = _NUMBER.sub("N", after)
         reason = f"{exception_type}: {after}"

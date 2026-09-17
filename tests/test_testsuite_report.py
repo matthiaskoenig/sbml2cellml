@@ -77,6 +77,13 @@ def test_reason_groups_cellml_validation_messages() -> None:
     assert _reason(a) == _reason(b)
 
 
+def test_reason_handles_message_ending_with_error_marker() -> None:
+    # "[ERROR]" with no text after it must not raise IndexError
+    reason = _reason("CellMLValidationError: [ERROR]")
+    assert isinstance(reason, str)
+    assert reason == "CellMLValidationError:"
+
+
 def test_render_report_groups_failure_reasons() -> None:
     ok = {stage: StageResult("pass") for stage in STAGES}
     variants = [

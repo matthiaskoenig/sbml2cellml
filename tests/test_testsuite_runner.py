@@ -16,7 +16,10 @@ from tests.sbml_models import simple_model, write_sbml
 FIXTURES = Path(__file__).parent / "data" / "testsuite" / "semantic"
 
 
-def test_message_appends_second_line_when_first_ends_with_colon() -> None:
+def test_message_drops_wrapper_line_when_first_ends_with_colon() -> None:
+    # the wrapper line ("CellML model ... has N errors:") is dropped
+    # entirely, not just appended to, so the digit count of N never shifts
+    # a later truncation and splits one issue across several report rows
     class CellMLValidationError(Exception):
         pass
 
@@ -27,7 +30,7 @@ def test_message_appends_second_line_when_first_ends_with_colon() -> None:
     )
     message = _message(err)
     assert message.startswith("CellMLValidationError: ")
-    assert "has 4 errors:" in message
+    assert "has 4 errors:" not in message
     assert "the first issue" in message
     assert "the second issue" not in message
 

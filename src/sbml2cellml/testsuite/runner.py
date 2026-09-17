@@ -29,8 +29,11 @@ from sbml2cellml.testsuite.worker import SimulatorWorker, frame
 
 logger = logging.getLogger(__name__)
 
-#: length of a failure message
-MESSAGE_LENGTH = 200
+#: length of a failure message; generous, so the normalised reason key that
+#: report._reason computes from it (REASON_LENGTH = 160, after quotes and
+#: numbers collapse) always comes from the complete issue text rather than a
+#: prefix cut short by the wrapper line
+MESSAGE_LENGTH = 400
 #: tight solver tolerances so the comparison measures the conversion, not the
 #: integrator; passed to every roadrunner and libopencor simulation
 RELATIVE_TOLERANCE = 1e-9
@@ -42,21 +45,24 @@ _ABSOLUTE_PATH = re.compile(r"'[^']*/([^/']+)'")
 
 
 def _message(err: BaseException) -> str:
-    """Type and first line of an exception, shortened.
+    """Type and the relevant line of an exception, shortened.
 
     Absolute paths quoted in the exception text are reduced to their
     basename first, so the message does not depend on `$HOME` or the suite
-    location. When the first line ends with `:` (e.g. a
-    `CellMLValidationError` whose message continues with the list of
-    issues), the second line is appended too, so the message carries the
-    first issue instead of just the count.
+    location. When the first line ends with `:` and a second line exists
+    (e.g. a `CellMLValidationError` whose message is a wrapper line -
+    `CellML model '...' converted from '...' has N errors:` - followed by
+    the list of issues), the wrapper line is dropped entirely and the
+    message is built from the second line instead, so it carries the
+    complete first issue rather than a wrapper prefix cut short by however
+    many digits the error count has. Otherwise the first line is used as
+    is.
     """
     text = _ABSOLUTE_PATH.sub(r"'\1'", str(err))
     lines = text.strip().splitlines()
     first = lines[0] if lines else ""
-    if first.endswith(":") and len(lines) > 1:
-        first = f"{first} {lines[1].strip()}"
-    return f"{type(err).__name__}: {first}"[:MESSAGE_LENGTH]
+    content = lines[1].strip() if first.endswith(":") and len(lines) > 1 else first
+    return f"{type(err).__name__}: {content}"[:MESSAGE_LENGTH]
 
 
 def _stage(comparison: Comparison) -> StageResult:

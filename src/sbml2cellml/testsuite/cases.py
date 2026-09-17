@@ -261,10 +261,11 @@ def load_case(case_dir: Path) -> Case:
     expected = pd.read_csv(case_dir / f"{cid}-results.csv")
     # the first column is always the variable of integration, named "time"
     # in most cases but "Time" (or another case) in many of them; renamed
-    # only when no other column is already "time" (e.g. 01820/01821, whose
-    # first column is a species also named "time"), else left as is so the
-    # comparison reports "duplicate column names" instead of silently
-    # dropping the real time column
+    # only when no other column is already "time" so it does not collide
+    # with a variable of that name (e.g. 01820/01821, which declare a
+    # variable "time"/"Time"/"TIME" among their settings variables); those
+    # two cases fail with "duplicate column names" regardless, from
+    # roadrunner's own selection labels colliding, not from this rename
     if "time" not in expected.columns[1:]:
         expected = expected.rename(columns={expected.columns[0]: "time"})
     return Case(
