@@ -68,6 +68,7 @@ dev = [
 
 [project.scripts]
 sbml2cellml = "sbml2cellml.cli:main"
+cellml2sbml = "sbml2cellml.cli:main_cellml2sbml"
 
 [project.urls]
 Homepage = "https://matthiaskoenig.github.io/sbml2cellml"

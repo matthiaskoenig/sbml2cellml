@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from sbml2cellml.cli import main
-from tests.conftest import MODELS_DIR
+from sbml2cellml.cli import main, main_cellml2sbml
+from tests.conftest import MODELS_DIR, TEST_MODEL_PATH
 
 
 def test_convert_with_output(
@@ -89,6 +89,76 @@ def test_entry_point_installed(tmp_path: Path) -> None:
             "-o",
             str(out),
         ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert out.is_file()
+
+
+def test_cellml2sbml_convert_with_output(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    out = tmp_path / "test_model.xml"
+    code = main_cellml2sbml([str(TEST_MODEL_PATH), "-o", str(out)])
+    assert code == 0
+    assert out.is_file()
+    assert str(out) in capsys.readouterr().out
+
+
+def test_cellml2sbml_default_output_next_to_input(tmp_path: Path) -> None:
+    cellml_path = tmp_path / "test_model.cellml"
+    shutil.copy(TEST_MODEL_PATH, cellml_path)
+    assert main_cellml2sbml([str(cellml_path)]) == 0
+    assert (tmp_path / "test_model.xml").is_file()
+
+
+def test_cellml2sbml_missing_input(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    code = main_cellml2sbml([str(tmp_path / "missing.cellml")])
+    assert code == 1
+    assert "missing.cellml" in capsys.readouterr().err
+
+
+def test_cellml2sbml_invalid_model(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    path = tmp_path / "invalid.cellml"
+    path.write_text(
+        '<?xml version="1.0"?><model xmlns="http://www.cellml.org/cellml/2.0#" name="bad">'
+        '<component name="c"><variable name="x" units="second"/>'
+        '<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><eq/><ci>x</ci><ci>y</ci></apply></math>'
+        "</component></model>"
+    )
+    code = main_cellml2sbml([str(path)])
+    assert code == 1
+    assert "analysed" in capsys.readouterr().err
+
+
+def test_cellml2sbml_verbose_logs(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    out = tmp_path / "test_model.xml"
+    assert main_cellml2sbml([str(TEST_MODEL_PATH), "-o", str(out), "-v"]) == 0
+    captured = capsys.readouterr()
+    assert "parameter for variable" in captured.out + captured.err
+
+
+def test_cellml2sbml_version(capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit) as info:
+        main_cellml2sbml(["--version"])
+    assert info.value.code == 0
+    assert "0.1.0" in capsys.readouterr().out
+
+
+def test_cellml2sbml_entry_point_installed(tmp_path: Path) -> None:
+    out = tmp_path / "test_model.xml"
+    script = shutil.which("cellml2sbml")
+    assert script is not None, "cellml2sbml console script not installed, run uv sync"
+    result = subprocess.run(
+        [script, str(TEST_MODEL_PATH), "-o", str(out)],
         capture_output=True,
         text=True,
         check=False,
