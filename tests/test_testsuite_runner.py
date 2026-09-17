@@ -1,6 +1,7 @@
 """Tests of the pipeline on the fixture cases."""
 
 import dataclasses
+import shutil
 from pathlib import Path
 
 import libsbml
@@ -9,6 +10,7 @@ from sbml2cellml import __version__
 from sbml2cellml.testsuite.cases import SUITE_VERSION, load_cases
 from sbml2cellml.testsuite.results import STAGES, STATUSES, SuiteResult
 from sbml2cellml.testsuite.runner import reference_selections, run_suite
+from tests.sbml_models import simple_model, write_sbml
 
 FIXTURES = Path(__file__).parent / "data" / "testsuite" / "semantic"
 
@@ -54,11 +56,66 @@ def test_run_suite_on_fixtures(tmp_path: Path) -> None:
 
 
 def test_run_suite_skips_unrunnable(tmp_path: Path) -> None:
-    import shutil
-
     root = tmp_path / "semantic"
     shutil.copytree(FIXTURES / "00001", root / "00001")
     (root / "00001" / "00001-sbml-l3v2.xml").unlink()
     result = run_suite(load_cases(root), tmp_path / "work")
     assert result.cases == {}
     assert result.skipped == {"00001": "no L3V2 file"}
+
+
+def test_run_suite_setup_failure(tmp_path: Path) -> None:
+    # a present but unparsable L3V2 file must not abort the whole suite
+    root = tmp_path / "semantic"
+    shutil.copytree(FIXTURES / "00001", root / "00001")
+    (root / "00001" / "00001-sbml-l3v2.xml").write_text("<sbml/>", encoding="utf-8")
+    result = run_suite(load_cases(root), tmp_path / "work")
+    stages = result.cases["00001"].stages
+    assert set(stages) == set(STAGES)
+    for stage in stages.values():
+        assert stage.status == "fail"
+        assert stage.message.startswith("setup:"), stage.message
+
+
+def test_run_suite_converts_quantities(tmp_path: Path) -> None:
+    """A non-unit compartment exercises the amount/concentration conversion."""
+    case_dir = tmp_path / "semantic" / "90001"
+    case_dir.mkdir(parents=True)
+    write_sbml(case_dir / "90001-sbml-l3v2.xml", simple_model("case90001"))
+    (case_dir / "90001-settings.txt").write_text(
+        "start: 0\n"
+        "duration: 4\n"
+        "steps: 8\n"
+        "variables: S1, S2\n"
+        "absolute: 1e-6\n"
+        "relative: 1e-4\n"
+        "amount: S1, S2\n"
+        "concentration:\n",
+        encoding="utf-8",
+    )
+    # cell has size 2; [S1](t) = 10 exp(-0.25 t), S1(t) = 2 [S1](t), and
+    # S2(t) = 4 + 20 (1 - exp(-0.25 t)); verified against a roadrunner run of
+    # this exact model in a spike, agreeing to better than 1e-7 relative.
+    (case_dir / "90001-results.csv").write_text(
+        "time,S1,S2\n"
+        "0,20,4\n"
+        "0.5,17.64993805,6.350061948\n"
+        "1,15.57601566,8.423984339\n"
+        "1.5,13.74578558,10.25421442\n"
+        "2,12.13061319,11.86938681\n"
+        "2.5,10.70522857,13.29477143\n"
+        "3,9.447331055,14.55266895\n"
+        "3.5,8.337240394,15.66275961\n"
+        "4,7.357588823,16.64241118\n",
+        encoding="utf-8",
+    )
+    (case_dir / "90001-model.m").write_text(
+        "componentTags: Compartment, Species, Reaction, Parameter\n"
+        "testTags: Amount, NonUnityCompartment\n"
+        "testType: TimeCourse\n",
+        encoding="utf-8",
+    )
+    result = run_suite(load_cases(case_dir.parent), tmp_path / "work")
+    stages = result.cases["90001"].stages
+    for name in ("reference", "sbml2cellml", "libopencor", "cellml2sbml", "roundtrip"):
+        assert stages[name].status == "pass", f"{name}: {stages[name].message}"

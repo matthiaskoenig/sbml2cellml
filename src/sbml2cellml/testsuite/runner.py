@@ -23,7 +23,7 @@ from sbml2cellml.testsuite.compare import (
     species_quantities,
     strip_brackets,
 )
-from sbml2cellml.testsuite.results import CaseResult, StageResult, SuiteResult
+from sbml2cellml.testsuite.results import STAGES, CaseResult, StageResult, SuiteResult
 from sbml2cellml.testsuite.worker import SimulatorWorker, frame
 
 logger = logging.getLogger(__name__)
@@ -76,14 +76,26 @@ def run_case(
         libopencor: worker for the CellML simulation.
 
     Returns:
-        The stage results; a stage whose input stage failed is `skip`.
+        The stage results; a stage whose input stage failed is `skip`. Every
+        stage is `fail` when the case itself cannot be set up (e.g. an
+        unparsable SBML file).
     """
     assert case.sbml_path is not None
     settings = case.settings
+    try:
+        model = libsbml.readSBMLFromFile(str(case.sbml_path)).getModel()
+        if model is None:
+            raise ValueError("no model in the SBML file")
+        quantities = species_quantities(model)
+        compartments = [c.getId() for c in model.getListOfCompartments()]
+    except Exception as err:
+        message = f"setup: {_message(err)}"[:MESSAGE_LENGTH]
+        stages = {stage: StageResult("fail", message) for stage in STAGES}
+        return CaseResult(
+            case.id, list(case.test_tags), list(case.component_tags), stages
+        )
+
     stages: dict[str, StageResult] = {}
-    model = libsbml.readSBMLFromFile(str(case.sbml_path)).getModel()
-    quantities = species_quantities(model)
-    compartments = [c.getId() for c in model.getListOfCompartments()]
 
     # reference
     try:
