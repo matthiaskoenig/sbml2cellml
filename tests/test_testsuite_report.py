@@ -71,6 +71,62 @@ def test_render_report_parameters() -> None:
     assert "| 00001 | Edelstein1996 - EPSP ACh event | Compartment, Species |" in text
 
 
+def test_render_report_informative_column() -> None:
+    result = sample()
+    result.cases["00001"].informative = True
+    result.cases["00002"].informative = False
+    text = render_report(result)
+    assert (
+        "| 00001 | Compartment, Species | pass | pass | pass | pass | pass | yes |"
+        in text
+    )
+    assert "| 00002 | Compartment | pass | pass | fail | pass | fail | no |" in text
+    # 00006's informative is left at its default (None): an empty cell
+    assert "| 00006 | Compartment | pass | pass | fail | pass | pass |  |" in text
+
+
+def test_render_report_informative_summary() -> None:
+    # of the sample cases, only 00001 has a passing libopencor stage
+    result = sample()
+    result.cases["00001"].informative = True
+    text = render_report(result)
+    assert (
+        "1 of the 1 cases with a passing libopencor stage are informative: "
+        "the reference moves more than the tolerance band for at least one "
+        "variable." in text
+    )
+
+
+def test_render_report_skips_informative_summary_without_passing_libopencor() -> None:
+    stages = {stage: StageResult("pass") for stage in STAGES}
+    stages["libopencor"] = StageResult("fail", "boom")
+    result = SuiteResult(
+        "3.5.0", "0.1.0", {"00001": CaseResult("00001", [], [], stages)}, {}
+    )
+    text = render_report(result)
+    assert "cases with a passing libopencor stage are informative" not in text
+
+
+def test_render_report_omits_tags_table_when_every_group_is_empty() -> None:
+    # BioModels cases carry no test tags; a tags breakdown with a single
+    # empty-string group says nothing and must not be rendered
+    stages = {stage: StageResult("pass") for stage in STAGES}
+    stages["libopencor"] = StageResult("fail", "S1 exceeds the tolerance by 0.5", 0.5)
+    result = SuiteResult(
+        "3.5.0", "0.1.0", {"BIOMD_A": CaseResult("BIOMD_A", [], [], stages)}, {}
+    )
+    text = render_report(result)
+    assert "numerical mismatch" in text
+    assert "| tags | cases | examples |" not in text
+
+
+def test_render_report_escapes_pipe_in_case_name() -> None:
+    result = sample()
+    result.cases["00001"].name = "A | B"
+    text = render_report(result, names=True)
+    assert "A \\| B" in text
+
+
 def test_reason_groups_tolerance_messages() -> None:
     a = _message(RuntimeError("S1 exceeds the tolerance by 0.5"))
     b = _message(RuntimeError("S2 exceeds the tolerance by nan"))

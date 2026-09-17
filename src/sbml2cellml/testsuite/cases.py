@@ -31,7 +31,9 @@ SUITE_URL = (
 CACHE_ENV = "SBML2CELLML_CACHE"
 #: name of a case directory
 CASE_ID = re.compile(r"^\d{5}$")
-#: component tags of SBML packages, none of which the converters support
+#: component tags of SBML packages, none of which the converters support;
+#: `layout` and `render` are deliberately absent - they only describe the
+#: diagram of the model, not its math, so a model using them still runs
 PACKAGE_PREFIXES = (
     "comp",
     "fbc",
@@ -40,8 +42,6 @@ PACKAGE_PREFIXES = (
     "distrib",
     "spatial",
     "groups",
-    "layout",
-    "render",
 )
 #: the only test type the harness runs
 TIME_COURSE = "TimeCourse"

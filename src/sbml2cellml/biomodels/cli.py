@@ -7,8 +7,12 @@
     sbml2cellml-biomodels report --results FILE --output FILE
 
 `run` runs the pipeline over `--ids` or, by default, the selection file,
-writes the results and the report. `update` refreshes the selection file
-from the current BioModels search. `report` renders a results file.
+writes the results and the report; it gives up without writing either when
+too many ids failed to download (`DOWNLOAD_FAILURE_FRACTION`, e.g. a
+BioModels outage) or when no case was left to run, and, when `--results`
+already exists, prints its regressions and improvements against the new run.
+`update` refreshes the selection file from the current BioModels search.
+`report` renders a results file.
 """
 
 import argparse
@@ -24,11 +28,14 @@ from sbml2cellml.biomodels.models import (
 )
 from sbml2cellml.biomodels.runner import run_biomodels
 from sbml2cellml.testsuite.report import write_report
-from sbml2cellml.testsuite.results import STAGES, SuiteResult
+from sbml2cellml.testsuite.results import STAGES, SuiteResult, improvements, regressions
 
 DEFAULT_MODELS = Path("biomodels") / "models.json"
 DEFAULT_RESULTS = Path("biomodels") / "results.json"
 DEFAULT_REPORT = Path("docs") / "biomodels.md"
+#: fraction of the requested ids whose download may fail before `run` gives
+#: up instead of writing a mostly empty result (e.g. a BioModels outage)
+DOWNLOAD_FAILURE_FRACTION = 0.05
 #: intro paragraph of the BioModels report
 BIOMODELS_INTRO = (
     "Manually curated SBML models of [BioModels](https://www.biomodels.org) "
@@ -117,6 +124,21 @@ def _run(args: argparse.Namespace) -> int:
     result = run_biomodels(
         ids, work_dir=Path(args.work_dir), timeout=args.timeout, progress=print
     )
+
+    download_failures = sum(
+        1 for reason in result.skipped.values() if reason.startswith("download failed")
+    )
+    if ids and download_failures > DOWNLOAD_FAILURE_FRACTION * len(ids):
+        print(
+            f"{download_failures} of {len(ids)} ids failed to download, more than "
+            f"{DOWNLOAD_FAILURE_FRACTION:.0%} of the ids",
+            file=sys.stderr,
+        )
+        return 1
+    if not result.cases:
+        print("No cases to run", file=sys.stderr)
+        return 1
+
     for stage in STAGES:
         counts = result.counts(stage)
         print(
@@ -125,6 +147,17 @@ def _run(args: argparse.Namespace) -> int:
     print(f"{len(result.skipped)} models skipped")
 
     results_path = Path(args.results)
+    if results_path.is_file():
+        previous = SuiteResult.from_json(results_path)
+        regs = regressions(previous, result)
+        print(f"{len(regs)} regressions")
+        for line in regs:
+            print(line)
+        imps = improvements(previous, result)
+        print(f"{len(imps)} improvements")
+        for line in imps:
+            print(line)
+
     results_path.parent.mkdir(parents=True, exist_ok=True)
     result.to_json(results_path)
     report_path = Path(args.report)

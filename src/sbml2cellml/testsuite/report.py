@@ -108,6 +108,20 @@ def render_report(
             f"{100 * counts['pass'] / total:.1f}% |"
         )
 
+    passing_libopencor = [
+        case
+        for case in result.cases.values()
+        if case.stages["libopencor"].status == "pass"
+    ]
+    if passing_libopencor:
+        informative = sum(1 for case in passing_libopencor if case.informative)
+        lines += [
+            "",
+            f"{informative} of the {len(passing_libopencor)} cases with a passing "
+            "libopencor stage are informative: the reference moves more than the "
+            "tolerance band for at least one variable.",
+        ]
+
     lines += ["", "## Failure reasons", ""]
     for stage in STAGES:
         groups: dict[str, list[str]] = defaultdict(list)
@@ -138,17 +152,20 @@ def render_report(
             for cid in mismatch_ids:
                 tags = ", ".join(sorted(set(result.cases[cid].test_tags)))
                 tag_groups[tags].append(cid)
-            lines += ["", "| tags | cases | examples |", "| --- | --- | --- |"]
-            for tags, ids in sorted(
-                tag_groups.items(), key=lambda item: (-len(item[1]), item[0])
-            ):
-                examples = ", ".join(ids[:CASES_PER_REASON])
-                more = (
-                    f", ... ({len(ids)} in total)"
-                    if len(ids) > CASES_PER_REASON
-                    else ""
-                )
-                lines.append(f"| {tags} | {len(ids)} | {examples}{more} |")
+            # omitted when every group is empty (e.g. BioModels cases, which
+            # carry no test tags), since the table would say nothing then
+            if any(tag_groups):
+                lines += ["", "| tags | cases | examples |", "| --- | --- | --- |"]
+                for tags, ids in sorted(
+                    tag_groups.items(), key=lambda item: (-len(item[1]), item[0])
+                ):
+                    examples = ", ".join(ids[:CASES_PER_REASON])
+                    more = (
+                        f", ... ({len(ids)} in total)"
+                        if len(ids) > CASES_PER_REASON
+                        else ""
+                    )
+                    lines.append(f"| {tags} | {len(ids)} | {examples}{more} |")
         lines.append("")
 
     lines += ["## Skipped cases", "", "| reason | cases |", "| --- | --- |"]
@@ -161,14 +178,22 @@ def render_report(
         "",
         "## Cases",
         "",
-        f"| case | {name_header}components | " + " | ".join(STAGES) + " |",
-        f"| --- | {name_sep}--- | " + " | ".join("---" for _ in STAGES) + " |",
+        f"| case | {name_header}components | "
+        + " | ".join(STAGES)
+        + " | informative |",
+        f"| --- | {name_sep}--- | " + " | ".join("---" for _ in STAGES) + " | --- |",
     ]
     for cid, case in sorted(result.cases.items()):
         statuses = " | ".join(case.stages[stage].status for stage in STAGES)
-        name_cell = f"{case.name} | " if names else ""
+        name = case.name.replace("|", "\\|")
+        name_cell = f"{name} | " if names else ""
+        if case.informative is None:
+            informative_cell = ""
+        else:
+            informative_cell = "yes" if case.informative else "no"
         lines.append(
-            f"| {cid} | {name_cell}{', '.join(case.component_tags)} | {statuses} |"
+            f"| {cid} | {name_cell}{', '.join(case.component_tags)} | "
+            f"{statuses} | {informative_cell} |"
         )
     lines.append("")
     return "\n".join(lines)

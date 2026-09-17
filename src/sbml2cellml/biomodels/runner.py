@@ -2,8 +2,9 @@
 
 The pipeline itself (`sbml2cellml.testsuite.runner.run_suite`) is reused
 unchanged; this module only turns a list of model ids into runnable cases,
-skipping the ids whose info or download request fails or whose model has no
-species (`prepare_cases`), and runs them (`run_biomodels`).
+skipping the ids whose info or download request fails, whose case cannot be
+built or whose model has no variable (`prepare_cases`), and runs them
+(`run_biomodels`).
 """
 
 import logging
@@ -34,8 +35,9 @@ def prepare_cases(
 
     Returns:
         The cases built and a skip reason per id whose info or download
-        request failed (`download failed: <ExceptionType>`) or whose model
-        has no species (`no species`); a case with SBML packages is still
+        request failed (`download failed: <ExceptionType>`), whose case
+        could not be built (`case failed: <ExceptionType>`) or whose model
+        has no variable (`no variables`); a case with SBML packages is still
         returned, `sbml2cellml.testsuite.cases.skip_reason` skips it later.
     """
     cases: list[Case] = []
@@ -44,14 +46,19 @@ def prepare_cases(
         try:
             info = model_info(model_id, cache)
             path = download_model(model_id, cache)
-            case = biomodel_case(info, path, packages(path))
         except Exception as err:
             logger.warning("%s skipped: %s", model_id, err)
             skipped[model_id] = f"download failed: {type(err).__name__}"
             continue
+        try:
+            case = biomodel_case(info, path, packages(path))
+        except Exception as err:
+            logger.warning("%s skipped: %s", model_id, err)
+            skipped[model_id] = f"case failed: {type(err).__name__}"
+            continue
         if not case.settings.variables:
-            logger.warning("%s skipped: no species", model_id)
-            skipped[model_id] = "no species"
+            logger.warning("%s skipped: no variables", model_id)
+            skipped[model_id] = "no variables"
             continue
         cases.append(case)
     return cases, skipped

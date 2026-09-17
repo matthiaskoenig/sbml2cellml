@@ -231,7 +231,7 @@ roadrunner and libopencor bundle different LLVM versions and crash once both hav
 
 ## BioModels check { #biomodels-check }
 
-`sbml2cellml.biomodels` runs the manually curated SBML models of [BioModels](https://www.biomodels.org) (about 1075) through the same pipeline as the [SBML test suite](#sbml-test-suite), reusing `sbml2cellml.testsuite`. These models have no expected results, so the `reference` stage simulates the original SBML with roadrunner over a generic timecourse (0 to 100 time units, 100 steps) and its frame becomes the expected results the `libopencor` and `roundtrip` simulations are compared with, using the same tolerances as the test suite (`1e-3` relative, `1e-6` absolute). A `reference` failure means roadrunner cannot simulate the model, it says nothing about the converters; models with an SBML package or without species are skipped.
+`sbml2cellml.biomodels` runs the manually curated SBML models of [BioModels](https://www.biomodels.org) (about 1075) through the same pipeline as the [SBML test suite](#sbml-test-suite), reusing `sbml2cellml.testsuite`. These models have no expected results, so the `reference` stage simulates the original SBML with roadrunner over a generic timecourse (0 to 100 time units, 100 steps) and its frame becomes the expected results the `libopencor` and `roundtrip` simulations are compared with, using the same tolerances as the test suite (`1e-3` relative, `1e-6` absolute). A `reference` failure means roadrunner cannot simulate the model, it says nothing about the converters; models with an SBML package or without a variable (no species and no rate-rule or assignment-rule target of its own) are skipped.
 
 ```bash
 uv run sbml2cellml-biomodels run

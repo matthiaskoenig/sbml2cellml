@@ -20,16 +20,38 @@ def _mocks(monkeypatch: pytest.MonkeyPatch, comp_path: Path) -> None:
     mock_downloads(monkeypatch, runner, comp_path)
 
 
-def _no_species_model(path: Path) -> Path:
-    """Write an SBML file with a compartment but no species."""
+def _no_variables_model(path: Path) -> Path:
+    """Write an SBML file with a compartment but no species or rule target."""
     doc = libsbml.SBMLDocument(3, 2)
     model: libsbml.Model = doc.createModel()
-    model.setId("no_species")
+    model.setId("no_variables")
     compartment: libsbml.Compartment = model.createCompartment()
     compartment.setId("cell")
     compartment.setSize(1.0)
     compartment.setConstant(True)
     libsbml.writeSBMLToFile(doc, str(path))
+    return path
+
+
+def _parameter_rate_model(path: Path) -> Path:
+    """Write an SBML file whose only state is a parameter with a rate rule."""
+    doc = libsbml.SBMLDocument(3, 2)
+    model: libsbml.Model = doc.createModel()
+    model.setId("parameter_state")
+    x: libsbml.Parameter = model.createParameter()
+    x.setId("x")
+    x.setValue(1.0)
+    x.setConstant(False)
+    rate_rule: libsbml.RateRule = model.createRateRule()
+    rate_rule.setVariable("x")
+    rate_rule.setMath(libsbml.parseL3Formula("-0.1 * x"))
+    libsbml.writeSBMLToFile(doc, str(path))
+    return path
+
+
+def _broken_model(path: Path) -> Path:
+    """Write a file which is not SBML, so `biomodel_case` fails to build."""
+    path.write_text("not sbml", encoding="utf-8")
     return path
 
 
@@ -40,17 +62,42 @@ def test_prepare_cases() -> None:
     assert skipped == {"BIOMD_C": "download failed: BioModelsError"}
 
 
-def test_prepare_cases_skips_model_without_species(
+def test_prepare_cases_skips_model_without_variables(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    no_species_path = _no_species_model(tmp_path / "no_species.xml")
+    no_variables_path = _no_variables_model(tmp_path / "no_variables.xml")
     monkeypatch.setattr(runner, "model_info", lambda model_id, cache=None: INFO_A)
     monkeypatch.setattr(
-        runner, "download_model", lambda model_id, cache=None: no_species_path
+        runner, "download_model", lambda model_id, cache=None: no_variables_path
     )
     cases, skipped = runner.prepare_cases(["BIOMD_A"])
     assert cases == []
-    assert skipped == {"BIOMD_A": "no species"}
+    assert skipped == {"BIOMD_A": "no variables"}
+
+
+def test_prepare_cases_keeps_model_with_parameter_rate_rule(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    path = _parameter_rate_model(tmp_path / "parameter_state.xml")
+    monkeypatch.setattr(runner, "model_info", lambda model_id, cache=None: INFO_A)
+    monkeypatch.setattr(runner, "download_model", lambda model_id, cache=None: path)
+    cases, skipped = runner.prepare_cases(["BIOMD_A"])
+    assert skipped == {}
+    assert [case.id for case in cases] == ["BIOMD_A"]
+    assert cases[0].settings.variables == ("x",)
+
+
+def test_prepare_cases_skips_case_construction_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    broken_path = _broken_model(tmp_path / "broken.xml")
+    monkeypatch.setattr(runner, "model_info", lambda model_id, cache=None: INFO_A)
+    monkeypatch.setattr(
+        runner, "download_model", lambda model_id, cache=None: broken_path
+    )
+    cases, skipped = runner.prepare_cases(["BIOMD_A"])
+    assert cases == []
+    assert skipped == {"BIOMD_A": "case failed: BioModelsError"}
 
 
 def test_run_biomodels(tmp_path: Path) -> None:

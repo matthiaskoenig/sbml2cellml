@@ -160,9 +160,11 @@ def model_info(model_id: str, cache: Path | None = None) -> ModelInfo:
         main_file=main_files[0]["name"],
     )
     root.mkdir(parents=True, exist_ok=True)
-    info_path.write_text(
+    tmp_path = info_path.with_name(info_path.name + ".part")
+    tmp_path.write_text(
         json.dumps(dataclasses.asdict(info), indent=1), encoding="utf-8"
     )
+    os.replace(tmp_path, info_path)
     logger.info("Fetched BioModels info for %s: %s", model_id, info.name)
     return info
 
@@ -183,7 +185,7 @@ def download_model(model_id: str, cache: Path | None = None) -> Path:
     """
     info = model_info(model_id, cache)
     root = biomodels_cache(cache) / model_id
-    path = root / info.main_file
+    path = root / Path(info.main_file).name
     if path.is_file():
         return path
     root.mkdir(parents=True, exist_ok=True)

@@ -29,6 +29,11 @@ class CaseResult:
     component_tags: list[str]
     stages: dict[str, StageResult]
     name: str = ""
+    #: whether the expected frame moves more than the tolerance band for at
+    #: least one variable (`sbml2cellml.testsuite.compare.is_informative`);
+    #: `None` when there is no expected frame, i.e. the reference failed
+    #: without expected results of its own
+    informative: bool | None = None
 
 
 @dataclass
@@ -84,6 +89,7 @@ class SuiteResult:
                     name: StageResult(**stage) for name, stage in case["stages"].items()
                 },
                 name=case.get("name", ""),
+                informative=case.get("informative"),
             )
             for cid, case in data["cases"].items()
         }

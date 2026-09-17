@@ -38,7 +38,6 @@ def test_constructs_liver() -> None:
     model = _read_model(LIVER_MODEL)
     text = LIVER_MODEL.read_text(encoding="utf-8")
     tags = constructs(model, text)
-    print("liver constructs:", tags)
     assert "Reactions" in tags
     assert "Events" not in tags
 
@@ -86,3 +85,24 @@ def test_biomodel_case() -> None:
     case_with_package = biomodel_case(INFO, LIVER_MODEL, ("comp",))
     assert "comp:package" in case_with_package.component_tags
     assert skip_reason(case_with_package) == "package comp"
+
+
+def test_biomodel_case_parameter_rate_rule_variable(tmp_path: Path) -> None:
+    # a model whose only state is a parameter driven by a rate rule (no
+    # species at all) still gets a variable: the rate-rule target
+    doc = libsbml.SBMLDocument(3, 2)
+    model: libsbml.Model = doc.createModel()
+    model.setId("parameter_state")
+    x: libsbml.Parameter = model.createParameter()
+    x.setId("x")
+    x.setValue(1.0)
+    x.setConstant(False)
+    rate_rule: libsbml.RateRule = model.createRateRule()
+    rate_rule.setVariable("x")
+    rate_rule.setMath(libsbml.parseL3Formula("-0.1 * x"))
+    sbml_path = tmp_path / "parameter_state.xml"
+    libsbml.writeSBMLToFile(doc, str(sbml_path))
+
+    case = biomodel_case(INFO, sbml_path, ())
+    assert case.settings.variables == ("x",)
+    assert skip_reason(case) is None

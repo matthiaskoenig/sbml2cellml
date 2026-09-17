@@ -71,6 +71,10 @@ def biomodel_case(info: ModelInfo, sbml_path: Path, packages: tuple[str, ...]) -
 
     Returns:
         The case, with `expected=None` and `test_type="TimeCourse"`.
+        `settings.variables` is the species ids, followed by the ids of the
+        rate-rule and assignment-rule targets which are not species
+        (parameters and compartments), in document order and without
+        duplicates; `amount` and `concentration` stay species only.
 
     Raises:
         BioModelsError: if the SBML file has no model.
@@ -80,11 +84,21 @@ def biomodel_case(info: ModelInfo, sbml_path: Path, packages: tuple[str, ...]) -
     if model is None:
         raise BioModelsError(f"{info.id}: no model in {sbml_path.name}")
     species = list(model.getListOfSpecies())
+    species_ids = tuple(s.getId() for s in species)
+    variables = list(species_ids)
+    seen = set(species_ids)
+    for rule in model.getListOfRules():
+        if not (rule.isRate() or rule.isAssignment()):
+            continue
+        target = rule.getVariable()
+        if target and target not in seen:
+            variables.append(target)
+            seen.add(target)
     settings = Settings(
         start=0.0,
         duration=DURATION,
         steps=STEPS,
-        variables=tuple(s.getId() for s in species),
+        variables=tuple(variables),
         absolute=ABSOLUTE,
         relative=RELATIVE,
         amount=frozenset(s.getId() for s in species if s.getHasOnlySubstanceUnits()),

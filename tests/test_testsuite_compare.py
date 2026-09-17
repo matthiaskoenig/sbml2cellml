@@ -9,6 +9,7 @@ from sbml2cellml.testsuite.cases import Settings
 from sbml2cellml.testsuite.compare import (
     CompareError,
     compare,
+    is_informative,
     requested_frame,
     species_quantities,
     strip_brackets,
@@ -185,6 +186,17 @@ def test_requested_frame_no_time_column_raises() -> None:
     df = pd.DataFrame({"S1": [4.0, 2.0]})
     with pytest.raises(CompareError, match="no time column"):
         requested_frame(df, quantities, SETTINGS)
+
+
+def test_is_informative_constant_frame_is_not_informative() -> None:
+    constant = pd.DataFrame(
+        {"time": [0.0, 0.5, 1.0], "S1": [1.0, 1.0, 1.0], "S2": [0.0, 0.0, 0.0]}
+    )
+    assert is_informative(constant, SETTINGS) is False
+
+
+def test_is_informative_decaying_frame_is_informative() -> None:
+    assert is_informative(expected(), SETTINGS) is True
 
 
 def test_strip_brackets() -> None:

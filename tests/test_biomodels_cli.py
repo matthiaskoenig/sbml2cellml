@@ -7,6 +7,7 @@ import pytest
 
 from sbml2cellml.biomodels import cli, runner
 from sbml2cellml.biomodels.models import load_selection, write_selection
+from sbml2cellml.testsuite.results import STAGES, CaseResult, StageResult, SuiteResult
 from tests.biomodels_mocks import mock_downloads, write_comp_model
 
 
@@ -116,3 +117,86 @@ def test_cli_missing_models_file(
     code = cli.main(["run", "--models", str(tmp_path / "missing.json")])
     assert code == 1
     assert "missing.json" in capsys.readouterr().err
+
+
+def test_cli_run_aborts_on_high_download_failure_rate(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    results_path = tmp_path / "results.json"
+    report_path = tmp_path / "report.md"
+    # two of three ids fail to download (BIOMD_A is served, the rest are
+    # not), well above the 5% threshold
+    code = cli.main(
+        [
+            "run",
+            "--ids",
+            "BIOMD_A,BAD_1,BAD_2",
+            "--work-dir",
+            str(tmp_path / "work"),
+            "--results",
+            str(results_path),
+            "--report",
+            str(report_path),
+        ]
+    )
+    assert code == 1
+    assert not results_path.is_file()
+    assert not report_path.is_file()
+    assert "download" in capsys.readouterr().err.lower()
+
+
+def test_cli_run_aborts_when_no_cases(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    results_path = tmp_path / "results.json"
+    report_path = tmp_path / "report.md"
+    # BIOMD_B downloads fine but is skipped for using the comp package, so
+    # no case is left to run
+    code = cli.main(
+        [
+            "run",
+            "--ids",
+            "BIOMD_B",
+            "--work-dir",
+            str(tmp_path / "work"),
+            "--results",
+            str(results_path),
+            "--report",
+            str(report_path),
+        ]
+    )
+    assert code == 1
+    assert not results_path.is_file()
+    assert not report_path.is_file()
+    assert "no cases" in capsys.readouterr().err.lower()
+
+
+def test_cli_run_prints_regressions_and_improvements(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    results_path = tmp_path / "results.json"
+    report_path = tmp_path / "report.md"
+    previous = SuiteResult(suite="biomodels", version="0.0.0")
+    stages = {stage: StageResult("pass") for stage in STAGES}
+    stages["roundtrip"] = StageResult("fail", "boom")
+    previous.cases["BIOMD_A"] = CaseResult("BIOMD_A", [], [], stages, name="x")
+    previous.to_json(results_path)
+
+    code = cli.main(
+        [
+            "run",
+            "--ids",
+            "BIOMD_A",
+            "--work-dir",
+            str(tmp_path / "work"),
+            "--results",
+            str(results_path),
+            "--report",
+            str(report_path),
+        ]
+    )
+    assert code == 0
+    out = capsys.readouterr().out
+    assert "0 regressions" in out
+    assert "1 improvements" in out
+    assert "BIOMD_A roundtrip: fail -> pass" in out

@@ -110,6 +110,35 @@ def compare(
     return Comparison(tuple(comparisons), not failures, "; ".join(failures))
 
 
+def is_informative(expected: pd.DataFrame, settings: Settings) -> bool:
+    """Whether the expected results move more than the tolerance band.
+
+    A case whose expected frame is (numerically) constant for every variable
+    passes the comparison trivially no matter what the converters do; this
+    flags that so it can be told apart from a genuine check.
+
+    Args:
+        expected: the expected frame, i.e. the case's expected results or,
+            when there are none, the reference simulation.
+        settings: settings of the case (variables and tolerances).
+
+    Returns:
+        True when at least one settings variable present in `expected` moves,
+        between its minimum and maximum, by more than
+        `absolute + relative * max(|value|)`.
+    """
+    for variable in settings.variables:
+        if variable not in expected.columns:
+            continue
+        values = expected[variable].to_numpy(dtype=float)
+        tolerance = settings.absolute + settings.relative * float(
+            np.max(np.abs(values))
+        )
+        if float(np.max(values)) - float(np.min(values)) > tolerance:
+            return True
+    return False
+
+
 def species_quantities(model: libsbml.Model) -> dict[str, tuple[bool, str]]:
     """Quantity of the species variables of a converted model.
 

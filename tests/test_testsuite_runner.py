@@ -49,6 +49,16 @@ def test_message_reduces_absolute_paths_to_basename() -> None:
     assert "/home/" not in message
 
 
+def test_message_rounds_long_decimals() -> None:
+    # a solver diagnostic (e.g. CVODE) prints full machine precision, which
+    # is an artifact of the solver and the machine it ran on and would churn
+    # the committed message across machines; rounded to 3 significant digits
+    err = RuntimeError("CVODE: at t = 0.0827801454102412, mxstep steps taken")
+    message = _message(err)
+    assert "0.0827801454102412" not in message
+    assert "0.0828" in message
+
+
 def test_reference_selections() -> None:
     case = load_cases(FIXTURES, ids=["00001"])[0]
     model = libsbml.readSBMLFromFile(str(case.sbml_path)).getModel()
