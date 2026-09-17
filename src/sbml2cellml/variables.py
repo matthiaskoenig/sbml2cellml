@@ -36,6 +36,25 @@ def sanitize_id(name: str) -> str:
     return sid
 
 
+def unique_sid(sid: str, used: set[str]) -> str:
+    """Make an SId unique among the used ones by appending a numeric suffix.
+
+    Args:
+        sid: sanitized id.
+        used: ids taken so far; the returned id is added to it.
+
+    Returns:
+        `sid` when free, else `sid_2`, `sid_3`, ... the first free one.
+    """
+    candidate = sid
+    n = 2
+    while candidate in used:
+        candidate = f"{sid}_{n}"
+        n += 1
+    used.add(candidate)
+    return candidate
+
+
 def variable_key(variable: Any) -> tuple[str, str]:
     """`(component name, variable name)` of a variable.
 
@@ -97,15 +116,7 @@ class VariableIds:
             name = representative.name()
             if counts[name] > 1:
                 name = f"{representative.parent().name()}_{name}"
-            sid = sanitize_id(name)
-            if sid in used:
-                n = 2
-                candidate = f"{sid}_{n}"
-                while candidate in used:
-                    n += 1
-                    candidate = f"{sid}_{n}"
-                sid = candidate
-            used.add(sid)
+            sid = unique_sid(sanitize_id(name), used)
             for member in equivalence_set(representative):
                 self._ids[variable_key(member)] = sid
 

@@ -13,7 +13,7 @@ from typing import Any
 import libcellml
 import libsbml
 
-from sbml2cellml.variables import sanitize_id
+from sbml2cellml.variables import sanitize_id, unique_sid
 
 #: SI prefixes of CellML, by name
 PREFIXES: dict[str, int] = {
@@ -110,9 +110,22 @@ def expand_units(units: Any, model: libcellml.Model) -> list[BaseUnit]:
             )
         expanded = expand_units(child, model)
         if not expanded:
+            result.append(
+                BaseUnit(
+                    libsbml.UNIT_KIND_DIMENSIONLESS,
+                    exponent,
+                    prefix_scale(prefix),
+                    multiplier,
+                )
+            )
             continue
         factor = multiplier * 10.0 ** prefix_scale(prefix)
         first_exponent = expanded[0].exponent
+        if first_exponent == 0:
+            raise UnitsConversionError(
+                f"Units '{reference}' start with a unit of exponent 0, "
+                f"the factor of '{units.name()}' cannot be folded."
+            )
         for index, base in enumerate(expanded):
             base_multiplier = base.multiplier
             if index == 0:
@@ -138,9 +151,10 @@ def add_units(
         The SBML unit id by CellML units name, for `unit_id`.
     """
     ids: dict[str, str] = {}
+    used: set[str] = set()
     for k in range(model_cellml.unitsCount()):
         units = model_cellml.units(k)
-        uid = sanitize_id(units.name())
+        uid = unique_sid(sanitize_id(units.name()), used)
         definition = model_sbml.createUnitDefinition()
         definition.setId(uid)
         if uid != units.name():

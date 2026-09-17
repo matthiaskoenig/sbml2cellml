@@ -7,6 +7,7 @@ from sbml2cellml.variables import (
     VariableIds,
     equivalence_set,
     sanitize_id,
+    unique_sid,
     variable_key,
 )
 from tests.cellml_models import analyse, multi_component_model
@@ -19,6 +20,13 @@ from tests.cellml_models import variable as add_variable
 )
 def test_sanitize_id(name: str, sid: str) -> None:
     assert sanitize_id(name) == sid
+
+
+def test_unique_sid() -> None:
+    used = {"x", "x_2"}
+    assert unique_sid("y", used) == "y"
+    assert unique_sid("x", used) == "x_3"
+    assert used == {"x", "x_2", "x_3", "y"}
 
 
 def test_equivalence_set_is_transitive() -> None:

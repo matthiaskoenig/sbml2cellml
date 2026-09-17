@@ -90,6 +90,30 @@ def test_expand_unknown_reference_raises() -> None:
         expand_units(units, model)
 
 
+def test_expand_empty_custom_reference_keeps_factor() -> None:
+    model = libcellml.Model("outer_empty")
+    empty = libcellml.Units("nothing")
+    outer = libcellml.Units("outer")
+    outer.addUnit("nothing", "kilo", 2.0, 5.0)
+    model.addUnits(empty)
+    model.addUnits(outer)
+    assert expand_units(outer, model) == [
+        BaseUnit(libsbml.UNIT_KIND_DIMENSIONLESS, 2.0, 3, 5.0)
+    ]
+
+
+def test_expand_zero_exponent_first_unit_raises() -> None:
+    model = libcellml.Model("zero_exponent")
+    zero = libcellml.Units("zero")
+    zero.addUnit("second", 0.0)
+    outer = libcellml.Units("outer")
+    outer.addUnit("zero", "kilo", 1.0, 5.0)
+    model.addUnits(zero)
+    model.addUnits(outer)
+    with pytest.raises(UnitsConversionError):
+        expand_units(outer, model)
+
+
 def test_add_units() -> None:
     model = model_with_units()
     doc = libsbml.SBMLDocument(3, 2)
@@ -116,3 +140,20 @@ def test_add_units() -> None:
     # standard units are used by name
     assert unit_id("second", ids) == "second"
     assert unit_id("mM", ids) == "mM"
+
+
+def test_add_units_dedupes_colliding_ids() -> None:
+    model = libcellml.Model("colliding")
+    slash = libcellml.Units("mM/s")
+    slash.addUnit("mole", "milli")
+    underscore = libcellml.Units("mM_s")
+    underscore.addUnit("mole", "milli")
+    model.addUnits(slash)
+    model.addUnits(underscore)
+    doc = libsbml.SBMLDocument(3, 2)
+    model_sbml = doc.createModel()
+    model_sbml.setId("colliding")
+    ids = add_units(model, model_sbml)
+    assert ids == {"mM/s": "mM_s", "mM_s": "mM_s_2"}
+    assert model_sbml.getNumUnitDefinitions() == 2
+    assert validate_document(doc) == []
