@@ -4,13 +4,14 @@ This file provides guidance when working with code in this repository.
 
 ## Project
 
-`sbml2cellml` converts SBML models to CellML 2.0 with libsbml and libcellml and
-simulates the result with libopencor. Python 3.13 only (libcellml has no wheel
-for 3.14 yet), packaged with hatchling (version in `src/sbml2cellml/__init__.py`).
-Runtime dependencies: `python-libsbml`, `libcellml`, `rich`. The
-`simulate` extra adds `pandas` and `matplotlib`; libopencor itself is not on
-PyPI and comes from a uv flat index on its GitHub release (`[tool.uv.index]`
-in `pyproject.toml`), it is part of the `dev` extra.
+`sbml2cellml` converts SBML models to CellML 2.0 and CellML models to SBML
+L3V2 with libsbml and libcellml and simulates the result with libopencor.
+Python 3.13 only (libcellml has no wheel for 3.14 yet), packaged with
+hatchling (version in `src/sbml2cellml/__init__.py`). Runtime dependencies:
+`python-libsbml`, `libcellml`, `rich`. The `simulate` extra adds `pandas`
+and `matplotlib`; libopencor itself is not on PyPI and comes from a uv flat
+index on its GitHub release (`[tool.uv.index]` in `pyproject.toml`), it is
+part of the `dev` extra, which also has `libroadrunner`.
 
 ## Commands
 
@@ -33,6 +34,7 @@ uv run python scripts/llms_txt.py
 uv run zensical serve
 
 sbml2cellml model.xml -o model.cellml
+cellml2sbml model.cellml -o model.xml
 ```
 
 `develop` is the default branch and takes every change through a pull request;
@@ -64,6 +66,21 @@ on `develop` after the merge.
   `run_timecourse` so the package works without it. The settings are applied
   to `document.simulations[0]`. Results drop the `component/` prefix of the
   variable names. Issues raise `SimulationError`.
+- `cellml2sbml.py`: `convert_cellml2sbml(cellml_path, sbml_path=None, validate=True)`,
+  analyser driven: parameters by variable type, rules by equation type, initial
+  assignments for computed constants and variable-referenced initial values,
+  resets as events with `eq` trigger and `-order` priority, imports flattened
+  with `Importer`.
+- `variables.py`: `VariableIds` gives one SBML id per equivalence set, a
+  component prefix on name clashes; `unique_sid` adds a numeric suffix for
+  colliding ids (parameters, unit definitions, the model id and event ids);
+  `VariableIds.reserve` reserves an id outside the variables (model, events).
+- `sbmlmath.py`: analyser AST to libsbml AST, nested piecewise flattened,
+  `mathml_to_sbml` for reset maths.
+- `units.py`: standard units by name, custom units expanded to base kinds, the
+  factor folded into the first unit.
+- `sbml.py`: libsbml helpers, `validate_document` returns error messages, unit
+  problems are warnings.
 - `cli.py`: argparse, `[project.scripts]` entry point.
 - `console.py`, `log.py`: rich console for scripts and the CLI, opt-in rich
   logging. Library code logs with `logging.getLogger(__name__)` and lazy `%s`
@@ -88,3 +105,8 @@ on `develop` after the merge.
 - Release notes go in `release-notes/` as part of a release commit.
 - `references/` holds the CellML specification and libopencor notes, it is not
   part of the documentation site.
+- Test models built with libcellml live in `tests/cellml_models.py`;
+  `tests/data/` holds the import fixtures.
+- roadrunner and libopencor bundle different LLVM versions and crash in one
+  process, so the roundtrip tests run roadrunner in a subprocess
+  (`tests/simulators.py`).

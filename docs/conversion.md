@@ -1,4 +1,4 @@
-# Conversion
+# SBML to CellML
 
 ## Python
 
@@ -49,3 +49,51 @@ The command exits with 1 and the message on stderr when the input does not exist
 ## Example models
 
 `examples/models/` in the repository holds the glimepiride models of [matthiaskoenig/glimepiride-model](https://github.com/matthiaskoenig/glimepiride-model), which `examples/glimepiride_example.py` converts. The liver and kidney models convert to valid CellML, the intestine and body models hit the [known gaps](roadmap.md) of the converter.
+
+# CellML to SBML
+
+[`convert_cellml2sbml`](api/cellml2sbml.md) reads a CellML 2.0 file, resolves its imports relative to the file, analyses it with libcellml and builds an SBML level 3 version 2 document:
+
+```python
+from pathlib import Path
+from sbml2cellml import convert_cellml2sbml
+
+doc = convert_cellml2sbml(Path("model.cellml"), sbml_path=Path("model.xml"))
+```
+
+or on the command line:
+
+```bash
+cellml2sbml model.cellml                 # writes model.xml next to the input
+cellml2sbml model.cellml -o out/model.xml
+cellml2sbml model.cellml --no-validate   # write even if libsbml reports errors
+cellml2sbml model.cellml -v
+```
+
+By default the document is checked with the libsbml consistency checks and a `SBMLValidationError` with the messages is raised on errors (unit problems are warnings and do not stop the conversion).
+
+## Mapping
+
+CellML has no species, compartments or reactions: every variable becomes a parameter, the equations become rules. The libcellml analyser decides the kind of every variable and equation and merges the variables which are connected across components.
+
+| CellML | SBML |
+| --- | --- |
+| variable of integration | the `time` symbol, `timeUnits` of the model |
+| constant | `parameter constant="true"` with the initial value |
+| computed constant (`c = 2 * k`) | `parameter constant="true"` with an initial assignment |
+| algebraic variable | `parameter constant="false"` with an assignment rule |
+| state (`dx/dt = ...`) | `parameter constant="false"` with a rate rule |
+| initial value given as a variable name | initial assignment |
+| standard units | the SBML unit kind of the same name |
+| custom units | unit definition expanded to base kinds |
+| variable written only by a reset | parameter constant="false" (an event assignment needs a non-constant target) |
+| reset | event with the trigger `test_variable == test_value`, priority `-order`, one event assignment |
+| components and connections | one flat namespace; a variable name used by several unconnected variables is prefixed with its component (`cell_x`), the CellML name is kept as `name`; the model id and event ids also get a numeric suffix when they collide with a variable id |
+| imports | resolved and flattened before the conversion |
+| model type other than ODE or algebraic (e.g. DAE) | CellML2SBMLConversionError |
+
+## Limitations
+
+- Implicit equations (`x + y = 4`, a system the analyser classifies as NLA) and external variables are not supported and raise `CellML2SBMLConversionError`.
+- Units on numbers in formulas are not carried into the SBML math (the analyser AST has none); libsbml reports them as unit warnings.
+- A reset triggers on the equality of the test variable and the test value. A continuous simulator detects the equality only when the test variable crosses the test value at an integrator step, so a reset may not fire in SBML simulators; the roundtrip harness reports this per model.

@@ -33,7 +33,9 @@ A pull request can only be merged once the four required checks are green:
 | `docs`  | `docs.yml`    | the zensical build including the api reference and the agent files  |
 
 `tests` aggregates the test matrix into a single job, so the name of the
-required check stays the same when the matrix changes.
+required check stays the same when the matrix changes. On linux the CI
+installs the python dev files before uv, because the roadrunner extension
+links against libpython.
 
 Further rules of a pull request:
 
@@ -94,7 +96,7 @@ A single sync creates the virtual environment in `.venv`, installs `sbml2cellml`
 uv sync --extra dev
 ```
 
-The `dev` extra contains everything used below, i.e., pytest, ruff, ty, tox, pre-commit, zensical and bump-my-version, together with the `simulate` extra and libopencor. libopencor is not on PyPI; `[tool.uv.index]` in `pyproject.toml` points uv at the wheels of its GitHub release, so `uv sync` installs it like any other dependency (pip users see [Installation](installation.md#simulation-with-libopencor)). The python version is taken from `.python-version` (3.13, the only supported version until libcellml ships a wheel for 3.14).
+The `dev` extra contains everything used below, i.e., pytest, ruff, ty, tox, pre-commit, zensical and bump-my-version, together with the `simulate` extra, libopencor and libroadrunner for the roundtrip tests. libopencor is not on PyPI; `[tool.uv.index]` in `pyproject.toml` points uv at the wheels of its GitHub release, so `uv sync` installs it like any other dependency (pip users see [Installation](installation.md#simulation-with-libopencor)). The python version is taken from `.python-version` (3.13, the only supported version until libcellml ships a wheel for 3.14).
 
 The tools are then run either with `uv run <command>`, which uses the environment without activating it, or from the activated environment:
 
@@ -140,6 +142,8 @@ pytest tests/test_cellml.py::test_read_model                 # a single test
 ```
 
 The simulation tests and the examples need libopencor and are skipped without it; with `uv sync --extra dev` it is installed.
+
+The roundtrip tests (`tests/test_roundtrip.py`) need roadrunner and are skipped without it. roadrunner and libopencor bundle different LLVM versions and crash once both have JIT-compiled in one process, so roadrunner runs in a subprocess (`tests/simulators.py`).
 
 ## Linting and formatting
 

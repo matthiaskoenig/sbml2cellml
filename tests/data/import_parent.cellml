@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/2.0#" name="parent">
+  <import xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="import_child.cellml">
+    <component name="decay_import" component_ref="decay"/>
+  </import>
+</model>

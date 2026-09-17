@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/2.0#" name="child">
+  <units name="per_second">
+    <unit units="second" exponent="-1"/>
+  </units>
+  <component name="decay">
+    <variable name="t" units="second" interface="public"/>
+    <variable name="m" units="dimensionless" initial_value="10" interface="public"/>
+    <variable name="k" units="per_second" initial_value="0.1"/>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply><eq/>
+        <apply><diff/><bvar><ci>t</ci></bvar><ci>m</ci></apply>
+        <apply><times/><apply><minus/><ci>k</ci></apply><ci>m</ci></apply>
+      </apply>
+    </math>
+  </component>
+</model>

@@ -1,7 +1,7 @@
-# sbml2cellml: conversion of SBML models to CellML
+# sbml2cellml: conversion between SBML and CellML
 [![GitHub Actions CI/CD Status](https://github.com/matthiaskoenig/sbml2cellml/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/matthiaskoenig/sbml2cellml/actions/workflows/ci-cd.yml) [![Documentation](https://img.shields.io/badge/docs-sbml2cellml-008080.svg)](https://matthiaskoenig.github.io/sbml2cellml) [![Version](https://img.shields.io/pypi/v/sbml2cellml.svg)](https://pypi.org/project/sbml2cellml/) [![Python Versions](https://img.shields.io/pypi/pyversions/sbml2cellml.svg)](https://pypi.org/project/sbml2cellml/) [![MIT License](https://img.shields.io/pypi/l/sbml2cellml.svg)](https://opensource.org/licenses/MIT)
 
-`sbml2cellml` converts models in the [Systems Biology Markup Language (SBML)](https://sbml.org) to [CellML 2.0](https://cellml.org), so that a model developed with SBML tooling can be used, simulated and shared in the CellML ecosystem. The source code is available from [https://github.com/matthiaskoenig/sbml2cellml](https://github.com/matthiaskoenig/sbml2cellml).
+`sbml2cellml` converts between [SBML (Systems Biology Markup Language)](https://sbml.org) and [CellML 2.0](https://cellml.org), so that a model developed with one tooling can be used, simulated and shared in the other ecosystem. The source code is available from [https://github.com/matthiaskoenig/sbml2cellml](https://github.com/matthiaskoenig/sbml2cellml).
 
 ## Quickstart
 
@@ -16,6 +16,7 @@ or on the command line:
 
 ```bash
 sbml2cellml model.xml -o model.cellml
+cellml2sbml model.cellml -o model.xml
 ```
 
 The conversion is validated with [libcellml](https://libcellml.org/); the resulting file can be simulated with [libopencor](https://opencor.ws/libopencor/), see [Simulation](simulation.md).
@@ -38,6 +39,8 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | function definition | not yet |
 | event | not yet, a warning is logged |
 | algebraic rule | not yet, a warning is logged |
+
+The reverse direction, [CellML to SBML](conversion.md#cellml-to-sbml), maps every variable to a parameter with rules and converts units and resets.
 
 The [Roadmap](roadmap.md) lists what comes next.
 

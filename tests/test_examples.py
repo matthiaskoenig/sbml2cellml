@@ -22,6 +22,7 @@ EXAMPLES_DIR = Path(__file__).parent.parent / "examples"
     [
         ("cellml_example.py", "test_model.cellml"),
         ("glimepiride_example.py", "glimepiride_body.cellml"),
+        ("cellml2sbml_example.py", "cell_growth.xml"),
     ],
 )
 def test_example_runs(
