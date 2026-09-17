@@ -48,6 +48,18 @@ def _variable_name(name: str) -> str:
     return name.rsplit("/", 1)[-1]
 
 
+def _scalar(value: Any) -> float:
+    """A constant of libopencor as a plain float.
+
+    `task.constant(k)` and `task.computed_constant(k)` return the value
+    repeated for every row as a numpy array rather than a single number;
+    take the first element in that case.
+    """
+    if hasattr(value, "__len__"):
+        value = value[0]
+    return float(value)
+
+
 def run_timecourse(
     cellml_path: Path, start: float = 0.0, end: float = 100.0, steps: int = 100
 ) -> tuple[pd.DataFrame, dict[str, str]]:
@@ -61,8 +73,8 @@ def run_timecourse(
 
     Returns:
         The timecourse with the variable of integration in the first column
-        followed by the states and the algebraic variables, and the units of
-        every column.
+        followed by the states, the algebraic variables, the constants and
+        the computed constants, and the units of every column.
 
     Raises:
         ImportError: if libopencor is not installed.
@@ -103,6 +115,16 @@ def run_timecourse(
         name = _variable_name(task.algebraic_variable_name(k))
         data[name] = task.algebraic_variable(k)
         units[name] = task.algebraic_variable_unit(k)
+
+    rows = len(task.voi)
+    for k in range(task.constant_count):
+        name = _variable_name(task.constant_name(k))
+        data[name] = [_scalar(task.constant(k))] * rows
+        units[name] = task.constant_unit(k)
+    for k in range(task.computed_constant_count):
+        name = _variable_name(task.computed_constant_name(k))
+        data[name] = [_scalar(task.computed_constant(k))] * rows
+        units[name] = task.computed_constant_unit(k)
 
     logger.info("Simulated '%s': %d rows, %d columns", path, steps + 1, len(data))
     return pd.DataFrame(data), units

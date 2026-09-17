@@ -20,13 +20,14 @@ matplotlib.use("Agg")
 
 def test_run_timecourse_test_model() -> None:
     df, units = run_timecourse(TEST_MODEL_PATH, start=0.0, end=50.0, steps=10)
-    assert list(df.columns) == ["t", "m"]
+    assert list(df.columns) == ["t", "m", "alpha"]
     assert len(df) == 11
     assert df["t"].iloc[0] == 0.0
     assert df["t"].iloc[-1] == 50.0
     assert df["m"].iloc[0] == 10.0
     assert np.all(np.diff(df["m"].to_numpy()) < 0)
-    assert units == {"t": "second", "m": "kilogram"}
+    assert (df["alpha"] == 0.05).all()
+    assert units == {"t": "second", "m": "kilogram", "alpha": "per_second"}
 
 
 def test_run_timecourse_liver(tmp_path: Path) -> None:
@@ -41,6 +42,8 @@ def test_run_timecourse_liver(tmp_path: Path) -> None:
     ).getModel()
     for species in m_sbml.getListOfSpecies():
         assert species.getId() in df.columns
+    # compartments are constants of the CellML model
+    assert "Vli" in df.columns
     assert set(units) == set(df.columns)
 
 
@@ -61,5 +64,6 @@ def test_plot_timecourse() -> None:
     df, units = run_timecourse(TEST_MODEL_PATH, end=10.0, steps=5)
     fig = plot_timecourse(df, units, show=False)
     ax = fig.axes[0]
-    assert len(ax.lines) == 1
+    # one line per column other than the variable of integration: m, alpha
+    assert len(ax.lines) == 2
     assert ax.get_xlabel() == "t [second]"
