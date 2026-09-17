@@ -243,7 +243,8 @@ def write_selection(path: Path, ids: list[str]) -> Selection:
                 "models": list(selection.models),
             },
             indent=1,
-        ),
+        )
+        + "\n",
         encoding="utf-8",
     )
     return selection
