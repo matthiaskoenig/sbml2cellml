@@ -12,9 +12,15 @@
 - **Stoichiometry** of reactants and products is not applied to the kinetic law.
 - **Unset initial values** are set to `1.0` with a warning instead of being computed from the rules.
 
+### CellML to SBML
+
+- **NLA equations and external variables** are not supported and raise `CellML2SBMLConversionError`.
+- **Units on numbers** in formulas are not carried into the SBML math.
+- **Resets** trigger on the equality of the test variable and the test value; a continuous simulator may not fire this trigger, see the [limitations](conversion.md#limitations).
+
 ## Planned
 
-1. **CellML to SBML** converter, so that models can go both ways.
+1. **CellML to SBML** converter: done, see [Conversion](conversion.md#cellml-to-sbml).
 2. **SBML test suite roundtrip.** Every semantic test case is simulated with libroadrunner, converted to CellML, simulated with libopencor, converted back to SBML and simulated again; the results are compared with the expected results of the test suite. The status of every case is published on this site; the check gates on regressions against a committed expected-status list until every case passes.
 3. **BioModels check** of the curated models before every release.
 4. The conversion gaps above, driven by the failures of the test suite.
