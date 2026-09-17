@@ -25,7 +25,7 @@ from sbml2cellml.sbmlmath import (
     variable_node,
 )
 from sbml2cellml.units import UnitsConversionError, add_units, unit_id
-from sbml2cellml.variables import VariableIds, variable_key
+from sbml2cellml.variables import VariableIds
 
 logger = logging.getLogger(__name__)
 
@@ -171,9 +171,11 @@ def build_document(model: libcellml.Model, analyser_model: Any) -> libsbml.SBMLD
 
     # variables which only a reset writes are not constant, even though the
     # analyser types them CONSTANT or COMPUTED_CONSTANT (they have an
-    # `initial_value` and no equation)
+    # `initial_value` and no equation); the reset may be declared on a
+    # connected copy of the variable in another component, so the targets
+    # are keyed by SBML id, not by (component, variable) name
     reset_targets = {
-        variable_key(component.reset(k).variable())
+        ids.id_for(component.reset(k).variable())
         for component in _components(model)
         for k in range(component.resetCount())
     }
@@ -189,9 +191,10 @@ def build_document(model: libcellml.Model, analyser_model: Any) -> libsbml.SBMLD
             raise MathConversionError(
                 f"External variable '{variable.variable().name()}' is not supported."
             )
+        sid = ids.id_for(variable.variable())
         constant = (
             variable_type in (VariableType.CONSTANT, VariableType.COMPUTED_CONSTANT)
-            and variable_key(variable.variable()) not in reset_targets
+            and sid not in reset_targets
         )
         _add_parameter(model_sbml, variable, ids, unit_ids, constant=constant)
 

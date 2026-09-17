@@ -13,10 +13,14 @@ from sbml2cellml.cellml2sbml import CellML2SBMLConversionError, build_document
 from sbml2cellml.sbml import SBMLValidationError, validate_document
 from tests.cellml_models import (
     analyse,
+    assignment,
+    cn,
+    math,
     math_model,
     multi_component_model,
     nla_model,
     reset_model,
+    variable,
 )
 from tests.conftest import TEST_MODEL_PATH
 
@@ -140,6 +144,42 @@ def test_convert_reset_model(tmp_path: Path) -> None:
         libsbml.formulaToL3String(count_assignment.getMath())
         == "count + 1 dimensionless"
     )
+    assert validate_document(doc) == []
+
+
+def test_reset_target_on_connected_copy_is_not_constant() -> None:
+    """A reset may be declared on a connected copy of a variable living in
+    another component; the parameter of the representative must still be
+    made non-constant (the reset target is keyed by SBML id, not by
+    (component, variable) name)."""
+    model = reset_model()
+    environment = model.component("environment")
+    count = environment.variable("count")
+    m = environment.variable("m")
+
+    counter = libcellml.Component("counter")
+    model.addComponent(counter)
+    count_c = variable(counter, "count_c", "dimensionless", interface="public")
+    m_c = variable(counter, "m_c", "kilogram", interface="public")
+
+    count.setInterfaceType("public")
+    m.setInterfaceType("public")
+    libcellml.Variable.addEquivalence(count, count_c)
+    libcellml.Variable.addEquivalence(m, m_c)
+
+    reset = libcellml.Reset()
+    reset.setOrder(2)
+    reset.setVariable(count_c)
+    reset.setTestVariable(m_c)
+    reset.setTestValue(math(assignment("m_c", cn("7", "kilogram"))))
+    reset.setResetValue(
+        math(assignment("count_c", f"<apply><plus/><ci>count_c</ci>{cn('1')}</apply>"))
+    )
+    counter.addReset(reset)
+
+    doc = build_document(model, analyse(model))
+    p = parameters(doc.getModel())
+    assert not p["count"].getConstant()
     assert validate_document(doc) == []
 
 

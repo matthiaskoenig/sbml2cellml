@@ -30,12 +30,21 @@ STEPS = 10
 
 
 def test_roundtrip_glimepiride_liver(tmp_path: Path) -> None:
-    sbml_path = MODELS_DIR / "glimepiride_liver.xml"
+    original_doc = libsbml.readSBMLFromFile(str(MODELS_DIR / "glimepiride_liver.xml"))
+    original_model = original_doc.getModel()
+    dose_species = original_model.getSpecies("gli_ext")
+    if dose_species is None:
+        print([s.getId() for s in original_model.getListOfSpecies()])
+        raise AssertionError("glimepiride_liver.xml has no 'gli_ext' species.")
+    dose_species.setInitialConcentration(0.01)
+    sbml_path = tmp_path / "liver_dosed.xml"
+    libsbml.writeSBMLToFile(original_doc, str(sbml_path))
+
     cellml_path = tmp_path / "liver.cellml"
     convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
     doc = convert_cellml2sbml(cellml_path)
 
-    original = libsbml.readSBMLFromFile(str(sbml_path)).getModel()
+    original = original_model
     roundtrip = doc.getModel()
     original_ids = (
         {c.getId() for c in original.getListOfCompartments()}
@@ -74,6 +83,7 @@ def test_roundtrip_glimepiride_liver(tmp_path: Path) -> None:
     result = simulate_sbml(
         document_to_string(doc), selections, start=0.0, end=END, steps=STEPS
     )
+    assert np.abs(expected).max() > 0
     np.testing.assert_allclose(result, expected, rtol=1e-4, atol=1e-8)
 
 
