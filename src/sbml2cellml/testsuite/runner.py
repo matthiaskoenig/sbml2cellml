@@ -9,6 +9,7 @@ conversions in this process.
 """
 
 import logging
+import re
 from collections.abc import Callable
 from pathlib import Path
 
@@ -34,16 +35,24 @@ MESSAGE_LENGTH = 200
 #: integrator; passed to every roadrunner and libopencor simulation
 RELATIVE_TOLERANCE = 1e-9
 ABSOLUTE_TOLERANCE = 1e-12
+#: an absolute path quoted in an exception message (e.g. the suite path of a
+#: `CellMLValidationError`), reduced to its basename so the message does not
+#: depend on the machine it ran on
+_ABSOLUTE_PATH = re.compile(r"'[^']*/([^/']+)'")
 
 
 def _message(err: BaseException) -> str:
     """Type and first line of an exception, shortened.
 
-    When the first line ends with `:` (e.g. a `CellMLValidationError` whose
-    message continues with the list of issues), the second line is appended
-    too, so the message carries the first issue instead of just the count.
+    Absolute paths quoted in the exception text are reduced to their
+    basename first, so the message does not depend on `$HOME` or the suite
+    location. When the first line ends with `:` (e.g. a
+    `CellMLValidationError` whose message continues with the list of
+    issues), the second line is appended too, so the message carries the
+    first issue instead of just the count.
     """
-    lines = str(err).strip().splitlines()
+    text = _ABSOLUTE_PATH.sub(r"'\1'", str(err))
+    lines = text.strip().splitlines()
     first = lines[0] if lines else ""
     if first.endswith(":") and len(lines) > 1:
         first = f"{first} {lines[1].strip()}"
@@ -197,7 +206,9 @@ def run_suite(
         cases: the cases; unrunnable ones are recorded as skipped.
         work_dir: directory for the converted files, created if needed.
         timeout: seconds per simulator call.
-        progress: called with the case id after every runnable case.
+        progress: called with the finished status line of the case after
+            every runnable case, e.g. `00001 reference=pass sbml2cellml=pass
+            libopencor=fail cellml2sbml=pass roundtrip=fail`.
 
     Returns:
         The suite result.
@@ -220,7 +231,11 @@ def run_suite(
     ):
         for case in runnable:
             logger.info("case %s", case.id)
-            result.cases[case.id] = run_case(case, work_dir, roadrunner, libopencor)
+            case_result = run_case(case, work_dir, roadrunner, libopencor)
+            result.cases[case.id] = case_result
             if progress is not None:
-                progress(case.id)
+                statuses = " ".join(
+                    f"{stage}={case_result.stages[stage].status}" for stage in STAGES
+                )
+                progress(f"{case.id} {statuses}")
     return result

@@ -84,9 +84,22 @@ class SimulatorWorker:
         self._connection = None
 
     def _restart(self) -> None:
-        """Replace a dead or hanging process."""
+        """Replace a dead or hanging process.
+
+        The process is killed directly rather than through the polite
+        `stop()` (no point asking a hanging worker to exit and waiting 5 s
+        for a reply that never comes); `stop()` stays polite for the normal
+        context manager exit.
+        """
         logger.warning("%s worker replaced", self.name)
-        self.stop()
+        if self._process is not None:
+            if self._process.is_alive():
+                self._process.kill()
+            self._process.join()
+        if self._connection is not None:
+            self._connection.close()
+        self._process = None
+        self._connection = None
         self.start()
 
     def call(self, function: str, **kwargs: Any) -> dict[str, Any]:

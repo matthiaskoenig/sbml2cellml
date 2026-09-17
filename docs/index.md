@@ -5,6 +5,11 @@
 
 ## Features
 
+- conversion of compartments, parameters, species, assignment and rate rules and reactions into a single CellML component
+- conversion of CellML models to SBML: parameters with rules, unit definitions, resets as events, imports resolved
+- validation of the result with [libcellml](https://libcellml.org/)
+- timecourse simulation of the CellML with [libopencor](https://opencor.ws/libopencor/), see [Simulation](simulation.md)
+- the `sbml2cellml` and `cellml2sbml` command lines
 - the SBML test suite harness: every semantic case through both converters and both simulators, results on the [SBML test suite](testsuite.md) page
 
 ## Quickstart

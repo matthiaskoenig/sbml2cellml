@@ -49,6 +49,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
         enable-cache: true
     - name: Cache the SBML test suite
+      # the complete SBML test suite runs on linux only
+      if: runner.os == 'Linux'
       uses: actions/cache@v6
       with:
         path: ~/.cache/sbml2cellml

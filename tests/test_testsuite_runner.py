@@ -5,6 +5,7 @@ import shutil
 from pathlib import Path
 
 import libsbml
+import pytest
 
 from sbml2cellml import __version__
 from sbml2cellml.testsuite.cases import SUITE_VERSION, load_cases
@@ -34,6 +35,15 @@ def test_message_appends_second_line_when_first_ends_with_colon() -> None:
 def test_message_single_line_unchanged() -> None:
     err = ValueError("no time column")
     assert _message(err) == "ValueError: no time column"
+
+
+def test_message_reduces_absolute_paths_to_basename() -> None:
+    # the message must not depend on $HOME or where the suite was checked
+    # out, or the committed docs/testsuite.md would differ across machines
+    err = ValueError("model '/home/x/y/z/case.xml' is invalid")
+    message = _message(err)
+    assert "'case.xml'" in message
+    assert "/home/" not in message
 
 
 def test_reference_selections() -> None:
@@ -73,7 +83,24 @@ def test_run_suite_on_fixtures(tmp_path: Path) -> None:
             assert case.stages["roundtrip"].status == "skip"
     path = tmp_path / "results.json"
     result.to_json(path)
-    assert SuiteResult.from_json(path) == result
+    loaded = SuiteResult.from_json(path)
+    # to_json rounds max_excess to 3 significant digits (so results.json is
+    # stable across machines); everything else roundtrips exactly
+    assert set(loaded.cases) == set(result.cases)
+    for cid, case in loaded.cases.items():
+        original = result.cases[cid]
+        assert case.test_tags == original.test_tags
+        assert case.component_tags == original.component_tags
+        for stage, stage_result in case.stages.items():
+            original_stage = original.stages[stage]
+            assert stage_result.status == original_stage.status
+            assert stage_result.message == original_stage.message
+            if original_stage.max_excess is None:
+                assert stage_result.max_excess is None
+            else:
+                assert stage_result.max_excess == pytest.approx(
+                    original_stage.max_excess, rel=1e-2
+                )
 
 
 def test_run_suite_skips_unrunnable(tmp_path: Path) -> None:

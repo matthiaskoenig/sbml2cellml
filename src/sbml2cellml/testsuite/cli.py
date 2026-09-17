@@ -81,9 +81,6 @@ def _run(args: argparse.Namespace) -> int:
         return 1
 
     result = run_suite(cases, Path(args.work_dir), timeout=args.timeout, progress=print)
-    for cid, case in result.cases.items():
-        statuses = " ".join(f"{stage}={case.stages[stage].status}" for stage in STAGES)
-        print(f"{cid} {statuses}")
     for stage in STAGES:
         counts = result.counts(stage)
         print(

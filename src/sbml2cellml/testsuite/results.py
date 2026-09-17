@@ -47,11 +47,23 @@ class SuiteResult:
         return counts
 
     def to_json(self, path: Path) -> None:
-        """Write the result as JSON, sorted and indented (deterministic)."""
+        """Write the result as JSON, sorted and indented (deterministic).
+
+        `max_excess` is rounded to 3 significant digits: its exact value is
+        an artifact of the solver and the machine it ran on, so keeping the
+        full precision would churn thousands of lines on every regeneration.
+        """
+        cases = {}
+        for cid, case in sorted(self.cases.items()):
+            case_data = asdict(case)
+            for stage in case_data["stages"].values():
+                if stage["max_excess"] is not None:
+                    stage["max_excess"] = float(f"{stage['max_excess']:.3g}")
+            cases[cid] = case_data
         data: dict[str, Any] = {
             "suite": self.suite,
             "version": self.version,
-            "cases": {cid: asdict(case) for cid, case in sorted(self.cases.items())},
+            "cases": cases,
             "skipped": dict(sorted(self.skipped.items())),
         }
         Path(path).write_text(

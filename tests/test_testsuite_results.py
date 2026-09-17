@@ -45,6 +45,23 @@ def test_json_roundtrip(tmp_path: Path) -> None:
     assert path.read_text() == text  # deterministic
 
 
+def test_json_rounds_max_excess(tmp_path: Path) -> None:
+    # a full-precision max_excess is an artifact of the solver and the
+    # machine it ran on; rounding to 3 significant digits keeps the file
+    # stable across machines instead of churning on every regeneration
+    path = tmp_path / "results.json"
+    original = suite("fail", "S1 exceeds the tolerance")
+    original.cases["00001"].stages["roundtrip"].max_excess = 0.5
+    original.to_json(path)
+    loaded = SuiteResult.from_json(path)
+    assert loaded.cases["00001"].stages["roundtrip"].max_excess == 0.5
+
+    original.cases["00001"].stages["roundtrip"].max_excess = 0.009634334135793121
+    original.to_json(path)
+    loaded = SuiteResult.from_json(path)
+    assert loaded.cases["00001"].stages["roundtrip"].max_excess == 0.00963
+
+
 def test_counts() -> None:
     result = suite("fail")
     assert result.counts("roundtrip") == {"pass": 0, "fail": 1, "skip": 1}

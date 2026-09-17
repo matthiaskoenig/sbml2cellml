@@ -260,8 +260,13 @@ def load_case(case_dir: Path) -> Case:
     info = parse_model_info((case_dir / f"{cid}-model.m").read_text(encoding="utf-8"))
     expected = pd.read_csv(case_dir / f"{cid}-results.csv")
     # the first column is always the variable of integration, named "time"
-    # in most cases but "Time" (or another case) in many of them
-    expected = expected.rename(columns={expected.columns[0]: "time"})
+    # in most cases but "Time" (or another case) in many of them; renamed
+    # only when no other column is already "time" (e.g. 01820/01821, whose
+    # first column is a species also named "time"), else left as is so the
+    # comparison reports "duplicate column names" instead of silently
+    # dropping the real time column
+    if "time" not in expected.columns[1:]:
+        expected = expected.rename(columns={expected.columns[0]: "time"})
     return Case(
         id=cid,
         case_dir=case_dir,
