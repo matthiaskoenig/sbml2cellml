@@ -18,9 +18,11 @@
 - **Units on numbers** in formulas are not carried into the SBML math.
 - **Resets** trigger on the equality of the test variable and the test value; a continuous simulator may not fire this trigger, see the [limitations](conversion.md#limitations).
 
+The failure reasons of the [SBML test suite report](testsuite.md#failure-reasons) are the work list for closing these gaps.
+
 ## Planned
 
 1. **CellML to SBML** converter: done, see [Conversion](conversion.md#cellml-to-sbml).
-2. **SBML test suite roundtrip.** Every semantic test case is simulated with libroadrunner, converted to CellML, simulated with libopencor, converted back to SBML and simulated again; the results are compared with the expected results of the test suite. The status of every case is published on this site; the check gates on regressions against a committed expected-status list until every case passes.
+2. **SBML test suite roundtrip**: done, see [SBML test suite](testsuite.md).
 3. **BioModels check** of the curated models before every release.
 4. The conversion gaps above, driven by the failures of the test suite.

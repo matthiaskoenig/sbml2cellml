@@ -48,8 +48,25 @@ def _variable_name(name: str) -> str:
     return name.rsplit("/", 1)[-1]
 
 
+def _scalar(value: Any) -> float:
+    """A constant of libopencor as a plain float.
+
+    `task.constant(k)` and `task.computed_constant(k)` return the value
+    repeated for every row as a numpy array rather than a single number;
+    take the first element in that case.
+    """
+    if hasattr(value, "__len__"):
+        value = value[0]
+    return float(value)
+
+
 def run_timecourse(
-    cellml_path: Path, start: float = 0.0, end: float = 100.0, steps: int = 100
+    cellml_path: Path,
+    start: float = 0.0,
+    end: float = 100.0,
+    steps: int = 100,
+    relative_tolerance: float | None = None,
+    absolute_tolerance: float | None = None,
 ) -> tuple[pd.DataFrame, dict[str, str]]:
     """Run a uniform timecourse of a CellML model.
 
@@ -58,11 +75,15 @@ def run_timecourse(
         start: start time of the output.
         end: end time of the output.
         steps: number of steps, the output has `steps + 1` rows.
+        relative_tolerance: relative tolerance of the ODE solver, the
+            libopencor default when `None`.
+        absolute_tolerance: absolute tolerance of the ODE solver, the
+            libopencor default when `None`.
 
     Returns:
         The timecourse with the variable of integration in the first column
-        followed by the states and the algebraic variables, and the units of
-        every column.
+        followed by the states, the algebraic variables, the constants and
+        the computed constants, and the units of every column.
 
     Raises:
         ImportError: if libopencor is not installed.
@@ -85,6 +106,10 @@ def run_timecourse(
     simulation.output_start_time = start
     simulation.output_end_time = end
     simulation.number_of_steps = steps
+    if relative_tolerance is not None:
+        simulation.ode_solver.relative_tolerance = relative_tolerance
+    if absolute_tolerance is not None:
+        simulation.ode_solver.absolute_tolerance = absolute_tolerance
 
     instance = document.instantiate()
     _raise_on_issues("instance", instance.issues)
@@ -103,6 +128,16 @@ def run_timecourse(
         name = _variable_name(task.algebraic_variable_name(k))
         data[name] = task.algebraic_variable(k)
         units[name] = task.algebraic_variable_unit(k)
+
+    rows = len(task.voi)
+    for k in range(task.constant_count):
+        name = _variable_name(task.constant_name(k))
+        data[name] = [_scalar(task.constant(k))] * rows
+        units[name] = task.constant_unit(k)
+    for k in range(task.computed_constant_count):
+        name = _variable_name(task.computed_constant_name(k))
+        data[name] = [_scalar(task.computed_constant(k))] * rows
+        units[name] = task.computed_constant_unit(k)
 
     logger.info("Simulated '%s': %d rows, %d columns", path, steps + 1, len(data))
     return pd.DataFrame(data), units

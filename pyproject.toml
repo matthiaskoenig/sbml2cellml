@@ -49,8 +49,15 @@ simulate = [
 	"pandas>=3.0.5",
 	"matplotlib>=3.11.1",
 ]
-dev = [
+# the SBML test suite harness: roadrunner as reference simulator, requests for
+# the download of the suite
+testsuite = [
 	"sbml2cellml[simulate]",
+	"libroadrunner>=2.10.0",
+	"requests>=2.32",
+]
+dev = [
+	"sbml2cellml[testsuite]",
 	# wheel from the GitHub release, see [tool.uv.index] below
 	"libopencor==1.20260803.0",
 	"bump-my-version>=1.5.1",
@@ -63,12 +70,12 @@ dev = [
 	"pytest-xdist>=3.8",
 	"zensical>=0.0.60",
 	"mkdocstrings-python>=2.0.8",
-	"libroadrunner>=2.10.0",
 ]
 
 [project.scripts]
 sbml2cellml = "sbml2cellml.cli:main"
 cellml2sbml = "sbml2cellml.cli:main_cellml2sbml"
+sbml2cellml-testsuite = "sbml2cellml.testsuite.cli:main"
 
 [project.urls]
 Homepage = "https://matthiaskoenig.github.io/sbml2cellml"
@@ -100,6 +107,9 @@ libopencor = { index = "libopencor" }
 testpaths = ["tests"]
 # the tests run in parallel (pytest-xdist), `pytest -n 0` runs them in one process
 addopts = "-n auto"
+markers = [
+	"testsuite: runs the complete SBML test suite, enabled with SBML2CELLML_TESTSUITE=1",
+]
 
 [tool.ty.environment]
 # the package lives in the src layout, the examples and scripts are modules at

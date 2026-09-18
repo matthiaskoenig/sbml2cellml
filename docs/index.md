@@ -3,6 +3,15 @@
 
 `sbml2cellml` converts between [SBML (Systems Biology Markup Language)](https://sbml.org) and [CellML 2.0](https://cellml.org), so that a model developed with one tooling can be used, simulated and shared in the other ecosystem. The source code is available from [https://github.com/matthiaskoenig/sbml2cellml](https://github.com/matthiaskoenig/sbml2cellml).
 
+## Features
+
+- conversion of compartments, parameters, species, assignment and rate rules and reactions into a single CellML component
+- conversion of CellML models to SBML: parameters with rules, unit definitions, resets as events, imports resolved
+- validation of the result with [libcellml](https://libcellml.org/)
+- timecourse simulation of the CellML with [libopencor](https://opencor.ws/libopencor/), see [Simulation](simulation.md)
+- the `sbml2cellml` and `cellml2sbml` command lines
+- the SBML test suite harness: every semantic case through both converters and both simulators, results on the [SBML test suite](testsuite.md) page
+
 ## Quickstart
 
 ```python
