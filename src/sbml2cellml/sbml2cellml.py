@@ -611,9 +611,9 @@ def _collect_reaction_terms(
 
     The rate of a reaction (`rates`) is in amount per time. Multiplied with
     the stoichiometry (the variable of a species reference with an id), it
-    is subtracted for every reactant and added for every product; for a
-    species in concentration the sum is divided by the size of its
-    compartment.
+    is subtracted for every reactant and added for every product which is not
+    a boundary species (reactions do not change those); for a species in
+    concentration the sum is divided by the size of its compartment.
 
     Returns:
         The right hand side of `d species / d time`, by species id.
@@ -626,12 +626,16 @@ def _collect_reaction_terms(
             continue
         formula = rates[rid]
         reference: libsbml.SpeciesReference
-        for reference in reaction.getListOfReactants():
-            factor = _stoichiometry_factor(rid, reference)
-            _append_term(terms, reference.getSpecies(), f"- {factor}({formula})")
-        for reference in reaction.getListOfProducts():
-            factor = _stoichiometry_factor(rid, reference)
-            _append_term(terms, reference.getSpecies(), f"+ {factor}({formula})")
+        for sign, references in (
+            ("-", reaction.getListOfReactants()),
+            ("+", reaction.getListOfProducts()),
+        ):
+            for reference in references:
+                sid: str = reference.getSpecies()
+                if model_sbml.getSpecies(sid).getBoundaryCondition():
+                    continue
+                factor = _stoichiometry_factor(rid, reference)
+                _append_term(terms, sid, f"{sign} {factor}({formula})")
 
     for sid, formula in terms.items():
         if not in_amount[sid]:

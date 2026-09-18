@@ -109,6 +109,20 @@ def test_run_timecourse_duplicate_names_raise(tmp_path: Path) -> None:
         run_timecourse(cellml_path)
 
 
+def test_run_timecourse_boundary_species_is_not_changed_by_reactions(
+    tmp_path: Path,
+) -> None:
+    """S1 (boundary) -> S2: S1 stays 10, S2 = 4 + k1 * S1 * t = 4 + 5 t."""
+    model_sbml = simple_model("boundary")
+    model_sbml.getSpecies("S1").setBoundaryCondition(True)
+    sbml_path = write_sbml(tmp_path / "boundary.xml", model_sbml)
+    cellml_path = tmp_path / "boundary.cellml"
+    convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
+    df, _ = run_timecourse(cellml_path, end=4.0, steps=4)
+    assert np.allclose(df["S1"], 10.0)
+    assert np.allclose(df["S2"], 4.0 + 5.0 * df["time"])
+
+
 def test_run_timecourse_missing_file(tmp_path: Path) -> None:
     with pytest.raises(SimulationError):
         run_timecourse(tmp_path / "missing.cellml")
