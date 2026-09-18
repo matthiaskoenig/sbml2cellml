@@ -252,3 +252,17 @@ def test_is_informative_all_nan_is_not_informative() -> None:
 def test_strip_brackets() -> None:
     df = pd.DataFrame({"time": [0.0], "[S1]": [1.0], "k": [2.0]})
     assert list(strip_brackets(df).columns) == ["time", "S1", "k"]
+
+
+def test_requested_frame_many_variables_without_warning() -> None:
+    """Building the frame column by column fragments it (PerformanceWarning)."""
+    import warnings
+
+    names = tuple(f"p{k}" for k in range(200))
+    df = pd.DataFrame({"time": [0.0, 1.0], **{name: [1.0, 2.0] for name in names}})
+    settings = Settings(0.0, 1.0, 1, names, 0, 0, frozenset(), frozenset())
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        out = requested_frame(df, {}, settings)
+    assert list(out.columns) == ["time", *names]
+    assert out["p199"].tolist() == [1.0, 2.0]
