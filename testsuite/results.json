@@ -1184,13 +1184,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0008,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0008,
@@ -1198,14 +1198,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0008,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -1224,13 +1224,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0008,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0008,
@@ -1238,14 +1238,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0008,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -6991,13 +6991,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0008,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0008,
@@ -7005,14 +7005,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0008,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -37418,13 +37418,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.249,
+     "message": "k1 exceeds the tolerance by 0.249",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.00108,
@@ -37432,14 +37432,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.249,
+     "message": "k1 exceeds the tolerance by 0.249",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -37457,13 +37457,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.049,
+     "message": "k1 exceeds the tolerance by 0.049",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.00104,
@@ -37471,14 +37471,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.049,
+     "message": "k1 exceeds the tolerance by 0.049",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -37496,13 +37496,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.00106,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00106,
@@ -37510,14 +37510,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.00106,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": []
@@ -37533,13 +37533,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.00112,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00112,
@@ -37547,14 +37547,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.00112,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -37572,13 +37572,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.00109,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00109,
@@ -37586,14 +37586,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.00109,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -37611,13 +37611,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.00106,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00106,
@@ -37625,14 +37625,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.00106,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": []
@@ -37823,13 +37823,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 2; S3 exceeds the tolerance by 3",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -37837,14 +37837,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 2; S3 exceeds the tolerance by 3",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -37865,13 +37865,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.0,
+     "message": "S1 exceeds the tolerance by 4; S2 exceeds the tolerance by 5; S3 exceeds the tolerance by 6",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -37879,14 +37879,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.0,
+     "message": "S1 exceeds the tolerance by 4; S2 exceeds the tolerance by 5; S3 exceeds the tolerance by 6",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -37993,13 +37993,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "S1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -38007,14 +38007,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "S1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -38036,13 +38036,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "S1 exceeds the tolerance by 3; S2 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -38050,14 +38050,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "S1 exceeds the tolerance by 3; S2 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -38663,13 +38663,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.00047,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00047,
@@ -38677,14 +38677,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.00047,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": []
@@ -38700,13 +38700,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": Infinity,
+     "message": "P exceeds the tolerance by inf; Q exceeds the tolerance by inf; R exceeds the tolerance by inf",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -38714,14 +38714,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": Infinity,
+     "message": "P exceeds the tolerance by inf; Q exceeds the tolerance by inf; R exceeds the tolerance by inf",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -38778,13 +38778,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 100.0,
+     "message": "S exceeds the tolerance by 100",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.03,
@@ -38792,14 +38792,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 100.0,
+     "message": "S exceeds the tolerance by 100",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -38821,13 +38821,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 99.0,
+     "message": "S exceeds the tolerance by 99",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.01,
@@ -38835,14 +38835,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 99.0,
+     "message": "S exceeds the tolerance by 99",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -38862,13 +38862,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -38876,14 +38876,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -38944,13 +38944,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 23.0,
+     "message": "P1 exceeds the tolerance by 2.7; P4 exceeds the tolerance by 2.14; P5 exceeds the tolerance by 0.047; P6 exceeds the tolerance by 0.571; P7 exceeds the tolerance by 1.52; P8 exceeds the tolerance by 0.228; P9 exceeds the tolerance by 2.43; P11 exceeds the tolerance by 3; P12 exceeds the tolerance by 5; P13 exceeds the tolerance by 1.95; P14 exceeds the tolerance by 0.0239; P16 exceeds the toleranc",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -38958,14 +38958,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 23.0,
+     "message": "P1 exceeds the tolerance by 2.7; P4 exceeds the tolerance by 2.14; P5 exceeds the tolerance by 0.047; P6 exceeds the tolerance by 0.571; P7 exceeds the tolerance by 1.52; P8 exceeds the tolerance by 0.228; P9 exceeds the tolerance by 2.43; P11 exceeds the tolerance by 3; P12 exceeds the tolerance by 5; P13 exceeds the tolerance by 1.95; P14 exceeds the tolerance by 0.0239; P16 exceeds the toleranc",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -39025,13 +39025,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 23.0,
+     "message": "P1 exceeds the tolerance by 2.14; P3 exceeds the tolerance by 1; P4 exceeds the tolerance by 1; P5 exceeds the tolerance by 2; P6 exceeds the tolerance by 2; P7 exceeds the tolerance by 1; P8 exceeds the tolerance by 2; P9 exceeds the tolerance by 23; P10 exceeds the tolerance by 2; P11 exceeds the tolerance by 1; P12 exceeds the tolerance by 1; P13 exceeds the tolerance by 1; P14 exceeds the tole",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.000112,
@@ -39039,14 +39039,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 23.0,
+     "message": "P1 exceeds the tolerance by 2.14; P3 exceeds the tolerance by 1; P4 exceeds the tolerance by 1; P5 exceeds the tolerance by 2; P6 exceeds the tolerance by 2; P7 exceeds the tolerance by 1; P8 exceeds the tolerance by 2; P9 exceeds the tolerance by 23; P10 exceeds the tolerance by 2; P11 exceeds the tolerance by 1; P12 exceeds the tolerance by 1; P13 exceeds the tolerance by 1; P14 exceeds the tole",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -39108,13 +39108,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.02e+23,
+     "message": "P1 exceeds the tolerance by 6.02e+23; P2 exceeds the tolerance by 6.02e+23; P3 exceeds the tolerance by 6.02e+23; P4 exceeds the tolerance by 6.02e+23; P5 exceeds the tolerance by 4.18e+18",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -418000000000000.0,
@@ -39122,14 +39122,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.02e+23,
+     "message": "P1 exceeds the tolerance by 6.02e+23; P2 exceeds the tolerance by 6.02e+23; P3 exceeds the tolerance by 6.02e+23; P4 exceeds the tolerance by 6.02e+23; P5 exceeds the tolerance by 4.18e+18",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -39148,13 +39148,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -418000000000000.0,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -418000000000000.0,
@@ -39162,14 +39162,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -418000000000000.0,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -39190,13 +39190,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 100.0,
+     "message": "S exceeds the tolerance by 100",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.03,
@@ -39204,14 +39204,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 100.0,
+     "message": "S exceeds the tolerance by 100",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -39233,13 +39233,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 9.89,
+     "message": "Q exceeds the tolerance by 9.89; R2 exceeds the tolerance by 9.89",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.01,
@@ -39247,14 +39247,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 9.89,
+     "message": "Q exceeds the tolerance by 9.89; R2 exceeds the tolerance by 9.89",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -39276,13 +39276,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 100.0,
+     "message": "S exceeds the tolerance by 100",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.03,
@@ -39290,14 +39290,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 100.0,
+     "message": "S exceeds the tolerance by 100",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -39320,13 +39320,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 100.0,
+     "message": "S exceeds the tolerance by 100",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.03,
@@ -39334,14 +39334,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 100.0,
+     "message": "S exceeds the tolerance by 100",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -39367,13 +39367,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 990.0,
+     "message": "S exceeds the tolerance by 990",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.01,
@@ -39381,14 +39381,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 990.0,
+     "message": "S exceeds the tolerance by 990",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -39412,13 +39412,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.94,
+     "message": "Q exceeds the tolerance by 4.94; R exceeds the tolerance by 4.94",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.01,
@@ -39426,14 +39426,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.94,
+     "message": "Q exceeds the tolerance by 4.94; R exceeds the tolerance by 4.94",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -39809,13 +39809,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.0,
+     "message": "x exceeds the tolerance by 5; y exceeds the tolerance by 1; z exceeds the tolerance by 3",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -39823,14 +39823,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.0,
+     "message": "x exceeds the tolerance by 5; y exceeds the tolerance by 1; z exceeds the tolerance by 3",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -39853,13 +39853,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "x exceeds the tolerance by 2; p exceeds the tolerance by 3; q exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -39867,14 +39867,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "x exceeds the tolerance by 2; p exceeds the tolerance by 3; q exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -39893,13 +39893,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "x exceeds the tolerance by 2; p exceeds the tolerance by 3; q exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -39907,14 +39907,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "x exceeds the tolerance by 2; p exceeds the tolerance by 3; q exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -40151,13 +40151,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "p2 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -40165,14 +40165,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "p2 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -40233,13 +40233,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "p1 exceeds the tolerance by 1; p2 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -40247,14 +40247,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "p1 exceeds the tolerance by 1; p2 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -45108,13 +45108,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "a exceeds the tolerance by 1; d exceeds the tolerance by 1; e exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -45122,14 +45122,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "a exceeds the tolerance by 1; d exceeds the tolerance by 1; e exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -45148,13 +45148,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "b exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -45162,14 +45162,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "b exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -45188,13 +45188,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "a exceeds the tolerance by 1; b exceeds the tolerance by 3; e exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -45202,14 +45202,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "a exceeds the tolerance by 1; b exceeds the tolerance by 3; e exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -45228,13 +45228,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 7.0,
+     "message": "a exceeds the tolerance by 2; b exceeds the tolerance by 7",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -45242,14 +45242,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 7.0,
+     "message": "a exceeds the tolerance by 2; b exceeds the tolerance by 7",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -45268,13 +45268,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -45282,14 +45282,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -45397,13 +45397,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "e1 exceeds the tolerance by 2; e2 exceeds the tolerance by 3",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -45411,14 +45411,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "e1 exceeds the tolerance by 2; e2 exceeds the tolerance by 3",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -45716,13 +45716,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0005,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0005,
@@ -45730,14 +45730,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0005,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -46243,13 +46243,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "x exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -46257,14 +46257,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "x exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -46324,13 +46324,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -46338,14 +46338,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -46366,13 +46366,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "x exceeds the tolerance by 4",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -46380,14 +46380,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "x exceeds the tolerance by 4",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -46407,13 +46407,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "x exceeds the tolerance by 4",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -46421,14 +46421,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "x exceeds the tolerance by 4",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -46448,13 +46448,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "x exceeds the tolerance by 4",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -46462,14 +46462,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "x exceeds the tolerance by 4",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -46567,13 +46567,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.0,
+     "message": "a exceeds the tolerance by 6; b exceeds the tolerance by 4; c exceeds the tolerance by 4; d exceeds the tolerance by 2; e exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0003,
@@ -46581,14 +46581,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.0,
+     "message": "a exceeds the tolerance by 6; b exceeds the tolerance by 4; c exceeds the tolerance by 4; d exceeds the tolerance by 2; e exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -46607,13 +46607,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.0,
+     "message": "a exceeds the tolerance by 1; b exceeds the tolerance by 1; c exceeds the tolerance by 3; d exceeds the tolerance by 3; e exceeds the tolerance by 5; f exceeds the tolerance by 5",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0003,
@@ -46621,14 +46621,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.0,
+     "message": "a exceeds the tolerance by 1; b exceeds the tolerance by 1; c exceeds the tolerance by 3; d exceeds the tolerance by 3; e exceeds the tolerance by 5; f exceeds the tolerance by 5",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -47302,13 +47302,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -47316,14 +47316,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -47421,13 +47421,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -47435,14 +47435,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -47461,13 +47461,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -47475,14 +47475,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -47501,13 +47501,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -47515,14 +47515,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -47541,13 +47541,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -47555,14 +47555,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": []
@@ -47579,13 +47579,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -47593,14 +47593,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -47621,13 +47621,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -47635,14 +47635,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -47662,13 +47662,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -47676,14 +47676,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -47702,13 +47702,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -47716,14 +47716,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -47742,13 +47742,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -47756,14 +47756,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -47820,13 +47820,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -47834,14 +47834,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -47860,13 +47860,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "p2 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -47874,14 +47874,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "p2 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -47900,13 +47900,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "p2 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -47914,14 +47914,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "p2 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -48849,13 +48849,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0003,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0003,
@@ -48863,14 +48863,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0003,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -48888,13 +48888,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "p1 exceeds the tolerance by 3",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0005,
@@ -48902,14 +48902,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "p1 exceeds the tolerance by 3",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -48928,13 +48928,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -48942,14 +48942,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -48968,13 +48968,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "p2 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -48982,14 +48982,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "p2 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -49008,13 +49008,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 199.0,
+     "message": "p1 exceeds the tolerance by 2; p2 exceeds the tolerance by 29; p3 exceeds the tolerance by 199",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -49022,14 +49022,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 199.0,
+     "message": "p1 exceeds the tolerance by 2; p2 exceeds the tolerance by 29; p3 exceeds the tolerance by 199",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -49048,13 +49048,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 29.0,
+     "message": "p1 exceeds the tolerance by 11; p2 exceeds the tolerance by 29; p3 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0003,
@@ -49062,14 +49062,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 29.0,
+     "message": "p1 exceeds the tolerance by 11; p2 exceeds the tolerance by 29; p3 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -49298,13 +49298,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "p1 exceeds the tolerance by 1; p2 exceeds the tolerance by 1; p3 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -49312,14 +49312,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "p1 exceeds the tolerance by 1; p2 exceeds the tolerance by 1; p3 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -49338,13 +49338,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.0,
+     "message": "p1 exceeds the tolerance by 1; p3 exceeds the tolerance by 1; p4 exceeds the tolerance by 3; p5 exceeds the tolerance by 5",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -49352,14 +49352,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.0,
+     "message": "p1 exceeds the tolerance by 1; p3 exceeds the tolerance by 1; p4 exceeds the tolerance by 3; p5 exceeds the tolerance by 5",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -49378,13 +49378,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "p1 exceeds the tolerance by 3",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0003,
@@ -49392,14 +49392,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "p1 exceeds the tolerance by 3",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -49420,13 +49420,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "p1 exceeds the tolerance by 4",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -49434,14 +49434,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "p1 exceeds the tolerance by 4",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -49462,13 +49462,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 15.0,
+     "message": "p1 exceeds the tolerance by 15",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0006,
@@ -49476,14 +49476,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 15.0,
+     "message": "p1 exceeds the tolerance by 15",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -49503,13 +49503,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 15.0,
+     "message": "p1 exceeds the tolerance by 15",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0006,
@@ -49517,14 +49517,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 15.0,
+     "message": "p1 exceeds the tolerance by 15",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -49585,13 +49585,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "p1 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -49599,14 +49599,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "p1 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -49665,13 +49665,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -49679,14 +49679,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -49705,13 +49705,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "p2 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": null,
@@ -49719,14 +49719,14 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "p2 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -50058,13 +50058,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -50072,14 +50072,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -50098,13 +50098,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -50112,14 +50112,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -50179,13 +50179,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "p1 exceeds the tolerance by 3",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -50193,14 +50193,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "p1 exceeds the tolerance by 3",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -50220,13 +50220,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.0,
+     "message": "p1 exceeds the tolerance by 5",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -50234,14 +50234,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.0,
+     "message": "p1 exceeds the tolerance by 5",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -50261,13 +50261,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.0,
+     "message": "p1 exceeds the tolerance by 5",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -50275,14 +50275,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.0,
+     "message": "p1 exceeds the tolerance by 5",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -50469,13 +50469,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0005,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0005,
@@ -50483,14 +50483,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0005,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -50509,13 +50509,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -50523,14 +50523,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -50549,13 +50549,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -50563,14 +50563,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -50589,13 +50589,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.0,
+     "message": "p1 exceeds the tolerance by 5",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0007,
@@ -50603,14 +50603,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.0,
+     "message": "p1 exceeds the tolerance by 5",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -50629,13 +50629,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 9.0,
+     "message": "p1 exceeds the tolerance by 9",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0011,
@@ -50643,14 +50643,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 9.0,
+     "message": "p1 exceeds the tolerance by 9",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -50669,13 +50669,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 26.0,
+     "message": "p1 exceeds the tolerance by 26",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0028,
@@ -50683,14 +50683,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 26.0,
+     "message": "p1 exceeds the tolerance by 26",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -50709,13 +50709,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.602,
+     "message": "p2 exceeds the tolerance by 0.602",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.00026,
@@ -50723,14 +50723,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.602,
+     "message": "p2 exceeds the tolerance by 0.602",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -51003,13 +51003,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 11.0,
+     "message": "a_truncated exceeds the tolerance by 3.3e-08; a_1865 exceeds the tolerance by 11; a_1873 exceeds the tolerance by 0.827; a_1890a exceeds the tolerance by 0.162; a_1890b exceeds the tolerance by 0.00961; a_1901 exceeds the tolerance by 0.0229; a_1903 exceeds the tolerance by 0.544; a_1904 exceeds the tolerance by 0.445; a_1908 exceeds the tolerance by 0.00368; a_1909 exceeds the tolerance by 0.0229",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1.56e-09,
@@ -51017,14 +51017,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 11.0,
+     "message": "a_truncated exceeds the tolerance by 3.3e-08; a_1865 exceeds the tolerance by 11; a_1873 exceeds the tolerance by 0.827; a_1890a exceeds the tolerance by 0.162; a_1890b exceeds the tolerance by 0.00961; a_1901 exceeds the tolerance by 0.0229; a_1903 exceeds the tolerance by 0.544; a_1904 exceeds the tolerance by 0.445; a_1908 exceeds the tolerance by 0.00368; a_1909 exceeds the tolerance by 0.0229",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -51214,13 +51214,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.0,
+     "message": "x exceeds the tolerance by 6; y exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -51228,14 +51228,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.0,
+     "message": "x exceeds the tolerance by 6; y exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -51256,13 +51256,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 7.0,
+     "message": "x exceeds the tolerance by 6; y exceeds the tolerance by 7",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -51270,14 +51270,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 7.0,
+     "message": "x exceeds the tolerance by 6; y exceeds the tolerance by 7",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -51298,13 +51298,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "x exceeds the tolerance by 4; y exceeds the tolerance by 3",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -51312,14 +51312,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "x exceeds the tolerance by 4; y exceeds the tolerance by 3",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -51340,13 +51340,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 7.0,
+     "message": "x exceeds the tolerance by 4; y exceeds the tolerance by 7",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -51354,14 +51354,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 7.0,
+     "message": "x exceeds the tolerance by 4; y exceeds the tolerance by 7",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -51381,13 +51381,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "x exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0006,
@@ -51395,14 +51395,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "x exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -51422,13 +51422,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "x exceeds the tolerance by 4; y exceeds the tolerance by 3",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -51436,14 +51436,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "x exceeds the tolerance by 4; y exceeds the tolerance by 3",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -51464,13 +51464,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 7.0,
+     "message": "x exceeds the tolerance by 4; y exceeds the tolerance by 7",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0008,
@@ -51478,14 +51478,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 7.0,
+     "message": "x exceeds the tolerance by 4; y exceeds the tolerance by 7",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -51505,13 +51505,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "x exceeds the tolerance by 4",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -51519,14 +51519,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "x exceeds the tolerance by 4",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -51546,13 +51546,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "x exceeds the tolerance by 3",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -51560,14 +51560,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "x exceeds the tolerance by 3",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -51588,13 +51588,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "x exceeds the tolerance by 3; y exceeds the tolerance by 0.999",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -51602,14 +51602,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "x exceeds the tolerance by 3; y exceeds the tolerance by 0.999",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -51762,13 +51762,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -51776,14 +51776,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -51801,13 +51801,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0003,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0003,
@@ -51815,14 +51815,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0003,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -54638,13 +54638,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 200.0,
+     "message": "Allsum exceeds the tolerance by 200",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -54652,14 +54652,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 200.0,
+     "message": "Allsum exceeds the tolerance by 200",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -54731,13 +54731,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.02,
+     "message": "P1 exceeds the tolerance by 5.02",
+     "status": "fail"
     },
     "reference": {
      "max_excess": null,
@@ -54745,14 +54745,14 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.02,
+     "message": "P1 exceeds the tolerance by 5.02",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -54948,13 +54948,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -54962,14 +54962,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -55117,13 +55117,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "a exceeds the tolerance by 1; d exceeds the tolerance by 1; e exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -55131,14 +55131,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "a exceeds the tolerance by 1; d exceeds the tolerance by 1; e exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -55321,13 +55321,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2; P2 exceeds the tolerance by 2; P3 exceeds the tolerance by 2; P4 exceeds the tolerance by 2; P5 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -55335,14 +55335,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2; P2 exceeds the tolerance by 2; P3 exceeds the tolerance by 2; P4 exceeds the tolerance by 2; P5 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -55677,13 +55677,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 15.0,
+     "message": "P4 exceeds the tolerance by 2.14; P5 exceeds the tolerance by 0.047; P6 exceeds the tolerance by 0.571; P7 exceeds the tolerance by 1.52; P8 exceeds the tolerance by 0.228; P9 exceeds the tolerance by 2.43; P11 exceeds the tolerance by 3; P12 exceeds the tolerance by 5; P13 exceeds the tolerance by 1.95; P14 exceeds the tolerance by 0.0239; P16 exceeds the tolerance by 1.72; P17 exceeds the tolera",
+     "status": "fail"
     },
     "reference": {
      "max_excess": null,
@@ -55691,14 +55691,14 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 15.0,
+     "message": "P4 exceeds the tolerance by 2.14; P5 exceeds the tolerance by 0.047; P6 exceeds the tolerance by 0.571; P7 exceeds the tolerance by 1.52; P8 exceeds the tolerance by 0.228; P9 exceeds the tolerance by 2.43; P11 exceeds the tolerance by 3; P12 exceeds the tolerance by 5; P13 exceeds the tolerance by 1.95; P14 exceeds the tolerance by 0.0239; P16 exceeds the tolerance by 1.72; P17 exceeds the tolera",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -55717,13 +55717,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "P1 exceeds the tolerance by 1; P4 exceeds the tolerance by 1; P5 exceeds the tolerance by 1; P6 exceeds the tolerance by 2; P7 exceeds the tolerance by 3; P9 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": null,
@@ -55731,14 +55731,14 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "P1 exceeds the tolerance by 1; P4 exceeds the tolerance by 1; P5 exceeds the tolerance by 1; P6 exceeds the tolerance by 2; P7 exceeds the tolerance by 3; P9 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -56910,13 +56910,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 16.0,
+     "message": "P0 exceeds the tolerance by 2.72; P1 exceeds the tolerance by 15.2; P2 exceeds the tolerance by 1; P3 exceeds the tolerance by 1; P4 exceeds the tolerance by 3.14; P5 exceeds the tolerance by 1.05; P6 exceeds the tolerance by 1.57; P7 exceeds the tolerance by 0.523; P8 exceeds the tolerance by 1.23; P9 exceeds the tolerance by 1.43; P10 exceeds the tolerance by 1; P11 exceeds the tolerance by 4; P",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -56924,14 +56924,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 16.0,
+     "message": "P0 exceeds the tolerance by 2.72; P1 exceeds the tolerance by 15.2; P2 exceeds the tolerance by 1; P3 exceeds the tolerance by 1; P4 exceeds the tolerance by 3.14; P5 exceeds the tolerance by 1.05; P6 exceeds the tolerance by 1.57; P7 exceeds the tolerance by 0.523; P8 exceeds the tolerance by 1.23; P9 exceeds the tolerance by 1.43; P10 exceeds the tolerance by 1; P11 exceeds the tolerance by 4; P",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -57034,13 +57034,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "P0 exceeds the tolerance by 3; P1 exceeds the tolerance by 3; P2 exceeds the tolerance by 3; P3 exceeds the tolerance by 3; P4 exceeds the tolerance by 3; P5 exceeds the tolerance by 3; P6 exceeds the tolerance by 3; P7 exceeds the tolerance by 2; P8 exceeds the tolerance by 3; P9 exceeds the tolerance by 2; P10 exceeds the tolerance by 3; P11 exceeds the tolerance by 3; P12 exceeds the tolerance ",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -57048,14 +57048,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "P0 exceeds the tolerance by 3; P1 exceeds the tolerance by 3; P2 exceeds the tolerance by 3; P3 exceeds the tolerance by 3; P4 exceeds the tolerance by 3; P5 exceeds the tolerance by 3; P6 exceeds the tolerance by 3; P7 exceeds the tolerance by 2; P8 exceeds the tolerance by 3; P9 exceeds the tolerance by 2; P10 exceeds the tolerance by 3; P11 exceeds the tolerance by 3; P12 exceeds the tolerance ",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -58121,13 +58121,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 10.0,
+     "message": "k1 exceeds the tolerance by 10; P1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": null,
@@ -58135,14 +58135,14 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 10.0,
+     "message": "k1 exceeds the tolerance by 10; P1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -58452,13 +58452,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 100.0,
+     "message": "S exceeds the tolerance by 100",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.03,
@@ -58466,14 +58466,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 100.0,
+     "message": "S exceeds the tolerance by 100",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -58497,13 +58497,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 99.0,
+     "message": "S exceeds the tolerance by 99",
+     "status": "fail"
     },
     "reference": {
      "max_excess": null,
@@ -58511,14 +58511,14 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 99.0,
+     "message": "S exceeds the tolerance by 99",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -58543,13 +58543,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 99.8,
+     "message": "S exceeds the tolerance by 99.8",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.15,
@@ -58557,14 +58557,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 99.8,
+     "message": "S exceeds the tolerance by 99.8",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -58995,13 +58995,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -59009,14 +59009,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -59037,13 +59037,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "P2 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -59051,14 +59051,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "P2 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -59079,13 +59079,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -59093,14 +59093,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -59121,13 +59121,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.5,
+     "message": "P2 exceeds the tolerance by 4.5",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -59135,14 +59135,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.5,
+     "message": "P2 exceeds the tolerance by 4.5",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -59163,13 +59163,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.5,
+     "message": "P1 exceeds the tolerance by 4.5",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -59177,14 +59177,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.5,
+     "message": "P1 exceeds the tolerance by 4.5",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -59492,13 +59492,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.02e+23,
+     "message": "k1 exceeds the tolerance by 1; k2 exceeds the tolerance by 6.02e+23",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -59506,14 +59506,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.02e+23,
+     "message": "k1 exceeds the tolerance by 1; k2 exceeds the tolerance by 6.02e+23",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -60208,13 +60208,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -60222,14 +60222,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -60249,13 +60249,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -60263,14 +60263,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -60290,13 +60290,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -60304,14 +60304,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -60332,13 +60332,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -60346,14 +60346,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -60375,13 +60375,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -60389,14 +60389,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "p1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -60415,13 +60415,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "p1 exceeds the tolerance by 4",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0006,
@@ -60429,14 +60429,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "p1 exceeds the tolerance by 4",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -60457,13 +60457,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.02e+23,
+     "message": "p1 exceeds the tolerance by 6.02e+23",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -60471,14 +60471,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.02e+23,
+     "message": "p1 exceeds the tolerance by 6.02e+23",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -61722,13 +61722,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -61736,14 +61736,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -61763,13 +61763,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -61777,14 +61777,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -61804,13 +61804,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -61818,14 +61818,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -61845,13 +61845,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -61859,14 +61859,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -61885,13 +61885,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -61899,14 +61899,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -61926,13 +61926,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "P1 exceeds the tolerance by 4",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0005,
@@ -61940,14 +61940,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "P1 exceeds the tolerance by 4",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -61968,13 +61968,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "P1 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0005,
@@ -61982,14 +61982,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "P1 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -62010,13 +62010,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.0,
+     "message": "P1 exceeds the tolerance by 5",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -62024,14 +62024,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.0,
+     "message": "P1 exceeds the tolerance by 5",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -64100,13 +64100,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -64114,14 +64114,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -64143,13 +64143,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "P1 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -64157,14 +64157,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "P1 exceeds the tolerance by 1",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -64186,13 +64186,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "P1 exceeds the tolerance by 4",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.00025,
@@ -64200,14 +64200,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "P1 exceeds the tolerance by 4",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -64229,13 +64229,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 24.0,
+     "message": "P1 exceeds the tolerance by 24",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.00025,
@@ -64243,14 +64243,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 24.0,
+     "message": "P1 exceeds the tolerance by 24",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -64271,13 +64271,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.5,
+     "message": "P1 exceeds the tolerance by 1.5",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -64285,14 +64285,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.5,
+     "message": "P1 exceeds the tolerance by 1.5",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -64314,13 +64314,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.5,
+     "message": "P1 exceeds the tolerance by 2.5",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -64328,14 +64328,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.5,
+     "message": "P1 exceeds the tolerance by 2.5",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -65086,13 +65086,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.5,
+     "message": "C1 exceeds the tolerance by 0.3; S1 exceeds the tolerance by 0.9; x exceeds the tolerance by 1.5",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.00011,
@@ -65100,14 +65100,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.5,
+     "message": "C1 exceeds the tolerance by 0.3; S1 exceeds the tolerance by 0.9; x exceeds the tolerance by 1.5",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -65134,13 +65134,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.5,
+     "message": "C1 exceeds the tolerance by 0.3; S1 exceeds the tolerance by 0.9; x exceeds the tolerance by 1.5",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.00011,
@@ -65148,14 +65148,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.5,
+     "message": "C1 exceeds the tolerance by 0.3; S1 exceeds the tolerance by 0.9; x exceeds the tolerance by 1.5",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -65178,13 +65178,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "x exceeds the tolerance by 2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -65192,14 +65192,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "x exceeds the tolerance by 2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -65462,13 +65462,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -65476,14 +65476,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": []
@@ -65499,13 +65499,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -65513,14 +65513,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -65537,13 +65537,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -65551,14 +65551,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -65577,13 +65577,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -65591,14 +65591,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -65746,13 +65746,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.00011,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00011,
@@ -65760,14 +65760,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.00011,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": []
@@ -65783,13 +65783,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": Infinity,
+     "message": "a exceeds the tolerance by 9; c exceeds the tolerance by 0.9; d exceeds the tolerance by inf",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -65797,14 +65797,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": Infinity,
+     "message": "a exceeds the tolerance by 9; c exceeds the tolerance by 0.9; d exceeds the tolerance by inf",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -65821,13 +65821,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -65835,14 +65835,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": []
@@ -65858,13 +65858,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": Infinity,
+     "message": "p exceeds the tolerance by 0.9; q exceeds the tolerance by 0.99; r exceeds the tolerance by 0.999; s exceeds the tolerance by inf",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -65872,14 +65872,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": Infinity,
+     "message": "p exceeds the tolerance by 0.9; q exceeds the tolerance by 0.99; r exceeds the tolerance by 0.999; s exceeds the tolerance by inf",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -65896,13 +65896,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0011,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0011,
@@ -65910,14 +65910,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0011,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": []
@@ -65933,13 +65933,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 29.0,
+     "message": "a exceeds the tolerance by 9; b exceeds the tolerance by 19; c exceeds the tolerance by 29",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0011,
@@ -65947,14 +65947,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 29.0,
+     "message": "a exceeds the tolerance by 9; b exceeds the tolerance by 19; c exceeds the tolerance by 29",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -65971,13 +65971,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0005,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0005,
@@ -65985,14 +65985,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0005,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": []
@@ -66008,13 +66008,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.0,
+     "message": "a exceeds the tolerance by 3; b exceeds the tolerance by 4; c exceeds the tolerance by 5",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0005,
@@ -66022,14 +66022,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.0,
+     "message": "a exceeds the tolerance by 3; b exceeds the tolerance by 4; c exceeds the tolerance by 5",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -66046,13 +66046,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0008,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0008,
@@ -66060,14 +66060,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0008,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": []
@@ -66083,13 +66083,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 8.0,
+     "message": "a exceeds the tolerance by 6; b exceeds the tolerance by 7; c exceeds the tolerance by 8; d exceeds the tolerance by 2.14",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.000414,
@@ -66097,14 +66097,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 8.0,
+     "message": "a exceeds the tolerance by 6; b exceeds the tolerance by 7; c exceeds the tolerance by 8; d exceeds the tolerance by 2.14",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -66121,13 +66121,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "SimulationFailure: libopencor: SimulationError: result: the name 'time' occurs twice",
+     "status": "fail"
     },
     "reference": {
      "max_excess": null,
@@ -66136,13 +66136,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "CompareError: duplicate column names in the simulation result",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Component 'sbml' contains multiple variables with the name 'time'. Valid variable names must be unique to their component.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -66161,13 +66161,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "SimulationFailure: libopencor: SimulationError: result: the name 'time' occurs twice",
+     "status": "fail"
     },
     "reference": {
      "max_excess": null,
@@ -66176,13 +66176,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "CompareError: duplicate column names in the simulation result",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Component 'sbml' contains multiple variables with the name 'time'. Valid variable names must be unique to their component.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [

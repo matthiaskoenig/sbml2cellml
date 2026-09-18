@@ -13,7 +13,7 @@ import pytest
 from sbml2cellml import convert_sbml2cellml
 from sbml2cellml.cellml import write_model
 from sbml2cellml.simulate import SimulationError, plot_timecourse, run_timecourse
-from tests.cellml_models import underconstrained_model
+from tests.cellml_models import algebraic_model, underconstrained_model
 from tests.conftest import MODELS_DIR, TEST_MODEL_PATH
 from tests.sbml_models import simple_model, write_sbml
 
@@ -83,6 +83,30 @@ def test_run_timecourse_applies_stoichiometry(tmp_path: Path) -> None:
     )
     expected = 10.0 * np.exp(-2 * 0.5 / 2.0 * df["time"])
     assert np.allclose(df["S1"], expected, rtol=1e-6)
+
+
+def test_run_timecourse_algebraic_model(tmp_path: Path) -> None:
+    """Without a variable of integration the values are the same at all times."""
+    cellml_path = tmp_path / "algebraic.cellml"
+    write_model(algebraic_model(), cellml_path)
+    df, units = run_timecourse(cellml_path, start=0.0, end=10.0, steps=5)
+    assert df["time"].tolist() == [0.0, 2.0, 4.0, 6.0, 8.0, 10.0]
+    assert df["a"].tolist() == [2.0] * 6
+    assert df["b"].tolist() == [4.0] * 6
+    assert set(units) == set(df.columns)
+
+
+def test_run_timecourse_duplicate_names_raise(tmp_path: Path) -> None:
+    """A variable `time` of an algebraic model would replace the time points."""
+    model = algebraic_model()
+    model.component(0).variable("a").setName("time")
+    model.component(0).setMath(
+        model.component(0).math().replace("<ci>a</ci>", "<ci>time</ci>")
+    )
+    cellml_path = tmp_path / "time.cellml"
+    write_model(model, cellml_path)
+    with pytest.raises(SimulationError, match="'time' occurs twice"):
+        run_timecourse(cellml_path)
 
 
 def test_run_timecourse_missing_file(tmp_path: Path) -> None:

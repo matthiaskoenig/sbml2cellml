@@ -184,13 +184,15 @@ def requested_frame(
         variable missing in `df` is left out (the comparison reports it).
 
     Raises:
-        CompareError: `df` has no time column (an algebraic-only model gives
-            a libopencor result without a variable of integration), or a
+        CompareError: `df` has no time column or duplicate column names (e.g.
+            a parameter with the id `time` next to roadrunner's time), or a
             variable needs converting between amount and concentration and
             its compartment column is missing from `df`.
     """
     if TIME not in df.columns:
         raise CompareError("no time column in the simulation result")
+    if df.columns.duplicated().any():
+        raise CompareError("duplicate column names in the simulation result")
     # collected first and turned into a frame at once: inserting the columns
     # one by one fragments the frame (a PerformanceWarning of pandas)
     columns: dict[str, np.ndarray] = {TIME: df[TIME].to_numpy()}
