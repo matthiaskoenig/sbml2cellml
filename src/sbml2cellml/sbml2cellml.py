@@ -27,6 +27,7 @@ import libsbml
 from sbml2cellml import cellml, mathml
 from sbml2cellml.cellml import CellMLValidationError
 from sbml2cellml.mathml import TIME_ID
+from sbml2cellml.variables import unique_sid
 
 logger = logging.getLogger(__name__)
 
@@ -89,8 +90,9 @@ def convert_sbml2cellml(
     compartment_sizes = _add_compartments(component, model_sbml, assigned)
     _add_parameters(component, model_sbml, assigned)
     in_amount = _add_species(component, model_sbml, compartment_sizes, assigned)
+    local_ids = _add_local_parameters(component, model_sbml)
 
-    reaction_terms = _collect_reaction_terms(model_sbml, in_amount)
+    reaction_terms = _collect_reaction_terms(model_sbml, in_amount, local_ids)
 
     parts: list[str] = []
     for vid, formula in assignment_rules.items():
@@ -360,14 +362,53 @@ def _collect_rules(
     return assignment_rules, rate_rules
 
 
+def _add_local_parameters(
+    component: libcellml.Component, model_sbml: libsbml.Model
+) -> dict[str, dict[str, str]]:
+    """Add the local parameters of the kinetic laws as variables.
+
+    A local parameter is only visible in its kinetic law, and several
+    reactions may have one of the same id. Each becomes a variable of its
+    own, `<reaction>_<parameter>`, with a numeric suffix when that id is
+    taken by another element of the model.
+
+    Returns:
+        The variable id of every local parameter, by reaction id and local
+        parameter id.
+    """
+    model_sbml.populateAllElementIdList()
+    ids: libsbml.IdList = model_sbml.getAllElementIdList()
+    used = {ids.at(k) for k in range(ids.size())} | {TIME_ID}
+    local_ids: dict[str, dict[str, str]] = {}
+    reaction: libsbml.Reaction
+    for reaction in model_sbml.getListOfReactions():
+        klaw: libsbml.KineticLaw | None = reaction.getKineticLaw()
+        if klaw is None:
+            continue
+        rid: str = reaction.getId()
+        # the local parameters in level 3, the parameters of the kinetic law
+        # in level 2
+        for k in range(klaw.getNumParameters()):
+            local = klaw.getParameter(k)
+            pid: str = local.getId()
+            vid = unique_sid(f"{rid}_{pid}", used)
+            local_ids.setdefault(rid, {})[pid] = vid
+            _add_variable(component, vid, _initial_value(vid, local.getValue()))
+            logger.info("'%s' variable for local parameter '%s' of '%s'", vid, pid, rid)
+    return local_ids
+
+
 def _collect_reaction_terms(
-    model_sbml: libsbml.Model, in_amount: dict[str, bool]
+    model_sbml: libsbml.Model,
+    in_amount: dict[str, bool],
+    local_ids: dict[str, dict[str, str]],
 ) -> dict[str, str]:
     """Collect the rate of change of every species from the kinetic laws.
 
-    The kinetic law of a reaction is in amount per time. It is subtracted for
-    every reactant and added for every product; for a species in concentration
-    the sum is divided by the size of its compartment.
+    The kinetic law of a reaction is in amount per time, with its local
+    parameters renamed to their variables (`local_ids`). It is subtracted
+    for every reactant and added for every product; for a species in
+    concentration the sum is divided by the size of its compartment.
 
     Returns:
         The right hand side of `d species / d time`, by species id.
@@ -382,7 +423,10 @@ def _collect_reaction_terms(
                 reaction.getId(),
             )
             continue
-        formula: str = libsbml.formulaToL3String(klaw.getMath())
+        math: libsbml.ASTNode = klaw.getMath().deepCopy()
+        for pid, vid in local_ids.get(reaction.getId(), {}).items():
+            math.renameSIdRefs(pid, vid)
+        formula: str = libsbml.formulaToL3String(math)
         reference: libsbml.SpeciesReference
         for reference in reaction.getListOfReactants():
             _append_term(terms, reference.getSpecies(), f"- ({formula})")

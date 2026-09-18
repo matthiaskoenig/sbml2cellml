@@ -48,7 +48,7 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | delay and rateOf symbols | not yet |
 | initial assignment | not yet, a warning is logged |
 | function definition | calls replaced by the body of the function |
-| local parameter of a kinetic law | not yet |
+| local parameter of a kinetic law | variable `<reaction>_<parameter>` (numeric suffix when taken) |
 | event | not yet, a warning is logged |
 | algebraic rule | not yet, a warning is logged |
 

@@ -1100,13 +1100,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-05,
@@ -1114,14 +1114,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'k' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -2361,13 +2361,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -2375,14 +2375,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'k' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -2407,9 +2407,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.85e-05,
-     "message": "S2 exceeds the tolerance by 4.85e-05; S3 exceeds the tolerance by 4.85e-05",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -2417,9 +2417,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 4.85e-05,
-     "message": "S2 exceeds the tolerance by 4.85e-05; S3 exceeds the tolerance by 4.85e-05",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -5277,13 +5277,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -5291,14 +5291,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'k' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -5324,9 +5324,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.000485,
-     "message": "S2 exceeds the tolerance by 0.000485; S3 exceeds the tolerance by 0.000485",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -5334,9 +5334,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.000485,
-     "message": "S2 exceeds the tolerance by 0.000485; S3 exceeds the tolerance by 0.000485",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -16115,13 +16115,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.737,
+     "message": "S1 exceeds the tolerance by 0.187; S2 exceeds the tolerance by 0.737; S3 exceeds the tolerance by 0.186",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.00106,
@@ -16129,14 +16129,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.737,
+     "message": "S1 exceeds the tolerance by 0.187; S2 exceeds the tolerance by 0.737; S3 exceeds the tolerance by 0.186",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'k' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -16200,13 +16200,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.00108,
+     "message": "S1 exceeds the tolerance by 0.00108; S2 exceeds the tolerance by 0.000347; S3 exceeds the tolerance by 0.000347; S4 exceeds the tolerance by 0.000119",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1.07e-06,
@@ -16214,14 +16214,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.00108,
+     "message": "S1 exceeds the tolerance by 0.00108; S2 exceeds the tolerance by 0.000347; S3 exceeds the tolerance by 0.000347; S4 exceeds the tolerance by 0.000119",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'k' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -16285,13 +16285,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.448,
+     "message": "S1 exceeds the tolerance by 0.448; S2 exceeds the tolerance by 0.293; S3 exceeds the tolerance by 0.137",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.00108,
@@ -16299,14 +16299,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.448,
+     "message": "S1 exceeds the tolerance by 0.448; S2 exceeds the tolerance by 0.293; S3 exceeds the tolerance by 0.137",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'k' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -18410,13 +18410,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.389,
+     "message": "S1 exceeds the tolerance by 0.08; S2 exceeds the tolerance by 0.389; S3 exceeds the tolerance by 0.0799",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.00104,
@@ -18424,14 +18424,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.389,
+     "message": "S1 exceeds the tolerance by 0.08; S2 exceeds the tolerance by 0.389; S3 exceeds the tolerance by 0.0799",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'k' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -18495,13 +18495,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.000115,
+     "message": "S1 exceeds the tolerance by 0.000115; S2 exceeds the tolerance by 4.03e-05; S3 exceeds the tolerance by 4.03e-05; S4 exceeds the tolerance by 2.37e-05",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1.06e-07,
@@ -18509,14 +18509,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.000115,
+     "message": "S1 exceeds the tolerance by 0.000115; S2 exceeds the tolerance by 4.03e-05; S3 exceeds the tolerance by 4.03e-05; S4 exceeds the tolerance by 2.37e-05",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'k' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -18581,13 +18581,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.577,
+     "message": "S1 exceeds the tolerance by 0.577; S2 exceeds the tolerance by 0.258; S3 exceeds the tolerance by 0.401",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.00105,
@@ -18595,14 +18595,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.577,
+     "message": "S1 exceeds the tolerance by 0.577; S2 exceeds the tolerance by 0.258; S3 exceeds the tolerance by 0.401",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'k' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -21325,13 +21325,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.000749,
+     "message": "S1 exceeds the tolerance by 0.000749; S2 exceeds the tolerance by 5.22e-06; S3 exceeds the tolerance by 5.51e-06",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -21339,14 +21339,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.000749,
+     "message": "S1 exceeds the tolerance by 0.000749; S2 exceeds the tolerance by 5.22e-06; S3 exceeds the tolerance by 5.51e-06",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'k' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -21369,13 +21369,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-05,
@@ -21383,14 +21383,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'k' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -21412,13 +21412,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 0.000224; S3 exceeds the tolerance by 0.000224",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -21426,14 +21426,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.0,
+     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 0.000224; S3 exceeds the tolerance by 0.000224",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'k' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -21460,9 +21460,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.904,
-     "message": "S1 exceeds the tolerance by 0.904; S2 exceeds the tolerance by 0.904",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -21470,9 +21470,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.904,
-     "message": "S1 exceeds the tolerance by 0.904; S2 exceeds the tolerance by 0.904",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -21504,9 +21504,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.904,
-     "message": "S1 exceeds the tolerance by 0.904; S2 exceeds the tolerance by 0.904",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -21514,9 +21514,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.904,
-     "message": "S1 exceeds the tolerance by 0.904; S2 exceeds the tolerance by 0.904",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -21548,9 +21548,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.904,
-     "message": "S1 exceeds the tolerance by 0.904; S2 exceeds the tolerance by 0.904",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -21558,9 +21558,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.904,
-     "message": "S1 exceeds the tolerance by 0.904; S2 exceeds the tolerance by 0.904",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -23013,8 +23013,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.935,
-     "message": "X0 exceeds the tolerance by 0.833; X1 exceeds the tolerance by 0.917; T exceeds the tolerance by 0.935; S1 exceeds the tolerance by 0.1",
+     "max_excess": 0.917,
+     "message": "X1 exceeds the tolerance by 0.917; T exceeds the tolerance by 0.917; S1 exceeds the tolerance by 0.1",
      "status": "fail"
     },
     "reference": {
@@ -23023,8 +23023,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.935,
-     "message": "X0 exceeds the tolerance by 0.833; X1 exceeds the tolerance by 0.917; T exceeds the tolerance by 0.935; S1 exceeds the tolerance by 0.1",
+     "max_excess": 0.917,
+     "message": "X1 exceeds the tolerance by 0.917; T exceeds the tolerance by 0.917; S1 exceeds the tolerance by 0.1",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23052,13 +23052,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.00792,
+     "message": "S4 exceeds the tolerance by 0.00792",
+     "status": "fail"
     },
     "reference": {
      "max_excess": null,
@@ -23066,14 +23066,14 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.00792,
+     "message": "S4 exceeds the tolerance by 0.00792",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'k' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -24261,13 +24261,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -24275,14 +24275,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'k' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -24307,9 +24307,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.0485,
-     "message": "S2 exceeds the tolerance by 0.0485; S3 exceeds the tolerance by 0.0485",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -24317,9 +24317,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.0485,
-     "message": "S2 exceeds the tolerance by 0.0485; S3 exceeds the tolerance by 0.0485",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -24819,9 +24819,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.607,
-     "message": "S1 exceeds the tolerance by 0.607; S2 exceeds the tolerance by 0.607; S3 exceeds the tolerance by 0.455",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -24829,9 +24829,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.607,
-     "message": "S1 exceeds the tolerance by 0.607; S2 exceeds the tolerance by 0.607; S3 exceeds the tolerance by 0.455",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -24863,9 +24863,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 5.12e-06,
-     "message": "S1 exceeds the tolerance by 3.41e-06; S2 exceeds the tolerance by 3.41e-06; S3 exceeds the tolerance by 3.41e-06; S4 exceeds the tolerance by 5.12e-06",
-     "status": "fail"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -24873,9 +24873,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 5.12e-06,
-     "message": "S1 exceeds the tolerance by 3.41e-06; S2 exceeds the tolerance by 3.41e-06; S3 exceeds the tolerance by 3.41e-06; S4 exceeds the tolerance by 5.12e-06",
-     "status": "fail"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -28909,9 +28909,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.000248,
-     "message": "S1 exceeds the tolerance by 0.000248; S2 exceeds the tolerance by 0.000248; S3 exceeds the tolerance by 0.000248; S4 exceeds the tolerance by 0.000186",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -28919,9 +28919,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.000248,
-     "message": "S1 exceeds the tolerance by 0.000248; S2 exceeds the tolerance by 0.000248; S3 exceeds the tolerance by 0.000248; S4 exceeds the tolerance by 0.000186",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -28954,9 +28954,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 3.91e-05,
-     "message": "S1 exceeds the tolerance by 9.35e-06; S2 exceeds the tolerance by 3.91e-05; S3 exceeds the tolerance by 9.35e-06; S4 exceeds the tolerance by 1.4e-05",
-     "status": "fail"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -28964,9 +28964,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 3.91e-05,
-     "message": "S1 exceeds the tolerance by 9.35e-06; S2 exceeds the tolerance by 3.91e-05; S3 exceeds the tolerance by 9.35e-06; S4 exceeds the tolerance by 1.4e-05",
-     "status": "fail"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -29089,8 +29089,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.607,
-     "message": "S1 exceeds the tolerance by 0.607; S2 exceeds the tolerance by 0.541; S3 exceeds the tolerance by 0.406",
+     "max_excess": 0.249,
+     "message": "S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186",
      "status": "fail"
     },
     "reference": {
@@ -29099,8 +29099,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.607,
-     "message": "S1 exceeds the tolerance by 0.607; S2 exceeds the tolerance by 0.541; S3 exceeds the tolerance by 0.406",
+     "max_excess": 0.249,
+     "message": "S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -29133,8 +29133,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.604,
-     "message": "S1 exceeds the tolerance by 0.604; S2 exceeds the tolerance by 0.604; S3 exceeds the tolerance by 0.453",
+     "max_excess": 0.491,
+     "message": "S2 exceeds the tolerance by 0.491; S3 exceeds the tolerance by 0.368",
      "status": "fail"
     },
     "reference": {
@@ -29143,8 +29143,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.604,
-     "message": "S1 exceeds the tolerance by 0.604; S2 exceeds the tolerance by 0.604; S3 exceeds the tolerance by 0.453",
+     "max_excess": 0.491,
+     "message": "S2 exceeds the tolerance by 0.491; S3 exceeds the tolerance by 0.368",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -29882,9 +29882,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.0904,
-     "message": "S1 exceeds the tolerance by 0.0904; S2 exceeds the tolerance by 0.0902",
-     "status": "fail"
+     "max_excess": -0.01,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.01,
@@ -29892,9 +29892,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.0904,
-     "message": "S1 exceeds the tolerance by 0.0904; S2 exceeds the tolerance by 0.0902",
-     "status": "fail"
+     "max_excess": -0.01,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -29926,9 +29926,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.83e-06,
-     "message": "S1 exceeds the tolerance by 1.83e-06; S2 exceeds the tolerance by 1.83e-06; S3 exceeds the tolerance by 1.83e-06",
-     "status": "fail"
+     "max_excess": -1.01e-09,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-09,
@@ -29936,9 +29936,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.83e-06,
-     "message": "S1 exceeds the tolerance by 1.83e-06; S2 exceeds the tolerance by 1.83e-06; S3 exceeds the tolerance by 1.83e-06",
-     "status": "fail"
+     "max_excess": -1.01e-09,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -29970,9 +29970,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.89e-06,
-     "message": "S1 exceeds the tolerance by 7.21e-07; S2 exceeds the tolerance by 1.89e-06; S3 exceeds the tolerance by 7.22e-07; S4 exceeds the tolerance by 1.09e-06",
-     "status": "fail"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -29980,9 +29980,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.89e-06,
-     "message": "S1 exceeds the tolerance by 7.21e-07; S2 exceeds the tolerance by 1.89e-06; S3 exceeds the tolerance by 7.22e-07; S4 exceeds the tolerance by 1.09e-06",
-     "status": "fail"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -30016,7 +30016,7 @@
     },
     "libopencor": {
      "max_excess": 0.49,
-     "message": "S1 exceeds the tolerance by 0.49; S2 exceeds the tolerance by 0.49",
+     "message": "S1 exceeds the tolerance by 0.49; S2 exceeds the tolerance by 0.489",
      "status": "fail"
     },
     "reference": {
@@ -30026,7 +30026,7 @@
     },
     "roundtrip": {
      "max_excess": 0.49,
-     "message": "S1 exceeds the tolerance by 0.49; S2 exceeds the tolerance by 0.49",
+     "message": "S1 exceeds the tolerance by 0.49; S2 exceeds the tolerance by 0.489",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -30060,8 +30060,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.982,
-     "message": "S1 exceeds the tolerance by 0.0256; S2 exceeds the tolerance by 0.982",
+     "max_excess": 0.99,
+     "message": "S2 exceeds the tolerance by 0.99",
      "status": "fail"
     },
     "reference": {
@@ -30070,8 +30070,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.982,
-     "message": "S1 exceeds the tolerance by 0.0256; S2 exceeds the tolerance by 0.982",
+     "max_excess": 0.99,
+     "message": "S2 exceeds the tolerance by 0.99",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -30104,8 +30104,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.26,
-     "message": "S1 exceeds the tolerance by 0.0256; S2 exceeds the tolerance by 1.26",
+     "max_excess": 1.27,
+     "message": "S2 exceeds the tolerance by 1.27",
      "status": "fail"
     },
     "reference": {
@@ -30114,8 +30114,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.26,
-     "message": "S1 exceeds the tolerance by 0.0256; S2 exceeds the tolerance by 1.26",
+     "max_excess": 1.27,
+     "message": "S2 exceeds the tolerance by 1.27",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -33992,9 +33992,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.0373,
-     "message": "S1 exceeds the tolerance by 0.0373; S2 exceeds the tolerance by 0.0373",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -34002,9 +34002,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.0373,
-     "message": "S1 exceeds the tolerance by 0.0373; S2 exceeds the tolerance by 0.0373",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -34029,13 +34029,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -34043,14 +34043,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'kf' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -36557,9 +36557,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.223,
-     "message": "S1 exceeds the tolerance by 0.137; S2 exceeds the tolerance by 0.085; S3 exceeds the tolerance by 0.137; S4 exceeds the tolerance by 0.223",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -36567,9 +36567,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.223,
-     "message": "S1 exceeds the tolerance by 0.137; S2 exceeds the tolerance by 0.085; S3 exceeds the tolerance by 0.137; S4 exceeds the tolerance by 0.223",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -36600,9 +36600,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.04e-05,
-     "message": "S1 exceeds the tolerance by 1.22e-05; S2 exceeds the tolerance by 8.06e-06; S3 exceeds the tolerance by 1.32e-05; S4 exceeds the tolerance by 2.04e-05",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -36610,9 +36610,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.04e-05,
-     "message": "S1 exceeds the tolerance by 1.22e-05; S2 exceeds the tolerance by 8.06e-06; S3 exceeds the tolerance by 1.32e-05; S4 exceeds the tolerance by 2.04e-05",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -41566,9 +41566,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.0373,
-     "message": "S1 exceeds the tolerance by 0.0373; S2 exceeds the tolerance by 0.0373",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -41576,9 +41576,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.0373,
-     "message": "S1 exceeds the tolerance by 0.0373; S2 exceeds the tolerance by 0.0373",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -41604,13 +41604,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -41618,14 +41618,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'kf' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -44608,7 +44608,7 @@
     },
     "libopencor": {
      "max_excess": 2.0,
-     "message": "S1 exceeds the tolerance by 2; S2 exceeds the tolerance by 1.12; S3 exceeds the tolerance by 0.199; S4 exceeds the tolerance by 1.12",
+     "message": "S1 exceeds the tolerance by 2; S2 exceeds the tolerance by 1.12; S3 exceeds the tolerance by 0.322; S4 exceeds the tolerance by 1.12",
      "status": "fail"
     },
     "reference": {
@@ -44618,7 +44618,7 @@
     },
     "roundtrip": {
      "max_excess": 2.0,
-     "message": "S1 exceeds the tolerance by 2; S2 exceeds the tolerance by 1.12; S3 exceeds the tolerance by 0.199; S4 exceeds the tolerance by 1.12",
+     "message": "S1 exceeds the tolerance by 2; S2 exceeds the tolerance by 1.12; S3 exceeds the tolerance by 0.322; S4 exceeds the tolerance by 1.12",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -47218,13 +47218,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -47232,14 +47232,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'J0' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -59804,8 +59804,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 79.7,
-     "message": "S1 exceeds the tolerance by 79.5; S2 exceeds the tolerance by 79.7",
+     "max_excess": 0.4,
+     "message": "S1 exceeds the tolerance by 0.4; S2 exceeds the tolerance by 0.2",
      "status": "fail"
     },
     "reference": {
@@ -59814,8 +59814,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 79.7,
-     "message": "S1 exceeds the tolerance by 79.5; S2 exceeds the tolerance by 79.7",
+     "max_excess": 0.4,
+     "message": "S1 exceeds the tolerance by 0.4; S2 exceeds the tolerance by 0.2",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -59843,13 +59843,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.4,
+     "message": "S1 exceeds the tolerance by 0.4",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -59857,14 +59857,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.4,
+     "message": "S1 exceeds the tolerance by 0.4",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'm_cf' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -59886,13 +59886,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.2,
+     "message": "S1 exceeds the tolerance by 0.2; S2 exceeds the tolerance by 0.2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -59900,14 +59900,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.2,
+     "message": "S1 exceeds the tolerance by 0.2; S2 exceeds the tolerance by 0.2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 's1_cf' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -62461,8 +62461,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 20.0,
-     "message": "k1 exceeds the tolerance by 8.5; S1 exceeds the tolerance by 20",
+     "max_excess": 8.5,
+     "message": "k1 exceeds the tolerance by 8.5",
      "status": "fail"
     },
     "reference": {
@@ -62471,8 +62471,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 20.0,
-     "message": "k1 exceeds the tolerance by 8.5; S1 exceeds the tolerance by 20",
+     "max_excess": 8.5,
+     "message": "k1 exceeds the tolerance by 8.5",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -62508,9 +62508,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 20.0,
-     "message": "S1 exceeds the tolerance by 20",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -62518,9 +62518,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 20.0,
-     "message": "S1 exceeds the tolerance by 20",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -62554,9 +62554,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 30.0,
-     "message": "S1 exceeds the tolerance by 30",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -62564,9 +62564,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 30.0,
-     "message": "S1 exceeds the tolerance by 30",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -62599,8 +62599,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 30.0,
-     "message": "k1 exceeds the tolerance by 3; S1 exceeds the tolerance by 30",
+     "max_excess": 3.0,
+     "message": "k1 exceeds the tolerance by 3",
      "status": "fail"
     },
     "reference": {
@@ -62609,8 +62609,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 30.0,
-     "message": "k1 exceeds the tolerance by 3; S1 exceeds the tolerance by 30",
+     "max_excess": 3.0,
+     "message": "k1 exceeds the tolerance by 3",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -62646,8 +62646,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 10.0,
-     "message": "k1 exceeds the tolerance by 3; S1 exceeds the tolerance by 10",
+     "max_excess": 3.0,
+     "message": "k1 exceeds the tolerance by 3",
      "status": "fail"
     },
     "reference": {
@@ -62656,8 +62656,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 10.0,
-     "message": "k1 exceeds the tolerance by 3; S1 exceeds the tolerance by 10",
+     "max_excess": 3.0,
+     "message": "k1 exceeds the tolerance by 3",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -62691,8 +62691,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 40.0,
-     "message": "k1 exceeds the tolerance by 1.1; S1 exceeds the tolerance by 40",
+     "max_excess": 1.1,
+     "message": "k1 exceeds the tolerance by 1.1",
      "status": "fail"
     },
     "reference": {
@@ -62701,8 +62701,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 40.0,
-     "message": "k1 exceeds the tolerance by 1.1; S1 exceeds the tolerance by 40",
+     "max_excess": 1.1,
+     "message": "k1 exceeds the tolerance by 1.1",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -62737,8 +62737,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 40.0,
-     "message": "k1 exceeds the tolerance by 6.9; S1 exceeds the tolerance by 40",
+     "max_excess": 6.9,
+     "message": "k1 exceeds the tolerance by 6.9",
      "status": "fail"
     },
     "reference": {
@@ -62747,8 +62747,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 40.0,
-     "message": "k1 exceeds the tolerance by 6.9; S1 exceeds the tolerance by 40",
+     "max_excess": 6.9,
+     "message": "k1 exceeds the tolerance by 6.9",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -63793,8 +63793,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.2,
-     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 1.2",
+     "max_excess": 0.4,
+     "message": "S1 exceeds the tolerance by 0.4; S2 exceeds the tolerance by 0.2",
      "status": "fail"
     },
     "reference": {
@@ -63803,8 +63803,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.2,
-     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 1.2",
+     "max_excess": 0.4,
+     "message": "S1 exceeds the tolerance by 0.4; S2 exceeds the tolerance by 0.2",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -63832,13 +63832,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.4,
+     "message": "S1 exceeds the tolerance by 0.4",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -63846,14 +63846,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.4,
+     "message": "S1 exceeds the tolerance by 0.4",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'm_cf' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -63875,13 +63875,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.2,
+     "message": "S1 exceeds the tolerance by 0.2; S2 exceeds the tolerance by 0.2",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -63889,14 +63889,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.2,
+     "message": "S1 exceeds the tolerance by 0.2; S2 exceeds the tolerance by 0.2",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 's1_cf' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -64359,9 +64359,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 6.02e+24,
-     "message": "S1 exceeds the tolerance by 6.02e+24",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -64369,9 +64369,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 6.02e+24,
-     "message": "S1 exceeds the tolerance by 6.02e+24",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -64442,9 +64442,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 3.98,
-     "message": "S1 exceeds the tolerance by 3.98",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -64452,9 +64452,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 3.98,
-     "message": "S1 exceeds the tolerance by 3.98",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -64523,13 +64523,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "S1 exceeds the tolerance by 0.0997; k0 exceeds the tolerance by 3",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.00028,
@@ -64537,14 +64537,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "S1 exceeds the tolerance by 0.0997; k0 exceeds the tolerance by 3",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'S1_stoich' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -64667,13 +64667,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "S1 exceeds the tolerance by 0.0997; k0 exceeds the tolerance by 4",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -64681,14 +64681,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "S1 exceeds the tolerance by 0.0997; k0 exceeds the tolerance by 4",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'S1_stoich' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -64715,13 +64715,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "S1 exceeds the tolerance by 0.0997; k0 exceeds the tolerance by 4",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -64729,14 +64729,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "S1 exceeds the tolerance by 0.0997; k0 exceeds the tolerance by 4",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'S1_stoich' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -64763,13 +64763,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "S1 exceeds the tolerance by 0.0997; k0 exceeds the tolerance by 4",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -64777,14 +64777,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "S1 exceeds the tolerance by 0.0997; k0 exceeds the tolerance by 4",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'S1_stoich' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -64812,13 +64812,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "S1 exceeds the tolerance by 0.0997; k0 exceeds the tolerance by 4",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -64826,14 +64826,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 4.0,
+     "message": "S1 exceeds the tolerance by 0.0997; k0 exceeds the tolerance by 4",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'S1_stoich' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -65296,13 +65296,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -65310,14 +65310,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'J1' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -65338,13 +65338,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -65352,14 +65352,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'S1_stoich' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -65380,13 +65380,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -65394,14 +65394,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'S1_stoich' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -65422,13 +65422,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -65436,14 +65436,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'S1_stoich' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
