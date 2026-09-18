@@ -2,7 +2,8 @@
 
 The SBML test suite accepts a value when
 `|value - expected| <= absolute + relative * |expected|` at every time point,
-with the tolerances of the case. Species are expected either as amounts or
+with the tolerances of the case; the special values `inf`, `-inf` and `nan`
+match only themselves. Species are expected either as amounts or
 as concentrations (the `amount` and `concentration` lists of the settings);
 a converted model carries every species in one quantity, so the columns are
 converted with the compartment before the comparison.
@@ -93,13 +94,17 @@ def compare(
             target = expected[variable].to_numpy(dtype=float)
         except (ValueError, TypeError):
             return _failed(f"variable {variable} is not numeric")
-        # a diverged simulation can produce inf; inf - inf is nan by definition,
-        # which is deliberately turned into "exceeds the tolerance" below rather
-        # than a numpy RuntimeWarning
+        # special values (inf, -inf, nan) match only themselves, e.g. a
+        # parameter initialised to inf or a ratio which is 0/0; any other
+        # difference involving one is an infinite error, and the tolerance of
+        # a special expected value is the absolute one, so the excess is never
+        # nan (`Comparison.max_excess` could not rank it)
         with np.errstate(invalid="ignore"):
-            error = np.abs(values - target)
+            same = (values == target) | (np.isnan(values) & np.isnan(target))
+            error = np.where(same, 0.0, np.abs(values - target))
             error = np.where(np.isnan(error), np.inf, error)
-            tolerance = settings.absolute + settings.relative * np.abs(target)
+            magnitude = np.where(np.isfinite(target), np.abs(target), 0.0)
+            tolerance = settings.absolute + settings.relative * magnitude
             excess = float(np.max(error - tolerance))
         passed = excess <= 0
         comparisons.append(
@@ -124,13 +129,16 @@ def is_informative(expected: pd.DataFrame, settings: Settings) -> bool:
 
     Returns:
         True when at least one settings variable present in `expected` moves,
-        between its minimum and maximum, by more than
+        between the minimum and maximum of its finite values, by more than
         `absolute + relative * max(|value|)`.
     """
     for variable in settings.variables:
         if variable not in expected.columns:
             continue
         values = expected[variable].to_numpy(dtype=float)
+        values = values[np.isfinite(values)]
+        if values.size == 0:
+            continue
         tolerance = settings.absolute + settings.relative * float(
             np.max(np.abs(values))
         )
