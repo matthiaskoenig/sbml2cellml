@@ -78,8 +78,12 @@ Changing a policy means changing the json and applying it:
 The script is idempotent: it updates the rulesets which exist and creates the
 missing ones. It also sets the merge settings of the repository, i.e.,
 auto-merge, delete branch on merge, and squash and rebase as the only merge
-methods. It needs the [github cli](https://cli.github.com) authenticated as a
-user with admin permission on the repository.
+methods, and it allows `develop` to deploy to the `github-pages` environment:
+enabling GitHub Pages creates that environment with a deployment policy for the
+default branch of that moment only, which rejects the deployments of the
+documentation workflow from `develop`. It needs the
+[github cli](https://cli.github.com) authenticated as a user with admin
+permission on the repository.
 
 ## Setup development environment
 
@@ -210,8 +214,8 @@ The `documentation` workflow runs both steps, so the files are regenerated with 
 The one-time setup of the GitHub repository, for the record:
 
 1. `develop` is created from `main` and made the default branch: `gh repo edit matthiaskoenig/sbml2cellml --default-branch develop`
-2. the merge settings and rulesets are applied: `.github/rulesets/apply.sh`
-3. the GitHub Pages source is set to GitHub Actions: `gh api -X POST repos/matthiaskoenig/sbml2cellml/pages -f build_type=workflow`
+2. the GitHub Pages source is set to GitHub Actions: `gh api -X POST repos/matthiaskoenig/sbml2cellml/pages -f build_type=workflow`
+3. the merge settings, the rulesets and the deployment branch of the documentation are applied: `.github/rulesets/apply.sh`
 4. the PyPI trusted publisher is registered on [pypi.org](https://pypi.org/manage/account/publishing/) for the project `sbml2cellml`, owner `matthiaskoenig`, repository `sbml2cellml`, workflow `ci-cd.yml`, environment `pypi` (as a pending publisher before the first release)
 5. the repository is enabled in the [Zenodo GitHub integration](https://zenodo.org/account/settings/github/), so that a GitHub release is archived with a DOI
 
