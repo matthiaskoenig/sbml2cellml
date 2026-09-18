@@ -96,6 +96,11 @@ packages = ["src/sbml2cellml"]
 # libopencor publishes its wheels on GitHub releases instead of PyPI. The
 # release page is used as a flat index, which only this package is taken from.
 # Bumping libopencor means changing the version here and in the dev extra.
+[tool.uv]
+# the version is dynamic (read from __init__.py by hatchling): rebuild the
+# editable install when it changes, so its metadata follows a version bump
+cache-keys = [{ file = "pyproject.toml" }, { file = "src/sbml2cellml/__init__.py" }]
+
 [[tool.uv.index]]
 name = "libopencor"
 url = "https://github.com/opencor/libopencor/releases/expanded_assets/v1.20260803.0"
