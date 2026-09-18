@@ -11,7 +11,9 @@ import numpy as np
 import pytest
 
 from sbml2cellml import convert_sbml2cellml
+from sbml2cellml.cellml import write_model
 from sbml2cellml.simulate import SimulationError, plot_timecourse, run_timecourse
+from tests.cellml_models import underconstrained_model
 from tests.conftest import MODELS_DIR, TEST_MODEL_PATH
 
 pytest.importorskip("libopencor")
@@ -47,15 +49,21 @@ def test_run_timecourse_liver(tmp_path: Path) -> None:
     assert set(units) == set(df.columns)
 
 
-def test_run_timecourse_underconstrained_raises(tmp_path: Path) -> None:
-    """Known conversion gap, see docs/roadmap.md."""
-    cellml_path = tmp_path / "kidney.cellml"
-    # the validation rejects the model already; libopencor has to as well
-    convert_sbml2cellml(
-        MODELS_DIR / "glimepiride_kidney.xml", cellml_path=cellml_path, validate=False
-    )
-    with pytest.raises(SimulationError, match="underconstrained"):
+def test_run_timecourse_invalid_model_raises(tmp_path: Path) -> None:
+    """The issues of the libopencor analyser become a SimulationError."""
+    cellml_path = tmp_path / "underconstrained.cellml"
+    write_model(underconstrained_model(), cellml_path)
+    with pytest.raises(SimulationError, match="variable 'k' in component 'main'"):
         run_timecourse(cellml_path)
+
+
+def test_run_timecourse_kidney_assignment_rules(tmp_path: Path) -> None:
+    """The targets of the assignment rules follow their rules at every time."""
+    cellml_path = tmp_path / "kidney.cellml"
+    convert_sbml2cellml(MODELS_DIR / "glimepiride_kidney.xml", cellml_path=cellml_path)
+    df, _ = run_timecourse(cellml_path, end=100.0, steps=10)
+    assert np.allclose(df["egfr"], df["f_renal_function"] * df["egfr_healthy"])
+    assert np.allclose(df["crcl"], df["egfr"] * df["BSA"] / 1.73 * 1.1)
 
 
 def test_run_timecourse_missing_file(tmp_path: Path) -> None:

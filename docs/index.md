@@ -39,7 +39,7 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | compartment | variable with the size as initial value |
 | parameter | variable with the value as initial value |
 | species | variable in amount (`hasOnlySubstanceUnits`) or concentration |
-| assignment rule | equation |
+| assignment rule | equation; its target has no initial value, the equation defines it from the start |
 | rate rule | differential equation |
 | reaction | kinetic law added to the differential equation of every reactant and product |
 | unit definition | not yet, every variable is `dimensionless` |

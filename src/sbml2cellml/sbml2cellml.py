@@ -3,8 +3,10 @@
 The conversion puts every SBML compartment, parameter and species as a variable
 into a single CellML component `sbml`, together with the variable of
 integration `time`. Assignment rules become equations, rate rules and the
-kinetic laws of the reactions become differential equations. All variables are
-`dimensionless`, the units of the SBML model are not converted yet.
+kinetic laws of the reactions become differential equations. The target of an
+assignment rule has no initial value, the rule defines it at all times. All
+variables are `dimensionless`, the units of the SBML model are not converted
+yet.
 
 Not supported yet (logged as warning, see docs/roadmap.md): unit definitions,
 initial assignments, function definitions, events and algebraic rules. The
@@ -75,11 +77,12 @@ def convert_sbml2cellml(
     time.setUnits(UNITS_ID)
     component.addVariable(time)
 
-    compartment_sizes = _add_compartments(component, model_sbml)
-    _add_parameters(component, model_sbml)
-    in_amount = _add_species(component, model_sbml, compartment_sizes)
-
     assignment_rules, rate_rules = _collect_rules(model_sbml)
+    assigned = set(assignment_rules)
+    compartment_sizes = _add_compartments(component, model_sbml, assigned)
+    _add_parameters(component, model_sbml, assigned)
+    in_amount = _add_species(component, model_sbml, compartment_sizes, assigned)
+
     reaction_terms = _collect_reaction_terms(model_sbml, in_amount)
 
     parts: list[str] = []
@@ -135,38 +138,54 @@ def _initial_value(sid: str, value: float) -> float:
     return value
 
 
-def _add_variable(component: libcellml.Component, sid: str, value: float) -> None:
-    """Add a dimensionless variable with an initial value to the component."""
+def _add_variable(
+    component: libcellml.Component, sid: str, value: float | None
+) -> None:
+    """Add a dimensionless variable to the component.
+
+    `value` is its initial value, `None` for a variable an equation computes
+    (the target of an assignment rule), which must not have one.
+    """
     variable = libcellml.Variable(sid)
     variable.setUnits(UNITS_ID)
-    variable.setInitialValue(value)
+    if value is not None:
+        variable.setInitialValue(value)
     component.addVariable(variable)
 
 
 def _add_compartments(
-    component: libcellml.Component, model_sbml: libsbml.Model
+    component: libcellml.Component, model_sbml: libsbml.Model, assigned: set[str]
 ) -> dict[str, float]:
     """Add the compartments as variables.
 
     Returns:
-        The initial size of every compartment by id.
+        The initial size of every compartment by id, which converts the
+        initial values of its species; NaN for a compartment an assignment
+        rule sets whose size attribute is unset.
     """
     sizes: dict[str, float] = {}
     compartment: libsbml.Compartment
     for compartment in model_sbml.getListOfCompartments():
         cid: str = compartment.getId()
-        sizes[cid] = _initial_value(cid, compartment.getSize())
-        _add_variable(component, cid, sizes[cid])
+        if cid in assigned:
+            sizes[cid] = compartment.getSize()
+            _add_variable(component, cid, None)
+        else:
+            sizes[cid] = _initial_value(cid, compartment.getSize())
+            _add_variable(component, cid, sizes[cid])
         logger.info("'%s' variable for compartment", cid)
     return sizes
 
 
-def _add_parameters(component: libcellml.Component, model_sbml: libsbml.Model) -> None:
+def _add_parameters(
+    component: libcellml.Component, model_sbml: libsbml.Model, assigned: set[str]
+) -> None:
     """Add the parameters as variables."""
     parameter: libsbml.Parameter
     for parameter in model_sbml.getListOfParameters():
         pid: str = parameter.getId()
-        _add_variable(component, pid, _initial_value(pid, parameter.getValue()))
+        value = None if pid in assigned else _initial_value(pid, parameter.getValue())
+        _add_variable(component, pid, value)
         logger.info("'%s' variable for parameter", pid)
 
 
@@ -174,12 +193,14 @@ def _add_species(
     component: libcellml.Component,
     model_sbml: libsbml.Model,
     compartment_sizes: dict[str, float],
+    assigned: set[str],
 ) -> dict[str, bool]:
     """Add the species as variables.
 
     A species with `hasOnlySubstanceUnits` is a variable in amount, every other
     species a variable in concentration; the initial value is converted with
-    the size of the compartment when it is given in the other quantity.
+    the size of the compartment when it is given in the other quantity. A
+    species an assignment rule sets has no initial value.
 
     Returns:
         Whether the variable of a species is in amount, by species id.
@@ -188,21 +209,42 @@ def _add_species(
     species: libsbml.Species
     for species in model_sbml.getListOfSpecies():
         sid: str = species.getId()
-        size = compartment_sizes[species.getCompartment()]
+        cid: str = species.getCompartment()
         amount = species.getHasOnlySubstanceUnits()
         in_amount[sid] = amount
 
-        if species.isSetInitialAmount():
+        initial: float | None
+        if sid in assigned:
+            initial = None
+        elif species.isSetInitialAmount():
             value = _initial_value(sid, species.getInitialAmount())
-            initial = value if amount else value / size
+            initial = value if amount else value / _size(cid, sid, compartment_sizes)
         elif species.isSetInitialConcentration():
             value = _initial_value(sid, species.getInitialConcentration())
-            initial = value * size if amount else value
+            initial = value * _size(cid, sid, compartment_sizes) if amount else value
         else:
             initial = _initial_value(sid, math.nan)
         _add_variable(component, sid, initial)
         logger.info("'%s' variable for species", sid)
     return in_amount
+
+
+def _size(cid: str, sid: str, compartment_sizes: dict[str, float]) -> float:
+    """Size of a compartment for the conversion of a species' initial value.
+
+    Only the size of a compartment which an assignment rule sets can be unset
+    (NaN); 1.0 is used then, with a warning.
+    """
+    size = compartment_sizes[cid]
+    if math.isnan(size):
+        logger.warning(
+            "Size of compartment '%s' is not set, using 1.0 to convert the "
+            "initial value of '%s'.",
+            cid,
+            sid,
+        )
+        return 1.0
+    return size
 
 
 def _collect_rules(

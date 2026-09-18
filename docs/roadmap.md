@@ -12,8 +12,7 @@
 - **Events** are skipped with a warning. CellML 2.0 has no events; a subset could be expressed with resets.
 - **Algebraic rules** are skipped with a warning.
 - **Stoichiometry** of reactants and products is not applied to the kinetic law.
-- **Unset initial values** are set to `1.0` with a warning instead of being computed from the rules.
-- **Assignment rule targets** keep an `initial_value`: the value of the SBML element or, when it has none, the `1.0` of the previous item. A variable with an initial value and an equation is not what CellML expects, the libcellml analyser reports the variables of the rule as underconstrained and the validation rejects the model (e.g., the glimepiride kidney model and the `... is underconstrained` failures of the [SBML test suite](testsuite.md#sbml2cellml)).
+- **Unset initial values** of variables which no assignment rule sets are `1.0`, with a warning, instead of being computed, e.g., from an initial assignment.
 
 ### CellML to SBML
 

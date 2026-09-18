@@ -14,10 +14,9 @@ from tests.conftest import GLIMEPIRIDE_MODELS, MODELS_DIR
 from tests.sbml_models import simple_model, write_sbml
 
 #: models the current converter renders as valid CellML
-VALID_MODELS = ["glimepiride_liver"]
+VALID_MODELS = ["glimepiride_kidney", "glimepiride_liver"]
 #: models with known conversion gaps, see docs/roadmap.md
 INVALID_MODELS = {
-    "glimepiride_kidney": "assignment rule target with an initial value (egfr)",
     "glimepiride_intestine": "function definition and units on numbers",
     "glimepiride_body": "units on numbers in formulas",
     "glimepiride_body_flat": "units on numbers in formulas",
@@ -122,6 +121,68 @@ def test_amount_given_for_concentration_species(tmp_path: Path) -> None:
     sbml_path = write_sbml(tmp_path / "amounts.xml", model_sbml)
     v = variables(convert_sbml2cellml(sbml_path))
     assert float(v["S1"].initialValue()) == 3.0
+
+
+def _model_with_assignment_rules() -> libsbml.Model:
+    """`simple_model` with a valued parameter and an unset species set by rules."""
+    model_sbml = simple_model("rules")
+    k2: libsbml.Parameter = model_sbml.createParameter()
+    k2.setId("k2")
+    k2.setValue(3.0)
+    k2.setConstant(False)
+    s3: libsbml.Species = model_sbml.createSpecies()
+    s3.setId("S3")
+    s3.setCompartment("cell")
+    s3.setHasOnlySubstanceUnits(False)
+    s3.setBoundaryCondition(False)
+    s3.setConstant(False)
+    for variable, formula in (("k2", "k1 + k1"), ("S3", "k1 * S1")):
+        rule: libsbml.AssignmentRule = model_sbml.createAssignmentRule()
+        rule.setVariable(variable)
+        rule.setMath(libsbml.parseL3Formula(formula))
+    return model_sbml
+
+
+def test_assignment_rule_targets_have_no_initial_value(tmp_path: Path) -> None:
+    """The rule defines the target at all times, including the start."""
+    sbml_path = write_sbml(tmp_path / "rules.xml", _model_with_assignment_rules())
+    v = variables(convert_sbml2cellml(sbml_path))
+    assert v["k2"].initialValue() == ""
+    assert v["S3"].initialValue() == ""
+    # the other variables keep theirs
+    assert float(v["k1"].initialValue()) == 0.5
+    assert float(v["S1"].initialValue()) == 10.0
+
+
+def test_unset_assignment_rule_target_logs_no_warning(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    sbml_path = write_sbml(tmp_path / "rules.xml", _model_with_assignment_rules())
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        convert_sbml2cellml(sbml_path)
+    assert "S3" not in caplog.text
+
+
+def test_assigned_compartment_without_size_converts_with_one(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    """The initial amount of a species needs the size of its compartment."""
+    model_sbml = simple_model("assigned_size")
+    cell: libsbml.Compartment = model_sbml.getCompartment("cell")
+    cell.unsetSize()
+    cell.setConstant(False)
+    rule: libsbml.AssignmentRule = model_sbml.createAssignmentRule()
+    rule.setVariable("cell")
+    rule.setMath(libsbml.parseL3Formula("k1 + k1"))
+    s2: libsbml.Species = model_sbml.getSpecies("S2")
+    s2.unsetInitialAmount()
+    s2.setInitialConcentration(4.0)  # amount species, concentration given
+    sbml_path = write_sbml(tmp_path / "assigned_size.xml", model_sbml)
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        v = variables(convert_sbml2cellml(sbml_path, validate=False))
+    assert v["cell"].initialValue() == ""
+    assert float(v["S2"].initialValue()) == 4.0
+    assert "Size of compartment 'cell' is not set" in caplog.text
 
 
 def test_nan_initial_value_logs_warning(

@@ -201,3 +201,17 @@ def math_model(rhs_by_variable: dict[str, str]) -> libcellml.Model:
     equations.extend(assignment(name, rhs) for name, rhs in rhs_by_variable.items())
     component.setMath(math(*equations))
     return model
+
+
+def underconstrained_model() -> libcellml.Model:
+    """`dx/dt = k * x` with a rate constant `k` which nothing defines."""
+    model = libcellml.Model("underconstrained")
+    component = libcellml.Component("main")
+    model.addComponent(component)
+    variable(component, "t", "dimensionless")
+    variable(component, "x", "dimensionless", 1.0)
+    variable(component, "k", "dimensionless")
+    component.setMath(
+        math(ode("x", "t", "<apply><times/><ci>k</ci><ci>x</ci></apply>"))
+    )
+    return model
