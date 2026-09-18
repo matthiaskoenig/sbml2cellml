@@ -191,7 +191,9 @@ def requested_frame(
     """
     if TIME not in df.columns:
         raise CompareError("no time column in the simulation result")
-    out = pd.DataFrame({TIME: df[TIME]})
+    # collected first and turned into a frame at once: inserting the columns
+    # one by one fragments the frame (a PerformanceWarning of pandas)
+    columns: dict[str, np.ndarray] = {TIME: df[TIME].to_numpy()}
     for variable in settings.variables:
         if variable not in df.columns:
             continue
@@ -211,8 +213,8 @@ def requested_frame(
                     values = values / size
                 elif not in_amount and want_amount:
                     values = values * size
-        out[variable] = values.to_numpy()
-    return out
+        columns[variable] = values.to_numpy()
+    return pd.DataFrame(columns, index=df.index)
 
 
 def strip_brackets(df: pd.DataFrame) -> pd.DataFrame:
