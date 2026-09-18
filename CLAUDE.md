@@ -6,7 +6,7 @@ This file provides guidance when working with code in this repository.
 
 `sbml2cellml` converts SBML models to CellML 2.0 and CellML models to SBML
 L3V2 with libsbml and libcellml and simulates the result with libopencor.
-Python 3.13 only (libcellml has no wheel for 3.14 yet), packaged with
+Python 3.13 and 3.14 (`.python-version` is 3.14), packaged with
 hatchling (version in `src/sbml2cellml/__init__.py`). Runtime dependencies:
 `python-libsbml`, `libcellml`, `rich`. The `simulate` extra adds `pandas`
 and `matplotlib`; libopencor itself is not on PyPI and comes from a uv flat
@@ -21,7 +21,7 @@ uv run pre-commit install
 
 pytest                          # all tests (parallel, pytest-xdist)
 pytest tests/test_sbml2cellml.py::test_simple_model_initial_values
-tox r -e py3.13                 # tests from uv.lock via tox-uv
+tox r -e py3.14                 # tests from uv.lock via tox-uv (also py3.13)
 tox r -e ty                     # type check
 tox run-parallel
 

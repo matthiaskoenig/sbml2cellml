@@ -31,11 +31,11 @@ jobs:
         run: |
           sudo add-apt-repository -y ppa:deadsnakes/ppa
           sudo apt-get update
-          sudo apt-get install -y python3.13-dev
+          sudo apt-get install -y python3.14-dev
       - name: Install uv and set the python version
         uses: astral-sh/setup-uv@v10.1.0
         with:
-          python-version: "3.13"
+          python-version: "3.14"
           enable-cache: true
       - name: Type check with tox
         env:
