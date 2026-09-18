@@ -277,6 +277,74 @@ def test_time_and_avogadro_convert_to_valid_cellml(tmp_path: Path) -> None:
     assert errors(validate_model(model)) == []
 
 
+def _with_local_parameters(model_sbml: libsbml.Model) -> libsbml.Model:
+    """Kinetic laws `k * S1` (r1, local k = 0.5) and `k * S2` (r2, local k = 2)."""
+    r1: libsbml.Reaction = model_sbml.getReaction("r1")
+    r1.getKineticLaw().setMath(libsbml.parseL3Formula("k * S1"))
+    local: libsbml.LocalParameter = r1.getKineticLaw().createLocalParameter()
+    local.setId("k")
+    local.setValue(0.5)
+    r2: libsbml.Reaction = model_sbml.createReaction()
+    r2.setId("r2")
+    r2.setReversible(False)
+    reactant: libsbml.SpeciesReference = r2.createReactant()
+    reactant.setSpecies("S2")
+    reactant.setConstant(True)
+    reactant.setStoichiometry(1.0)
+    product: libsbml.SpeciesReference = r2.createProduct()
+    product.setSpecies("S1")
+    product.setConstant(True)
+    product.setStoichiometry(1.0)
+    law: libsbml.KineticLaw = r2.createKineticLaw()
+    law.setMath(libsbml.parseL3Formula("k * S2"))
+    local = law.createLocalParameter()
+    local.setId("k")
+    local.setValue(2.0)
+    return model_sbml
+
+
+def test_local_parameters_become_variables_per_reaction(tmp_path: Path) -> None:
+    """Local parameters of the same id in two reactions keep their values."""
+    model_sbml = _with_local_parameters(simple_model("locals"))
+    sbml_path = write_sbml(tmp_path / "locals.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    assert errors(validate_model(model)) == []
+    v = variables(model)
+    assert float(v["r1_k"].initialValue()) == 0.5
+    assert float(v["r2_k"].initialValue()) == 2.0
+    assert "<ci>k</ci>" not in model.component(0).math().replace(" ", "")
+
+
+def test_local_parameter_shadows_global_parameter(tmp_path: Path) -> None:
+    model_sbml = simple_model("shadow")
+    law: libsbml.KineticLaw = model_sbml.getReaction("r1").getKineticLaw()
+    local: libsbml.LocalParameter = law.createLocalParameter()
+    local.setId("k1")  # the law k1 * S1 means the local k1
+    local.setValue(3.0)
+    sbml_path = write_sbml(tmp_path / "shadow.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    v = variables(model)
+    assert float(v["k1"].initialValue()) == 0.5
+    assert float(v["r1_k1"].initialValue()) == 3.0
+    math = model.component(0).math().replace(" ", "")
+    assert "<ci>r1_k1</ci>" in math
+    assert "<ci>k1</ci>" not in math
+
+
+def test_local_parameter_id_avoids_existing_ids(tmp_path: Path) -> None:
+    model_sbml = _with_local_parameters(simple_model("collision"))
+    taken: libsbml.Parameter = model_sbml.createParameter()
+    taken.setId("r1_k")
+    taken.setValue(9.0)
+    taken.setConstant(True)
+    sbml_path = write_sbml(tmp_path / "collision.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    assert errors(validate_model(model)) == []
+    v = variables(model)
+    assert float(v["r1_k"].initialValue()) == 9.0
+    assert float(v["r1_k_2"].initialValue()) == 0.5
+
+
 def test_nan_initial_value_logs_warning(
     tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:

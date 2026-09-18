@@ -64,7 +64,8 @@ on `develop` after the merge.
   read from a file). Assignment rules become equations
   (their targets get no initial value), rate rules and kinetic laws
   differential equations; a concentration species
-  gets its reaction terms divided by the compartment. Events, initial
+  gets its reaction terms divided by the compartment. The local parameters of
+  a kinetic law become variables `<reaction>_<parameter>` (`unique_sid`). Events, initial
   assignments, algebraic rules and unset initial values (set to 1.0) are logged
   as warnings. The generated CellML is a fixed contract: tests compare the
   structure and the validity of the example models.
