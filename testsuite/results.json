@@ -1561,13 +1561,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -1575,14 +1575,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -3464,13 +3464,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -3478,14 +3478,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -3507,13 +3507,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -3521,14 +3521,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -3550,13 +3550,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -3564,14 +3564,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -3593,13 +3593,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -3607,14 +3607,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -3635,13 +3635,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -3649,14 +3649,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -5448,13 +5448,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -5462,14 +5462,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -5491,13 +5491,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -5505,14 +5505,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -6049,13 +6049,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -6063,14 +6063,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -6092,13 +6092,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -6106,14 +6106,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -6135,13 +6135,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-06,
@@ -6149,14 +6149,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -6178,13 +6178,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-05,
@@ -6192,14 +6192,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -6221,13 +6221,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-06,
@@ -6235,14 +6235,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -6265,13 +6265,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-05,
@@ -6279,14 +6279,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -6309,13 +6309,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -6.51e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -6.51e-07,
@@ -6323,14 +6323,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -6.51e-07,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -6353,13 +6353,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -6367,14 +6367,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -6397,13 +6397,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.8e-05,
+     "message": "S1 exceeds the tolerance by 2.8e-05; S2 exceeds the tolerance by 1.59e-06; S3 exceeds the tolerance by 1.6e-06; S4 exceeds the tolerance by 2.4e-06",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1.02e-08,
@@ -6411,14 +6411,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.8e-05,
+     "message": "S1 exceeds the tolerance by 2.8e-05; S2 exceeds the tolerance by 1.59e-06; S3 exceeds the tolerance by 1.6e-06; S4 exceeds the tolerance by 2.4e-06",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -6441,13 +6441,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.499,
+     "message": "S1 exceeds the tolerance by 0.247; S2 exceeds the tolerance by 0.499; S3 exceeds the tolerance by 0.374",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -6455,14 +6455,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.499,
+     "message": "S1 exceeds the tolerance by 0.247; S2 exceeds the tolerance by 0.499; S3 exceeds the tolerance by 0.374",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -12088,13 +12088,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -12102,14 +12102,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -12132,13 +12132,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -12146,14 +12146,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -12175,13 +12175,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -12189,14 +12189,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -12219,13 +12219,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.0499,
+     "message": "S1 exceeds the tolerance by 0.00996; S2 exceeds the tolerance by 0.0475; S3 exceeds the tolerance by 0.0499",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1.1e-05,
@@ -12233,14 +12233,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.0499,
+     "message": "S1 exceeds the tolerance by 0.00996; S2 exceeds the tolerance by 0.0475; S3 exceeds the tolerance by 0.0499",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -12263,13 +12263,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -12277,14 +12277,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -12306,13 +12306,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 8.66e-06,
+     "message": "S1 exceeds the tolerance by 8.66e-06; S2 exceeds the tolerance by 5.86e-07; S3 exceeds the tolerance by 5.88e-07; S4 exceeds the tolerance by 8.83e-07",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -12320,14 +12320,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 8.66e-06,
+     "message": "S1 exceeds the tolerance by 8.66e-06; S2 exceeds the tolerance by 5.86e-07; S3 exceeds the tolerance by 5.88e-07; S4 exceeds the tolerance by 8.83e-07",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -12349,13 +12349,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.35e-05,
+     "message": "S1 exceeds the tolerance by 3.56e-05; S2 exceeds the tolerance by 3.56e-05; S3 exceeds the tolerance by 8.66e-06; S4 exceeds the tolerance by 5.35e-05",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1.1e-08,
@@ -12363,14 +12363,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.35e-05,
+     "message": "S1 exceeds the tolerance by 3.56e-05; S2 exceeds the tolerance by 3.56e-05; S3 exceeds the tolerance by 8.66e-06; S4 exceeds the tolerance by 5.35e-05",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -12392,13 +12392,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.35e-05,
+     "message": "S1 exceeds the tolerance by 3.56e-05; S2 exceeds the tolerance by 3.56e-05; S3 exceeds the tolerance by 8.66e-06; S4 exceeds the tolerance by 5.35e-05",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1.1e-08,
@@ -12406,14 +12406,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.35e-05,
+     "message": "S1 exceeds the tolerance by 3.56e-05; S2 exceeds the tolerance by 3.56e-05; S3 exceeds the tolerance by 8.66e-06; S4 exceeds the tolerance by 5.35e-05",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -12435,13 +12435,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.000499,
+     "message": "S1 exceeds the tolerance by 9.96e-05; S2 exceeds the tolerance by 0.000475; S3 exceeds the tolerance by 0.000499",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1.1e-07,
@@ -12449,14 +12449,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.000499,
+     "message": "S1 exceeds the tolerance by 9.96e-05; S2 exceeds the tolerance by 0.000475; S3 exceeds the tolerance by 0.000499",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -12479,13 +12479,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.499,
+     "message": "S1 exceeds the tolerance by 0.0996; S2 exceeds the tolerance by 0.475; S3 exceeds the tolerance by 0.499",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.00011,
@@ -12493,14 +12493,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.499,
+     "message": "S1 exceeds the tolerance by 0.0996; S2 exceeds the tolerance by 0.475; S3 exceeds the tolerance by 0.499",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -12524,13 +12524,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.00105,
+     "message": "S2 exceeds the tolerance by 0.000996; S3 exceeds the tolerance by 0.00105",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -12538,14 +12538,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.00105,
+     "message": "S2 exceeds the tolerance by 0.000996; S3 exceeds the tolerance by 0.00105",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -12569,13 +12569,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.5e-05,
+     "message": "S2 exceeds the tolerance by 9.99e-06; S4 exceeds the tolerance by 1.5e-05",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1e-08,
@@ -12583,14 +12583,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.5e-05,
+     "message": "S2 exceeds the tolerance by 9.99e-06; S4 exceeds the tolerance by 1.5e-05",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -12613,13 +12613,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.000135,
+     "message": "S1 exceeds the tolerance by 9e-05; S2 exceeds the tolerance by 9e-05; S3 exceeds the tolerance by 9.99e-06; S4 exceeds the tolerance by 0.000135",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1.1e-08,
@@ -12627,14 +12627,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.000135,
+     "message": "S1 exceeds the tolerance by 9e-05; S2 exceeds the tolerance by 9e-05; S3 exceeds the tolerance by 9.99e-06; S4 exceeds the tolerance by 0.000135",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -12657,13 +12657,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-08,
@@ -12671,14 +12671,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-08,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -12700,13 +12700,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-05,
@@ -12714,14 +12714,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -24727,13 +24727,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.07e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.07e-08,
@@ -24741,14 +24741,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.07e-08,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -24771,13 +24771,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -24785,14 +24785,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -24815,13 +24815,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.607,
+     "message": "S1 exceeds the tolerance by 0.607; S2 exceeds the tolerance by 0.607; S3 exceeds the tolerance by 0.455",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -24829,14 +24829,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.607,
+     "message": "S1 exceeds the tolerance by 0.607; S2 exceeds the tolerance by 0.607; S3 exceeds the tolerance by 0.455",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -24859,13 +24859,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.12e-06,
+     "message": "S1 exceeds the tolerance by 3.41e-06; S2 exceeds the tolerance by 3.41e-06; S3 exceeds the tolerance by 3.41e-06; S4 exceeds the tolerance by 5.12e-06",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -24873,14 +24873,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 5.12e-06,
+     "message": "S1 exceeds the tolerance by 3.41e-06; S2 exceeds the tolerance by 3.41e-06; S3 exceeds the tolerance by 3.41e-06; S4 exceeds the tolerance by 5.12e-06",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -25168,13 +25168,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.249,
+     "message": "S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -25182,14 +25182,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.249,
+     "message": "S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -25212,13 +25212,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.249,
+     "message": "S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -25226,14 +25226,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.249,
+     "message": "S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -25255,13 +25255,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.399,
+     "message": "S2 exceeds the tolerance by 0.399; S3 exceeds the tolerance by 0.299",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -25269,14 +25269,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.399,
+     "message": "S2 exceeds the tolerance by 0.399; S3 exceeds the tolerance by 0.299",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -25299,13 +25299,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.228,
+     "message": "S2 exceeds the tolerance by 0.228; S3 exceeds the tolerance by 0.171",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -25313,14 +25313,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.228,
+     "message": "S2 exceeds the tolerance by 0.228; S3 exceeds the tolerance by 0.171",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -25343,13 +25343,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.749,
+     "message": "S2 exceeds the tolerance by 0.749; S3 exceeds the tolerance by 0.561",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -25357,14 +25357,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.749,
+     "message": "S2 exceeds the tolerance by 0.749; S3 exceeds the tolerance by 0.561",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -25386,13 +25386,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.491,
+     "message": "S2 exceeds the tolerance by 0.491; S3 exceeds the tolerance by 0.368",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -25400,14 +25400,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.491,
+     "message": "S2 exceeds the tolerance by 0.491; S3 exceeds the tolerance by 0.368",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -27827,13 +27827,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.12,
+     "message": "S2 exceeds the tolerance by 2.12; S3 exceeds the tolerance by 1.59",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -27841,14 +27841,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.12,
+     "message": "S2 exceeds the tolerance by 2.12; S3 exceeds the tolerance by 1.59",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -27872,13 +27872,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.511,
+     "message": "S2 exceeds the tolerance by 0.511; S3 exceeds the tolerance by 0.383",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -27886,14 +27886,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.511,
+     "message": "S2 exceeds the tolerance by 0.511; S3 exceeds the tolerance by 0.383",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -27916,13 +27916,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.75,
+     "message": "S2 exceeds the tolerance by 6.75; S3 exceeds the tolerance by 5.06",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -27930,14 +27930,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.75,
+     "message": "S2 exceeds the tolerance by 6.75; S3 exceeds the tolerance by 5.06",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -27961,13 +27961,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.925,
+     "message": "S2 exceeds the tolerance by 0.925; S3 exceeds the tolerance by 0.694",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -27975,14 +27975,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.925,
+     "message": "S2 exceeds the tolerance by 0.925; S3 exceeds the tolerance by 0.694",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -28006,13 +28006,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.03,
+     "message": "S2 exceeds the tolerance by 1.03; S3 exceeds the tolerance by 0.77",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -28020,14 +28020,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.03,
+     "message": "S2 exceeds the tolerance by 1.03; S3 exceeds the tolerance by 0.77",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -28050,13 +28050,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.57,
+     "message": "S1 exceeds the tolerance by 1.34; S2 exceeds the tolerance by 6.57; S3 exceeds the tolerance by 4.93",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -28064,14 +28064,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.57,
+     "message": "S1 exceeds the tolerance by 1.34; S2 exceeds the tolerance by 6.57; S3 exceeds the tolerance by 4.93",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -28275,13 +28275,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.249,
+     "message": "S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -28289,14 +28289,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.249,
+     "message": "S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -28320,13 +28320,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.228,
+     "message": "S2 exceeds the tolerance by 0.228; S3 exceeds the tolerance by 0.171",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -28334,14 +28334,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.228,
+     "message": "S2 exceeds the tolerance by 0.228; S3 exceeds the tolerance by 0.171",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -28725,13 +28725,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 24.0,
+     "message": "S1 exceeds the tolerance by 0.999; S2 exceeds the tolerance by 24; S3 exceeds the tolerance by 18",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -28739,14 +28739,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 24.0,
+     "message": "S1 exceeds the tolerance by 0.999; S2 exceeds the tolerance by 24; S3 exceeds the tolerance by 18",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -28770,13 +28770,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.249,
+     "message": "S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -28784,14 +28784,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.249,
+     "message": "S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -28815,13 +28815,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 11.5,
+     "message": "S1 exceeds the tolerance by 0.999; S2 exceeds the tolerance by 11.5; S3 exceeds the tolerance by 8.62",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -28829,14 +28829,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 11.5,
+     "message": "S1 exceeds the tolerance by 0.999; S2 exceeds the tolerance by 11.5; S3 exceeds the tolerance by 8.62",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -28860,13 +28860,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.228,
+     "message": "S2 exceeds the tolerance by 0.228; S3 exceeds the tolerance by 0.171",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -28874,14 +28874,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.228,
+     "message": "S2 exceeds the tolerance by 0.228; S3 exceeds the tolerance by 0.171",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -29085,13 +29085,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.607,
+     "message": "S1 exceeds the tolerance by 0.607; S2 exceeds the tolerance by 0.541; S3 exceeds the tolerance by 0.406",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -29099,14 +29099,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.607,
+     "message": "S1 exceeds the tolerance by 0.607; S2 exceeds the tolerance by 0.541; S3 exceeds the tolerance by 0.406",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -29129,13 +29129,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.604,
+     "message": "S1 exceeds the tolerance by 0.604; S2 exceeds the tolerance by 0.604; S3 exceeds the tolerance by 0.453",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -29143,14 +29143,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.604,
+     "message": "S1 exceeds the tolerance by 0.604; S2 exceeds the tolerance by 0.604; S3 exceeds the tolerance by 0.453",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -30626,13 +30626,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.249,
+     "message": "S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -30640,14 +30640,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.249,
+     "message": "S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -30670,13 +30670,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.399,
+     "message": "S2 exceeds the tolerance by 0.399; S3 exceeds the tolerance by 0.299",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -30684,14 +30684,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.399,
+     "message": "S2 exceeds the tolerance by 0.399; S3 exceeds the tolerance by 0.299",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -31509,13 +31509,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.749,
+     "message": "S2 exceeds the tolerance by 0.749; S3 exceeds the tolerance by 0.561",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -31523,14 +31523,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.749,
+     "message": "S2 exceeds the tolerance by 0.749; S3 exceeds the tolerance by 0.561",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -31553,13 +31553,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.491,
+     "message": "S2 exceeds the tolerance by 0.491; S3 exceeds the tolerance by 0.368",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -31567,14 +31567,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.491,
+     "message": "S2 exceeds the tolerance by 0.491; S3 exceeds the tolerance by 0.368",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -31860,13 +31860,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.325,
+     "message": "S1 exceeds the tolerance by 0.325; S2 exceeds the tolerance by 0.325; S3 exceeds the tolerance by 0.243",
+     "status": "fail"
     },
     "reference": {
      "max_excess": null,
@@ -31874,14 +31874,14 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.325,
+     "message": "S1 exceeds the tolerance by 0.325; S2 exceeds the tolerance by 0.325; S3 exceeds the tolerance by 0.243",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -38530,13 +38530,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 13.6,
+     "message": "S1 exceeds the tolerance by 13.6; C exceeds the tolerance by 9",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0011,
@@ -38544,14 +38544,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 13.6,
+     "message": "S1 exceeds the tolerance by 13.6; C exceeds the tolerance by 9",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'fakeC' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -38621,13 +38621,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 9.0,
+     "message": "S1 exceeds the tolerance by 1.87; C exceeds the tolerance by 9",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.000123,
@@ -38635,14 +38635,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 9.0,
+     "message": "S1 exceeds the tolerance by 1.87; C exceeds the tolerance by 9",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'fakeC' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -40999,13 +40999,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -41013,14 +41013,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -41044,13 +41044,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -41058,14 +41058,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -43954,13 +43954,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.00015,
+     "message": "S2 exceeds the tolerance by 0.00015; S3 exceeds the tolerance by 0.000112",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -43968,14 +43968,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.00015,
+     "message": "S2 exceeds the tolerance by 0.00015; S3 exceeds the tolerance by 0.000112",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -44001,13 +44001,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.61e-05,
+     "message": "S1 exceeds the tolerance by 9.24e-07; S2 exceeds the tolerance by 1.74e-05; S3 exceeds the tolerance by 9.26e-07; S4 exceeds the tolerance by 2.61e-05",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1e-08,
@@ -44015,14 +44015,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.61e-05,
+     "message": "S1 exceeds the tolerance by 9.24e-07; S2 exceeds the tolerance by 1.74e-05; S3 exceeds the tolerance by 9.26e-07; S4 exceeds the tolerance by 2.61e-05",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -66578,5 +66578,5 @@
   "01798": "no L3V2 file"
  },
  "suite": "3.5.0",
- "version": "0.1.0"
+ "version": "0.2.0"
 }
