@@ -17,9 +17,9 @@ from tests.sbml_models import simple_model, write_sbml
 VALID_MODELS = ["glimepiride_kidney", "glimepiride_liver"]
 #: models with known conversion gaps, see docs/roadmap.md
 INVALID_MODELS = {
-    "glimepiride_intestine": "function definition and SBML units on numbers",
-    "glimepiride_body": "SBML units on numbers and function definitions",
-    "glimepiride_body_flat": "SBML units on numbers and function definitions",
+    "glimepiride_intestine": "SBML units on numbers and reaction ids in formulas",
+    "glimepiride_body": "SBML units on numbers and reaction ids in formulas",
+    "glimepiride_body_flat": "SBML units on numbers and reaction ids in formulas",
 }
 
 
@@ -193,6 +193,78 @@ def test_numbers_without_units_convert_to_valid_cellml(tmp_path: Path) -> None:
     sbml_path = write_sbml(tmp_path / "numbers.xml", model_sbml)
     model = convert_sbml2cellml(sbml_path)
     assert errors(validate_model(model)) == []
+
+
+def _model_with_function_definition() -> libsbml.Model:
+    """`simple_model` whose kinetic law calls `multiply(x, y) = x * y`."""
+    model_sbml = simple_model("functions")
+    fd: libsbml.FunctionDefinition = model_sbml.createFunctionDefinition()
+    fd.setId("multiply")
+    fd.setMath(libsbml.parseL3Formula("lambda(x, y, x * y)"))
+    law: libsbml.KineticLaw = model_sbml.getReaction("r1").getKineticLaw()
+    law.setMath(libsbml.parseL3Formula("multiply(k1, S1)"))
+    return model_sbml
+
+
+def test_function_definitions_are_inlined(tmp_path: Path) -> None:
+    """CellML has no functions, a call becomes the body of the function."""
+    sbml_path = write_sbml(
+        tmp_path / "functions.xml", _model_with_function_definition()
+    )
+    model = convert_sbml2cellml(sbml_path)
+    assert errors(validate_model(model)) == []
+    math = model.component(0).math()
+    assert "multiply" not in math
+    assert "<times/>" in math
+
+
+def _model_calling(functions: dict[str, str]) -> libsbml.Model:
+    """`simple_model` with the given function definitions, the law calls `f`."""
+    model_sbml = simple_model("calls")
+    for fid, body in functions.items():
+        fd: libsbml.FunctionDefinition = model_sbml.createFunctionDefinition()
+        fd.setId(fid)
+        fd.setMath(libsbml.parseL3Formula(body))
+    law: libsbml.KineticLaw = model_sbml.getReaction("r1").getKineticLaw()
+    law.setMath(libsbml.parseL3Formula("f(k1)"))
+    return model_sbml
+
+
+@pytest.mark.parametrize(
+    ("functions", "recursive"),
+    [
+        ({"f": "lambda(x, f(x))"}, "f"),
+        ({"f": "lambda(x, g(x))", "g": "lambda(x, f(x))"}, "f, g"),
+    ],
+)
+def test_recursive_function_definitions_are_not_expanded(
+    functions: dict[str, str],
+    recursive: str,
+    tmp_path: Path,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """libsbml crashes on expanding a recursive function read from a file."""
+    sbml_path = write_sbml(tmp_path / "calls.xml", _model_calling(functions))
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        model = convert_sbml2cellml(sbml_path, validate=False)
+    assert (
+        f"Function definitions of 'calls' could not be expanded, their calls "
+        f"remain: recursive function definitions {recursive}" in caplog.text
+    )
+    assert "<ci>f</ci>" in model.component(0).math().replace(" ", "")
+
+
+def test_function_definitions_libsbml_refuses_log_warning(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    """A call of an undefined function makes libsbml refuse the document."""
+    sbml_path = write_sbml(
+        tmp_path / "calls.xml", _model_calling({"f": "lambda(x, g(x))"})
+    )
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        convert_sbml2cellml(sbml_path, validate=False)
+    assert "Function definitions of 'calls' could not be expanded" in caplog.text
+    assert "invalid" in caplog.text
 
 
 def test_nan_initial_value_logs_warning(

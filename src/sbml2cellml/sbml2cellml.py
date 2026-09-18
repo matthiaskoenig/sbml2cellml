@@ -8,9 +8,13 @@ assignment rule has no initial value, the rule defines it at all times. All
 variables are `dimensionless`, the units of the SBML model are not converted
 yet.
 
+CellML has no functions: the calls of SBML function definitions are replaced
+by the bodies of the functions (libsbml's `expandFunctionDefinitions`
+conversion) before the conversion.
+
 Not supported yet (logged as warning, see docs/roadmap.md): unit definitions,
-initial assignments, function definitions, events and algebraic rules. The
-stoichiometry of a reaction is not applied to its kinetic law either.
+initial assignments, events and algebraic rules. The stoichiometry of a
+reaction is not applied to its kinetic law either.
 """
 
 import logging
@@ -64,6 +68,10 @@ def convert_sbml2cellml(
         raise SBML2CellMLConversionError(f"No model in SBML file '{sbml_path}'.")
     mid: str = model_sbml.getId() if model_sbml.isSetId() else Path(sbml_path).stem
     logger.info("Converting SBML model '%s' from '%s'", mid, sbml_path)
+    _expand_function_definitions(doc, mid)
+    # the conversion rewrites the document, its model is read again
+    model_sbml = doc.getModel()
+    assert model_sbml is not None
 
     model = libcellml.Model(mid)
     component = libcellml.Component(COMPONENT_ID)
@@ -123,6 +131,86 @@ def convert_sbml2cellml(
         logger.info("CellML written to '%s'", cellml_path)
 
     return model
+
+
+def _expand_function_definitions(doc: libsbml.SBMLDocument, mid: str) -> None:
+    """Replace the calls of function definitions by the function bodies.
+
+    libsbml inlines every call with its arguments and removes the function
+    definitions. It refuses an invalid document (e.g. a call of an undefined
+    function) and crashes on a recursive function definition read from a
+    file, which is therefore checked first. The calls then stay, with a
+    warning, and the validation of the CellML reports them as unknown names.
+
+    Args:
+        doc: the SBML document, converted in place.
+        mid: id of the model, for the log.
+    """
+    model_sbml: libsbml.Model = doc.getModel()
+    count = model_sbml.getNumFunctionDefinitions()
+    if count == 0:
+        return
+    recursive = _recursive_functions(model_sbml)
+    if recursive:
+        logger.warning(
+            "Function definitions of '%s' could not be expanded, their calls "
+            "remain: recursive function definitions %s",
+            mid,
+            ", ".join(recursive),
+        )
+        return
+    properties = libsbml.ConversionProperties()
+    properties.addOption("expandFunctionDefinitions", True)
+    status = doc.convert(properties)
+    if status != libsbml.LIBSBML_OPERATION_SUCCESS:
+        logger.warning(
+            "Function definitions of '%s' could not be expanded, their calls "
+            "remain: %s",
+            mid,
+            libsbml.OperationReturnValue_toString(status),
+        )
+        return
+    logger.info("Expanded %d function definitions of '%s'", count, mid)
+
+
+def _function_calls(node: libsbml.ASTNode | None, names: set[str]) -> None:
+    """Collect the names of the functions a formula calls."""
+    if node is None:
+        return
+    if node.getType() == libsbml.AST_FUNCTION:
+        names.add(node.getName())
+    for k in range(node.getNumChildren()):
+        _function_calls(node.getChild(k), names)
+
+
+def _recursive_functions(model_sbml: libsbml.Model) -> list[str]:
+    """Ids of the function definitions which call themselves.
+
+    A function is recursive when it reaches itself through its calls,
+    directly or through other function definitions.
+
+    Returns:
+        The sorted ids of the recursive function definitions.
+    """
+    calls: dict[str, set[str]] = {}
+    definition: libsbml.FunctionDefinition
+    for definition in model_sbml.getListOfFunctionDefinitions():
+        names: set[str] = set()
+        _function_calls(definition.getMath(), names)
+        calls[definition.getId()] = names
+    recursive = []
+    for fid in sorted(calls):
+        seen: set[str] = set()
+        stack = list(calls[fid])
+        while stack:
+            name = stack.pop()
+            if name == fid:
+                recursive.append(fid)
+                break
+            if name not in seen:
+                seen.add(name)
+                stack.extend(calls.get(name, ()))
+    return recursive
 
 
 def _initial_value(sid: str, value: float) -> float:
