@@ -10,8 +10,7 @@
 - **Initial assignments** are skipped with a warning. The initial value would have to be computed from the assignment, e.g., with libroadrunner.
 - **Events** are skipped with a warning. CellML 2.0 has no events; a subset could be expressed with resets.
 - **Algebraic rules** are skipped with a warning.
-- **Stoichiometry** of reactants and products is not applied to the kinetic law.
-- **Ids of species references and reactions** in formulas (a stoichiometry, a reaction rate) are not converted, they reference unknown names.
+- **stoichiometryMath** of level 2 species references is not converted, the stoichiometry attribute is used.
 - **N-ary relations** such as `a > b > c` are not split into binary ones; CellML only has binary relations.
 - **The delay and rateOf symbols** are not converted: CellML has no delays, and `rateOf(x)` would have to become the right-hand side of the equation of `x`.
 - **Unset initial values** of variables which no assignment rule sets are `1.0`, with a warning, instead of being computed, e.g., from an initial assignment.

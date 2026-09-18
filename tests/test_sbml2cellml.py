@@ -17,9 +17,9 @@ from tests.sbml_models import simple_model, write_sbml
 VALID_MODELS = ["glimepiride_kidney", "glimepiride_liver"]
 #: models with known conversion gaps, see docs/roadmap.md
 INVALID_MODELS = {
-    "glimepiride_intestine": "SBML units on numbers and reaction ids in formulas",
-    "glimepiride_body": "SBML units on numbers and reaction ids in formulas",
-    "glimepiride_body_flat": "SBML units on numbers and reaction ids in formulas",
+    "glimepiride_intestine": "SBML units on numbers",
+    "glimepiride_body": "SBML units on numbers",
+    "glimepiride_body_flat": "SBML units on numbers",
 }
 
 
@@ -42,14 +42,21 @@ def test_convert_glimepiride_structure(name: str, tmp_path: Path) -> None:
 
     doc = libsbml.readSBMLFromFile(str(sbml_path))
     m_sbml = doc.getModel()
-    n_expected = (
-        m_sbml.getNumCompartments()
-        + m_sbml.getNumParameters()
-        + m_sbml.getNumSpecies()
-        + 1
-    )
-    assert model.component(0).variableCount() == n_expected
-    assert TIME_ID in variables(model)
+    # time, the compartments, parameters and species, and the reactions whose
+    # id a formula uses as its rate
+    sbml_ids = {TIME_ID} | {
+        element.getId()
+        for listing in (
+            m_sbml.getListOfCompartments(),
+            m_sbml.getListOfParameters(),
+            m_sbml.getListOfSpecies(),
+        )
+        for element in listing
+    }
+    reaction_ids = {reaction.getId() for reaction in m_sbml.getListOfReactions()}
+    names = set(variables(model))
+    assert sbml_ids <= names
+    assert names - sbml_ids <= reaction_ids
 
     # the written file parses back without issues
     assert cellml_path.is_file()
@@ -343,6 +350,53 @@ def test_local_parameter_id_avoids_existing_ids(tmp_path: Path) -> None:
     v = variables(model)
     assert float(v["r1_k"].initialValue()) == 9.0
     assert float(v["r1_k_2"].initialValue()) == 0.5
+
+
+def _with_rule(model_sbml: libsbml.Model, variable: str, formula: str) -> None:
+    """Add a non-constant parameter (if missing) set by an assignment rule."""
+    if model_sbml.getElementBySId(variable) is None:
+        p: libsbml.Parameter = model_sbml.createParameter()
+        p.setId(variable)
+        p.setConstant(False)
+    rule: libsbml.AssignmentRule = model_sbml.createAssignmentRule()
+    rule.setVariable(variable)
+    rule.setMath(libsbml.parseL3Formula(formula))
+
+
+def test_species_reference_id_is_a_variable_of_its_stoichiometry(
+    tmp_path: Path,
+) -> None:
+    model_sbml = simple_model("reference_id")
+    reference: libsbml.SpeciesReference = model_sbml.getReaction("r1").getReactant(0)
+    reference.setId("s1ref")
+    reference.setStoichiometry(2.0)
+    _with_rule(model_sbml, "p", "s1ref + s1ref")
+    sbml_path = write_sbml(tmp_path / "reference_id.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    assert errors(validate_model(model)) == []
+    assert float(variables(model)["s1ref"].initialValue()) == 2.0
+
+
+def test_assigned_stoichiometry_has_no_initial_value(tmp_path: Path) -> None:
+    model_sbml = simple_model("assigned_stoichiometry")
+    reference: libsbml.SpeciesReference = model_sbml.getReaction("r1").getReactant(0)
+    reference.setId("s1ref")
+    reference.setConstant(False)
+    reference.setStoichiometry(2.0)
+    _with_rule(model_sbml, "s1ref", "k1 + k1")
+    sbml_path = write_sbml(tmp_path / "assigned_stoichiometry.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    assert errors(validate_model(model)) == []
+    assert variables(model)["s1ref"].initialValue() == ""
+
+
+def test_reaction_id_in_a_formula_is_the_rate(tmp_path: Path) -> None:
+    model_sbml = simple_model("reaction_id")
+    _with_rule(model_sbml, "flux", "r1")
+    sbml_path = write_sbml(tmp_path / "reaction_id.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    assert errors(validate_model(model)) == []
+    assert "r1" in variables(model)
 
 
 def test_nan_initial_value_logs_warning(

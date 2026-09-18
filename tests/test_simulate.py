@@ -15,6 +15,7 @@ from sbml2cellml.cellml import write_model
 from sbml2cellml.simulate import SimulationError, plot_timecourse, run_timecourse
 from tests.cellml_models import underconstrained_model
 from tests.conftest import MODELS_DIR, TEST_MODEL_PATH
+from tests.sbml_models import simple_model, write_sbml
 
 pytest.importorskip("libopencor")
 matplotlib.use("Agg")
@@ -64,6 +65,24 @@ def test_run_timecourse_kidney_assignment_rules(tmp_path: Path) -> None:
     df, _ = run_timecourse(cellml_path, end=100.0, steps=10)
     assert np.allclose(df["egfr"], df["f_renal_function"] * df["egfr_healthy"])
     assert np.allclose(df["crcl"], df["egfr"] * df["BSA"] / 1.73 * 1.1)
+
+
+def test_run_timecourse_applies_stoichiometry(tmp_path: Path) -> None:
+    """S1 -> S2 with stoichiometry 2 of S1: d[S1]/dt = -2 k1 [S1] / cell."""
+    model_sbml = simple_model("stoichiometry")
+    model_sbml.getReaction("r1").getReactant(0).setStoichiometry(2.0)
+    sbml_path = write_sbml(tmp_path / "stoichiometry.xml", model_sbml)
+    cellml_path = tmp_path / "stoichiometry.cellml"
+    convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
+    df, _ = run_timecourse(
+        cellml_path,
+        end=4.0,
+        steps=8,
+        relative_tolerance=1e-10,
+        absolute_tolerance=1e-12,
+    )
+    expected = 10.0 * np.exp(-2 * 0.5 / 2.0 * df["time"])
+    assert np.allclose(df["S1"], expected, rtol=1e-6)
 
 
 def test_run_timecourse_missing_file(tmp_path: Path) -> None:
