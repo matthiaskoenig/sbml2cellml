@@ -1479,9 +1479,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.989,
-     "message": "S1 exceeds the tolerance by 0.989; S2 exceeds the tolerance by 0.989",
-     "status": "fail"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-05,
@@ -1489,9 +1489,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.989,
-     "message": "S1 exceeds the tolerance by 0.989; S2 exceeds the tolerance by 0.989",
-     "status": "fail"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -1522,9 +1522,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.887,
-     "message": "S1 exceeds the tolerance by 0.887; S2 exceeds the tolerance by 0.887",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -1532,9 +1532,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.887,
-     "message": "S1 exceeds the tolerance by 0.887; S2 exceeds the tolerance by 0.887",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -7232,9 +7232,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.85,
-     "message": "S1 exceeds the tolerance by 0.85; S2 exceeds the tolerance by 0.83",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -7242,9 +7242,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.85,
-     "message": "S1 exceeds the tolerance by 0.85; S2 exceeds the tolerance by 0.83",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -7438,9 +7438,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.999,
-     "message": "S2 exceeds the tolerance by 0.999; S3 exceeds the tolerance by 0.749",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -7448,9 +7448,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.999,
-     "message": "S2 exceeds the tolerance by 0.999; S3 exceeds the tolerance by 0.749",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -19288,9 +19288,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.249,
-     "message": "S1 exceeds the tolerance by 0.249; S2 exceeds the tolerance by 0.249",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -19298,9 +19298,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.249,
-     "message": "S1 exceeds the tolerance by 0.249; S2 exceeds the tolerance by 0.249",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -19331,9 +19331,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.904,
-     "message": "S1 exceeds the tolerance by 0.904; S2 exceeds the tolerance by 0.904",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -19341,9 +19341,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.904,
-     "message": "S1 exceeds the tolerance by 0.904; S2 exceeds the tolerance by 0.904",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -19503,9 +19503,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00749,
-     "message": "S1 exceeds the tolerance by 0.00749; S2 exceeds the tolerance by 0.000553; S3 exceeds the tolerance by 0.000556",
-     "status": "fail"
+     "max_excess": -1.01e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-05,
@@ -19513,9 +19513,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.00749,
-     "message": "S1 exceeds the tolerance by 0.00749; S2 exceeds the tolerance by 0.000553; S3 exceeds the tolerance by 0.000556",
-     "status": "fail"
+     "max_excess": -1.01e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -19588,9 +19588,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.975,
-     "message": "S1 exceeds the tolerance by 0.975; S2 exceeds the tolerance by 0.164; S3 exceeds the tolerance by 0.164",
-     "status": "fail"
+     "max_excess": -0.000103,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.000103,
@@ -19598,9 +19598,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.975,
-     "message": "S1 exceeds the tolerance by 0.975; S2 exceeds the tolerance by 0.164; S3 exceeds the tolerance by 0.164",
-     "status": "fail"
+     "max_excess": -0.000103,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -19631,9 +19631,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00047,
-     "message": "S1 exceeds the tolerance by 0.00047; S2 exceeds the tolerance by 0.00047; S3 exceeds the tolerance by 0.00047",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -19641,9 +19641,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.00047,
-     "message": "S1 exceeds the tolerance by 0.00047; S2 exceeds the tolerance by 0.00047; S3 exceeds the tolerance by 0.00047",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -19674,9 +19674,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00473,
-     "message": "S1 exceeds the tolerance by 0.00473; S2 exceeds the tolerance by 0.00473; S3 exceeds the tolerance by 0.00473",
-     "status": "fail"
+     "max_excess": -1.02e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.02e-05,
@@ -19684,9 +19684,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.00473,
-     "message": "S1 exceeds the tolerance by 0.00473; S2 exceeds the tolerance by 0.00473; S3 exceeds the tolerance by 0.00473",
-     "status": "fail"
+     "max_excess": -1.02e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -19803,9 +19803,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.12e-05,
-     "message": "S1 exceeds the tolerance by 1.1e-05; S2 exceeds the tolerance by 1.09e-05; S3 exceeds the tolerance by 1.12e-05",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -19813,9 +19813,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.12e-05,
-     "message": "S1 exceeds the tolerance by 1.1e-05; S2 exceeds the tolerance by 1.09e-05; S3 exceeds the tolerance by 1.12e-05",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -19932,9 +19932,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.0426,
-     "message": "S1 exceeds the tolerance by 0.0426; S2 exceeds the tolerance by 0.0426; S3 exceeds the tolerance by 0.0426",
-     "status": "fail"
+     "max_excess": -0.000108,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.000108,
@@ -19942,9 +19942,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.0426,
-     "message": "S1 exceeds the tolerance by 0.0426; S2 exceeds the tolerance by 0.0426; S3 exceeds the tolerance by 0.0426",
-     "status": "fail"
+     "max_excess": -0.000108,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -20061,9 +20061,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.436,
-     "message": "S1 exceeds the tolerance by 0.436; S2 exceeds the tolerance by 0.436; S3 exceeds the tolerance by 0.436",
-     "status": "fail"
+     "max_excess": -0.00105,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00105,
@@ -20071,9 +20071,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.436,
-     "message": "S1 exceeds the tolerance by 0.436; S2 exceeds the tolerance by 0.436; S3 exceeds the tolerance by 0.436",
-     "status": "fail"
+     "max_excess": -0.00105,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -20147,9 +20147,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00749,
-     "message": "S1 exceeds the tolerance by 0.00749; S2 exceeds the tolerance by 0.000553; S3 exceeds the tolerance by 0.000556",
-     "status": "fail"
+     "max_excess": -1.01e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-05,
@@ -20157,9 +20157,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.00749,
-     "message": "S1 exceeds the tolerance by 0.00749; S2 exceeds the tolerance by 0.000553; S3 exceeds the tolerance by 0.000556",
-     "status": "fail"
+     "max_excess": -1.01e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -20234,9 +20234,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.975,
-     "message": "S1 exceeds the tolerance by 0.975; S2 exceeds the tolerance by 0.164; S3 exceeds the tolerance by 0.164",
-     "status": "fail"
+     "max_excess": -0.000103,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.000103,
@@ -20244,9 +20244,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.975,
-     "message": "S1 exceeds the tolerance by 0.975; S2 exceeds the tolerance by 0.164; S3 exceeds the tolerance by 0.164",
-     "status": "fail"
+     "max_excess": -0.000103,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -20454,9 +20454,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00229,
-     "message": "S1 exceeds the tolerance by 0.00229; S2 exceeds the tolerance by 0.00229; S3 exceeds the tolerance by 0.00229",
-     "status": "fail"
+     "max_excess": -1.03e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.03e-05,
@@ -20464,9 +20464,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.00229,
-     "message": "S1 exceeds the tolerance by 0.00229; S2 exceeds the tolerance by 0.00229; S3 exceeds the tolerance by 0.00229",
-     "status": "fail"
+     "max_excess": -1.03e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -20498,9 +20498,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.6e-05,
-     "message": "S1 exceeds the tolerance by 1.59e-05; S2 exceeds the tolerance by 1.58e-05; S3 exceeds the tolerance by 1.6e-05",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -20508,9 +20508,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.6e-05,
-     "message": "S1 exceeds the tolerance by 1.59e-05; S2 exceeds the tolerance by 1.58e-05; S3 exceeds the tolerance by 1.6e-05",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -20542,8 +20542,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 55.2,
-     "message": "S1 exceeds the tolerance by 1.12; S2 exceeds the tolerance by 55.2",
+     "max_excess": 55.1,
+     "message": "S1 exceeds the tolerance by 1.12; S2 exceeds the tolerance by 55.1",
      "status": "fail"
     },
     "reference": {
@@ -20552,8 +20552,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 55.2,
-     "message": "S1 exceeds the tolerance by 1.12; S2 exceeds the tolerance by 55.2",
+     "max_excess": 55.1,
+     "message": "S1 exceeds the tolerance by 1.12; S2 exceeds the tolerance by 55.1",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -20586,8 +20586,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 28.9,
-     "message": "S1 exceeds the tolerance by 28.9; S2 exceeds the tolerance by 26.2",
+     "max_excess": 55.1,
+     "message": "S1 exceeds the tolerance by 1.12; S2 exceeds the tolerance by 55.1",
      "status": "fail"
     },
     "reference": {
@@ -20596,8 +20596,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 28.9,
-     "message": "S1 exceeds the tolerance by 28.9; S2 exceeds the tolerance by 26.2",
+     "max_excess": 55.1,
+     "message": "S1 exceeds the tolerance by 1.12; S2 exceeds the tolerance by 55.1",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -20673,8 +20673,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00165,
-     "message": "S1 exceeds the tolerance by 0.00165; S2 exceeds the tolerance by 1.03e-05; S3 exceeds the tolerance by 1.06e-05",
+     "max_excess": 0.000909,
+     "message": "S1 exceeds the tolerance by 0.000909; S2 exceeds the tolerance by 4.67e-06; S3 exceeds the tolerance by 4.96e-06",
      "status": "fail"
     },
     "reference": {
@@ -20683,8 +20683,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.00165,
-     "message": "S1 exceeds the tolerance by 0.00165; S2 exceeds the tolerance by 1.03e-05; S3 exceeds the tolerance by 1.06e-05",
+     "max_excess": 0.000909,
+     "message": "S1 exceeds the tolerance by 0.000909; S2 exceeds the tolerance by 4.67e-06; S3 exceeds the tolerance by 4.96e-06",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -20760,8 +20760,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.0,
-     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 0.000217; S3 exceeds the tolerance by 0.000217",
+     "max_excess": 9.16e-05,
+     "message": "S1 exceeds the tolerance by 9.16e-05",
      "status": "fail"
     },
     "reference": {
@@ -20770,8 +20770,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.0,
-     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 0.000217; S3 exceeds the tolerance by 0.000217",
+     "max_excess": 9.16e-05,
+     "message": "S1 exceeds the tolerance by 9.16e-05",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -20804,9 +20804,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.9,
-     "message": "S1 exceeds the tolerance by 0.0647; S2 exceeds the tolerance by 0.0647; S3 exceeds the tolerance by 0.0647; S4 exceeds the tolerance by 0.9",
-     "status": "fail"
+     "max_excess": -0.000103,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.000103,
@@ -20814,9 +20814,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.9,
-     "message": "S1 exceeds the tolerance by 0.0647; S2 exceeds the tolerance by 0.0647; S3 exceeds the tolerance by 0.0647; S4 exceeds the tolerance by 0.9",
-     "status": "fail"
+     "max_excess": -0.000103,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -20891,9 +20891,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.04,
-     "message": "S1 exceeds the tolerance by 0.00123; S2 exceeds the tolerance by 0.00122; S3 exceeds the tolerance by 0.00123; S4 exceeds the tolerance by 0.04",
-     "status": "fail"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-05,
@@ -20901,9 +20901,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.04,
-     "message": "S1 exceeds the tolerance by 0.00123; S2 exceeds the tolerance by 0.00122; S3 exceeds the tolerance by 0.00123; S4 exceeds the tolerance by 0.04",
-     "status": "fail"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -20978,9 +20978,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.57,
-     "message": "S1 exceeds the tolerance by 0.537; S2 exceeds the tolerance by 0.536; S3 exceeds the tolerance by 4.57",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -20988,9 +20988,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 4.57,
-     "message": "S1 exceeds the tolerance by 0.537; S2 exceeds the tolerance by 0.536; S3 exceeds the tolerance by 4.57",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -21022,9 +21022,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.124,
-     "message": "S1 exceeds the tolerance by 0.0423; S2 exceeds the tolerance by 0.0421; S3 exceeds the tolerance by 0.124",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -21032,9 +21032,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.124,
-     "message": "S1 exceeds the tolerance by 0.0423; S2 exceeds the tolerance by 0.0421; S3 exceeds the tolerance by 0.124",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -21066,9 +21066,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.247,
-     "message": "S1 exceeds the tolerance by 0.124; S2 exceeds the tolerance by 0.247",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -21076,9 +21076,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.247,
-     "message": "S1 exceeds the tolerance by 0.124; S2 exceeds the tolerance by 0.247",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -21110,9 +21110,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.12,
-     "message": "S1 exceeds the tolerance by 2.07; S2 exceeds the tolerance by 4.12",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -21120,9 +21120,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 4.12,
-     "message": "S1 exceeds the tolerance by 2.07; S2 exceeds the tolerance by 4.12",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -21197,9 +21197,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 7.5e-05,
-     "message": "S1 exceeds the tolerance by 7.5e-05; S3 exceeds the tolerance by 2.78e-08",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -21207,9 +21207,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 7.5e-05,
-     "message": "S1 exceeds the tolerance by 7.5e-05; S3 exceeds the tolerance by 2.78e-08",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -21241,9 +21241,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.0824,
-     "message": "S1 exceeds the tolerance by 0.046; S2 exceeds the tolerance by 0.021; S3 exceeds the tolerance by 0.0824",
-     "status": "fail"
+     "max_excess": -0.000103,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.000103,
@@ -21251,9 +21251,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.0824,
-     "message": "S1 exceeds the tolerance by 0.046; S2 exceeds the tolerance by 0.021; S3 exceeds the tolerance by 0.0824",
-     "status": "fail"
+     "max_excess": -0.000103,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -21285,9 +21285,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.01,
-     "message": "S1 exceeds the tolerance by 1.01; S2 exceeds the tolerance by 0.00612; S3 exceeds the tolerance by 0.0334",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -21295,9 +21295,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.01,
-     "message": "S1 exceeds the tolerance by 1.01; S2 exceeds the tolerance by 0.00612; S3 exceeds the tolerance by 0.0334",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -21329,9 +21329,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.000749,
-     "message": "S1 exceeds the tolerance by 0.000749; S2 exceeds the tolerance by 5.22e-06; S3 exceeds the tolerance by 5.51e-06",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -21339,9 +21339,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.000749,
-     "message": "S1 exceeds the tolerance by 0.000749; S2 exceeds the tolerance by 5.22e-06; S3 exceeds the tolerance by 5.51e-06",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -21416,9 +21416,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.0,
-     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 0.000224; S3 exceeds the tolerance by 0.000224",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -21426,9 +21426,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.0,
-     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 0.000224; S3 exceeds the tolerance by 0.000224",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -21593,9 +21593,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.249,
-     "message": "S1 exceeds the tolerance by 0.249; S2 exceeds the tolerance by 0.249",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -21603,9 +21603,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.249,
-     "message": "S1 exceeds the tolerance by 0.249; S2 exceeds the tolerance by 0.249",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -21637,9 +21637,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.999,
-     "message": "S1 exceeds the tolerance by 0.999; S2 exceeds the tolerance by 0.999",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -21647,9 +21647,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.999,
-     "message": "S1 exceeds the tolerance by 0.999; S2 exceeds the tolerance by 0.999",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -25040,9 +25040,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.9,
-     "message": "S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 0.899",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -25050,9 +25050,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.9,
-     "message": "S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 0.899",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -25084,9 +25084,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 9.9,
-     "message": "S1 exceeds the tolerance by 9.9; S2 exceeds the tolerance by 9.67",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -25094,9 +25094,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 9.9,
-     "message": "S1 exceeds the tolerance by 9.9; S2 exceeds the tolerance by 9.67",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -25704,9 +25704,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.9,
-     "message": "S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 0.899",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -25714,9 +25714,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.9,
-     "message": "S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 0.899",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -25749,9 +25749,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 9.9,
-     "message": "S1 exceeds the tolerance by 9.9; S2 exceeds the tolerance by 9.67",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -25759,9 +25759,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 9.9,
-     "message": "S1 exceeds the tolerance by 9.9; S2 exceeds the tolerance by 9.67",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -26150,9 +26150,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.49,
-     "message": "S1 exceeds the tolerance by 1.49; S2 exceeds the tolerance by 1.49",
-     "status": "fail"
+     "max_excess": -0.01,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.01,
@@ -26160,9 +26160,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.49,
-     "message": "S1 exceeds the tolerance by 1.49; S2 exceeds the tolerance by 1.49",
-     "status": "fail"
+     "max_excess": -0.01,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -26194,9 +26194,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.49,
-     "message": "S1 exceeds the tolerance by 0.49; S2 exceeds the tolerance by 0.489",
-     "status": "fail"
+     "max_excess": -0.01,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.01,
@@ -26204,9 +26204,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.49,
-     "message": "S1 exceeds the tolerance by 0.49; S2 exceeds the tolerance by 0.489",
-     "status": "fail"
+     "max_excess": -0.01,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -26284,9 +26284,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.5,
-     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 0.0291; S3 exceeds the tolerance by 0.0291; S4 exceeds the tolerance by 1.5",
-     "status": "fail"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -26294,9 +26294,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.5,
-     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 0.0291; S3 exceeds the tolerance by 0.0291; S4 exceeds the tolerance by 1.5",
-     "status": "fail"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -26329,9 +26329,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.5,
-     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 0.0291; S3 exceeds the tolerance by 0.0291; S4 exceeds the tolerance by 1.5",
-     "status": "fail"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -26339,9 +26339,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.5,
-     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 0.0291; S3 exceeds the tolerance by 0.0291; S4 exceeds the tolerance by 1.5",
-     "status": "fail"
+     "max_excess": -1.01e-08,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -27696,9 +27696,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.25,
-     "message": "S1 exceeds the tolerance by 2.25; S2 exceeds the tolerance by 2.2",
-     "status": "fail"
+     "max_excess": -0.000101,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.000101,
@@ -27706,9 +27706,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.25,
-     "message": "S1 exceeds the tolerance by 2.25; S2 exceeds the tolerance by 2.2",
-     "status": "fail"
+     "max_excess": -0.000101,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -27741,9 +27741,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 9.95,
-     "message": "S1 exceeds the tolerance by 9.95; S2 exceeds the tolerance by 9.72",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -27751,9 +27751,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 9.95,
-     "message": "S1 exceeds the tolerance by 9.95; S2 exceeds the tolerance by 9.72",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -28234,9 +28234,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.9,
-     "message": "S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 0.805",
-     "status": "fail"
+     "max_excess": -0.000101,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.000101,
@@ -28244,9 +28244,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.9,
-     "message": "S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 0.805",
-     "status": "fail"
+     "max_excess": -0.000101,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -28639,8 +28639,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.9,
-     "message": "S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 0.67",
+     "max_excess": 0.277,
+     "message": "S1 exceeds the tolerance by 0.0975; S2 exceeds the tolerance by 0.277",
      "status": "fail"
     },
     "reference": {
@@ -28649,8 +28649,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.9,
-     "message": "S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 0.67",
+     "max_excess": 0.277,
+     "message": "S1 exceeds the tolerance by 0.0975; S2 exceeds the tolerance by 0.277",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -28684,8 +28684,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.976,
-     "message": "S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 0.976",
+     "max_excess": 0.0975,
+     "message": "S2 exceeds the tolerance by 0.0975",
      "status": "fail"
     },
     "reference": {
@@ -28694,8 +28694,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.976,
-     "message": "S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 0.976",
+     "max_excess": 0.0975,
+     "message": "S2 exceeds the tolerance by 0.0975",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -29044,9 +29044,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 9.9,
-     "message": "S1 exceeds the tolerance by 9.9; S2 exceeds the tolerance by 9.67",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -29054,9 +29054,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 9.9,
-     "message": "S1 exceeds the tolerance by 9.9; S2 exceeds the tolerance by 9.67",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -29750,9 +29750,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.989,
-     "message": "S1 exceeds the tolerance by 0.49; S2 exceeds the tolerance by 0.989",
-     "status": "fail"
+     "max_excess": -0.01,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.01,
@@ -29760,9 +29760,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.989,
-     "message": "S1 exceeds the tolerance by 0.49; S2 exceeds the tolerance by 0.989",
-     "status": "fail"
+     "max_excess": -0.01,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -30015,9 +30015,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.49,
-     "message": "S1 exceeds the tolerance by 0.49; S2 exceeds the tolerance by 0.489",
-     "status": "fail"
+     "max_excess": -0.01,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.01,
@@ -30025,9 +30025,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.49,
-     "message": "S1 exceeds the tolerance by 0.49; S2 exceeds the tolerance by 0.489",
-     "status": "fail"
+     "max_excess": -0.01,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -30896,8 +30896,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.0,
-     "message": "S1 exceeds the tolerance by 4; S2 exceeds the tolerance by 1.14; S3 exceeds the tolerance by 1.22",
+     "max_excess": 0.496,
+     "message": "S1 exceeds the tolerance by 0.0912; S2 exceeds the tolerance by 0.496; S3 exceeds the tolerance by 0.0911",
      "status": "fail"
     },
     "reference": {
@@ -30906,8 +30906,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 4.0,
-     "message": "S1 exceeds the tolerance by 4; S2 exceeds the tolerance by 1.14; S3 exceeds the tolerance by 1.22",
+     "max_excess": 0.496,
+     "message": "S1 exceeds the tolerance by 0.0912; S2 exceeds the tolerance by 0.496; S3 exceeds the tolerance by 0.0911",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -31602,8 +31602,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.999,
-     "message": "S1 exceeds the tolerance by 0.281; S2 exceeds the tolerance by 0.999; S3 exceeds the tolerance by 0.281",
+     "max_excess": 0.389,
+     "message": "S1 exceeds the tolerance by 0.08; S2 exceeds the tolerance by 0.389; S3 exceeds the tolerance by 0.0799",
      "status": "fail"
     },
     "reference": {
@@ -31612,8 +31612,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.999,
-     "message": "S1 exceeds the tolerance by 0.281; S2 exceeds the tolerance by 0.999; S3 exceeds the tolerance by 0.281",
+     "max_excess": 0.389,
+     "message": "S1 exceeds the tolerance by 0.08; S2 exceeds the tolerance by 0.389; S3 exceeds the tolerance by 0.0799",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -31646,8 +31646,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.19,
-     "message": "S1 exceeds the tolerance by 0.278; S2 exceeds the tolerance by 2.19; S3 exceeds the tolerance by 0.278",
+     "max_excess": 0.389,
+     "message": "S1 exceeds the tolerance by 0.08; S2 exceeds the tolerance by 0.389; S3 exceeds the tolerance by 0.0799",
      "status": "fail"
     },
     "reference": {
@@ -31656,8 +31656,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.19,
-     "message": "S1 exceeds the tolerance by 0.278; S2 exceeds the tolerance by 2.19; S3 exceeds the tolerance by 0.278",
+     "max_excess": 0.389,
+     "message": "S1 exceeds the tolerance by 0.08; S2 exceeds the tolerance by 0.389; S3 exceeds the tolerance by 0.0799",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -31953,8 +31953,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.88,
-     "message": "X0 exceeds the tolerance by 1.74; X1 exceeds the tolerance by 2.88; T exceeds the tolerance by 0.427; S1 exceeds the tolerance by 1.57",
+     "max_excess": 1.57,
+     "message": "X1 exceeds the tolerance by 1.57; S1 exceeds the tolerance by 1.57",
      "status": "fail"
     },
     "reference": {
@@ -31963,8 +31963,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 2.88,
-     "message": "X0 exceeds the tolerance by 1.74; X1 exceeds the tolerance by 2.88; T exceeds the tolerance by 0.427; S1 exceeds the tolerance by 1.57",
+     "max_excess": 1.57,
+     "message": "X1 exceeds the tolerance by 1.57; S1 exceeds the tolerance by 1.57",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -31999,7 +31999,7 @@
     },
     "libopencor": {
      "max_excess": 1.57,
-     "message": "X0 exceeds the tolerance by 0.24; X1 exceeds the tolerance by 1.5; T exceeds the tolerance by 0.0524; S1 exceeds the tolerance by 1.57",
+     "message": "X1 exceeds the tolerance by 1.57; S1 exceeds the tolerance by 1.57",
      "status": "fail"
     },
     "reference": {
@@ -32009,7 +32009,7 @@
     },
     "roundtrip": {
      "max_excess": 1.57,
-     "message": "X0 exceeds the tolerance by 0.24; X1 exceeds the tolerance by 1.5; T exceeds the tolerance by 0.0524; S1 exceeds the tolerance by 1.57",
+     "message": "X1 exceeds the tolerance by 1.57; S1 exceeds the tolerance by 1.57",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -32306,9 +32306,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 9.9,
-     "message": "S1 exceeds the tolerance by 9.9; S2 exceeds the tolerance by 9.89",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -32316,9 +32316,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 9.9,
-     "message": "S1 exceeds the tolerance by 9.9; S2 exceeds the tolerance by 9.89",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -32396,8 +32396,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.999,
-     "message": "S1 exceeds the tolerance by 0.14; S2 exceeds the tolerance by 0.999; S3 exceeds the tolerance by 0.14",
+     "max_excess": 0.745,
+     "message": "S1 exceeds the tolerance by 0.183; S2 exceeds the tolerance by 0.745; S3 exceeds the tolerance by 0.183",
      "status": "fail"
     },
     "reference": {
@@ -32406,8 +32406,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.999,
-     "message": "S1 exceeds the tolerance by 0.14; S2 exceeds the tolerance by 0.999; S3 exceeds the tolerance by 0.14",
+     "max_excess": 0.745,
+     "message": "S1 exceeds the tolerance by 0.183; S2 exceeds the tolerance by 0.745; S3 exceeds the tolerance by 0.183",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -32440,8 +32440,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.52,
-     "message": "S1 exceeds the tolerance by 0.41; S2 exceeds the tolerance by 2.52; S3 exceeds the tolerance by 0.41",
+     "max_excess": 0.745,
+     "message": "S1 exceeds the tolerance by 0.183; S2 exceeds the tolerance by 0.745; S3 exceeds the tolerance by 0.183",
      "status": "fail"
     },
     "reference": {
@@ -32450,8 +32450,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.52,
-     "message": "S1 exceeds the tolerance by 0.41; S2 exceeds the tolerance by 2.52; S3 exceeds the tolerance by 0.41",
+     "max_excess": 0.745,
+     "message": "S1 exceeds the tolerance by 0.183; S2 exceeds the tolerance by 0.745; S3 exceeds the tolerance by 0.183",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -32526,9 +32526,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.249,
-     "message": "S1 exceeds the tolerance by 0.249; S2 exceeds the tolerance by 0.249",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -32536,9 +32536,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.249,
-     "message": "S1 exceeds the tolerance by 0.249; S2 exceeds the tolerance by 0.249",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -32569,9 +32569,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.886,
-     "message": "S1 exceeds the tolerance by 0.886; S2 exceeds the tolerance by 0.886",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -32579,9 +32579,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.886,
-     "message": "S1 exceeds the tolerance by 0.886; S2 exceeds the tolerance by 0.886",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -32741,9 +32741,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00749,
-     "message": "S1 exceeds the tolerance by 0.00749; S2 exceeds the tolerance by 0.00054; S3 exceeds the tolerance by 0.000543",
-     "status": "fail"
+     "max_excess": -1.01e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-05,
@@ -32751,9 +32751,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.00749,
-     "message": "S1 exceeds the tolerance by 0.00749; S2 exceeds the tolerance by 0.00054; S3 exceeds the tolerance by 0.000543",
-     "status": "fail"
+     "max_excess": -1.01e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -32826,9 +32826,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.0,
-     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 0.00219; S3 exceeds the tolerance by 0.00219",
-     "status": "fail"
+     "max_excess": -1.01e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-06,
@@ -32836,9 +32836,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.0,
-     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 0.00219; S3 exceeds the tolerance by 0.00219",
-     "status": "fail"
+     "max_excess": -1.01e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -32869,9 +32869,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.0496,
-     "message": "S1 exceeds the tolerance by 0.0496; S2 exceeds the tolerance by 0.0495; S3 exceeds the tolerance by 0.0496",
-     "status": "fail"
+     "max_excess": -0.000108,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.000108,
@@ -32879,9 +32879,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.0496,
-     "message": "S1 exceeds the tolerance by 0.0496; S2 exceeds the tolerance by 0.0495; S3 exceeds the tolerance by 0.0496",
-     "status": "fail"
+     "max_excess": -0.000108,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -34244,9 +34244,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.999,
-     "message": "S1 exceeds the tolerance by 0.999; S2 exceeds the tolerance by 0.435; S3 exceeds the tolerance by 0.435",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -34254,9 +34254,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.999,
-     "message": "S1 exceeds the tolerance by 0.999; S2 exceeds the tolerance by 0.435; S3 exceeds the tolerance by 0.435",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -35742,9 +35742,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.0,
-     "message": "S2 exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -35752,9 +35752,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.0,
-     "message": "S2 exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -35786,9 +35786,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.015,
-     "message": "S2 exceeds the tolerance by 0.015",
-     "status": "fail"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-05,
@@ -35796,9 +35796,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.015,
-     "message": "S2 exceeds the tolerance by 0.015",
-     "status": "fail"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -35830,9 +35830,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.29e-05,
-     "message": "S1 exceeds the tolerance by 1.29e-05; S2 exceeds the tolerance by 9.41e-06; S3 exceeds the tolerance by 3.04e-06; S4 exceeds the tolerance by 6.91e-06",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -35840,9 +35840,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.29e-05,
-     "message": "S1 exceeds the tolerance by 1.29e-05; S2 exceeds the tolerance by 9.41e-06; S3 exceeds the tolerance by 3.04e-06; S4 exceeds the tolerance by 6.91e-06",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -37089,9 +37089,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.74,
-     "message": "c exceeds the tolerance by 1.74",
-     "status": "fail"
+     "max_excess": -0.00115,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00115,
@@ -37099,9 +37099,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.74,
-     "message": "c exceeds the tolerance by 1.74",
-     "status": "fail"
+     "max_excess": -0.00115,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -37131,9 +37131,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.933,
-     "message": "c exceeds the tolerance by 0.933",
-     "status": "fail"
+     "max_excess": -0.00115,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00115,
@@ -37141,9 +37141,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.933,
-     "message": "c exceeds the tolerance by 0.933",
-     "status": "fail"
+     "max_excess": -0.00115,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -37255,9 +37255,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.46,
-     "message": "c exceeds the tolerance by 2.46",
-     "status": "fail"
+     "max_excess": -0.00107,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00107,
@@ -37265,9 +37265,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.46,
-     "message": "c exceeds the tolerance by 2.46",
-     "status": "fail"
+     "max_excess": -0.00107,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -37297,9 +37297,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 14.6,
-     "message": "c exceeds the tolerance by 14.6",
-     "status": "fail"
+     "max_excess": -0.00107,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00107,
@@ -37307,9 +37307,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 14.6,
-     "message": "c exceeds the tolerance by 14.6",
-     "status": "fail"
+     "max_excess": -0.00107,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -37339,9 +37339,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.26,
-     "message": "c exceeds the tolerance by 4.26",
-     "status": "fail"
+     "max_excess": -0.00117,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00117,
@@ -37349,9 +37349,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 4.26,
-     "message": "c exceeds the tolerance by 4.26",
-     "status": "fail"
+     "max_excess": -0.00117,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -37381,9 +37381,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 62.7,
-     "message": "c exceeds the tolerance by 62.7",
-     "status": "fail"
+     "max_excess": -0.00105,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00105,
@@ -37391,9 +37391,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 62.7,
-     "message": "c exceeds the tolerance by 62.7",
-     "status": "fail"
+     "max_excess": -0.00105,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -37422,9 +37422,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.249,
-     "message": "k1 exceeds the tolerance by 0.249",
-     "status": "fail"
+     "max_excess": -0.00108,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00108,
@@ -37432,9 +37432,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.249,
-     "message": "k1 exceeds the tolerance by 0.249",
-     "status": "fail"
+     "max_excess": -0.00108,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -37461,9 +37461,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.049,
-     "message": "k1 exceeds the tolerance by 0.049",
-     "status": "fail"
+     "max_excess": -0.00104,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00104,
@@ -37471,9 +37471,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.049,
-     "message": "k1 exceeds the tolerance by 0.049",
-     "status": "fail"
+     "max_excess": -0.00104,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -38705,7 +38705,7 @@
     },
     "libopencor": {
      "max_excess": Infinity,
-     "message": "P exceeds the tolerance by inf; Q exceeds the tolerance by inf; R exceeds the tolerance by inf",
+     "message": "R exceeds the tolerance by inf",
      "status": "fail"
     },
     "reference": {
@@ -38715,7 +38715,7 @@
     },
     "roundtrip": {
      "max_excess": Infinity,
-     "message": "P exceeds the tolerance by inf; Q exceeds the tolerance by inf; R exceeds the tolerance by inf",
+     "message": "R exceeds the tolerance by inf",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -38738,13 +38738,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -38752,14 +38752,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Variable 'P' in component 'sbml' has an invalid initial value 'inf'. Initial values must be a real number string or a variable reference.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": []
@@ -38948,9 +38948,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 23.0,
-     "message": "P1 exceeds the tolerance by 2.7; P4 exceeds the tolerance by 2.14; P5 exceeds the tolerance by 0.047; P6 exceeds the tolerance by 0.571; P7 exceeds the tolerance by 1.52; P8 exceeds the tolerance by 0.228; P9 exceeds the tolerance by 2.43; P11 exceeds the tolerance by 3; P12 exceeds the tolerance by 5; P13 exceeds the tolerance by 1.95; P14 exceeds the tolerance by 0.0239; P16 exceeds the toleranc",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -38958,9 +38958,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 23.0,
-     "message": "P1 exceeds the tolerance by 2.7; P4 exceeds the tolerance by 2.14; P5 exceeds the tolerance by 0.047; P6 exceeds the tolerance by 0.571; P7 exceeds the tolerance by 1.52; P8 exceeds the tolerance by 0.228; P9 exceeds the tolerance by 2.43; P11 exceeds the tolerance by 3; P12 exceeds the tolerance by 5; P13 exceeds the tolerance by 1.95; P14 exceeds the tolerance by 0.0239; P16 exceeds the toleranc",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -39029,9 +39029,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 23.0,
-     "message": "P1 exceeds the tolerance by 2.14; P3 exceeds the tolerance by 1; P4 exceeds the tolerance by 1; P5 exceeds the tolerance by 2; P6 exceeds the tolerance by 2; P7 exceeds the tolerance by 1; P8 exceeds the tolerance by 2; P9 exceeds the tolerance by 23; P10 exceeds the tolerance by 2; P11 exceeds the tolerance by 1; P12 exceeds the tolerance by 1; P13 exceeds the tolerance by 1; P14 exceeds the tole",
-     "status": "fail"
+     "max_excess": -0.000112,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.000112,
@@ -39039,9 +39039,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 23.0,
-     "message": "P1 exceeds the tolerance by 2.14; P3 exceeds the tolerance by 1; P4 exceeds the tolerance by 1; P5 exceeds the tolerance by 2; P6 exceeds the tolerance by 2; P7 exceeds the tolerance by 1; P8 exceeds the tolerance by 2; P9 exceeds the tolerance by 23; P10 exceeds the tolerance by 2; P11 exceeds the tolerance by 1; P12 exceeds the tolerance by 1; P13 exceeds the tolerance by 1; P14 exceeds the tole",
-     "status": "fail"
+     "max_excess": -0.000112,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -39112,9 +39112,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 6.02e+23,
-     "message": "P1 exceeds the tolerance by 6.02e+23; P2 exceeds the tolerance by 6.02e+23; P3 exceeds the tolerance by 6.02e+23; P4 exceeds the tolerance by 6.02e+23; P5 exceeds the tolerance by 4.18e+18",
-     "status": "fail"
+     "max_excess": -418000000000000.0,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -418000000000000.0,
@@ -39122,9 +39122,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 6.02e+23,
-     "message": "P1 exceeds the tolerance by 6.02e+23; P2 exceeds the tolerance by 6.02e+23; P3 exceeds the tolerance by 6.02e+23; P4 exceeds the tolerance by 6.02e+23; P5 exceeds the tolerance by 4.18e+18",
-     "status": "fail"
+     "max_excess": -418000000000000.0,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -39459,9 +39459,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 20.0,
-     "message": "X exceeds the tolerance by 20",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -39469,9 +39469,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 20.0,
-     "message": "X exceeds the tolerance by 20",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -39640,9 +39640,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.0,
-     "message": "Q exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -39650,9 +39650,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.0,
-     "message": "Q exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -40378,8 +40378,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 885.0,
-     "message": "S1 exceeds the tolerance by 84.7; S2 exceeds the tolerance by 885; S3 exceeds the tolerance by 25.3; S4 exceeds the tolerance by 1.92; k3 exceeds the tolerance by 1.42; k4 exceeds the tolerance by 4.39; k5 exceeds the tolerance by 2.24; kavo exceeds the tolerance by 0.0199; comp2 exceeds the tolerance by 4.39",
+     "max_excess": 1030.0,
+     "message": "S1 exceeds the tolerance by 118; S2 exceeds the tolerance by 1.03e+03; S3 exceeds the tolerance by 27; S4 exceeds the tolerance by 1.92; k3 exceeds the tolerance by 1.42; k4 exceeds the tolerance by 4.39; k5 exceeds the tolerance by 2.24; comp2 exceeds the tolerance by 4.39",
      "status": "fail"
     },
     "reference": {
@@ -40388,8 +40388,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 885.0,
-     "message": "S1 exceeds the tolerance by 84.7; S2 exceeds the tolerance by 885; S3 exceeds the tolerance by 25.3; S4 exceeds the tolerance by 1.92; k3 exceeds the tolerance by 1.42; k4 exceeds the tolerance by 4.39; k5 exceeds the tolerance by 2.24; kavo exceeds the tolerance by 0.0199; comp2 exceeds the tolerance by 4.39",
+     "max_excess": 1030.0,
+     "message": "S1 exceeds the tolerance by 118; S2 exceeds the tolerance by 1.03e+03; S3 exceeds the tolerance by 27; S4 exceeds the tolerance by 1.92; k3 exceeds the tolerance by 1.42; k4 exceeds the tolerance by 4.39; k5 exceeds the tolerance by 2.24; comp2 exceeds the tolerance by 4.39",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -41824,9 +41824,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.999,
-     "message": "S1 exceeds the tolerance by 0.999; S2 exceeds the tolerance by 0.435; S3 exceeds the tolerance by 0.435",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -41834,9 +41834,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.999,
-     "message": "S1 exceeds the tolerance by 0.999; S2 exceeds the tolerance by 0.435; S3 exceeds the tolerance by 0.435",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -42902,9 +42902,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.75,
-     "message": "S1 exceeds the tolerance by 0.0731; S2 exceeds the tolerance by 0.073; S3 exceeds the tolerance by 0.75",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -42912,9 +42912,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.75,
-     "message": "S1 exceeds the tolerance by 0.0731; S2 exceeds the tolerance by 0.073; S3 exceeds the tolerance by 0.75",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -42948,9 +42948,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.5,
-     "message": "S2 exceeds the tolerance by 1.5",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -42958,9 +42958,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.5,
-     "message": "S2 exceeds the tolerance by 1.5",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -42993,9 +42993,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.161,
-     "message": "S1 exceeds the tolerance by 0.022; S2 exceeds the tolerance by 0.0219; S3 exceeds the tolerance by 0.161",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -43003,9 +43003,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.161,
-     "message": "S1 exceeds the tolerance by 0.022; S2 exceeds the tolerance by 0.0219; S3 exceeds the tolerance by 0.161",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -43038,9 +43038,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.0345,
-     "message": "S1 exceeds the tolerance by 0.0345; S2 exceeds the tolerance by 0.0345; S3 exceeds the tolerance by 0.0111",
-     "status": "fail"
+     "max_excess": -1.05e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.05e-05,
@@ -43048,9 +43048,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.0345,
-     "message": "S1 exceeds the tolerance by 0.0345; S2 exceeds the tolerance by 0.0345; S3 exceeds the tolerance by 0.0111",
-     "status": "fail"
+     "max_excess": -1.05e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -43084,9 +43084,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.5,
-     "message": "S2 exceeds the tolerance by 1.5",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -43094,9 +43094,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.5,
-     "message": "S2 exceeds the tolerance by 1.5",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -43130,9 +43130,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.97e-05,
-     "message": "S1 exceeds the tolerance by 4.97e-05; S2 exceeds the tolerance by 4.97e-05; S3 exceeds the tolerance by 2.77e-05",
-     "status": "fail"
+     "max_excess": -1.01e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-07,
@@ -43140,9 +43140,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 4.97e-05,
-     "message": "S1 exceeds the tolerance by 4.97e-05; S2 exceeds the tolerance by 4.97e-05; S3 exceeds the tolerance by 2.77e-05",
-     "status": "fail"
+     "max_excess": -1.01e-07,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -43176,9 +43176,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00345,
-     "message": "S1 exceeds the tolerance by 0.00345; S2 exceeds the tolerance by 0.00345; S3 exceeds the tolerance by 0.00111",
-     "status": "fail"
+     "max_excess": -1.05e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.05e-06,
@@ -43186,9 +43186,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.00345,
-     "message": "S1 exceeds the tolerance by 0.00345; S2 exceeds the tolerance by 0.00345; S3 exceeds the tolerance by 0.00111",
-     "status": "fail"
+     "max_excess": -1.05e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -43222,8 +43222,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.04,
-     "message": "S1 exceeds the tolerance by 0.382; S2 exceeds the tolerance by 1.04; S3 exceeds the tolerance by 0.382",
+     "max_excess": 0.393,
+     "message": "S1 exceeds the tolerance by 0.112; S2 exceeds the tolerance by 0.393; S3 exceeds the tolerance by 0.112",
      "status": "fail"
     },
     "reference": {
@@ -43232,8 +43232,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.04,
-     "message": "S1 exceeds the tolerance by 0.382; S2 exceeds the tolerance by 1.04; S3 exceeds the tolerance by 0.382",
+     "max_excess": 0.393,
+     "message": "S1 exceeds the tolerance by 0.112; S2 exceeds the tolerance by 0.393; S3 exceeds the tolerance by 0.112",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43268,8 +43268,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.000179,
-     "message": "S1 exceeds the tolerance by 0.000108; S2 exceeds the tolerance by 2.19e-05; S3 exceeds the tolerance by 0.000179; S4 exceeds the tolerance by 1.23e-05",
+     "max_excess": 0.000106,
+     "message": "S1 exceeds the tolerance by 0.000106; S2 exceeds the tolerance by 3.14e-05; S3 exceeds the tolerance by 6.29e-05; S4 exceeds the tolerance by 1.26e-05",
      "status": "fail"
     },
     "reference": {
@@ -43278,8 +43278,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.000179,
-     "message": "S1 exceeds the tolerance by 0.000108; S2 exceeds the tolerance by 2.19e-05; S3 exceeds the tolerance by 0.000179; S4 exceeds the tolerance by 1.23e-05",
+     "max_excess": 0.000106,
+     "message": "S1 exceeds the tolerance by 0.000106; S2 exceeds the tolerance by 3.14e-05; S3 exceeds the tolerance by 6.29e-05; S4 exceeds the tolerance by 1.26e-05",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43314,8 +43314,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.463,
-     "message": "S1 exceeds the tolerance by 0.463; S2 exceeds the tolerance by 0.44; S3 exceeds the tolerance by 0.129",
+     "max_excess": 0.743,
+     "message": "S1 exceeds the tolerance by 0.371; S2 exceeds the tolerance by 0.743; S3 exceeds the tolerance by 0.245",
      "status": "fail"
     },
     "reference": {
@@ -43324,8 +43324,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.463,
-     "message": "S1 exceeds the tolerance by 0.463; S2 exceeds the tolerance by 0.44; S3 exceeds the tolerance by 0.129",
+     "max_excess": 0.743,
+     "message": "S1 exceeds the tolerance by 0.371; S2 exceeds the tolerance by 0.743; S3 exceeds the tolerance by 0.245",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43360,8 +43360,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.798,
-     "message": "S1 exceeds the tolerance by 0.217; S2 exceeds the tolerance by 0.798; S3 exceeds the tolerance by 0.217",
+     "max_excess": 0.209,
+     "message": "S1 exceeds the tolerance by 0.0504; S2 exceeds the tolerance by 0.209; S3 exceeds the tolerance by 0.0503",
      "status": "fail"
     },
     "reference": {
@@ -43370,8 +43370,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.798,
-     "message": "S1 exceeds the tolerance by 0.217; S2 exceeds the tolerance by 0.798; S3 exceeds the tolerance by 0.217",
+     "max_excess": 0.209,
+     "message": "S1 exceeds the tolerance by 0.0504; S2 exceeds the tolerance by 0.209; S3 exceeds the tolerance by 0.0503",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43406,8 +43406,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.245,
-     "message": "S1 exceeds the tolerance by 0.112; S2 exceeds the tolerance by 0.014; S3 exceeds the tolerance by 0.245; S4 exceeds the tolerance by 0.0386",
+     "max_excess": 0.107,
+     "message": "S1 exceeds the tolerance by 0.107; S2 exceeds the tolerance by 0.0362; S3 exceeds the tolerance by 0.0724; S4 exceeds the tolerance by 0.0264",
      "status": "fail"
     },
     "reference": {
@@ -43416,8 +43416,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.245,
-     "message": "S1 exceeds the tolerance by 0.112; S2 exceeds the tolerance by 0.014; S3 exceeds the tolerance by 0.245; S4 exceeds the tolerance by 0.0386",
+     "max_excess": 0.107,
+     "message": "S1 exceeds the tolerance by 0.107; S2 exceeds the tolerance by 0.0362; S3 exceeds the tolerance by 0.0724; S4 exceeds the tolerance by 0.0264",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43452,8 +43452,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.965,
-     "message": "S1 exceeds the tolerance by 0.531; S2 exceeds the tolerance by 0.965; S3 exceeds the tolerance by 0.269",
+     "max_excess": 1.1,
+     "message": "S1 exceeds the tolerance by 0.251; S2 exceeds the tolerance by 1.1; S3 exceeds the tolerance by 0.429",
      "status": "fail"
     },
     "reference": {
@@ -43462,8 +43462,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.965,
-     "message": "S1 exceeds the tolerance by 0.531; S2 exceeds the tolerance by 0.965; S3 exceeds the tolerance by 0.269",
+     "max_excess": 1.1,
+     "message": "S1 exceeds the tolerance by 0.251; S2 exceeds the tolerance by 1.1; S3 exceeds the tolerance by 0.429",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43497,9 +43497,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.25,
-     "message": "S1 exceeds the tolerance by 0.124; S2 exceeds the tolerance by 1.25",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -43507,9 +43507,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.25,
-     "message": "S1 exceeds the tolerance by 0.124; S2 exceeds the tolerance by 1.25",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -43543,9 +43543,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 3.87,
-     "message": "S1 exceeds the tolerance by 3.87; S2 exceeds the tolerance by 2.75",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -43553,9 +43553,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 3.87,
-     "message": "S1 exceeds the tolerance by 3.87; S2 exceeds the tolerance by 2.75",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -43589,9 +43589,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.12,
-     "message": "S2 exceeds the tolerance by 1.12",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -43599,9 +43599,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.12,
-     "message": "S2 exceeds the tolerance by 1.12",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -43635,9 +43635,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.0095,
-     "message": "S1 exceeds the tolerance by 0.0095; S2 exceeds the tolerance by 0.002; S3 exceeds the tolerance by 0.00152",
-     "status": "fail"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-05,
@@ -43645,9 +43645,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.0095,
-     "message": "S1 exceeds the tolerance by 0.0095; S2 exceeds the tolerance by 0.002; S3 exceeds the tolerance by 0.00152",
-     "status": "fail"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -43681,9 +43681,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.3e-07,
-     "message": "S1 exceeds the tolerance by 2.3e-07; S2 exceeds the tolerance by 2.12e-07; S3 exceeds the tolerance by 7.45e-09",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -43691,9 +43691,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.3e-07,
-     "message": "S1 exceeds the tolerance by 2.3e-07; S2 exceeds the tolerance by 2.12e-07; S3 exceeds the tolerance by 7.45e-09",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -43727,9 +43727,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.975,
-     "message": "S1 exceeds the tolerance by 0.975; S2 exceeds the tolerance by 0.147; S3 exceeds the tolerance by 0.216",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -43737,9 +43737,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.975,
-     "message": "S1 exceeds the tolerance by 0.975; S2 exceeds the tolerance by 0.147; S3 exceeds the tolerance by 0.216",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -43775,7 +43775,7 @@
     },
     "libopencor": {
      "max_excess": 1.22,
-     "message": "X1 exceeds the tolerance by 1.22; T exceeds the tolerance by 0.359; S1 exceeds the tolerance by 0.202",
+     "message": "X1 exceeds the tolerance by 1.22; T exceeds the tolerance by 1.22; S1 exceeds the tolerance by 0.202",
      "status": "fail"
     },
     "reference": {
@@ -43785,7 +43785,7 @@
     },
     "roundtrip": {
      "max_excess": 1.22,
-     "message": "X1 exceeds the tolerance by 1.22; T exceeds the tolerance by 0.359; S1 exceeds the tolerance by 0.202",
+     "message": "X1 exceeds the tolerance by 1.22; T exceeds the tolerance by 1.22; S1 exceeds the tolerance by 0.202",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43820,8 +43820,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.203,
-     "message": "X0 exceeds the tolerance by 0.124; X1 exceeds the tolerance by 0.104; T exceeds the tolerance by 0.203; S1 exceeds the tolerance by 0.0338",
+     "max_excess": 0.104,
+     "message": "X1 exceeds the tolerance by 0.104; T exceeds the tolerance by 0.104; S1 exceeds the tolerance by 0.0338",
      "status": "fail"
     },
     "reference": {
@@ -43830,8 +43830,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.203,
-     "message": "X0 exceeds the tolerance by 0.124; X1 exceeds the tolerance by 0.104; T exceeds the tolerance by 0.203; S1 exceeds the tolerance by 0.0338",
+     "max_excess": 0.104,
+     "message": "X1 exceeds the tolerance by 0.104; T exceeds the tolerance by 0.104; S1 exceeds the tolerance by 0.0338",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43867,7 +43867,7 @@
     },
     "libopencor": {
      "max_excess": 0.000959,
-     "message": "S2 exceeds the tolerance by 5.18e-05; S4 exceeds the tolerance by 0.000959",
+     "message": "S4 exceeds the tolerance by 0.000959",
      "status": "fail"
     },
     "reference": {
@@ -43877,7 +43877,7 @@
     },
     "roundtrip": {
      "max_excess": 0.000959,
-     "message": "S2 exceeds the tolerance by 5.18e-05; S4 exceeds the tolerance by 0.000959",
+     "message": "S4 exceeds the tolerance by 0.000959",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43912,8 +43912,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.0574,
-     "message": "S1 exceeds the tolerance by 0.0481; S2 exceeds the tolerance by 0.0481; S3 exceeds the tolerance by 0.0574; S4 exceeds the tolerance by 0.0278",
+     "max_excess": 0.0278,
+     "message": "S4 exceeds the tolerance by 0.0278",
      "status": "fail"
     },
     "reference": {
@@ -43922,8 +43922,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.0574,
-     "message": "S1 exceeds the tolerance by 0.0481; S2 exceeds the tolerance by 0.0481; S3 exceeds the tolerance by 0.0574; S4 exceeds the tolerance by 0.0278",
+     "max_excess": 0.0278,
+     "message": "S4 exceeds the tolerance by 0.0278",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43958,9 +43958,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00015,
-     "message": "S2 exceeds the tolerance by 0.00015; S3 exceeds the tolerance by 0.000112",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -43968,9 +43968,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.00015,
-     "message": "S2 exceeds the tolerance by 0.00015; S3 exceeds the tolerance by 0.000112",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -44005,9 +44005,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.61e-05,
-     "message": "S1 exceeds the tolerance by 9.24e-07; S2 exceeds the tolerance by 1.74e-05; S3 exceeds the tolerance by 9.26e-07; S4 exceeds the tolerance by 2.61e-05",
-     "status": "fail"
+     "max_excess": -1e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-08,
@@ -44015,9 +44015,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.61e-05,
-     "message": "S1 exceeds the tolerance by 9.24e-07; S2 exceeds the tolerance by 1.74e-05; S3 exceeds the tolerance by 9.26e-07; S4 exceeds the tolerance by 2.61e-05",
-     "status": "fail"
+     "max_excess": -1e-08,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -44239,9 +44239,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.49,
-     "message": "S1 exceeds the tolerance by 0.49; S2 exceeds the tolerance by 0.489",
-     "status": "fail"
+     "max_excess": -0.01,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.01,
@@ -44249,9 +44249,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.49,
-     "message": "S1 exceeds the tolerance by 0.49; S2 exceeds the tolerance by 0.489",
-     "status": "fail"
+     "max_excess": -0.01,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -44379,9 +44379,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.79,
-     "message": "S1 exceeds the tolerance by 0.0647; S2 exceeds the tolerance by 0.79",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -44389,9 +44389,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.79,
-     "message": "S1 exceeds the tolerance by 0.0647; S2 exceeds the tolerance by 0.79",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -44424,9 +44424,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.172,
-     "message": "S1 exceeds the tolerance by 0.172; S2 exceeds the tolerance by 0.127; S3 exceeds the tolerance by 0.172",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -44434,9 +44434,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.172,
-     "message": "S1 exceeds the tolerance by 0.172; S2 exceeds the tolerance by 0.127; S3 exceeds the tolerance by 0.172",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -44469,9 +44469,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.75,
-     "message": "S1 exceeds the tolerance by 0.0731; S2 exceeds the tolerance by 0.073; S3 exceeds the tolerance by 0.75",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -44479,9 +44479,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.75,
-     "message": "S1 exceeds the tolerance by 0.0731; S2 exceeds the tolerance by 0.073; S3 exceeds the tolerance by 0.75",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -44515,9 +44515,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.0015,
-     "message": "S2 exceeds the tolerance by 0.0015",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -44525,9 +44525,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.0015,
-     "message": "S2 exceeds the tolerance by 0.0015",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -44561,9 +44561,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.0498,
-     "message": "S2 exceeds the tolerance by 0.0182; S3 exceeds the tolerance by 0.00808; S4 exceeds the tolerance by 0.0498",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -44571,9 +44571,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.0498,
-     "message": "S2 exceeds the tolerance by 0.0182; S3 exceeds the tolerance by 0.00808; S4 exceeds the tolerance by 0.0498",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -44607,9 +44607,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.0,
-     "message": "S1 exceeds the tolerance by 2; S2 exceeds the tolerance by 1.12; S3 exceeds the tolerance by 0.322; S4 exceeds the tolerance by 1.12",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -44617,9 +44617,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.0,
-     "message": "S1 exceeds the tolerance by 2; S2 exceeds the tolerance by 1.12; S3 exceeds the tolerance by 0.322; S4 exceeds the tolerance by 1.12",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -44653,9 +44653,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 20.0,
-     "message": "X exceeds the tolerance by 20",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -44663,9 +44663,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 20.0,
-     "message": "X exceeds the tolerance by 20",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -45023,9 +45023,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.79,
-     "message": "S1 exceeds the tolerance by 0.0647; S2 exceeds the tolerance by 0.79",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -45033,9 +45033,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.79,
-     "message": "S1 exceeds the tolerance by 0.0647; S2 exceeds the tolerance by 0.79",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -45069,9 +45069,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.172,
-     "message": "S1 exceeds the tolerance by 0.172; S2 exceeds the tolerance by 0.127; S3 exceeds the tolerance by 0.172",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -45079,9 +45079,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.172,
-     "message": "S1 exceeds the tolerance by 0.172; S2 exceeds the tolerance by 0.127; S3 exceeds the tolerance by 0.172",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -45112,9 +45112,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.0,
-     "message": "a exceeds the tolerance by 1; d exceeds the tolerance by 1; e exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -45122,9 +45122,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.0,
-     "message": "a exceeds the tolerance by 1; d exceeds the tolerance by 1; e exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -45152,9 +45152,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.0,
-     "message": "b exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -45162,9 +45162,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.0,
-     "message": "b exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -45192,9 +45192,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 3.0,
-     "message": "a exceeds the tolerance by 1; b exceeds the tolerance by 3; e exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -45202,9 +45202,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 3.0,
-     "message": "a exceeds the tolerance by 1; b exceeds the tolerance by 3; e exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -45232,9 +45232,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 7.0,
-     "message": "a exceeds the tolerance by 2; b exceeds the tolerance by 7",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -45242,9 +45242,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 7.0,
-     "message": "a exceeds the tolerance by 2; b exceeds the tolerance by 7",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -45493,8 +45493,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 69.7,
-     "message": "S1 exceeds the tolerance by 15.4; S2 exceeds the tolerance by 69.7; S3 exceeds the tolerance by 6.67; S4 exceeds the tolerance by 2; kavo exceeds the tolerance by 0.0998",
+     "max_excess": 78.1,
+     "message": "S1 exceeds the tolerance by 22.9; S2 exceeds the tolerance by 78.1; S3 exceeds the tolerance by 6.79; S4 exceeds the tolerance by 2",
      "status": "fail"
     },
     "reference": {
@@ -45503,8 +45503,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 69.7,
-     "message": "S1 exceeds the tolerance by 15.4; S2 exceeds the tolerance by 69.7; S3 exceeds the tolerance by 6.67; S4 exceeds the tolerance by 2; kavo exceeds the tolerance by 0.0998",
+     "max_excess": 78.1,
+     "message": "S1 exceeds the tolerance by 22.9; S2 exceeds the tolerance by 78.1; S3 exceeds the tolerance by 6.79; S4 exceeds the tolerance by 2",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -45638,9 +45638,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.0,
-     "message": "S1 exceeds the tolerance by 2; k1 exceeds the tolerance by 2",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -45648,9 +45648,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.0,
-     "message": "S1 exceeds the tolerance by 2; k1 exceeds the tolerance by 2",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -45681,9 +45681,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 5.0,
-     "message": "S1 exceeds the tolerance by 5; k1 exceeds the tolerance by 5",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -45691,9 +45691,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 5.0,
-     "message": "S1 exceeds the tolerance by 5; k1 exceeds the tolerance by 5",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -46247,9 +46247,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.0,
-     "message": "x exceeds the tolerance by 2",
-     "status": "fail"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -46257,9 +46257,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.0,
-     "message": "x exceeds the tolerance by 2",
-     "status": "fail"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -46571,9 +46571,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 6.0,
-     "message": "a exceeds the tolerance by 6; b exceeds the tolerance by 4; c exceeds the tolerance by 4; d exceeds the tolerance by 2; e exceeds the tolerance by 2",
-     "status": "fail"
+     "max_excess": -0.0003,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0003,
@@ -46581,9 +46581,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 6.0,
-     "message": "a exceeds the tolerance by 6; b exceeds the tolerance by 4; c exceeds the tolerance by 4; d exceeds the tolerance by 2; e exceeds the tolerance by 2",
-     "status": "fail"
+     "max_excess": -0.0003,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -46611,9 +46611,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 5.0,
-     "message": "a exceeds the tolerance by 1; b exceeds the tolerance by 1; c exceeds the tolerance by 3; d exceeds the tolerance by 3; e exceeds the tolerance by 5; f exceeds the tolerance by 5",
-     "status": "fail"
+     "max_excess": -0.0003,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0003,
@@ -46621,9 +46621,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 5.0,
-     "message": "a exceeds the tolerance by 1; b exceeds the tolerance by 1; c exceeds the tolerance by 3; d exceeds the tolerance by 3; e exceeds the tolerance by 5; f exceeds the tolerance by 5",
-     "status": "fail"
+     "max_excess": -0.0003,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -47266,9 +47266,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.0,
-     "message": "p1 exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -47276,9 +47276,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.0,
-     "message": "p1 exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -48892,9 +48892,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 3.0,
-     "message": "p1 exceeds the tolerance by 3",
-     "status": "fail"
+     "max_excess": -0.0005,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0005,
@@ -48902,9 +48902,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 3.0,
-     "message": "p1 exceeds the tolerance by 3",
-     "status": "fail"
+     "max_excess": -0.0005,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -48972,9 +48972,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.0,
-     "message": "p2 exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -48982,9 +48982,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.0,
-     "message": "p2 exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -49012,9 +49012,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 199.0,
-     "message": "p1 exceeds the tolerance by 2; p2 exceeds the tolerance by 29; p3 exceeds the tolerance by 199",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -49022,9 +49022,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 199.0,
-     "message": "p1 exceeds the tolerance by 2; p2 exceeds the tolerance by 29; p3 exceeds the tolerance by 199",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -49052,9 +49052,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 29.0,
-     "message": "p1 exceeds the tolerance by 11; p2 exceeds the tolerance by 29; p3 exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0003,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0003,
@@ -49062,9 +49062,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 29.0,
-     "message": "p1 exceeds the tolerance by 11; p2 exceeds the tolerance by 29; p3 exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0003,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -49303,7 +49303,7 @@
     },
     "libopencor": {
      "max_excess": 1.0,
-     "message": "p1 exceeds the tolerance by 1; p2 exceeds the tolerance by 1; p3 exceeds the tolerance by 1",
+     "message": "p1 exceeds the tolerance by 1",
      "status": "fail"
     },
     "reference": {
@@ -49313,7 +49313,7 @@
     },
     "roundtrip": {
      "max_excess": 1.0,
-     "message": "p1 exceeds the tolerance by 1; p2 exceeds the tolerance by 1; p3 exceeds the tolerance by 1",
+     "message": "p1 exceeds the tolerance by 1",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -49342,9 +49342,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 5.0,
-     "message": "p1 exceeds the tolerance by 1; p3 exceeds the tolerance by 1; p4 exceeds the tolerance by 3; p5 exceeds the tolerance by 5",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -49352,9 +49352,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 5.0,
-     "message": "p1 exceeds the tolerance by 1; p3 exceeds the tolerance by 1; p4 exceeds the tolerance by 3; p5 exceeds the tolerance by 5",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -49589,9 +49589,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.0,
-     "message": "p1 exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -49599,9 +49599,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.0,
-     "message": "p1 exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -50062,9 +50062,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.0,
-     "message": "p1 exceeds the tolerance by 2",
-     "status": "fail"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -50072,9 +50072,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.0,
-     "message": "p1 exceeds the tolerance by 2",
-     "status": "fail"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -50513,9 +50513,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.0,
-     "message": "p1 exceeds the tolerance by 2",
-     "status": "fail"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -50523,9 +50523,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.0,
-     "message": "p1 exceeds the tolerance by 2",
-     "status": "fail"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -50553,9 +50553,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.0,
-     "message": "p1 exceeds the tolerance by 2",
-     "status": "fail"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -50563,9 +50563,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.0,
-     "message": "p1 exceeds the tolerance by 2",
-     "status": "fail"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -50593,9 +50593,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 5.0,
-     "message": "p1 exceeds the tolerance by 5",
-     "status": "fail"
+     "max_excess": -0.0007,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0007,
@@ -50603,9 +50603,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 5.0,
-     "message": "p1 exceeds the tolerance by 5",
-     "status": "fail"
+     "max_excess": -0.0007,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -50633,9 +50633,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 9.0,
-     "message": "p1 exceeds the tolerance by 9",
-     "status": "fail"
+     "max_excess": -0.0011,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0011,
@@ -50643,9 +50643,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 9.0,
-     "message": "p1 exceeds the tolerance by 9",
-     "status": "fail"
+     "max_excess": -0.0011,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -50673,9 +50673,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 26.0,
-     "message": "p1 exceeds the tolerance by 26",
-     "status": "fail"
+     "max_excess": -0.0028,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0028,
@@ -50683,9 +50683,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 26.0,
-     "message": "p1 exceeds the tolerance by 26",
-     "status": "fail"
+     "max_excess": -0.0028,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -50713,9 +50713,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.602,
-     "message": "p2 exceeds the tolerance by 0.602",
-     "status": "fail"
+     "max_excess": -0.00026,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00026,
@@ -50723,9 +50723,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.602,
-     "message": "p2 exceeds the tolerance by 0.602",
-     "status": "fail"
+     "max_excess": -0.00026,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -51007,9 +51007,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 11.0,
-     "message": "a_truncated exceeds the tolerance by 3.3e-08; a_1865 exceeds the tolerance by 11; a_1873 exceeds the tolerance by 0.827; a_1890a exceeds the tolerance by 0.162; a_1890b exceeds the tolerance by 0.00961; a_1901 exceeds the tolerance by 0.0229; a_1903 exceeds the tolerance by 0.544; a_1904 exceeds the tolerance by 0.445; a_1908 exceeds the tolerance by 0.00368; a_1909 exceeds the tolerance by 0.0229",
-     "status": "fail"
+     "max_excess": -1.56e-09,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.56e-09,
@@ -51017,9 +51017,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 11.0,
-     "message": "a_truncated exceeds the tolerance by 3.3e-08; a_1865 exceeds the tolerance by 11; a_1873 exceeds the tolerance by 0.827; a_1890a exceeds the tolerance by 0.162; a_1890b exceeds the tolerance by 0.00961; a_1901 exceeds the tolerance by 0.0229; a_1903 exceeds the tolerance by 0.544; a_1904 exceeds the tolerance by 0.445; a_1908 exceeds the tolerance by 0.00368; a_1909 exceeds the tolerance by 0.0229",
-     "status": "fail"
+     "max_excess": -1.56e-09,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -53415,9 +53415,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 30.0,
-     "message": "A exceeds the tolerance by 30",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -53425,9 +53425,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 30.0,
-     "message": "A exceeds the tolerance by 30",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -53459,9 +53459,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 10.0,
-     "message": "A exceeds the tolerance by 10",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -53469,9 +53469,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 10.0,
-     "message": "A exceeds the tolerance by 10",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -53503,9 +53503,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 30.0,
-     "message": "A exceeds the tolerance by 30",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -53513,9 +53513,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 30.0,
-     "message": "A exceeds the tolerance by 30",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -53547,9 +53547,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 50.0,
-     "message": "A exceeds the tolerance by 30; B exceeds the tolerance by 50",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -53557,9 +53557,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 50.0,
-     "message": "A exceeds the tolerance by 30; B exceeds the tolerance by 50",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -53591,9 +53591,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 30.0,
-     "message": "B exceeds the tolerance by 30",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -53601,9 +53601,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 30.0,
-     "message": "B exceeds the tolerance by 30",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -53637,8 +53637,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 35.0,
-     "message": "A exceeds the tolerance by 35",
+     "max_excess": 5.0,
+     "message": "A exceeds the tolerance by 5",
      "status": "fail"
     },
     "reference": {
@@ -53647,8 +53647,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 35.0,
-     "message": "A exceeds the tolerance by 35",
+     "max_excess": 5.0,
+     "message": "A exceeds the tolerance by 5",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -53683,8 +53683,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 20.0,
-     "message": "A exceeds the tolerance by 20",
+     "max_excess": 10.0,
+     "message": "A exceeds the tolerance by 10",
      "status": "fail"
     },
     "reference": {
@@ -53693,8 +53693,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 20.0,
-     "message": "A exceeds the tolerance by 20",
+     "max_excess": 10.0,
+     "message": "A exceeds the tolerance by 10",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -53729,8 +53729,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 25.0,
-     "message": "A exceeds the tolerance by 25",
+     "max_excess": 5.0,
+     "message": "A exceeds the tolerance by 5",
      "status": "fail"
     },
     "reference": {
@@ -53739,8 +53739,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 25.0,
-     "message": "A exceeds the tolerance by 25",
+     "max_excess": 5.0,
+     "message": "A exceeds the tolerance by 5",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -53775,8 +53775,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 45.0,
-     "message": "A exceeds the tolerance by 25; B exceeds the tolerance by 45",
+     "max_excess": 5.0,
+     "message": "A exceeds the tolerance by 5; B exceeds the tolerance by 5",
      "status": "fail"
     },
     "reference": {
@@ -53785,8 +53785,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 45.0,
-     "message": "A exceeds the tolerance by 25; B exceeds the tolerance by 45",
+     "max_excess": 5.0,
+     "message": "A exceeds the tolerance by 5; B exceeds the tolerance by 5",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -53821,8 +53821,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 20.0,
-     "message": "A exceeds the tolerance by 10; B exceeds the tolerance by 20",
+     "max_excess": 10.0,
+     "message": "A exceeds the tolerance by 10; B exceeds the tolerance by 10",
      "status": "fail"
     },
     "reference": {
@@ -53831,8 +53831,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 20.0,
-     "message": "A exceeds the tolerance by 10; B exceeds the tolerance by 20",
+     "max_excess": 10.0,
+     "message": "A exceeds the tolerance by 10; B exceeds the tolerance by 10",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -53866,9 +53866,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 30.0,
-     "message": "A exceeds the tolerance by 30",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -53876,9 +53876,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 30.0,
-     "message": "A exceeds the tolerance by 30",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -53911,9 +53911,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 10.0,
-     "message": "A exceeds the tolerance by 10",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -53921,9 +53921,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 10.0,
-     "message": "A exceeds the tolerance by 10",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -53956,9 +53956,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 30.0,
-     "message": "A exceeds the tolerance by 30",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -53966,9 +53966,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 30.0,
-     "message": "A exceeds the tolerance by 30",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -54001,9 +54001,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 50.0,
-     "message": "A exceeds the tolerance by 30; B exceeds the tolerance by 50",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -54011,9 +54011,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 50.0,
-     "message": "A exceeds the tolerance by 30; B exceeds the tolerance by 50",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -54046,9 +54046,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 30.0,
-     "message": "B exceeds the tolerance by 30",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -54056,9 +54056,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 30.0,
-     "message": "B exceeds the tolerance by 30",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -55121,9 +55121,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.0,
-     "message": "a exceeds the tolerance by 1; d exceeds the tolerance by 1; e exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -55131,9 +55131,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.0,
-     "message": "a exceeds the tolerance by 1; d exceeds the tolerance by 1; e exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -55325,9 +55325,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.0,
-     "message": "P1 exceeds the tolerance by 2; P2 exceeds the tolerance by 2; P3 exceeds the tolerance by 2; P4 exceeds the tolerance by 2; P5 exceeds the tolerance by 2",
-     "status": "fail"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -55335,9 +55335,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.0,
-     "message": "P1 exceeds the tolerance by 2; P2 exceeds the tolerance by 2; P3 exceeds the tolerance by 2; P4 exceeds the tolerance by 2; P5 exceeds the tolerance by 2",
-     "status": "fail"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -55498,8 +55498,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.977,
-     "message": "S1 exceeds the tolerance by 0.42; S2 exceeds the tolerance by 0.977; x exceeds the tolerance by 0.6",
+     "max_excess": 0.271,
+     "message": "S2 exceeds the tolerance by 0.271",
      "status": "fail"
     },
     "reference": {
@@ -55508,8 +55508,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.977,
-     "message": "S1 exceeds the tolerance by 0.42; S2 exceeds the tolerance by 0.977; x exceeds the tolerance by 0.6",
+     "max_excess": 0.271,
+     "message": "S2 exceeds the tolerance by 0.271",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -56218,9 +56218,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.5,
-     "message": "S1 exceeds the tolerance by 0.35; x exceeds the tolerance by 0.5",
-     "status": "fail"
+     "max_excess": -0.00015,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00015,
@@ -56228,9 +56228,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.5,
-     "message": "S1 exceeds the tolerance by 0.35; x exceeds the tolerance by 0.5",
-     "status": "fail"
+     "max_excess": -0.00015,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -56267,9 +56267,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.5,
-     "message": "C1 exceeds the tolerance by 0.5; S1 exceeds the tolerance by 0.35; x exceeds the tolerance by 0.5",
-     "status": "fail"
+     "max_excess": -0.00015,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00015,
@@ -56277,9 +56277,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.5,
-     "message": "C1 exceeds the tolerance by 0.5; S1 exceeds the tolerance by 0.35; x exceeds the tolerance by 0.5",
-     "status": "fail"
+     "max_excess": -0.00015,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -56354,9 +56354,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 150.0,
-     "message": "P4 exceeds the tolerance by 21.4; P5 exceeds the tolerance by 0.471; P6 exceeds the tolerance by 5.71; P7 exceeds the tolerance by 15.2; P8 exceeds the tolerance by 2.28; P9 exceeds the tolerance by 24.3; P11 exceeds the tolerance by 30; P12 exceeds the tolerance by 50; P13 exceeds the tolerance by 19.5; P14 exceeds the tolerance by 0.24; P16 exceeds the tolerance by 17.2; P17 exceeds the toleranc",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -56364,9 +56364,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 150.0,
-     "message": "P4 exceeds the tolerance by 21.4; P5 exceeds the tolerance by 0.471; P6 exceeds the tolerance by 5.71; P7 exceeds the tolerance by 15.2; P8 exceeds the tolerance by 2.28; P9 exceeds the tolerance by 24.3; P11 exceeds the tolerance by 30; P12 exceeds the tolerance by 50; P13 exceeds the tolerance by 19.5; P14 exceeds the tolerance by 0.24; P16 exceeds the tolerance by 17.2; P17 exceeds the toleranc",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -57775,9 +57775,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 150.0,
-     "message": "S0 exceeds the tolerance by 17.2; S1 exceeds the tolerance by 142; S4 exceeds the tolerance by 21.4; S5 exceeds the tolerance by 0.471; S6 exceeds the tolerance by 5.71; S7 exceeds the tolerance by 15.2; S8 exceeds the tolerance by 2.28; S9 exceeds the tolerance by 24.3; S11 exceeds the tolerance by 30; S12 exceeds the tolerance by 50; S13 exceeds the tolerance by 19.5; S14 exceeds the tolerance b",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -57785,9 +57785,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 150.0,
-     "message": "S0 exceeds the tolerance by 17.2; S1 exceeds the tolerance by 142; S4 exceeds the tolerance by 21.4; S5 exceeds the tolerance by 0.471; S6 exceeds the tolerance by 5.71; S7 exceeds the tolerance by 15.2; S8 exceeds the tolerance by 2.28; S9 exceeds the tolerance by 24.3; S11 exceeds the tolerance by 30; S12 exceeds the tolerance by 50; S13 exceeds the tolerance by 19.5; S14 exceeds the tolerance b",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -59361,9 +59361,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 20.0,
-     "message": "S1 exceeds the tolerance by 20",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -59371,9 +59371,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 20.0,
-     "message": "S1 exceeds the tolerance by 20",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -59407,9 +59407,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 20.0,
-     "message": "S1 exceeds the tolerance by 20",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -59417,9 +59417,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 20.0,
-     "message": "S1 exceeds the tolerance by 20",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -59496,9 +59496,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 6.02e+23,
-     "message": "k1 exceeds the tolerance by 1; k2 exceeds the tolerance by 6.02e+23",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -59506,9 +59506,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 6.02e+23,
-     "message": "k1 exceeds the tolerance by 1; k2 exceeds the tolerance by 6.02e+23",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -59539,8 +59539,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.0,
-     "message": "S1 exceeds the tolerance by 0.4; S2 exceeds the tolerance by 0.2; m_cf exceeds the tolerance by 2; s1_cf exceeds the tolerance by 4",
+     "max_excess": 0.4,
+     "message": "S1 exceeds the tolerance by 0.4; S2 exceeds the tolerance by 0.2",
      "status": "fail"
     },
     "reference": {
@@ -59549,8 +59549,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 4.0,
-     "message": "S1 exceeds the tolerance by 0.4; S2 exceeds the tolerance by 0.2; m_cf exceeds the tolerance by 2; s1_cf exceeds the tolerance by 4",
+     "max_excess": 0.4,
+     "message": "S1 exceeds the tolerance by 0.4; S2 exceeds the tolerance by 0.2",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -59584,8 +59584,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.0,
-     "message": "S1 exceeds the tolerance by 0.4; s1_cf exceeds the tolerance by 4",
+     "max_excess": 0.4,
+     "message": "S1 exceeds the tolerance by 0.4",
      "status": "fail"
     },
     "reference": {
@@ -59594,8 +59594,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 4.0,
-     "message": "S1 exceeds the tolerance by 0.4; s1_cf exceeds the tolerance by 4",
+     "max_excess": 0.4,
+     "message": "S1 exceeds the tolerance by 0.4",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -59629,8 +59629,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.0,
-     "message": "S1 exceeds the tolerance by 0.2; S2 exceeds the tolerance by 0.2; m_cf exceeds the tolerance by 2",
+     "max_excess": 0.2,
+     "message": "S1 exceeds the tolerance by 0.2; S2 exceeds the tolerance by 0.2",
      "status": "fail"
     },
     "reference": {
@@ -59639,8 +59639,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.0,
-     "message": "S1 exceeds the tolerance by 0.2; S2 exceeds the tolerance by 0.2; m_cf exceeds the tolerance by 2",
+     "max_excess": 0.2,
+     "message": "S1 exceeds the tolerance by 0.2; S2 exceeds the tolerance by 0.2",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -59934,8 +59934,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 9.0,
-     "message": "S1 exceeds the tolerance by 1.8; S2 exceeds the tolerance by 0.5; m_cf exceeds the tolerance by 5; s1_cf exceeds the tolerance by 9",
+     "max_excess": 1.8,
+     "message": "S1 exceeds the tolerance by 1.8; S2 exceeds the tolerance by 0.5",
      "status": "fail"
     },
     "reference": {
@@ -59944,8 +59944,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 9.0,
-     "message": "S1 exceeds the tolerance by 1.8; S2 exceeds the tolerance by 0.5; m_cf exceeds the tolerance by 5; s1_cf exceeds the tolerance by 9",
+     "max_excess": 1.8,
+     "message": "S1 exceeds the tolerance by 1.8; S2 exceeds the tolerance by 0.5",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -59980,8 +59980,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 9.0,
-     "message": "S1 exceeds the tolerance by 1.8; s1_cf exceeds the tolerance by 9",
+     "max_excess": 1.8,
+     "message": "S1 exceeds the tolerance by 1.8",
      "status": "fail"
     },
     "reference": {
@@ -59990,8 +59990,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 9.0,
-     "message": "S1 exceeds the tolerance by 1.8; s1_cf exceeds the tolerance by 9",
+     "max_excess": 1.8,
+     "message": "S1 exceeds the tolerance by 1.8",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -60026,8 +60026,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 5.0,
-     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 0.5; m_cf exceeds the tolerance by 5",
+     "max_excess": 1.0,
+     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 0.5",
      "status": "fail"
     },
     "reference": {
@@ -60036,8 +60036,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 5.0,
-     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 0.5; m_cf exceeds the tolerance by 5",
+     "max_excess": 1.0,
+     "message": "S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 0.5",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -60073,9 +60073,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 3.0,
-     "message": "k0 exceeds the tolerance by 3",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -60083,9 +60083,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 3.0,
-     "message": "k0 exceeds the tolerance by 3",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -60118,9 +60118,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 3.0,
-     "message": "k0 exceeds the tolerance by 3",
-     "status": "fail"
+     "max_excess": -0.00028,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00028,
@@ -60128,9 +60128,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 3.0,
-     "message": "k0 exceeds the tolerance by 3",
-     "status": "fail"
+     "max_excess": -0.00028,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -61930,8 +61930,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.0,
-     "message": "P1 exceeds the tolerance by 4",
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
      "status": "fail"
     },
     "reference": {
@@ -61940,8 +61940,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 4.0,
-     "message": "P1 exceeds the tolerance by 4",
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -61972,8 +61972,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.0,
-     "message": "P1 exceeds the tolerance by 1",
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
      "status": "fail"
     },
     "reference": {
@@ -61982,8 +61982,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.0,
-     "message": "P1 exceeds the tolerance by 1",
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -62014,9 +62014,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 5.0,
-     "message": "P1 exceeds the tolerance by 5",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -62024,9 +62024,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 5.0,
-     "message": "P1 exceeds the tolerance by 5",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -63024,9 +63024,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 5.02,
-     "message": "S1 exceeds the tolerance by 5.02",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -63034,9 +63034,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 5.02,
-     "message": "S1 exceeds the tolerance by 5.02",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -63113,8 +63113,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.65,
-     "message": "S1 exceeds the tolerance by 0.65; S2 exceeds the tolerance by 0.35",
+     "max_excess": 0.6,
+     "message": "S1 exceeds the tolerance by 0.6; S2 exceeds the tolerance by 0.3",
      "status": "fail"
     },
     "reference": {
@@ -63123,8 +63123,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.65,
-     "message": "S1 exceeds the tolerance by 0.65; S2 exceeds the tolerance by 0.35",
+     "max_excess": 0.6,
+     "message": "S1 exceeds the tolerance by 0.6; S2 exceeds the tolerance by 0.3",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -63159,8 +63159,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.65,
-     "message": "S1 exceeds the tolerance by 0.65; S2 exceeds the tolerance by 0.0496",
+     "max_excess": 0.6,
+     "message": "S1 exceeds the tolerance by 0.6",
      "status": "fail"
     },
     "reference": {
@@ -63169,8 +63169,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.65,
-     "message": "S1 exceeds the tolerance by 0.65; S2 exceeds the tolerance by 0.0496",
+     "max_excess": 0.6,
+     "message": "S1 exceeds the tolerance by 0.6",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -63205,8 +63205,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.35,
-     "message": "S1 exceeds the tolerance by 0.35; S2 exceeds the tolerance by 0.35",
+     "max_excess": 0.3,
+     "message": "S1 exceeds the tolerance by 0.3; S2 exceeds the tolerance by 0.3",
      "status": "fail"
     },
     "reference": {
@@ -63215,8 +63215,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.35,
-     "message": "S1 exceeds the tolerance by 0.35; S2 exceeds the tolerance by 0.35",
+     "max_excess": 0.3,
+     "message": "S1 exceeds the tolerance by 0.3; S2 exceeds the tolerance by 0.3",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -63515,8 +63515,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.65,
-     "message": "S1 exceeds the tolerance by 0.65; S2 exceeds the tolerance by 0.35; S3 exceeds the tolerance by 0.0997; S4 exceeds the tolerance by 0.0996",
+     "max_excess": 0.6,
+     "message": "S1 exceeds the tolerance by 0.6; S2 exceeds the tolerance by 0.3; S3 exceeds the tolerance by 0.15; S4 exceeds the tolerance by 0.15",
      "status": "fail"
     },
     "reference": {
@@ -63525,8 +63525,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.65,
-     "message": "S1 exceeds the tolerance by 0.65; S2 exceeds the tolerance by 0.35; S3 exceeds the tolerance by 0.0997; S4 exceeds the tolerance by 0.0996",
+     "max_excess": 0.6,
+     "message": "S1 exceeds the tolerance by 0.6; S2 exceeds the tolerance by 0.3; S3 exceeds the tolerance by 0.15; S4 exceeds the tolerance by 0.15",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -63562,8 +63562,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.65,
-     "message": "S1 exceeds the tolerance by 0.65; S2 exceeds the tolerance by 0.0496; S3 exceeds the tolerance by 0.0997; S4 exceeds the tolerance by 0.0996",
+     "max_excess": 0.6,
+     "message": "S1 exceeds the tolerance by 0.6; S3 exceeds the tolerance by 0.15; S4 exceeds the tolerance by 0.15",
      "status": "fail"
     },
     "reference": {
@@ -63572,8 +63572,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.65,
-     "message": "S1 exceeds the tolerance by 0.65; S2 exceeds the tolerance by 0.0496; S3 exceeds the tolerance by 0.0997; S4 exceeds the tolerance by 0.0996",
+     "max_excess": 0.6,
+     "message": "S1 exceeds the tolerance by 0.6; S3 exceeds the tolerance by 0.15; S4 exceeds the tolerance by 0.15",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -63609,8 +63609,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.35,
-     "message": "S1 exceeds the tolerance by 0.35; S2 exceeds the tolerance by 0.35; S3 exceeds the tolerance by 0.0997; S4 exceeds the tolerance by 0.0996",
+     "max_excess": 0.3,
+     "message": "S1 exceeds the tolerance by 0.3; S2 exceeds the tolerance by 0.3; S3 exceeds the tolerance by 0.15; S4 exceeds the tolerance by 0.15",
      "status": "fail"
     },
     "reference": {
@@ -63619,8 +63619,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.35,
-     "message": "S1 exceeds the tolerance by 0.35; S2 exceeds the tolerance by 0.35; S3 exceeds the tolerance by 0.0997; S4 exceeds the tolerance by 0.0996",
+     "max_excess": 0.3,
+     "message": "S1 exceeds the tolerance by 0.3; S2 exceeds the tolerance by 0.3; S3 exceeds the tolerance by 0.15; S4 exceeds the tolerance by 0.15",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -64012,9 +64012,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.5,
-     "message": "S1 exceeds the tolerance by 0.5",
-     "status": "fail"
+     "max_excess": -0.0003,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0003,
@@ -64022,9 +64022,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.5,
-     "message": "S1 exceeds the tolerance by 0.5",
-     "status": "fail"
+     "max_excess": -0.0003,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -64104,8 +64104,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.0,
-     "message": "P1 exceeds the tolerance by 2",
+     "max_excess": 1.5,
+     "message": "P1 exceeds the tolerance by 1.5",
      "status": "fail"
     },
     "reference": {
@@ -64114,8 +64114,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.0,
-     "message": "P1 exceeds the tolerance by 2",
+     "max_excess": 1.5,
+     "message": "P1 exceeds the tolerance by 1.5",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -64147,8 +64147,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.0,
-     "message": "P1 exceeds the tolerance by 1",
+     "max_excess": 1.5,
+     "message": "P1 exceeds the tolerance by 1.5",
      "status": "fail"
     },
     "reference": {
@@ -64157,8 +64157,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1.0,
-     "message": "P1 exceeds the tolerance by 1",
+     "max_excess": 1.5,
+     "message": "P1 exceeds the tolerance by 1.5",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -64190,8 +64190,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.0,
-     "message": "P1 exceeds the tolerance by 4",
+     "max_excess": 3.5,
+     "message": "P1 exceeds the tolerance by 3.5",
      "status": "fail"
     },
     "reference": {
@@ -64200,8 +64200,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 4.0,
-     "message": "P1 exceeds the tolerance by 4",
+     "max_excess": 3.5,
+     "message": "P1 exceeds the tolerance by 3.5",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -64233,8 +64233,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 24.0,
-     "message": "P1 exceeds the tolerance by 24",
+     "max_excess": 23.5,
+     "message": "P1 exceeds the tolerance by 23.5",
      "status": "fail"
     },
     "reference": {
@@ -64243,8 +64243,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 24.0,
-     "message": "P1 exceeds the tolerance by 24",
+     "max_excess": 23.5,
+     "message": "P1 exceeds the tolerance by 23.5",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -64527,9 +64527,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 3.0,
-     "message": "k0 exceeds the tolerance by 3",
-     "status": "fail"
+     "max_excess": -0.00028,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00028,
@@ -64537,9 +64537,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 3.0,
-     "message": "k0 exceeds the tolerance by 3",
-     "status": "fail"
+     "max_excess": -0.00028,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -64955,8 +64955,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.6,
-     "message": "S1 exceeds the tolerance by 0.0596; S2 exceeds the tolerance by 0.0394; m_cf exceeds the tolerance by 2.4; s1_cf exceeds the tolerance by 4.6",
+     "max_excess": 0.0596,
+     "message": "S1 exceeds the tolerance by 0.0596; S2 exceeds the tolerance by 0.0394",
      "status": "fail"
     },
     "reference": {
@@ -64965,8 +64965,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 4.6,
-     "message": "S1 exceeds the tolerance by 0.0596; S2 exceeds the tolerance by 0.0394; m_cf exceeds the tolerance by 2.4; s1_cf exceeds the tolerance by 4.6",
+     "max_excess": 0.0596,
+     "message": "S1 exceeds the tolerance by 0.0596; S2 exceeds the tolerance by 0.0394",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -65000,8 +65000,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.6,
-     "message": "S1 exceeds the tolerance by 0.0596; s1_cf exceeds the tolerance by 4.6",
+     "max_excess": 0.0596,
+     "message": "S1 exceeds the tolerance by 0.0596",
      "status": "fail"
     },
     "reference": {
@@ -65010,8 +65010,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 4.6,
-     "message": "S1 exceeds the tolerance by 0.0596; s1_cf exceeds the tolerance by 4.6",
+     "max_excess": 0.0596,
+     "message": "S1 exceeds the tolerance by 0.0596",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -65045,8 +65045,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.4,
-     "message": "S1 exceeds the tolerance by 0.0395; S2 exceeds the tolerance by 0.0394; m_cf exceeds the tolerance by 2.4",
+     "max_excess": 0.0395,
+     "message": "S1 exceeds the tolerance by 0.0395; S2 exceeds the tolerance by 0.0394",
      "status": "fail"
     },
     "reference": {
@@ -65055,8 +65055,8 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.4,
-     "message": "S1 exceeds the tolerance by 0.0395; S2 exceeds the tolerance by 0.0394; m_cf exceeds the tolerance by 2.4",
+     "max_excess": 0.0395,
+     "message": "S1 exceeds the tolerance by 0.0395; S2 exceeds the tolerance by 0.0394",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -65182,9 +65182,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.0,
-     "message": "x exceeds the tolerance by 2",
-     "status": "fail"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0004,
@@ -65192,9 +65192,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.0,
-     "message": "x exceeds the tolerance by 2",
-     "status": "fail"
+     "max_excess": -0.0004,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -65787,9 +65787,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": Infinity,
-     "message": "a exceeds the tolerance by 9; c exceeds the tolerance by 0.9; d exceeds the tolerance by inf",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -65797,9 +65797,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": Infinity,
-     "message": "a exceeds the tolerance by 9; c exceeds the tolerance by 0.9; d exceeds the tolerance by inf",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -65863,7 +65863,7 @@
     },
     "libopencor": {
      "max_excess": Infinity,
-     "message": "p exceeds the tolerance by 0.9; q exceeds the tolerance by 0.99; r exceeds the tolerance by 0.999; s exceeds the tolerance by inf",
+     "message": "s exceeds the tolerance by inf",
      "status": "fail"
     },
     "reference": {
@@ -65873,7 +65873,7 @@
     },
     "roundtrip": {
      "max_excess": Infinity,
-     "message": "p exceeds the tolerance by 0.9; q exceeds the tolerance by 0.99; r exceeds the tolerance by 0.999; s exceeds the tolerance by inf",
+     "message": "s exceeds the tolerance by inf",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -65937,9 +65937,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 29.0,
-     "message": "a exceeds the tolerance by 9; b exceeds the tolerance by 19; c exceeds the tolerance by 29",
-     "status": "fail"
+     "max_excess": -0.0011,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0011,
@@ -65947,9 +65947,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 29.0,
-     "message": "a exceeds the tolerance by 9; b exceeds the tolerance by 19; c exceeds the tolerance by 29",
-     "status": "fail"
+     "max_excess": -0.0011,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -66012,9 +66012,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 5.0,
-     "message": "a exceeds the tolerance by 3; b exceeds the tolerance by 4; c exceeds the tolerance by 5",
-     "status": "fail"
+     "max_excess": -0.0005,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0005,
@@ -66022,9 +66022,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 5.0,
-     "message": "a exceeds the tolerance by 3; b exceeds the tolerance by 4; c exceeds the tolerance by 5",
-     "status": "fail"
+     "max_excess": -0.0005,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -66087,9 +66087,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 8.0,
-     "message": "a exceeds the tolerance by 6; b exceeds the tolerance by 7; c exceeds the tolerance by 8; d exceeds the tolerance by 2.14",
-     "status": "fail"
+     "max_excess": -0.000414,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.000414,
@@ -66097,9 +66097,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 8.0,
-     "message": "a exceeds the tolerance by 6; b exceeds the tolerance by 7; c exceeds the tolerance by 8; d exceeds the tolerance by 2.14",
-     "status": "fail"
+     "max_excess": -0.000414,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,

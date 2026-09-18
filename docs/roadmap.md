@@ -7,7 +7,8 @@
 ### SBML to CellML
 
 - **Units.** Every variable is `dimensionless` and the SBML unit definitions are not converted. A number without units in a formula is `dimensionless` too, but a number with the units of an SBML unit definition (e.g., `2 mM`) references units which do not exist in the CellML model, which libcellml reports as an error. The `time` variable has no unit either.
-- **Initial assignments** are skipped with a warning. The initial value would have to be computed from the assignment, e.g., with libroadrunner.
+- **Initial assignments** are evaluated to initial values (libsbml's `expandInitialAssignments`), so the CellML model has the value but not the formula; libsbml does not evaluate an assignment to NaN, which stays unconverted with a warning.
+- **An infinite or NaN initial value of a state** cannot be expressed: CellML initial values are real numbers (a constant gets the equation `x = INF` instead).
 - **Events** are skipped with a warning. CellML 2.0 has no events; a subset could be expressed with resets.
 - **Algebraic rules** are skipped with a warning.
 - **stoichiometryMath** of level 2 species references is not converted, the stoichiometry attribute is used.
@@ -15,7 +16,7 @@
 - **Time without differential equations.** CellML knows the variable of integration only from a differential equation: a model without one has no `time` variable, and a formula using time in such a model cannot be converted.
 - **An SBML id `time`** collides with the variable of integration `time` of the CellML model and with the time column of the simulation results.
 - **The delay and rateOf symbols** are not converted: CellML has no delays, and `rateOf(x)` would have to become the right-hand side of the equation of `x`.
-- **Unset initial values** of variables which no assignment rule sets are `1.0`, with a warning, instead of being computed, e.g., from an initial assignment.
+- **Unset initial values** of variables which no assignment rule or initial assignment sets are `1.0`, with a warning.
 
 ### CellML to SBML
 

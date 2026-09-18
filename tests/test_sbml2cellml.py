@@ -1,6 +1,7 @@
 """Tests of the SBML to CellML conversion."""
 
 import logging
+import math
 from pathlib import Path
 
 import libcellml
@@ -416,6 +417,75 @@ def test_model_without_differential_equations_has_no_time(tmp_path: Path) -> Non
     assert TIME_ID not in variables(model)
 
 
+def test_initial_assignments_give_initial_values(tmp_path: Path) -> None:
+    """libsbml evaluates the initial assignments to initial values."""
+    model_sbml = simple_model("initial_assignments")
+    for symbol, formula in (("k1", "2 * 0.75"), ("S1", "k1 * 4")):
+        ia: libsbml.InitialAssignment = model_sbml.createInitialAssignment()
+        ia.setSymbol(symbol)
+        ia.setMath(libsbml.parseL3Formula(formula))
+    sbml_path = write_sbml(tmp_path / "initial_assignments.xml", model_sbml)
+    v = variables(convert_sbml2cellml(sbml_path))
+    assert float(v["k1"].initialValue()) == 1.5
+    assert float(v["S1"].initialValue()) == 6.0
+
+
+def test_initial_assignments_with_recursive_functions_are_not_expanded(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    """libsbml crashes on expanding them with a recursive function present."""
+    model_sbml = _model_calling({"f": "lambda(x, f(x))"})
+    ia: libsbml.InitialAssignment = model_sbml.createInitialAssignment()
+    ia.setSymbol("k1")
+    ia.setMath(libsbml.parseL3Formula("2 * 3"))
+    sbml_path = write_sbml(tmp_path / "calls.xml", model_sbml)
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        convert_sbml2cellml(sbml_path, validate=False)
+    assert "Initial assignments of 'calls' could not be expanded" in caplog.text
+    assert "InitialAssignment for 'k1' not converted" in caplog.text
+
+
+def test_non_finite_initial_values_become_equations(tmp_path: Path) -> None:
+    """CellML initial values are real numbers: INF and NaN become equations."""
+    model_sbml = simple_model("non_finite")
+    for pid in ("P", "Q", "R"):
+        p: libsbml.Parameter = model_sbml.createParameter()
+        p.setId(pid)
+        p.setConstant(True)
+    # values, and an initial assignment libsbml evaluates
+    model_sbml.getParameter("Q").setValue(-math.inf)
+    model_sbml.getParameter("R").setValue(math.nan)
+    for symbol, formula in (("P", "INF"),):
+        ia: libsbml.InitialAssignment = model_sbml.createInitialAssignment()
+        ia.setSymbol(symbol)
+        ia.setMath(libsbml.parseL3Formula(formula))
+    sbml_path = write_sbml(tmp_path / "non_finite.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    assert errors(validate_model(model)) == []
+    v = variables(model)
+    assert [v[pid].initialValue() for pid in ("P", "Q", "R")] == ["", "", ""]
+    math_text = model.component(0).math()
+    assert math_text.count("<infinity/>") == 2
+    assert "<notanumber/>" in math_text
+
+
+def test_initial_assignment_to_nan_is_not_evaluated(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    """libsbml does not evaluate an initial assignment to NaN; it stays."""
+    model_sbml = simple_model("nan_assignment")
+    ia: libsbml.InitialAssignment = model_sbml.createInitialAssignment()
+    ia.setSymbol("k1")
+    ia.setMath(libsbml.parseL3Formula("NaN"))
+    sbml_path = write_sbml(tmp_path / "nan_assignment.xml", model_sbml)
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        convert_sbml2cellml(sbml_path, validate=False)
+    assert "Initial assignments of 'nan_assignment' could not be expanded (1 of 1)" in (
+        caplog.text
+    )
+    assert "InitialAssignment for 'k1' not converted" in caplog.text
+
+
 def test_nan_initial_value_logs_warning(
     tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:
@@ -430,13 +500,8 @@ def test_nan_initial_value_logs_warning(
     assert "k_undefined" in caplog.text
 
 
-def test_event_and_initial_assignment_log_warnings(
-    tmp_path: Path, caplog: pytest.LogCaptureFixture
-) -> None:
+def test_event_logs_warning(tmp_path: Path, caplog: pytest.LogCaptureFixture) -> None:
     model_sbml = simple_model("events")
-    ia: libsbml.InitialAssignment = model_sbml.createInitialAssignment()
-    ia.setSymbol("k1")
-    ia.setMath(libsbml.parseL3Formula("2 * 0.5"))
     event: libsbml.Event = model_sbml.createEvent()
     event.setId("e1")
     event.setUseValuesFromTriggerTime(True)
@@ -451,4 +516,3 @@ def test_event_and_initial_assignment_log_warnings(
     with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
         convert_sbml2cellml(sbml_path, validate=False)
     assert "Event 'e1'" in caplog.text
-    assert "InitialAssignment for 'k1'" in caplog.text

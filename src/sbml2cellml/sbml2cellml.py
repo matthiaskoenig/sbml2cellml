@@ -10,11 +10,11 @@ yet.
 
 CellML has no functions: the calls of SBML function definitions are replaced
 by the bodies of the functions (libsbml's `expandFunctionDefinitions`
-conversion) before the conversion.
+conversion) before the conversion, and the initial assignments are evaluated
+to initial values (`expandInitialAssignments`).
 
 Not supported yet (logged as warning, see docs/roadmap.md): unit definitions,
-initial assignments, events and algebraic rules. The stoichiometry of a
-reaction is not applied to its kinetic law either.
+events and algebraic rules.
 """
 
 import logging
@@ -68,7 +68,7 @@ def convert_sbml2cellml(
         raise SBML2CellMLConversionError(f"No model in SBML file '{sbml_path}'.")
     mid: str = model_sbml.getId() if model_sbml.isSetId() else Path(sbml_path).stem
     logger.info("Converting SBML model '%s' from '%s'", mid, sbml_path)
-    _expand_function_definitions(doc, mid)
+    _expand(doc, mid)
     # the conversion rewrites the document, its model is read again
     model_sbml = doc.getModel()
     assert model_sbml is not None
@@ -112,6 +112,9 @@ def convert_sbml2cellml(
     for rid in reaction_ids:
         logger.info("%s = %s (rate of reaction)", rid, rates[rid])
         parts.append(mathml.mathml_for_assignment(vid=rid, formula=rates[rid]))
+    parts.extend(
+        _non_finite_initial_values(component, set(rate_rules) | set(reaction_terms))
+    )
     if not (rate_rules or reaction_terms or _uses_time(model_sbml)):
         # CellML knows the variable of integration only from a differential
         # equation, an unused one has an unknown type: the model is algebraic
@@ -127,8 +130,7 @@ def convert_sbml2cellml(
     assignment: libsbml.InitialAssignment
     for assignment in model_sbml.getListOfInitialAssignments():
         logger.warning(
-            "InitialAssignment for '%s' not converted, initial assignments are "
-            "not supported yet.",
+            "InitialAssignment for '%s' not converted, it was not evaluated.",
             assignment.getSymbol(),
         )
 
@@ -147,44 +149,69 @@ def convert_sbml2cellml(
     return model
 
 
-def _expand_function_definitions(doc: libsbml.SBMLDocument, mid: str) -> None:
-    """Replace the calls of function definitions by the function bodies.
+def _expand(doc: libsbml.SBMLDocument, mid: str) -> None:
+    """Expand the function definitions and initial assignments with libsbml.
 
-    libsbml inlines every call with its arguments and removes the function
-    definitions. It refuses an invalid document (e.g. a call of an undefined
-    function) and crashes on a recursive function definition read from a
-    file, which is therefore checked first. The calls then stay, with a
-    warning, and the validation of the CellML reports them as unknown names.
+    The calls of function definitions are replaced by the function bodies
+    (`expandFunctionDefinitions`), the initial assignments evaluated to
+    initial values (`expandInitialAssignments`). libsbml refuses an invalid
+    document (e.g. a call of an undefined function) and crashes on a
+    recursive function definition read from a file, which is therefore
+    checked first. What is not expanded stays, with a warning: the calls,
+    which the validation of the CellML reports as unknown names, and the
+    initial assignments, which are not converted.
 
     Args:
         doc: the SBML document, converted in place.
         mid: id of the model, for the log.
     """
-    model_sbml: libsbml.Model = doc.getModel()
-    count = model_sbml.getNumFunctionDefinitions()
-    if count == 0:
-        return
-    recursive = _recursive_functions(model_sbml)
-    if recursive:
-        logger.warning(
-            "Function definitions of '%s' could not be expanded, their calls "
-            "remain: recursive function definitions %s",
-            mid,
-            ", ".join(recursive),
-        )
-        return
-    properties = libsbml.ConversionProperties()
-    properties.addOption("expandFunctionDefinitions", True)
-    status = doc.convert(properties)
-    if status != libsbml.LIBSBML_OPERATION_SUCCESS:
-        logger.warning(
-            "Function definitions of '%s' could not be expanded, their calls "
-            "remain: %s",
-            mid,
-            libsbml.OperationReturnValue_toString(status),
-        )
-        return
-    logger.info("Expanded %d function definitions of '%s'", count, mid)
+    recursive = _recursive_functions(doc.getModel())
+    expansions = (
+        (
+            "expandFunctionDefinitions",
+            "Function definitions",
+            "their calls remain",
+            libsbml.Model.getNumFunctionDefinitions,
+        ),
+        (
+            "expandInitialAssignments",
+            "Initial assignments",
+            "they are not converted",
+            libsbml.Model.getNumInitialAssignments,
+        ),
+    )
+    for option, what, consequence, count_of in expansions:
+        count = count_of(doc.getModel())
+        if count == 0:
+            continue
+        if recursive:
+            logger.warning(
+                "%s of '%s' could not be expanded, %s: recursive function "
+                "definitions %s",
+                what,
+                mid,
+                consequence,
+                ", ".join(recursive),
+            )
+            continue
+        properties = libsbml.ConversionProperties()
+        properties.addOption(option, True)
+        status = doc.convert(properties)
+        # libsbml may expand a part and report a failure, e.g. an initial
+        # assignment to NaN, which it cannot evaluate
+        left = count_of(doc.getModel())
+        if left:
+            logger.warning(
+                "%s of '%s' could not be expanded (%d of %d), %s: %s",
+                what,
+                mid,
+                left,
+                count,
+                consequence,
+                libsbml.OperationReturnValue_toString(status),
+            )
+        if left < count:
+            logger.info("Expanded %d %s of '%s'", count - left, what.lower(), mid)
 
 
 def _collect_names(
@@ -233,17 +260,23 @@ def _recursive_functions(model_sbml: libsbml.Model) -> list[str]:
     return recursive
 
 
-def _initial_value(sid: str, value: float) -> float:
-    """Replace a NaN initial value by 1.0 with a warning.
+def _initial_value(sid: str, value: float | None) -> float:
+    """Replace an unset initial value by 1.0 with a warning.
 
-    A NaN is what libsbml returns for an unset value; the value would have to
-    be calculated from the rules and initial assignments, which is not
-    supported yet.
+    `value` is `None` when the SBML attribute is unset (libsbml returns NaN
+    for an unset value, like for a value set to NaN, so the caller decides
+    with `isSet...`); a value which is set is returned as it is, NaN and
+    infinity included.
     """
-    if math.isnan(value):
+    if value is None:
         logger.warning("Initial value of '%s' is not set, using 1.0.", sid)
         return 1.0
     return value
+
+
+def _set_value(is_set: bool, value: float) -> float | None:
+    """The value of an SBML attribute, `None` when it is unset."""
+    return value if is_set else None
 
 
 def _add_variable(
@@ -279,7 +312,9 @@ def _add_compartments(
             sizes[cid] = compartment.getSize()
             _add_variable(component, cid, None)
         else:
-            sizes[cid] = _initial_value(cid, compartment.getSize())
+            sizes[cid] = _initial_value(
+                cid, _set_value(compartment.isSetSize(), compartment.getSize())
+            )
             _add_variable(component, cid, sizes[cid])
         logger.info("'%s' variable for compartment", cid)
     return sizes
@@ -292,7 +327,13 @@ def _add_parameters(
     parameter: libsbml.Parameter
     for parameter in model_sbml.getListOfParameters():
         pid: str = parameter.getId()
-        value = None if pid in assigned else _initial_value(pid, parameter.getValue())
+        value = (
+            None
+            if pid in assigned
+            else _initial_value(
+                pid, _set_value(parameter.isSetValue(), parameter.getValue())
+            )
+        )
         _add_variable(component, pid, value)
         logger.info("'%s' variable for parameter", pid)
 
@@ -331,7 +372,7 @@ def _add_species(
             value = _initial_value(sid, species.getInitialConcentration())
             initial = value * _size(cid, sid, compartment_sizes) if amount else value
         else:
-            initial = _initial_value(sid, math.nan)
+            initial = _initial_value(sid, None)
         _add_variable(component, sid, initial)
         logger.info("'%s' variable for species", sid)
     return in_amount
@@ -412,7 +453,10 @@ def _add_local_parameters(
             pid: str = local.getId()
             vid = unique_sid(f"{rid}_{pid}", used)
             local_ids.setdefault(rid, {})[pid] = vid
-            _add_variable(component, vid, _initial_value(vid, local.getValue()))
+            value = _initial_value(
+                vid, _set_value(local.isSetValue(), local.getValue())
+            )
+            _add_variable(component, vid, value)
             logger.info("'%s' variable for local parameter '%s' of '%s'", vid, pid, rid)
     return local_ids
 
@@ -436,7 +480,12 @@ def _add_species_references(
             value = (
                 None
                 if vid in assigned
-                else _initial_value(vid, reference.getStoichiometry())
+                else _initial_value(
+                    vid,
+                    _set_value(
+                        reference.isSetStoichiometry(), reference.getStoichiometry()
+                    ),
+                )
             )
             _add_variable(component, vid, value)
             logger.info(
@@ -502,6 +551,40 @@ def _uses_time(model_sbml: libsbml.Model) -> bool:
                 reaction.getKineticLaw().getMath(), libsbml.AST_NAME_TIME, names
             )
     return bool(names)
+
+
+#: L3 formula of the non-finite initial values libcellml writes
+NON_FINITE = {"inf": "INF", "-inf": "-INF", "nan": "NaN"}
+
+
+def _non_finite_initial_values(
+    component: libcellml.Component, states: set[str]
+) -> list[str]:
+    """Replace infinite and NaN initial values by equations.
+
+    CellML initial values are real numbers or variable references; a
+    variable which is not a state and has an infinite or NaN initial value
+    (from an SBML value or an initial assignment) gets the equation
+    `v = INF` (or `-INF`, `NaN`) instead. A state keeps it, CellML cannot
+    express it.
+
+    Args:
+        component: the component with the variables.
+        states: ids of the variables which a differential equation defines.
+
+    Returns:
+        The `apply` elements of the equations.
+    """
+    parts: list[str] = []
+    for k in range(component.variableCount()):
+        variable: libcellml.Variable = component.variable(k)
+        formula = NON_FINITE.get(variable.initialValue())
+        if formula is None or variable.name() in states:
+            continue
+        variable.removeInitialValue()
+        logger.info("%s = %s (non-finite initial value)", variable.name(), formula)
+        parts.append(mathml.mathml_for_assignment(vid=variable.name(), formula=formula))
+    return parts
 
 
 def _stoichiometry_factor(reaction_id: str, reference: libsbml.SpeciesReference) -> str:

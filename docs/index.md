@@ -48,7 +48,8 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | numbers in formulas | real numbers, `dimensionless` when they have no units; SBML unit definitions on numbers not yet |
 | time and avogadro symbols | the variable of integration `time`, the number 6.02214179e23 |
 | delay and rateOf symbols | not yet |
-| initial assignment | not yet, a warning is logged |
+| initial assignment | evaluated to the initial value (not to NaN, a warning is logged) |
+| infinite or NaN value | the equation `x = INF` (or `-INF`, `NaN`), not for a state |
 | function definition | calls replaced by the body of the function |
 | local parameter of a kinetic law | variable `<reaction>_<parameter>` (numeric suffix when taken) |
 | event | not yet, a warning is logged |
