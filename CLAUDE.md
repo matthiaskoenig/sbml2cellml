@@ -58,8 +58,9 @@ on `develop` after the merge.
 
 - `sbml2cellml.py`: `convert_sbml2cellml(sbml_path, cellml_path=None, validate=True)`.
   One CellML component `sbml`, one variable per compartment, parameter and
-  species plus `time`, all `dimensionless`. Assignment rules become equations,
-  rate rules and kinetic laws differential equations; a concentration species
+  species plus `time`, all `dimensionless`. Assignment rules become equations
+  (their targets get no initial value), rate rules and kinetic laws
+  differential equations; a concentration species
   gets its reaction terms divided by the compartment. Events, initial
   assignments, algebraic rules and unset initial values (set to 1.0) are logged
   as warnings. The generated CellML is a fixed contract: tests compare the
