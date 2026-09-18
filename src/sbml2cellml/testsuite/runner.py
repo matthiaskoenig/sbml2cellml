@@ -14,12 +14,14 @@ from collections.abc import Callable
 from pathlib import Path
 
 import libsbml
+import pandas as pd
 
 from sbml2cellml import __version__, convert_cellml2sbml, convert_sbml2cellml
 from sbml2cellml.testsuite.cases import SUITE_VERSION, Case, skip_reason
 from sbml2cellml.testsuite.compare import (
     Comparison,
     compare,
+    is_informative,
     requested_frame,
     species_quantities,
     strip_brackets,
@@ -42,6 +44,12 @@ ABSOLUTE_TOLERANCE = 1e-12
 #: `CellMLValidationError`), reduced to its basename so the message does not
 #: depend on the machine it ran on
 _ABSOLUTE_PATH = re.compile(r"'[^']*/([^/']+)'")
+#: a number with more than six decimals (e.g. `0.0827801454102412`, from a
+#: solver diagnostic such as `CVODE: at t = 0.0827801454102412`); its exact
+#: value is an artifact of the solver and the machine it ran on, so it is
+#: rounded to three significant digits to keep the stored message stable
+#: across machines
+_LONG_DECIMAL = re.compile(r"\d+\.\d{7,}(?:e[+-]?\d+)?")
 
 
 def _message(err: BaseException) -> str:
@@ -49,16 +57,19 @@ def _message(err: BaseException) -> str:
 
     Absolute paths quoted in the exception text are reduced to their
     basename first, so the message does not depend on `$HOME` or the suite
-    location. When the first line ends with `:` and a second line exists
-    (e.g. a `CellMLValidationError` whose message is a wrapper line -
-    `CellML model '...' converted from '...' has N errors:` - followed by
-    the list of issues), the wrapper line is dropped entirely and the
-    message is built from the second line instead, so it carries the
-    complete first issue rather than a wrapper prefix cut short by however
-    many digits the error count has. Otherwise the first line is used as
-    is.
+    location. A number with more than six decimals is rounded to three
+    significant digits, so a solver diagnostic does not churn the committed
+    message across machines. When the first line ends with `:` and a second
+    line exists (e.g. a `CellMLValidationError` whose message is a wrapper
+    line - `CellML model '...' converted from '...' has N errors:` -
+    followed by the list of issues), the wrapper line is dropped entirely
+    and the message is built from the second line instead, so it carries
+    the complete first issue rather than a wrapper prefix cut short by
+    however many digits the error count has. Otherwise the first line is
+    used as is.
     """
     text = _ABSOLUTE_PATH.sub(r"'\1'", str(err))
+    text = _LONG_DECIMAL.sub(lambda m: f"{float(m.group()):.3g}", text)
     lines = text.strip().splitlines()
     first = lines[0] if lines else ""
     content = lines[1].strip() if first.endswith(":") and len(lines) > 1 else first
@@ -101,10 +112,31 @@ def run_case(
     Returns:
         The stage results; a stage whose input stage failed is `skip`. Every
         stage is `fail` when the case itself cannot be set up (e.g. an
-        unparsable SBML file).
+        unparsable SBML file). When `case.expected` is `None`, the reference
+        simulation becomes the expected results for `libopencor` and
+        `roundtrip` when it succeeds; when it fails, those two stages are
+        `skip` (`reference failed`) instead of running, and `reference`
+        itself has no `max_excess` (there is nothing to compare it with).
+        `CaseResult.informative` is `sbml2cellml.testsuite.compare.
+        is_informative` of the expected frame (the case's expected results,
+        or the reference once it is known), `None` when there is no expected
+        frame, i.e. `case.expected` is `None` and the reference failed.
     """
     assert case.sbml_path is not None
     settings = case.settings
+
+    def _result(
+        stages: dict[str, StageResult], informative: bool | None = None
+    ) -> CaseResult:
+        return CaseResult(
+            case.id,
+            list(case.test_tags),
+            list(case.component_tags),
+            stages,
+            name=case.name,
+            informative=informative,
+        )
+
     try:
         model = libsbml.readSBMLFromFile(str(case.sbml_path)).getModel()
         if model is None:
@@ -114,13 +146,12 @@ def run_case(
     except Exception as err:
         message = f"setup: {_message(err)}"[:MESSAGE_LENGTH]
         stages = {stage: StageResult("fail", message) for stage in STAGES}
-        return CaseResult(
-            case.id, list(case.test_tags), list(case.component_tags), stages
-        )
+        return _result(stages)
 
     stages: dict[str, StageResult] = {}
 
     # reference
+    expected: pd.DataFrame | None = case.expected
     try:
         result = roadrunner.call(
             "simulate_sbml",
@@ -132,11 +163,16 @@ def run_case(
             relative_tolerance=RELATIVE_TOLERANCE,
             absolute_tolerance=ABSOLUTE_TOLERANCE,
         )
-        stages["reference"] = _stage(
-            compare(strip_brackets(frame(result)), case.expected, settings)
-        )
+        reference = strip_brackets(frame(result))
+        if expected is None:
+            expected = reference
+            stages["reference"] = StageResult("pass")
+        else:
+            stages["reference"] = _stage(compare(reference, expected, settings))
     except Exception as err:
         stages["reference"] = StageResult("fail", _message(err))
+
+    informative = is_informative(expected, settings) if expected is not None else None
 
     # sbml2cellml
     cellml_path = work_dir / f"{case.id}.cellml"
@@ -147,25 +183,26 @@ def run_case(
         stages["sbml2cellml"] = StageResult("fail", _message(err))
         for stage in ("libopencor", "cellml2sbml", "roundtrip"):
             stages[stage] = StageResult("skip", "sbml2cellml failed")
-        return CaseResult(
-            case.id, list(case.test_tags), list(case.component_tags), stages
-        )
+        return _result(stages, informative)
 
     # libopencor
-    try:
-        result = libopencor.call(
-            "simulate_cellml",
-            cellml_path=str(cellml_path),
-            start=settings.start,
-            end=settings.end,
-            steps=settings.steps,
-            relative_tolerance=RELATIVE_TOLERANCE,
-            absolute_tolerance=ABSOLUTE_TOLERANCE,
-        )
-        df = requested_frame(frame(result), quantities, settings)
-        stages["libopencor"] = _stage(compare(df, case.expected, settings))
-    except Exception as err:
-        stages["libopencor"] = StageResult("fail", _message(err))
+    if expected is None:
+        stages["libopencor"] = StageResult("skip", "reference failed")
+    else:
+        try:
+            result = libopencor.call(
+                "simulate_cellml",
+                cellml_path=str(cellml_path),
+                start=settings.start,
+                end=settings.end,
+                steps=settings.steps,
+                relative_tolerance=RELATIVE_TOLERANCE,
+                absolute_tolerance=ABSOLUTE_TOLERANCE,
+            )
+            df = requested_frame(frame(result), quantities, settings)
+            stages["libopencor"] = _stage(compare(df, expected, settings))
+        except Exception as err:
+            stages["libopencor"] = StageResult("fail", _message(err))
 
     # cellml2sbml
     roundtrip_path = work_dir / f"{case.id}-roundtrip.xml"
@@ -175,29 +212,30 @@ def run_case(
     except Exception as err:
         stages["cellml2sbml"] = StageResult("fail", _message(err))
         stages["roundtrip"] = StageResult("skip", "cellml2sbml failed")
-        return CaseResult(
-            case.id, list(case.test_tags), list(case.component_tags), stages
-        )
+        return _result(stages, informative)
 
     # roundtrip
-    try:
-        selections = list(dict.fromkeys([*settings.variables, *compartments]))
-        result = roadrunner.call(
-            "simulate_sbml",
-            sbml=roundtrip_path.read_text(encoding="utf-8"),
-            selections=selections,
-            start=settings.start,
-            end=settings.end,
-            steps=settings.steps,
-            relative_tolerance=RELATIVE_TOLERANCE,
-            absolute_tolerance=ABSOLUTE_TOLERANCE,
-        )
-        df = requested_frame(frame(result), quantities, settings)
-        stages["roundtrip"] = _stage(compare(df, case.expected, settings))
-    except Exception as err:
-        stages["roundtrip"] = StageResult("fail", _message(err))
+    if expected is None:
+        stages["roundtrip"] = StageResult("skip", "reference failed")
+    else:
+        try:
+            selections = list(dict.fromkeys([*settings.variables, *compartments]))
+            result = roadrunner.call(
+                "simulate_sbml",
+                sbml=roundtrip_path.read_text(encoding="utf-8"),
+                selections=selections,
+                start=settings.start,
+                end=settings.end,
+                steps=settings.steps,
+                relative_tolerance=RELATIVE_TOLERANCE,
+                absolute_tolerance=ABSOLUTE_TOLERANCE,
+            )
+            df = requested_frame(frame(result), quantities, settings)
+            stages["roundtrip"] = _stage(compare(df, expected, settings))
+        except Exception as err:
+            stages["roundtrip"] = StageResult("fail", _message(err))
 
-    return CaseResult(case.id, list(case.test_tags), list(case.component_tags), stages)
+    return _result(stages, informative)
 
 
 def run_suite(

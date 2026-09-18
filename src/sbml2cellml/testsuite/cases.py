@@ -31,7 +31,9 @@ SUITE_URL = (
 CACHE_ENV = "SBML2CELLML_CACHE"
 #: name of a case directory
 CASE_ID = re.compile(r"^\d{5}$")
-#: component tags of SBML packages, none of which the converters support
+#: component tags of SBML packages, none of which the converters support;
+#: `layout` and `render` are deliberately absent - they only describe the
+#: diagram of the model, not its math, so a model using them still runs
 PACKAGE_PREFIXES = (
     "comp",
     "fbc",
@@ -40,8 +42,6 @@ PACKAGE_PREFIXES = (
     "distrib",
     "spatial",
     "groups",
-    "layout",
-    "render",
 )
 #: the only test type the harness runs
 TIME_COURSE = "TimeCourse"
@@ -219,16 +219,23 @@ def parse_model_info(text: str) -> dict[str, list[str]]:
 
 @dataclass(frozen=True)
 class Case:
-    """One semantic test case."""
+    """One semantic test case.
+
+    `expected` is `None` for a case without expected results (e.g. a
+    BioModels model): the reference simulation itself becomes the expected
+    results for the later stages. `name` is a display name (e.g. the model
+    name), empty for the SBML test suite cases.
+    """
 
     id: str
     case_dir: Path
     sbml_path: Path | None
     settings: Settings
-    expected: pd.DataFrame
+    expected: pd.DataFrame | None
     test_tags: tuple[str, ...]
     component_tags: tuple[str, ...]
     test_type: str
+    name: str = ""
 
     @property
     def packages(self) -> tuple[str, ...]:

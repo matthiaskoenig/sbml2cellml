@@ -9,6 +9,7 @@ from sbml2cellml.testsuite.cases import Settings
 from sbml2cellml.testsuite.compare import (
     CompareError,
     compare,
+    is_informative,
     requested_frame,
     species_quantities,
     strip_brackets,
@@ -75,6 +76,41 @@ def test_compare_nan_fails() -> None:
     result = expected()
     result.loc[1, "S1"] = np.nan
     assert not compare(result, expected(), SETTINGS).passed
+
+
+def test_compare_matching_special_values_pass() -> None:
+    special = pd.DataFrame(
+        {
+            "time": [0.0, 0.5, 1.0],
+            "S1": [np.inf, -np.inf, 1.0],
+            "S2": [np.nan, np.nan, 0.75],
+        }
+    )
+    comparison = compare(special.copy(), special, SETTINGS)
+    assert comparison.passed, comparison.message
+    assert comparison.max_excess <= 0
+
+
+def test_compare_nan_expected_against_number_fails() -> None:
+    # S2 is compared after the passing S1, the order in which a nan excess
+    # used to be dropped from the maximum
+    target = expected()
+    target.loc[0, "S2"] = np.nan
+    comparison = compare(expected(), target, SETTINGS)
+    assert not comparison.passed
+    assert comparison.message == "S2 exceeds the tolerance by inf"
+    assert comparison.max_excess == np.inf
+
+
+def test_compare_inf_expected_against_number_fails() -> None:
+    target = expected()
+    target.loc[1, "S1"] = np.inf
+    result = expected()
+    result.loc[1, "S1"] = 1e300
+    comparison = compare(result, target, SETTINGS)
+    assert not comparison.passed
+    assert comparison.message == "S1 exceeds the tolerance by inf"
+    assert comparison.max_excess == np.inf
 
 
 def test_compare_duplicate_columns_fails() -> None:
@@ -185,6 +221,32 @@ def test_requested_frame_no_time_column_raises() -> None:
     df = pd.DataFrame({"S1": [4.0, 2.0]})
     with pytest.raises(CompareError, match="no time column"):
         requested_frame(df, quantities, SETTINGS)
+
+
+def test_is_informative_constant_frame_is_not_informative() -> None:
+    constant = pd.DataFrame(
+        {"time": [0.0, 0.5, 1.0], "S1": [1.0, 1.0, 1.0], "S2": [0.0, 0.0, 0.0]}
+    )
+    assert is_informative(constant, SETTINGS) is False
+
+
+def test_is_informative_decaying_frame_is_informative() -> None:
+    assert is_informative(expected(), SETTINGS) is True
+
+
+def test_is_informative_ignores_nan_values() -> None:
+    # a ratio which is 0/0 at the start and moves afterwards
+    frame = pd.DataFrame(
+        {"time": [0.0, 0.5, 1.0], "S1": [np.nan, 0.5, 0.25], "S2": [0.0, 0.0, 0.0]}
+    )
+    assert is_informative(frame, SETTINGS) is True
+
+
+def test_is_informative_all_nan_is_not_informative() -> None:
+    frame = pd.DataFrame(
+        {"time": [0.0, 0.5, 1.0], "S1": [np.nan] * 3, "S2": [0.0, 0.0, 0.0]}
+    )
+    assert is_informative(frame, SETTINGS) is False
 
 
 def test_strip_brackets() -> None:

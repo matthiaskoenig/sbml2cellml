@@ -11,6 +11,7 @@
 - **Algebraic rules** are skipped with a warning.
 - **Stoichiometry** of reactants and products is not applied to the kinetic law.
 - **Unset initial values** are set to `1.0` with a warning instead of being computed from the rules.
+- **Assignment rule targets** keep the value of the SBML element as `initial_value`. libcellml then treats the rule as a nonlinear equation with that value as the initial guess, so the model is a DAE: libopencor reports the initial guess instead of the assigned value at the start time, and `cellml2sbml` rejects the model (`... is of type 'dae'`). The BioModels check shows it on the non-species variables it compares, e.g., `BIOMD0000000271`.
 
 ### CellML to SBML
 
@@ -24,5 +25,5 @@ The failure reasons of the [SBML test suite report](testsuite.md#failure-reasons
 
 1. **CellML to SBML** converter: done, see [Conversion](conversion.md#cellml-to-sbml).
 2. **SBML test suite roundtrip**: done, see [SBML test suite](testsuite.md).
-3. **BioModels check** of the curated models before every release.
+3. **BioModels check** of the curated models before every release: done, see [BioModels](biomodels.md).
 4. The conversion gaps above, driven by the failures of the test suite.

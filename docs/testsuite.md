@@ -11,11 +11,13 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 
 | stage | pass | fail | skip | pass rate |
 | --- | --- | --- | --- | --- |
-| reference | 1380 | 155 | 0 | 89.9% |
+| reference | 1384 | 151 | 0 | 90.2% |
 | sbml2cellml | 526 | 1009 | 0 | 34.3% |
 | libopencor | 137 | 389 | 1009 | 8.9% |
 | cellml2sbml | 458 | 68 | 1009 | 29.8% |
 | roundtrip | 137 | 321 | 1077 | 8.9% |
+
+135 of the 137 cases with a passing libopencor stage are informative: the reference moves more than the tolerance band for at least one variable.
 
 ## Failure reasons
 
@@ -25,13 +27,11 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | --- | --- | --- |
 | SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules. The formula '...' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelD | 101 | 00039, 00040, 00182, 00184, 00531, 00532, 00533, 00534, 00535, 00536, ... (101 in total) |
 | SimulationFailure: roadrunner: RuntimeError: Unable to support delay differential equations. The function '...' is not supported., at llvm::Value* rrllvm::ASTNo | 47 | 00937, 00938, 00939, 00940, 00941, 00942, 00943, 00981, 00982, 00984, ... (47 in total) |
-| numerical mismatch | 5 | 00950, 00951, 01511, 01811, 01813 |
 | duplicate column names | 2 | 01820, 01821 |
+| numerical mismatch | 1 | 01511 |
 
 | tags | cases | examples |
 | --- | --- | --- |
-| InitialValueReassigned | 3 | 00950, 01811, 01813 |
-|  | 1 | 00951 |
 | Amount, BoundaryCondition, EventIsPersistent, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment, VolumeConcentrationRates | 1 | 01511 |
 
 ### sbml2cellml
@@ -51,7 +51,7 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | reason | cases | examples |
 | --- | --- | --- |
 | numerical mismatch | 321 | 00003, 00007, 00008, 00009, 00011, 00012, 00013, 00016, 00017, 00022, ... (321 in total) |
-| SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable '...' in component '...' is underconstrained.; CellML file | Analyser: va | 68 | 00038, 00087, 00088, 00089, 00090, 00091, 00137, 00138, 00151, 00152, ... (68 in total) |
+| SimulationFailure: libopencor: SimulationError: file: CellML file \| Analyser: variable '...' in component '...' is underconstrained.; CellML file \| Analyser: va | 68 | 00038, 00087, 00088, 00089, 00090, 00091, 00137, 00138, 00151, 00152, ... (68 in total) |
 
 | tags | cases | examples |
 | --- | --- | --- |
@@ -171,1540 +171,1540 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 
 ## Cases
 
-| case | components | reference | sbml2cellml | libopencor | cellml2sbml | roundtrip |
-| --- | --- | --- | --- | --- | --- | --- |
-| 00001 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00002 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00003 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00004 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00005 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00006 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00007 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00008 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00009 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00010 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00011 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00012 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00013 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00014 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00015 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00016 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00017 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00018 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00019 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00020 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00021 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00022 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00023 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00024 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00025 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00026 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00027 | Compartment, Species, Reaction, InitialAssignment | pass | fail | skip | skip | skip |
-| 00028 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00029 | Compartment, Species, AssignmentRule | pass | fail | skip | skip | skip |
-| 00030 | Compartment, Species, AssignmentRule | pass | fail | skip | skip | skip |
-| 00031 | Compartment, Species, RateRule | pass | fail | skip | skip | skip |
-| 00032 | Compartment, Species, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00033 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00034 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00035 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00036 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00037 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00038 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00039 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00040 | Compartment, Species, Parameter, AlgebraicRule, RateRule | fail | pass | fail | pass | fail |
-| 00041 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00042 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00043 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00044 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00045 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00046 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00047 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00048 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00049 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00050 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00051 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00052 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00053 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00054 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00055 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00056 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00057 | Compartment, Species, Reaction | pass | fail | skip | skip | skip |
-| 00058 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00060 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00061 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00062 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00063 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00064 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00065 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00066 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00067 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00071 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00072 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00073 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00074 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00075 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00076 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00077 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00078 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip |
-| 00079 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip |
-| 00080 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip |
-| 00081 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00082 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00083 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00084 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00085 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00086 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00087 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00088 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00089 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00090 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00091 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00092 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00093 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00094 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00095 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00096 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00097 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00098 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00099 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00100 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00101 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00102 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00103 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00104 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00105 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00106 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00107 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00108 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00109 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00110 | Compartment, FunctionDefinition, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00111 | Compartment, FunctionDefinition, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00112 | Compartment, FunctionDefinition, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00113 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00114 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00115 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00116 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00117 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00118 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00119 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00120 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00121 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00122 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00123 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00124 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00125 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00126 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00127 | Compartment, Parameter, Reaction, Species, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00128 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00132 | Compartment, Species, Reaction, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00133 | Compartment, Parameter, Species, Reaction, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00135 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00136 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00137 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00138 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00139 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00140 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00141 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00142 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00143 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00144 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00145 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00146 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00147 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00148 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00149 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00150 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00151 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00152 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00153 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00154 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00155 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00156 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00157 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00158 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00159 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00160 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00161 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00162 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00163 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00164 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00165 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00166 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00167 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00168 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00169 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00170 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00171 | Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00172 | Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip |
-| 00173 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00174 | Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00175 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00176 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00177 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00178 | Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00179 | Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00180 | Parameter, InitialAssignment, RateRule | pass | fail | skip | skip | skip |
-| 00181 | Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00182 | Parameter, RateRule, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00183 | Parameter, FunctionDefinition, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00184 | Parameter, FunctionDefinition, RateRule, AlgebraicRule | fail | fail | skip | skip | skip |
-| 00185 | Parameter, InitialAssignment, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00186 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00187 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00188 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00189 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00190 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00191 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00192 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00193 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00194 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00195 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00196 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00197 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00198 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00199 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00200 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00201 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00202 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00203 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00204 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00205 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00206 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00207 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00208 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00209 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00210 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00211 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00212 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00213 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00214 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00215 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00216 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00217 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00218 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00219 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00220 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00221 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00222 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00223 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00224 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00225 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00226 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00227 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00228 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00229 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00230 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00231 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00232 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00233 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00234 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00235 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00236 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00237 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00238 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00239 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00240 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00241 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00242 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00243 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00244 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00245 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00246 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00247 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00248 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00249 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00250 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00251 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00252 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00253 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00254 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00255 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00256 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00257 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00258 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00259 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00260 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00261 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00262 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00263 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00264 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00265 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00266 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00267 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00268 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00269 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00270 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00271 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00272 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00273 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00274 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00275 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00276 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00277 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00278 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00279 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00280 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00281 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00282 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00283 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00284 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00285 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00286 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00287 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00288 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00289 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00290 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00291 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00292 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00293 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00294 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00295 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00296 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00297 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00298 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00299 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00300 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00301 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00302 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00303 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00304 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00305 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00306 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00307 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00308 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00309 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00310 | Compartment, Species, Reaction, Parameter, AssignmentRule, RateRule | pass | fail | skip | skip | skip |
-| 00311 | Compartment, Species, Reaction, Parameter, AssignmentRule, RateRule | pass | fail | skip | skip | skip |
-| 00312 | Compartment, Species, Reaction, Parameter, AssignmentRule, RateRule | pass | fail | skip | skip | skip |
-| 00313 | Compartment, Species, RateRule, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00314 | Compartment, Species, RateRule, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00315 | Compartment, Species, RateRule, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00316 | Compartment, Species, RateRule, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00317 | Compartment, Species, RateRule, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00318 | Compartment, Species, RateRule, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00319 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00320 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00321 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00322 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00323 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00324 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00325 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00326 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00327 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00328 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00329 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00330 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00331 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass |
-| 00332 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00333 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00334 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass |
-| 00335 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | fail | pass | fail |
-| 00336 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | fail | pass | fail |
-| 00337 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | fail | pass | fail |
-| 00338 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00339 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00340 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00341 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00342 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00343 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00344 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00345 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00346 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00347 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00348 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00349 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00350 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00351 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00352 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00353 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00354 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail |
-| 00355 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail |
-| 00356 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail |
-| 00357 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail |
-| 00358 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail |
-| 00359 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail |
-| 00360 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00361 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00362 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00363 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00364 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00365 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00366 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00367 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00368 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00369 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00370 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00371 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00372 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00373 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00374 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00375 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00376 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00377 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00378 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00379 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00380 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00381 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00382 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00383 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00384 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00385 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00386 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00387 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00389 | Compartment, Species, Reaction, EventNoDelay | pass | fail | skip | skip | skip |
-| 00390 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00392 | Compartment, Species, Reaction, EventNoDelay | pass | fail | skip | skip | skip |
-| 00393 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00395 | Compartment, Species, Reaction, EventNoDelay | pass | fail | skip | skip | skip |
-| 00396 | Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip |
-| 00397 | Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip |
-| 00398 | Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip |
-| 00399 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00400 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00401 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00402 | Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip |
-| 00403 | Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip |
-| 00404 | Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip |
-| 00405 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00406 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00407 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00408 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00409 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00410 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00411 | Compartment, Species, Reaction, Parameter, EventWithDelay, FunctionDefinition | pass | pass | fail | pass | fail |
-| 00412 | Compartment, Species, Reaction, Parameter, EventWithDelay, FunctionDefinition | pass | pass | fail | pass | fail |
-| 00413 | Compartment, Species, Reaction, Parameter, EventWithDelay, FunctionDefinition | pass | pass | fail | pass | fail |
-| 00414 | Compartment, Species, Reaction, Parameter, EventWithDelay, FunctionDefinition | pass | pass | fail | pass | fail |
-| 00415 | Compartment, Species, Reaction, Parameter, EventWithDelay, FunctionDefinition | pass | pass | fail | pass | fail |
-| 00416 | Compartment, Species, Reaction, Parameter, EventWithDelay, FunctionDefinition | pass | pass | fail | pass | fail |
-| 00417 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00418 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00419 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00420 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00421 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00422 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00423 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00424 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00425 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00426 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00427 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00428 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00429 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00430 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00431 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00432 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00433 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00434 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00435 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00436 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00437 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00438 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00439 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00440 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00441 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00442 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00443 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00444 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00446 | Compartment, Species, Reaction, EventWithDelay | pass | fail | skip | skip | skip |
-| 00447 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00449 | Compartment, Species, Reaction, EventWithDelay | pass | fail | skip | skip | skip |
-| 00450 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00452 | Compartment, Species, Reaction, EventWithDelay | pass | fail | skip | skip | skip |
-| 00453 | Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip |
-| 00454 | Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip |
-| 00455 | Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip |
-| 00456 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00457 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00458 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00459 | Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip |
-| 00460 | Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip |
-| 00461 | Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip |
-| 00462 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00463 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00464 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00465 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00466 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00467 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00468 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00469 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00470 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00471 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00472 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00473 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00474 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00475 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00476 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00477 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00478 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00479 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00480 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00481 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00482 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00483 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00484 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00485 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00486 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00487 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00488 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00489 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00490 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00491 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00492 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00493 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00494 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00495 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00496 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00497 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00498 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00499 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00500 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00501 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00502 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00503 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00504 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00505 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00506 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00507 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00508 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00509 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00510 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00511 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00512 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00513 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00514 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00515 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00522 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip |
-| 00523 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip |
-| 00524 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip |
-| 00525 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00526 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00527 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00528 | Compartment, Species, Reaction, Parameter, InitialAssignment, FunctionDefinition | pass | pass | fail | pass | fail |
-| 00529 | Compartment, Species, Reaction, Parameter, InitialAssignment, FunctionDefinition | pass | pass | fail | pass | fail |
-| 00530 | Compartment, Species, Reaction, Parameter, InitialAssignment, FunctionDefinition | pass | pass | pass | pass | pass |
-| 00531 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00532 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | pass | pass | pass |
-| 00533 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00534 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00535 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00536 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00537 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00538 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00539 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | pass | pass | pass |
-| 00540 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | pass | pass | pass |
-| 00541 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | pass | pass | pass |
-| 00542 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | pass | pass | pass |
-| 00543 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00544 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | pass | pass | pass |
-| 00545 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | pass | pass | pass |
-| 00546 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00547 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | pass | pass | pass |
-| 00548 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00549 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00550 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00551 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00552 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00553 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00554 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00555 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00556 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00557 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00558 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00559 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00560 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00565 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 00566 | Compartment, Species, Reaction, AlgebraicRule | fail | fail | skip | skip | skip |
-| 00567 | Compartment, Species, Reaction, Parameter, AlgebraicRule, FunctionDefinition | fail | pass | fail | pass | fail |
-| 00568 | Compartment, Species, Reaction, Parameter, AlgebraicRule, FunctionDefinition | fail | pass | pass | pass | pass |
-| 00569 | Compartment, Species, Reaction, Parameter, AlgebraicRule, FunctionDefinition | fail | pass | fail | pass | fail |
-| 00570 | Compartment, Species, Reaction, Parameter, AlgebraicRule, FunctionDefinition | fail | pass | fail | pass | fail |
-| 00571 | Compartment, Species, Reaction, Parameter, AlgebraicRule, FunctionDefinition | fail | pass | fail | pass | fail |
-| 00572 | Compartment, Species, Reaction, Parameter, AlgebraicRule, FunctionDefinition | fail | pass | pass | pass | pass |
-| 00573 | Parameter, RateRule, AlgebraicRule | fail | fail | skip | skip | skip |
-| 00574 | Parameter, RateRule, AlgebraicRule | fail | fail | skip | skip | skip |
-| 00575 | Parameter, RateRule, AlgebraicRule | fail | fail | skip | skip | skip |
-| 00576 | Parameter, RateRule, AlgebraicRule | fail | fail | skip | skip | skip |
-| 00577 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00578 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00579 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00580 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00581 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00582 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00583 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00584 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00585 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00586 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00587 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00588 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00589 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00590 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00591 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00592 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00593 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00594 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00595 | Compartment, Species, Reaction | pass | fail | skip | skip | skip |
-| 00596 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 00598 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00599 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00600 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00601 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00602 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00603 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00604 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00605 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00606 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00607 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00608 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00611 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00612 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 00613 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip |
-| 00614 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip |
-| 00615 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip |
-| 00616 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00617 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00618 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00619 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip |
-| 00620 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip |
-| 00621 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip |
-| 00622 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip |
-| 00623 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip |
-| 00624 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip |
-| 00625 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00626 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00627 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00628 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule, FunctionDefinition | fail | fail | skip | skip | skip |
-| 00629 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule, FunctionDefinition | fail | fail | skip | skip | skip |
-| 00630 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule, FunctionDefinition | fail | fail | skip | skip | skip |
-| 00631 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00632 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00633 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00634 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00635 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00636 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00637 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00638 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00639 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00640 | Compartment, Species, Reaction, Parameter, RateRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00641 | Compartment, Species, Reaction, Parameter, RateRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00642 | Compartment, Species, Reaction, Parameter, RateRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00643 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00644 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00645 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00646 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip |
-| 00647 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip |
-| 00648 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip |
-| 00649 | Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip |
-| 00650 | Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip |
-| 00651 | Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip |
-| 00652 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip |
-| 00653 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip |
-| 00654 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip |
-| 00655 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip |
-| 00656 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip |
-| 00657 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip |
-| 00658 | Compartment, Species, Reaction, Parameter, AlgebraicRule, InitialAssignment | fail | pass | fail | pass | fail |
-| 00659 | Compartment, Species, Reaction, Parameter, AlgebraicRule, InitialAssignment | fail | pass | fail | pass | fail |
-| 00660 | Compartment, Species, Reaction, Parameter, AlgebraicRule, InitialAssignment | fail | pass | fail | pass | fail |
-| 00661 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay | fail | pass | fail | pass | fail |
-| 00662 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay | fail | pass | fail | pass | fail |
-| 00663 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay | fail | pass | fail | pass | fail |
-| 00664 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay | fail | pass | fail | pass | fail |
-| 00665 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay | fail | pass | fail | pass | fail |
-| 00666 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay | fail | pass | fail | pass | fail |
-| 00667 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip |
-| 00668 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip |
-| 00669 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip |
-| 00670 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00671 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00672 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00673 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip |
-| 00674 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip |
-| 00675 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip |
-| 00676 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00677 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00678 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00679 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip |
-| 00680 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip |
-| 00681 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip |
-| 00682 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip |
-| 00683 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip |
-| 00684 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip |
-| 00685 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip |
-| 00686 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00687 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip |
-| 00688 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00689 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip |
-| 00690 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip |
-| 00691 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip |
-| 00692 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip |
-| 00693 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00694 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00695 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip |
-| 00696 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip |
-| 00697 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00698 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00699 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip |
-| 00700 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip |
-| 00701 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip |
-| 00702 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip |
-| 00703 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip |
-| 00704 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00705 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip |
-| 00706 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00707 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip |
-| 00708 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip |
-| 00709 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00710 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00711 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00712 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00713 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00714 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00715 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00716 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00717 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00718 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00719 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00720 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00721 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00722 | Compartment, Species, Reaction, Parameter, RateRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00723 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip |
-| 00724 | Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip |
-| 00732 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00733 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00734 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 00735 | Compartment, Species, Reaction, Parameter, RateRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00736 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip |
-| 00737 | Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip |
-| 00738 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip |
-| 00739 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip |
-| 00740 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00741 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00742 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00743 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00744 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00745 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00746 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00747 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00748 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00749 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip |
-| 00750 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip |
-| 00751 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00752 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00753 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 00754 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, InitialAssignment | pass | pass | fail | pass | fail |
-| 00755 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, InitialAssignment | pass | pass | fail | pass | fail |
-| 00756 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, InitialAssignment | pass | pass | fail | pass | fail |
-| 00757 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, EventWithDelay | pass | pass | fail | pass | fail |
-| 00758 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, EventWithDelay | pass | pass | fail | pass | fail |
-| 00759 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, EventWithDelay | pass | pass | fail | pass | fail |
-| 00760 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay, FunctionDefinition | fail | pass | fail | pass | fail |
-| 00761 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay, FunctionDefinition | fail | pass | fail | pass | fail |
-| 00762 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay, FunctionDefinition | fail | pass | fail | pass | fail |
-| 00763 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00764 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00765 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00766 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00767 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00768 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00769 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip |
-| 00770 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip |
-| 00771 | Compartment, Species, Reaction, Parameter, EventWithDelay, InitialAssignment | pass | pass | fail | pass | fail |
-| 00772 | Compartment, Species, Reaction, Parameter, EventWithDelay, InitialAssignment | pass | pass | fail | pass | fail |
-| 00773 | Compartment, Species, Reaction, Parameter, EventWithDelay, InitialAssignment | pass | pass | fail | pass | fail |
-| 00774 | Compartment, Species, Reaction, Parameter, EventWithDelay, EventNoDelay | pass | pass | fail | pass | fail |
-| 00775 | Compartment, Species, Reaction, Parameter, EventWithDelay, EventNoDelay | pass | pass | fail | pass | fail |
-| 00776 | Compartment, Species, Reaction, Parameter, EventWithDelay, EventNoDelay | pass | pass | fail | pass | fail |
-| 00777 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay, AlgebraicRule | fail | pass | fail | fail | skip |
-| 00778 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay, InitialAssignment | fail | pass | fail | pass | fail |
-| 00779 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay, InitialAssignment | fail | pass | fail | pass | fail |
-| 00780 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay, InitialAssignment | fail | pass | fail | pass | fail |
-| 00781 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00782 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00783 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00784 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00785 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00786 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00787 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00788 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00789 | Compartment, Species, Reaction, Parameter, EventNoDelay, InitialAssignment | pass | pass | fail | pass | fail |
-| 00790 | Compartment, Species, Reaction, Parameter, EventNoDelay, InitialAssignment | pass | pass | fail | pass | fail |
-| 00791 | Compartment, Species, Reaction, Parameter, EventNoDelay, InitialAssignment | pass | pass | fail | pass | fail |
-| 00792 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00793 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00794 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00795 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00796 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00797 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00798 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass |
-| 00799 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00800 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00801 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00802 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00803 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00804 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00805 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00806 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00807 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00808 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 00809 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00810 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00811 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00812 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00813 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00814 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00815 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00816 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00817 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00818 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00819 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00820 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00821 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00822 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00823 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00824 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00825 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00826 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00830 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 00831 | Compartment, Species, Reaction | pass | fail | skip | skip | skip |
-| 00832 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00833 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00834 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00835 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip |
-| 00836 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip |
-| 00837 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip |
-| 00838 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00839 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00840 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00841 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00842 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00843 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00844 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | fail | skip | skip | skip |
-| 00845 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | fail | skip | skip | skip |
-| 00846 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | fail | skip | skip | skip |
-| 00847 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | fail | skip | skip | skip |
-| 00848 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | fail | skip | skip | skip |
-| 00849 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | fail | skip | skip | skip |
-| 00850 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | fail | skip | skip | skip |
-| 00851 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00852 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00853 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00854 | Compartment, Species, Reaction, Parameter, FunctionDefinition, CSymbolTime | pass | fail | skip | skip | skip |
-| 00855 | Compartment, Species, Reaction, Parameter, FunctionDefinition, CSymbolTime | pass | fail | skip | skip | skip |
-| 00856 | Compartment, Species, Reaction, Parameter, FunctionDefinition, CSymbolTime | pass | fail | skip | skip | skip |
-| 00857 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00858 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00859 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00860 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00861 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00862 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00863 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00864 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00865 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00866 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00867 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00868 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00869 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00876 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | fail | skip | skip | skip |
-| 00877 | Compartment, Species, Reaction, Parameter, CSymbolTime, InitialAssignment | pass | pass | fail | pass | fail |
-| 00878 | Compartment, Species, CSymbolTime, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00879 | Compartment, Species, CSymbolTime, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail |
-| 00880 | Compartment, Species, CSymbolTime, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00881 | Compartment, Species, CSymbolTime, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00882 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00883 | Compartment, Species, Reaction, Parameter, CSymbolTime, EventNoDelay | pass | pass | fail | pass | fail |
-| 00884 | Compartment, Species, Reaction, CSymbolTime, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00885 | Compartment, Species, Reaction, CSymbolTime, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00886 | Compartment, Species, CSymbolTime, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00887 | Compartment, Species, Reaction, Parameter, CSymbolTime, EventWithDelay, EventNoDelay | pass | pass | fail | pass | fail |
-| 00888 | Compartment, Species, CSymbolTime, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00889 | Compartment, Species, Reaction, Parameter, CSymbolTime, RateRule | pass | fail | skip | skip | skip |
-| 00890 | Compartment, Species, Reaction, CSymbolTime, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00891 | Parameter, RateRule, CSymbolTime | pass | fail | skip | skip | skip |
-| 00892 | Parameter, RateRule, CSymbolTime | pass | fail | skip | skip | skip |
-| 00893 | Parameter, RateRule, CSymbolTime | pass | fail | skip | skip | skip |
-| 00894 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00895 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00896 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00897 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 00901 | Compartment, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00902 | Compartment, RateRule | pass | fail | skip | skip | skip |
-| 00903 | Compartment, RateRule | pass | fail | skip | skip | skip |
-| 00904 | Compartment, RateRule | pass | fail | skip | skip | skip |
-| 00905 | Compartment, RateRule | pass | fail | skip | skip | skip |
-| 00906 | Compartment, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00907 | Compartment, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00908 | Compartment, RateRule | pass | fail | skip | skip | skip |
-| 00909 | Compartment, RateRule | pass | fail | skip | skip | skip |
-| 00910 | Compartment, RateRule | pass | fail | skip | skip | skip |
-| 00911 | Compartment, RateRule, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00912 | Compartment, RateRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00913 | Compartment, RateRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00914 | Compartment, RateRule, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00915 | Compartment, RateRule, FunctionDefinition | pass | fail | skip | skip | skip |
-| 00916 | Compartment, RateRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00917 | Compartment, RateRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00918 | Compartment, RateRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00919 | Compartment, RateRule, InitialAssignment | pass | fail | skip | skip | skip |
-| 00920 | Parameter, InitialAssignment | pass | fail | skip | skip | skip |
-| 00921 | Parameter, InitialAssignment | pass | fail | skip | skip | skip |
-| 00922 | Parameter, InitialAssignment | pass | fail | skip | skip | skip |
-| 00923 | Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00924 | Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00925 | Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 00926 | Compartment, Species, RateRule | pass | fail | skip | skip | skip |
-| 00927 | Compartment, Species, RateRule | pass | fail | skip | skip | skip |
-| 00928 | Compartment, CSymbolTime, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 00929 | Compartment, CSymbolTime, Species, Reaction, Parameter, EventNoDelay | pass | pass | pass | pass | pass |
-| 00930 | Compartment, CSymbolTime, Species, EventNoDelay, EventPriority | pass | fail | skip | skip | skip |
-| 00931 | Compartment, CSymbolTime, Species, EventNoDelay, EventPriority | pass | fail | skip | skip | skip |
-| 00932 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | pass | pass | pass |
-| 00933 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 00934 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Species | pass | fail | skip | skip | skip |
-| 00935 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Species | pass | fail | skip | skip | skip |
-| 00936 | AssignmentRule, CSymbolTime, Compartment, EventWithDelay, Species | pass | fail | skip | skip | skip |
-| 00937 | AssignmentRule, CSymbolDelay, CSymbolTime, Parameter | fail | fail | skip | skip | skip |
-| 00938 | AssignmentRule, CSymbolDelay, CSymbolTime, Compartment, InitialAssignment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 00939 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 00940 | AssignmentRule, CSymbolDelay, CSymbolTime, Compartment, InitialAssignment, Parameter, Species | fail | fail | skip | skip | skip |
-| 00941 | AssignmentRule, CSymbolDelay, CSymbolTime, InitialAssignment, Parameter | fail | fail | skip | skip | skip |
-| 00942 | AssignmentRule, CSymbolDelay, CSymbolTime, Compartment, InitialAssignment, Parameter, Species | fail | fail | skip | skip | skip |
-| 00943 | AssignmentRule, CSymbolDelay, CSymbolTime, InitialAssignment, Parameter | fail | fail | skip | skip | skip |
-| 00944 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 00945 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 00946 | AssignmentRule, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | fail | skip |
-| 00947 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 00948 | AssignmentRule, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | fail | skip |
-| 00949 | Parameter | pass | fail | skip | skip | skip |
-| 00950 | InitialAssignment, Parameter | fail | fail | skip | skip | skip |
-| 00951 | Parameter | fail | fail | skip | skip | skip |
-| 00952 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 00953 | AssignmentRule, CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 00954 | AssignmentRule, Parameter | pass | fail | skip | skip | skip |
-| 00955 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip |
-| 00956 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 00957 | AssignmentRule, Parameter | pass | fail | skip | skip | skip |
-| 00958 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 00959 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip |
-| 00960 | CSymbolAvogadro, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 00961 | AssignmentRule, CSymbolAvogadro, Parameter | pass | fail | skip | skip | skip |
-| 00962 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 00963 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 00964 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 00965 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 00966 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, FunctionDefinition, Parameter | pass | fail | skip | skip | skip |
-| 00967 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 00969 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 00970 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00971 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 00972 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 00974 | AssignmentRule, Compartment, InitialAssignment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 00975 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 00976 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 00977 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 00978 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 00979 | CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 00980 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 00981 | AssignmentRule, CSymbolDelay, CSymbolTime, Compartment, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 00982 | AssignmentRule, CSymbolDelay, CSymbolTime, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 00983 | AlgebraicRule, AssignmentRule, CSymbolDelay, CSymbolTime, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 00984 | AssignmentRule, CSymbolDelay, CSymbolTime, Compartment, EventNoDelay, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 00985 | AssignmentRule, CSymbolDelay, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 00995 | EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 00996 | EventNoDelay, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 00997 | EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 00998 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 00999 | AssignmentRule, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01000 | AssignmentRule, CSymbolAvogadro, CSymbolTime, Compartment, EventNoDelay, EventPriority, EventWithDelay, FunctionDefinition, InitialAssignment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01001 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 01002 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 01003 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 01004 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 01005 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 01006 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 01007 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 01008 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01009 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 01010 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 01011 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 01012 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 01013 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass |
-| 01014 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 01015 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 01016 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass |
-| 01017 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01018 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01019 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01020 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01021 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01022 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01023 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01024 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01025 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01026 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01030 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01031 | Compartment, Species, Reaction | pass | fail | skip | skip | skip |
-| 01032 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 01033 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 01034 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip |
-| 01035 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip |
-| 01036 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip |
-| 01037 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip |
-| 01038 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 01039 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 01040 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip |
-| 01041 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01042 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01043 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01044 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | fail | skip | skip | skip |
-| 01045 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | fail | skip | skip | skip |
-| 01046 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | fail | skip | skip | skip |
-| 01047 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | fail | skip | skip | skip |
-| 01048 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | fail | skip | skip | skip |
-| 01049 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | fail | skip | skip | skip |
-| 01050 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | fail | skip | skip | skip |
-| 01054 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | fail | skip | skip | skip |
-| 01055 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01056 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01057 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01058 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01059 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01060 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01061 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01062 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01063 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01064 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01065 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 01066 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 01067 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 01068 | InitialAssignment, Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | pass | fail | pass | fail |
-| 01069 | InitialAssignment, Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | pass | fail | pass | fail |
-| 01070 | InitialAssignment, Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | pass | fail | pass | fail |
-| 01071 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 01072 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 01073 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail |
-| 01074 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 01075 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 01076 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail |
-| 01077 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 01078 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 01079 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 01080 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 01081 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 01082 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail |
-| 01083 | InitialAssignment, Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 01084 | InitialAssignment, Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 01085 | InitialAssignment, Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 01086 | InitialAssignment, Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail |
-| 01087 | InitialAssignment, Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 01088 | InitialAssignment, Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip |
-| 01089 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01090 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01091 | InitialAssignment, Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip |
-| 01092 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip |
-| 01093 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01094 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip |
-| 01095 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip |
-| 01096 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01097 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01098 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01099 | InitialAssignment, Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip |
-| 01100 | Compartment, Species, Reaction, Parameter, CSymbolTime, InitialAssignment | pass | fail | skip | skip | skip |
-| 01101 | Compartment, Species, Reaction, Parameter, CSymbolTime, InitialAssignment | pass | fail | skip | skip | skip |
-| 01102 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 01103 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01104 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01105 | AssignmentRule, Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01106 | AssignmentRule, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01107 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01108 | AlgebraicRule, AssignmentRule, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01109 | AssignmentRule, CSymbolTime, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01110 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip |
-| 01111 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip |
-| 01112 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01113 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01114 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01115 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01116 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01117 | Compartment, RateRule, Species | pass | fail | skip | skip | skip |
-| 01118 | Compartment, RateRule, Species | pass | fail | skip | skip | skip |
-| 01119 | CSymbolTime, EventPriority, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01120 | Compartment, EventWithDelay, RateRule, Species | pass | fail | skip | skip | skip |
-| 01121 | AssignmentRule, CSymbolAvogadro, CSymbolTime, Compartment, FunctionDefinition, InitialAssignment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01122 | Compartment, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01123 | Compartment, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01184 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 01185 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 01197 | Compartment | pass | fail | skip | skip | skip |
-| 01198 | AssignmentRule, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01199 | AssignmentRule, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01200 | AssignmentRule, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01201 | AssignmentRule, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01202 | AssignmentRule, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01203 | AssignmentRule, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01204 | AssignmentRule, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01205 | AssignmentRule, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01206 | AssignmentRule, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01207 | AssignmentRule, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01208 | AssignmentRule, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01209 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01210 | AssignmentRule, Parameter | pass | fail | skip | skip | skip |
-| 01211 | CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 01212 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 01213 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01214 | CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 01215 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01216 | AssignmentRule, Parameter | pass | fail | skip | skip | skip |
-| 01217 | AssignmentRule, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01218 | AssignmentRule, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01219 | Compartment, RateRule, Species | pass | fail | skip | skip | skip |
-| 01220 | Compartment, RateRule, Species | pass | fail | skip | skip | skip |
-| 01221 | Compartment, RateRule, Species | pass | fail | skip | skip | skip |
-| 01222 | CSymbolTime, Compartment, EventNoDelay, RateRule, Species | pass | fail | skip | skip | skip |
-| 01223 | AssignmentRule, CSymbolTime, Compartment, RateRule, Species | pass | fail | skip | skip | skip |
-| 01224 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01225 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01226 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01227 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 01228 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 01229 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 01230 | CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 01231 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01232 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01233 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01234 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01235 | AssignmentRule, Parameter | pass | fail | skip | skip | skip |
-| 01236 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01237 | CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 01238 | EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 01239 | EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 01240 | CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 01241 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01242 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 01243 | CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 01244 | AlgebraicRule, Parameter | pass | fail | skip | skip | skip |
-| 01245 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01246 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01247 | Parameter | pass | fail | skip | skip | skip |
-| 01248 | CSymbolRateOf, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01249 | CSymbolRateOf, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01250 | CSymbolRateOf, InitialAssignment, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01251 | CSymbolRateOf, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01252 | CSymbolRateOf, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01253 | CSymbolRateOf, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01254 | CSymbolRateOf, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01255 | AssignmentRule, CSymbolRateOf, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01256 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01257 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01258 | CSymbolRateOf, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01259 | CSymbolRateOf, Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01260 | CSymbolRateOf, CSymbolTime, EventNoDelay, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01261 | AssignmentRule, CSymbolRateOf, EventNoDelay, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01262 | CSymbolRateOf, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01263 | CSymbolRateOf, CSymbolTime, EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01264 | CSymbolRateOf, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01265 | CSymbolRateOf, Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01266 | CSymbolRateOf, CSymbolTime, EventNoDelay, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01267 | CSymbolRateOf, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01268 | CSymbolRateOf, CSymbolTime, EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01269 | CSymbolRateOf, CSymbolTime, Compartment, EventPriority, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01270 | CSymbolRateOf, CSymbolTime, Compartment, EventPriority, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01271 | FunctionDefinition, Parameter | pass | fail | skip | skip | skip |
-| 01272 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01273 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01274 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01275 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01276 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01277 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip |
-| 01278 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip |
-| 01279 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip |
-| 01280 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip |
-| 01281 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip |
-| 01282 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01283 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01284 | EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 01285 | CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 01286 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 01287 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01288 | Compartment, Reaction, Species | pass | pass | pass | pass | pass |
-| 01289 | FunctionDefinition, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01290 | Parameter, RateRule | pass | pass | pass | pass | pass |
-| 01291 | AssignmentRule, Parameter | pass | fail | skip | skip | skip |
-| 01292 | AlgebraicRule, Parameter | fail | fail | skip | skip | skip |
-| 01293 | CSymbolRateOf, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01294 | CSymbolRateOf, CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01295 | CSymbolRateOf, CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01296 | CSymbolRateOf, Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01297 | CSymbolRateOf, CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01298 | CSymbolRateOf, CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01299 | CSymbolRateOf, CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01300 | InitialAssignment, Parameter, Reaction | pass | fail | skip | skip | skip |
-| 01301 | AssignmentRule, Parameter, Reaction | pass | fail | skip | skip | skip |
-| 01302 | Parameter, RateRule, Reaction | pass | fail | skip | skip | skip |
-| 01303 | CSymbolTime, EventNoDelay, Parameter, Reaction | pass | fail | skip | skip | skip |
-| 01304 | CSymbolTime, EventNoDelay, Parameter, Reaction | pass | fail | skip | skip | skip |
-| 01305 | CSymbolTime, EventWithDelay, Parameter, Reaction | pass | fail | skip | skip | skip |
-| 01306 | AssignmentRule, CSymbolTime, Parameter, Reaction | pass | fail | skip | skip | skip |
-| 01307 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01308 | Compartment, RateRule, Species | pass | fail | skip | skip | skip |
-| 01309 | Compartment, RateRule, Species | pass | fail | skip | skip | skip |
-| 01310 | Compartment | pass | fail | skip | skip | skip |
-| 01311 | FunctionDefinition, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01312 | FunctionDefinition, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01313 | FunctionDefinition, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01314 | FunctionDefinition, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01315 | FunctionDefinition, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01316 | CSymbolAvogadro, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01317 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip |
-| 01318 | AssignmentRule, CSymbolDelay, CSymbolTime, Parameter | fail | fail | skip | skip | skip |
-| 01319 | AssignmentRule, CSymbolDelay, CSymbolTime, Parameter | fail | fail | skip | skip | skip |
-| 01320 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01321 | AssignmentRule, CSymbolRateOf, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01322 | AssignmentRule, CSymbolRateOf, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01323 | CSymbolAvogadro, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01324 | EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01325 | EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01326 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01327 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01328 | CSymbolTime, EventNoDelay, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01329 | CSymbolTime, EventNoDelay, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01330 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 01331 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 01332 | EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 01333 | EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 01334 | EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 01335 | EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01336 | EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 01337 | EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 01338 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01339 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01340 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 01341 | Compartment, Species | pass | fail | skip | skip | skip |
-| 01342 | Compartment, Species | pass | fail | skip | skip | skip |
-| 01343 | AssignmentRule, CSymbolTime, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01395 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01400 | AssignmentRule, CSymbolDelay, CSymbolRateOf, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01401 | AssignmentRule, CSymbolDelay, CSymbolRateOf, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01402 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01403 | AssignmentRule, CSymbolDelay, CSymbolRateOf, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01404 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01405 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01406 | AssignmentRule, CSymbolDelay, CSymbolRateOf, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01407 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01408 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01409 | AssignmentRule, CSymbolDelay, CSymbolRateOf, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01410 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01411 | AssignmentRule, CSymbolDelay, Compartment, FunctionDefinition, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01412 | AssignmentRule, CSymbolDelay, FunctionDefinition, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01413 | AssignmentRule, CSymbolDelay, FunctionDefinition, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01414 | CSymbolDelay, Compartment, Parameter, RateRule, Reaction, Species | fail | fail | skip | skip | skip |
-| 01415 | CSymbolDelay, Compartment, Parameter, RateRule, Reaction, Species | fail | fail | skip | skip | skip |
-| 01416 | AssignmentRule, CSymbolDelay, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01417 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01418 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01419 | AssignmentRule, CSymbolDelay, Compartment, Parameter, RateRule, Reaction, Species | fail | fail | skip | skip | skip |
-| 01420 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01421 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01422 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01423 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01424 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01425 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01426 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01427 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01428 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01429 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01430 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01431 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01432 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01433 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01434 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01436 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01438 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01440 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01442 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01444 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01445 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01446 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01447 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01448 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01449 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01450 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01451 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01452 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01453 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01454 | AssignmentRule, CSymbolDelay, Compartment, Parameter, RateRule, Species | fail | fail | skip | skip | skip |
-| 01455 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01456 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01457 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01458 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01459 | CSymbolRateOf, Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01460 | CSymbolRateOf, Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01461 | AssignmentRule, CSymbolRateOf, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01462 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01463 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01464 | Compartment, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01465 | AssignmentRule, Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01466 | AssignmentRule, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 01478 | AssignmentRule, Compartment, FunctionDefinition, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01479 | AlgebraicRule, CSymbolAvogadro, Parameter | fail | fail | skip | skip | skip |
-| 01480 | AssignmentRule, CSymbolDelay, Compartment, Reaction, Species | fail | fail | skip | skip | skip |
-| 01482 | AlgebraicRule, CSymbolRateOf, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01483 | AlgebraicRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01484 | AlgebraicRule, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01485 | AssignmentRule, FunctionDefinition, Parameter | pass | fail | skip | skip | skip |
-| 01486 | AssignmentRule, FunctionDefinition, Parameter | pass | fail | skip | skip | skip |
-| 01487 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip |
-| 01488 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip |
-| 01489 | FunctionDefinition, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01490 | AssignmentRule, FunctionDefinition, Parameter | pass | fail | skip | skip | skip |
-| 01491 | AssignmentRule, FunctionDefinition, Parameter | pass | fail | skip | skip | skip |
-| 01492 | AssignmentRule, FunctionDefinition, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01493 | AssignmentRule, FunctionDefinition, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01494 | FunctionDefinition, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01495 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip |
-| 01496 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip |
-| 01497 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip |
-| 01498 | AssignmentRule, Compartment, InitialAssignment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01499 | AlgebraicRule, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01500 | AlgebraicRule, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01501 | AlgebraicRule, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01502 | AlgebraicRule, Parameter | fail | fail | skip | skip | skip |
-| 01503 | AlgebraicRule, Parameter | fail | fail | skip | skip | skip |
-| 01504 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01505 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01506 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01507 | AssignmentRule, CSymbolTime, Compartment, EventWithDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01508 | AssignmentRule, CSymbolTime, Compartment, EventWithDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01509 | AssignmentRule, CSymbolTime, Compartment, EventWithDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01510 | AssignmentRule, Compartment, EventNoDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01511 | AssignmentRule, Compartment, EventWithDelay, Parameter, RateRule, Species | fail | fail | skip | skip | skip |
-| 01512 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01513 | AssignmentRule, Compartment, InitialAssignment, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01514 | AssignmentRule, Compartment, InitialAssignment, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01515 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01516 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01518 | CSymbolDelay, EventWithDelay, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01519 | CSymbolDelay, EventWithDelay, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01520 | CSymbolDelay, EventWithDelay, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01521 | CSymbolDelay, EventNoDelay, EventPriority, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01522 | AssignmentRule, CSymbolDelay, CSymbolTime, EventNoDelay, Parameter | fail | fail | skip | skip | skip |
-| 01523 | CSymbolDelay, EventWithDelay, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01524 | CSymbolDelay, EventWithDelay, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01525 | CSymbolRateOf, CSymbolTime, EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01526 | CSymbolRateOf, CSymbolTime, EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01527 | CSymbolRateOf, EventNoDelay, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01528 | CSymbolRateOf, CSymbolTime, EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01529 | CSymbolRateOf, CSymbolTime, EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01530 | CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 01531 | EventNoDelay, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01532 | EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01533 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 01534 | AssignmentRule, CSymbolDelay, Compartment, InitialAssignment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01535 | AssignmentRule, CSymbolDelay, Compartment, InitialAssignment, Parameter, RateRule, Reaction, Species | fail | fail | skip | skip | skip |
-| 01536 | CSymbolDelay, CSymbolTime, Compartment, EventNoDelay, Parameter, RateRule, Reaction, Species | fail | fail | skip | skip | skip |
-| 01537 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip |
-| 01538 | AssignmentRule, CSymbolDelay, Compartment, Parameter, RateRule, Reaction, Species | fail | fail | skip | skip | skip |
-| 01540 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01541 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01542 | AssignmentRule, CSymbolRateOf, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01543 | AssignmentRule, CSymbolRateOf, Compartment, InitialAssignment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01552 | AssignmentRule, Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01553 | Compartment, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01554 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01555 | AssignmentRule, Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01556 | Compartment, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01557 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01561 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01563 | Compartment, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01564 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01566 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01574 | AssignmentRule, Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01575 | AlgebraicRule, EventWithDelay, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01576 | AlgebraicRule, EventWithDelay, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01577 | AlgebraicRule, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01578 | AlgebraicRule, EventNoDelay, Parameter | fail | fail | skip | skip | skip |
-| 01579 | AlgebraicRule, EventWithDelay, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01580 | AssignmentRule, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01582 | AssignmentRule, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01583 | Compartment, EventNoDelay, EventPriority, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01584 | AssignmentRule, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01586 | AssignmentRule, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01588 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01589 | AlgebraicRule, CSymbolTime, EventNoDelay, EventPriority, Parameter | fail | fail | skip | skip | skip |
-| 01590 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01591 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01592 | AssignmentRule, CSymbolDelay, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01593 | AssignmentRule, CSymbolDelay, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | fail | fail | skip | skip | skip |
-| 01594 | AssignmentRule, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01595 | AssignmentRule, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01596 | AssignmentRule, CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 01597 | AssignmentRule, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01598 | AssignmentRule, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01599 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01600 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01601 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01602 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01603 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01604 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01605 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01626 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01627 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01631 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01633 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01635 | Compartment, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01641 | CSymbolAvogadro, CSymbolTime, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01642 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01643 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01644 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01645 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01646 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01647 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01648 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 01649 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01650 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01651 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01652 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01653 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01654 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01655 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01657 | AssignmentRule, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01658 | CSymbolAvogadro, CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 01659 | CSymbolAvogadro, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01660 | CSymbolAvogadro, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01661 | CSymbolAvogadro, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01662 | CSymbolAvogadro, CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip |
-| 01663 | CSymbolAvogadro, EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 01664 | CSymbolAvogadro, CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 01665 | CSymbolAvogadro, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01666 | Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01667 | Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01668 | Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01669 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01670 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01671 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01672 | CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01673 | CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01674 | CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01675 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01676 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01677 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01678 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01679 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01680 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01681 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01682 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01683 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01684 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01685 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01686 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01687 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01688 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01689 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01690 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01691 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01692 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01693 | EventNoDelay, FunctionDefinition, Parameter | pass | fail | skip | skip | skip |
-| 01694 | EventNoDelay, FunctionDefinition, Parameter | pass | fail | skip | skip | skip |
-| 01695 | EventNoDelay, FunctionDefinition, Parameter | pass | fail | skip | skip | skip |
-| 01696 | EventNoDelay, FunctionDefinition, Parameter | pass | fail | skip | skip | skip |
-| 01697 | EventNoDelay, Parameter | pass | fail | skip | skip | skip |
-| 01698 | EventNoDelay, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01699 | EventNoDelay, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01700 | EventNoDelay, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01701 | EventWithDelay, FunctionDefinition, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01702 | EventWithDelay, FunctionDefinition, Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01703 | Compartment, EventWithDelay, RateRule, Species | pass | fail | skip | skip | skip |
-| 01704 | Compartment, EventWithDelay, RateRule, Species | pass | fail | skip | skip | skip |
-| 01705 | CSymbolTime, Compartment, EventNoDelay, EventPriority, RateRule, Species | pass | fail | skip | skip | skip |
-| 01706 | CSymbolTime, Compartment, EventWithDelay, RateRule, Species | pass | fail | skip | skip | skip |
-| 01707 | CSymbolTime, Compartment, EventWithDelay, RateRule, Species | pass | fail | skip | skip | skip |
-| 01708 | CSymbolTime, Compartment, EventWithDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01709 | CSymbolTime, Compartment, EventWithDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
-| 01710 | Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01711 | Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01712 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 01713 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 01714 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 01715 | Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01716 | Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01717 | Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01718 | Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01719 | Compartment, EventNoDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01720 | CSymbolTime, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01721 | CSymbolTime, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01722 | CSymbolAvogadro, Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01723 | CSymbolAvogadro, Compartment, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01724 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01725 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01726 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01727 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01728 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01729 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01730 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01731 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01732 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01733 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01734 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01735 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01736 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01737 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01738 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01739 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01740 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01741 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01742 | Compartment, FunctionDefinition, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01744 | AssignmentRule, CSymbolTime, Compartment, FunctionDefinition, Reaction, Species | pass | fail | skip | skip | skip |
-| 01746 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01748 | AssignmentRule, CSymbolTime, Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01754 | EventWithDelay, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01755 | EventWithDelay, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01756 | EventWithDelay, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01757 | EventWithDelay, InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01758 | EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01759 | CSymbolTime, EventNoDelay, EventWithDelay, Parameter | pass | fail | skip | skip | skip |
-| 01760 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01761 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01762 | CSymbolAvogadro, Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01763 | CSymbolAvogadro, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01766 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01767 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01768 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01769 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01770 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01771 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01772 | Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01773 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01774 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01775 | CSymbolAvogadro, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01776 | CSymbolAvogadro, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01777 | CSymbolAvogadro, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip |
-| 01779 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, Species | pass | fail | skip | skip | skip |
-| 01780 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, Species | pass | fail | skip | skip | skip |
-| 01781 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01782 | AssignmentRule, Parameter | pass | fail | skip | skip | skip |
-| 01783 | Parameter, RateRule | pass | fail | skip | skip | skip |
-| 01799 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01800 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01801 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01802 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01803 | Parameter | pass | fail | skip | skip | skip |
-| 01804 | Compartment, Species | pass | fail | skip | skip | skip |
-| 01805 | Compartment | pass | fail | skip | skip | skip |
-| 01806 | Compartment, Species | pass | fail | skip | skip | skip |
-| 01807 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01808 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail |
-| 01809 | Compartment, Reaction, Species | pass | fail | skip | skip | skip |
-| 01810 | Parameter | pass | fail | skip | skip | skip |
-| 01811 | InitialAssignment, Parameter | fail | fail | skip | skip | skip |
-| 01812 | Parameter | pass | fail | skip | skip | skip |
-| 01813 | InitialAssignment, Parameter | fail | fail | skip | skip | skip |
-| 01814 | Parameter | pass | fail | skip | skip | skip |
-| 01815 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01816 | Parameter | pass | fail | skip | skip | skip |
-| 01817 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01818 | Parameter | pass | fail | skip | skip | skip |
-| 01819 | InitialAssignment, Parameter | pass | fail | skip | skip | skip |
-| 01820 | Parameter | fail | fail | skip | skip | skip |
-| 01821 | CSymbolTime, InitialAssignment, Parameter | fail | fail | skip | skip | skip |
-| 01822 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip |
-| 01823 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip |
+| case | components | reference | sbml2cellml | libopencor | cellml2sbml | roundtrip | informative |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 00001 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00002 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00003 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00004 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00005 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00006 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | no |
+| 00007 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00008 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00009 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | no |
+| 00010 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00011 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00012 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00013 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | no |
+| 00014 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00015 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00016 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00017 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00018 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00019 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00020 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00021 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00022 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00023 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00024 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00025 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00026 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00027 | Compartment, Species, Reaction, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00028 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00029 | Compartment, Species, AssignmentRule | pass | fail | skip | skip | skip | no |
+| 00030 | Compartment, Species, AssignmentRule | pass | fail | skip | skip | skip | no |
+| 00031 | Compartment, Species, RateRule | pass | fail | skip | skip | skip | yes |
+| 00032 | Compartment, Species, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00033 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00034 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00035 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00036 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00037 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00038 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00039 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00040 | Compartment, Species, Parameter, AlgebraicRule, RateRule | fail | pass | fail | pass | fail | yes |
+| 00041 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00042 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00043 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00044 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00045 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00046 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00047 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00048 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00049 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00050 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00051 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00052 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00053 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00054 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00055 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00056 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00057 | Compartment, Species, Reaction | pass | fail | skip | skip | skip | yes |
+| 00058 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00060 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00061 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00062 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00063 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00064 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00065 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00066 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00067 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00071 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00072 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00073 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00074 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00075 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00076 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00077 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00078 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00079 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00080 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00081 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00082 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00083 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00084 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00085 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00086 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00087 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00088 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00089 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00090 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00091 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00092 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00093 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00094 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00095 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00096 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00097 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00098 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00099 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00100 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00101 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00102 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00103 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00104 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00105 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00106 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00107 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00108 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00109 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00110 | Compartment, FunctionDefinition, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00111 | Compartment, FunctionDefinition, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00112 | Compartment, FunctionDefinition, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00113 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00114 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00115 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00116 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00117 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00118 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | no |
+| 00119 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00120 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00121 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00122 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00123 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00124 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00125 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00126 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00127 | Compartment, Parameter, Reaction, Species, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00128 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00132 | Compartment, Species, Reaction, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00133 | Compartment, Parameter, Species, Reaction, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00135 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00136 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00137 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00138 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00139 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00140 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00141 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00142 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00143 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00144 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00145 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00146 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00147 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00148 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00149 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00150 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00151 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00152 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00153 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00154 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00155 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00156 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00157 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00158 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00159 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00160 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00161 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00162 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00163 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00164 | Parameter, RateRule | pass | fail | skip | skip | skip | no |
+| 00165 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00166 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00167 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00168 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00169 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00170 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00171 | Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00172 | Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00173 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00174 | Parameter, AssignmentRule | pass | fail | skip | skip | skip | no |
+| 00175 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00176 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00177 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00178 | Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00179 | Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00180 | Parameter, InitialAssignment, RateRule | pass | fail | skip | skip | skip | yes |
+| 00181 | Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00182 | Parameter, RateRule, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00183 | Parameter, FunctionDefinition, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00184 | Parameter, FunctionDefinition, RateRule, AlgebraicRule | fail | fail | skip | skip | skip | yes |
+| 00185 | Parameter, InitialAssignment, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00186 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00187 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00188 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00189 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00190 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00191 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00192 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00193 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00194 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00195 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00196 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00197 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00198 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00199 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00200 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00201 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00202 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00203 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00204 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00205 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00206 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00207 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00208 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00209 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00210 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00211 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00212 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00213 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | no |
+| 00214 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00215 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00216 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00217 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00218 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00219 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00220 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00221 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00222 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00223 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00224 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00225 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00226 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00227 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00228 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | no |
+| 00229 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00230 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00231 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00232 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00233 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00234 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00235 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00236 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00237 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00238 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00239 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00240 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00241 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00242 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00243 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00244 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00245 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00246 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00247 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00248 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00249 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00250 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00251 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00252 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00253 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00254 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00255 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00256 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00257 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00258 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00259 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00260 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00261 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00262 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00263 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00264 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00265 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00266 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00267 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00268 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00269 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00270 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00271 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00272 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00273 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00274 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00275 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00276 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00277 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00278 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00279 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00280 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00281 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00282 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00283 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00284 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00285 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00286 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00287 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00288 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00289 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00290 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00291 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00292 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00293 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00294 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00295 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00296 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00297 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00298 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00299 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00300 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00301 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00302 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00303 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00304 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00305 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00306 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00307 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00308 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00309 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00310 | Compartment, Species, Reaction, Parameter, AssignmentRule, RateRule | pass | fail | skip | skip | skip | yes |
+| 00311 | Compartment, Species, Reaction, Parameter, AssignmentRule, RateRule | pass | fail | skip | skip | skip | yes |
+| 00312 | Compartment, Species, Reaction, Parameter, AssignmentRule, RateRule | pass | fail | skip | skip | skip | yes |
+| 00313 | Compartment, Species, RateRule, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00314 | Compartment, Species, RateRule, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00315 | Compartment, Species, RateRule, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00316 | Compartment, Species, RateRule, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00317 | Compartment, Species, RateRule, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00318 | Compartment, Species, RateRule, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00319 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00320 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00321 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00322 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00323 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00324 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00325 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00326 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00327 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00328 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00329 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00330 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00331 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
+| 00332 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00333 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00334 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
+| 00335 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
+| 00336 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
+| 00337 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
+| 00338 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00339 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00340 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00341 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00342 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00343 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00344 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00345 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00346 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00347 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00348 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00349 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00350 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00351 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00352 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00353 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00354 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 00355 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 00356 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 00357 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 00358 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 00359 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 00360 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00361 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00362 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00363 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00364 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00365 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00366 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00367 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00368 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00369 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00370 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00371 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00372 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00373 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00374 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00375 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00376 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00377 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00378 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00379 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00380 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00381 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00382 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00383 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00384 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00385 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00386 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00387 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00389 | Compartment, Species, Reaction, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00390 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00392 | Compartment, Species, Reaction, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00393 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00395 | Compartment, Species, Reaction, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00396 | Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00397 | Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00398 | Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00399 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00400 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00401 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00402 | Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00403 | Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00404 | Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00405 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00406 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00407 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00408 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00409 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00410 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00411 | Compartment, Species, Reaction, Parameter, EventWithDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 00412 | Compartment, Species, Reaction, Parameter, EventWithDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 00413 | Compartment, Species, Reaction, Parameter, EventWithDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 00414 | Compartment, Species, Reaction, Parameter, EventWithDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 00415 | Compartment, Species, Reaction, Parameter, EventWithDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 00416 | Compartment, Species, Reaction, Parameter, EventWithDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 00417 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00418 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00419 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00420 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00421 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00422 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00423 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00424 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00425 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00426 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00427 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00428 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00429 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00430 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00431 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00432 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00433 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00434 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00435 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00436 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00437 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00438 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00439 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00440 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00441 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00442 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00443 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00444 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00446 | Compartment, Species, Reaction, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00447 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00449 | Compartment, Species, Reaction, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00450 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00452 | Compartment, Species, Reaction, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00453 | Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00454 | Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00455 | Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00456 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00457 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00458 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00459 | Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00460 | Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00461 | Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00462 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00463 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00464 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | no |
+| 00465 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00466 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00467 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00468 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00469 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00470 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00471 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00472 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00473 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00474 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00475 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00476 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00477 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00478 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00479 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00480 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00481 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00482 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00483 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00484 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00485 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00486 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00487 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00488 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00489 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00490 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00491 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00492 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00493 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00494 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00495 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00496 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00497 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00498 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00499 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00500 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00501 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00502 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00503 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00504 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00505 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00506 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00507 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00508 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00509 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00510 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00511 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00512 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00513 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00514 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00515 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00522 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00523 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00524 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00525 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00526 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00527 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00528 | Compartment, Species, Reaction, Parameter, InitialAssignment, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 00529 | Compartment, Species, Reaction, Parameter, InitialAssignment, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 00530 | Compartment, Species, Reaction, Parameter, InitialAssignment, FunctionDefinition | pass | pass | pass | pass | pass | yes |
+| 00531 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00532 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | pass | pass | pass | yes |
+| 00533 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00534 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00535 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00536 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00537 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00538 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00539 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | pass | pass | pass | yes |
+| 00540 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | pass | pass | pass | yes |
+| 00541 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | pass | pass | pass | yes |
+| 00542 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | pass | pass | pass | yes |
+| 00543 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00544 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | pass | pass | pass | yes |
+| 00545 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | pass | pass | pass | yes |
+| 00546 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00547 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | pass | pass | pass | yes |
+| 00548 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00549 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00550 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00551 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00552 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00553 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00554 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00555 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00556 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00557 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00558 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00559 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00560 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00565 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 00566 | Compartment, Species, Reaction, AlgebraicRule | fail | fail | skip | skip | skip | yes |
+| 00567 | Compartment, Species, Reaction, Parameter, AlgebraicRule, FunctionDefinition | fail | pass | fail | pass | fail | yes |
+| 00568 | Compartment, Species, Reaction, Parameter, AlgebraicRule, FunctionDefinition | fail | pass | pass | pass | pass | yes |
+| 00569 | Compartment, Species, Reaction, Parameter, AlgebraicRule, FunctionDefinition | fail | pass | fail | pass | fail | yes |
+| 00570 | Compartment, Species, Reaction, Parameter, AlgebraicRule, FunctionDefinition | fail | pass | fail | pass | fail | yes |
+| 00571 | Compartment, Species, Reaction, Parameter, AlgebraicRule, FunctionDefinition | fail | pass | fail | pass | fail | yes |
+| 00572 | Compartment, Species, Reaction, Parameter, AlgebraicRule, FunctionDefinition | fail | pass | pass | pass | pass | yes |
+| 00573 | Parameter, RateRule, AlgebraicRule | fail | fail | skip | skip | skip | yes |
+| 00574 | Parameter, RateRule, AlgebraicRule | fail | fail | skip | skip | skip | yes |
+| 00575 | Parameter, RateRule, AlgebraicRule | fail | fail | skip | skip | skip | yes |
+| 00576 | Parameter, RateRule, AlgebraicRule | fail | fail | skip | skip | skip | yes |
+| 00577 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00578 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00579 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | no |
+| 00580 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00581 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00582 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00583 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00584 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00585 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00586 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00587 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00588 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00589 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00590 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00591 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00592 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00593 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00594 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00595 | Compartment, Species, Reaction | pass | fail | skip | skip | skip | yes |
+| 00596 | Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 00598 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00599 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00600 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00601 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00602 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00603 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00604 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00605 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00606 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00607 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00608 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00611 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00612 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00613 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip | yes |
+| 00614 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip | yes |
+| 00615 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip | yes |
+| 00616 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00617 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00618 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00619 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
+| 00620 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
+| 00621 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
+| 00622 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00623 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00624 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00625 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00626 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00627 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00628 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule, FunctionDefinition | fail | fail | skip | skip | skip | yes |
+| 00629 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule, FunctionDefinition | fail | fail | skip | skip | skip | yes |
+| 00630 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule, FunctionDefinition | fail | fail | skip | skip | skip | yes |
+| 00631 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00632 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00633 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00634 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00635 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00636 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00637 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00638 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00639 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00640 | Compartment, Species, Reaction, Parameter, RateRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00641 | Compartment, Species, Reaction, Parameter, RateRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00642 | Compartment, Species, Reaction, Parameter, RateRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00643 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00644 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00645 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00646 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00647 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00648 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00649 | Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00650 | Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00651 | Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00652 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00653 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00654 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00655 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00656 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00657 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00658 | Compartment, Species, Reaction, Parameter, AlgebraicRule, InitialAssignment | fail | pass | fail | pass | fail | yes |
+| 00659 | Compartment, Species, Reaction, Parameter, AlgebraicRule, InitialAssignment | fail | pass | fail | pass | fail | yes |
+| 00660 | Compartment, Species, Reaction, Parameter, AlgebraicRule, InitialAssignment | fail | pass | fail | pass | fail | yes |
+| 00661 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay | fail | pass | fail | pass | fail | yes |
+| 00662 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay | fail | pass | fail | pass | fail | yes |
+| 00663 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay | fail | pass | fail | pass | fail | yes |
+| 00664 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay | fail | pass | fail | pass | fail | yes |
+| 00665 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay | fail | pass | fail | pass | fail | yes |
+| 00666 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay | fail | pass | fail | pass | fail | yes |
+| 00667 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00668 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00669 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00670 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00671 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00672 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00673 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip | yes |
+| 00674 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip | yes |
+| 00675 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip | yes |
+| 00676 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00677 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00678 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00679 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
+| 00680 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
+| 00681 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
+| 00682 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00683 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00684 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00685 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00686 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00687 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip | yes |
+| 00688 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00689 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
+| 00690 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00691 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00692 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00693 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00694 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00695 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip | yes |
+| 00696 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip | yes |
+| 00697 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00698 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00699 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
+| 00700 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
+| 00701 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00702 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00703 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00704 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00705 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip | yes |
+| 00706 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00707 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
+| 00708 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00709 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00710 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00711 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00712 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00713 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00714 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00715 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00716 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00717 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00718 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00719 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00720 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00721 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00722 | Compartment, Species, Reaction, Parameter, RateRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00723 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00724 | Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00732 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00733 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00734 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00735 | Compartment, Species, Reaction, Parameter, RateRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00736 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00737 | Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00738 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00739 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00740 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00741 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00742 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00743 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00744 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00745 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00746 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00747 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00748 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00749 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
+| 00750 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
+| 00751 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00752 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00753 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 00754 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00755 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00756 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00757 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00758 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00759 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00760 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay, FunctionDefinition | fail | pass | fail | pass | fail | yes |
+| 00761 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay, FunctionDefinition | fail | pass | fail | pass | fail | yes |
+| 00762 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay, FunctionDefinition | fail | pass | fail | pass | fail | yes |
+| 00763 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00764 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00765 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00766 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00767 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00768 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00769 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00770 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00771 | Compartment, Species, Reaction, Parameter, EventWithDelay, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00772 | Compartment, Species, Reaction, Parameter, EventWithDelay, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00773 | Compartment, Species, Reaction, Parameter, EventWithDelay, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00774 | Compartment, Species, Reaction, Parameter, EventWithDelay, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00775 | Compartment, Species, Reaction, Parameter, EventWithDelay, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00776 | Compartment, Species, Reaction, Parameter, EventWithDelay, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00777 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay, AlgebraicRule | fail | pass | fail | fail | skip | yes |
+| 00778 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay, InitialAssignment | fail | pass | fail | pass | fail | yes |
+| 00779 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay, InitialAssignment | fail | pass | fail | pass | fail | yes |
+| 00780 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay, InitialAssignment | fail | pass | fail | pass | fail | yes |
+| 00781 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00782 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00783 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00784 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00785 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00786 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00787 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00788 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00789 | Compartment, Species, Reaction, Parameter, EventNoDelay, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00790 | Compartment, Species, Reaction, Parameter, EventNoDelay, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00791 | Compartment, Species, Reaction, Parameter, EventNoDelay, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00792 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00793 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00794 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00795 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00796 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00797 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00798 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
+| 00799 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00800 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00801 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00802 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00803 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00804 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00805 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00806 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00807 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00808 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 00809 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00810 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00811 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00812 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00813 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00814 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00815 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00816 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00817 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00818 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00819 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00820 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00821 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00822 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00823 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00824 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00825 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00826 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00830 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 00831 | Compartment, Species, Reaction | pass | fail | skip | skip | skip | yes |
+| 00832 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00833 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00834 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00835 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00836 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00837 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00838 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00839 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00840 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00841 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00842 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00843 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00844 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | fail | skip | skip | skip | yes |
+| 00845 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00846 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00847 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00848 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00849 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00850 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00851 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00852 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00853 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00854 | Compartment, Species, Reaction, Parameter, FunctionDefinition, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00855 | Compartment, Species, Reaction, Parameter, FunctionDefinition, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00856 | Compartment, Species, Reaction, Parameter, FunctionDefinition, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00857 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00858 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00859 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00860 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00861 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00862 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00863 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00864 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00865 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00866 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00867 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00868 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00869 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00876 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | fail | skip | skip | skip | yes |
+| 00877 | Compartment, Species, Reaction, Parameter, CSymbolTime, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00878 | Compartment, Species, CSymbolTime, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00879 | Compartment, Species, CSymbolTime, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00880 | Compartment, Species, CSymbolTime, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00881 | Compartment, Species, CSymbolTime, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00882 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00883 | Compartment, Species, Reaction, Parameter, CSymbolTime, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00884 | Compartment, Species, Reaction, CSymbolTime, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00885 | Compartment, Species, Reaction, CSymbolTime, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00886 | Compartment, Species, CSymbolTime, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00887 | Compartment, Species, Reaction, Parameter, CSymbolTime, EventWithDelay, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00888 | Compartment, Species, CSymbolTime, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00889 | Compartment, Species, Reaction, Parameter, CSymbolTime, RateRule | pass | fail | skip | skip | skip | yes |
+| 00890 | Compartment, Species, Reaction, CSymbolTime, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00891 | Parameter, RateRule, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00892 | Parameter, RateRule, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00893 | Parameter, RateRule, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00894 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00895 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00896 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00897 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 00901 | Compartment, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00902 | Compartment, RateRule | pass | fail | skip | skip | skip | yes |
+| 00903 | Compartment, RateRule | pass | fail | skip | skip | skip | yes |
+| 00904 | Compartment, RateRule | pass | fail | skip | skip | skip | yes |
+| 00905 | Compartment, RateRule | pass | fail | skip | skip | skip | yes |
+| 00906 | Compartment, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00907 | Compartment, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00908 | Compartment, RateRule | pass | fail | skip | skip | skip | yes |
+| 00909 | Compartment, RateRule | pass | fail | skip | skip | skip | yes |
+| 00910 | Compartment, RateRule | pass | fail | skip | skip | skip | yes |
+| 00911 | Compartment, RateRule, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00912 | Compartment, RateRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00913 | Compartment, RateRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00914 | Compartment, RateRule, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00915 | Compartment, RateRule, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 00916 | Compartment, RateRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00917 | Compartment, RateRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00918 | Compartment, RateRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00919 | Compartment, RateRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 00920 | Parameter, InitialAssignment | pass | fail | skip | skip | skip | no |
+| 00921 | Parameter, InitialAssignment | pass | fail | skip | skip | skip | no |
+| 00922 | Parameter, InitialAssignment | pass | fail | skip | skip | skip | no |
+| 00923 | Parameter, AssignmentRule | pass | fail | skip | skip | skip | no |
+| 00924 | Parameter, AssignmentRule | pass | fail | skip | skip | skip | no |
+| 00925 | Parameter, AssignmentRule | pass | fail | skip | skip | skip | no |
+| 00926 | Compartment, Species, RateRule | pass | fail | skip | skip | skip | yes |
+| 00927 | Compartment, Species, RateRule | pass | fail | skip | skip | skip | yes |
+| 00928 | Compartment, CSymbolTime, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00929 | Compartment, CSymbolTime, Species, Reaction, Parameter, EventNoDelay | pass | pass | pass | pass | pass | yes |
+| 00930 | Compartment, CSymbolTime, Species, EventNoDelay, EventPriority | pass | fail | skip | skip | skip | yes |
+| 00931 | Compartment, CSymbolTime, Species, EventNoDelay, EventPriority | pass | fail | skip | skip | skip | yes |
+| 00932 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | pass | pass | pass | yes |
+| 00933 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 00934 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Species | pass | fail | skip | skip | skip | yes |
+| 00935 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Species | pass | fail | skip | skip | skip | yes |
+| 00936 | AssignmentRule, CSymbolTime, Compartment, EventWithDelay, Species | pass | fail | skip | skip | skip | yes |
+| 00937 | AssignmentRule, CSymbolDelay, CSymbolTime, Parameter | fail | fail | skip | skip | skip | yes |
+| 00938 | AssignmentRule, CSymbolDelay, CSymbolTime, Compartment, InitialAssignment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 00939 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 00940 | AssignmentRule, CSymbolDelay, CSymbolTime, Compartment, InitialAssignment, Parameter, Species | fail | fail | skip | skip | skip | yes |
+| 00941 | AssignmentRule, CSymbolDelay, CSymbolTime, InitialAssignment, Parameter | fail | fail | skip | skip | skip | yes |
+| 00942 | AssignmentRule, CSymbolDelay, CSymbolTime, Compartment, InitialAssignment, Parameter, Species | fail | fail | skip | skip | skip | yes |
+| 00943 | AssignmentRule, CSymbolDelay, CSymbolTime, InitialAssignment, Parameter | fail | fail | skip | skip | skip | yes |
+| 00944 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 00945 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 00946 | AssignmentRule, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | fail | skip | yes |
+| 00947 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 00948 | AssignmentRule, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | fail | skip | yes |
+| 00949 | Parameter | pass | fail | skip | skip | skip | no |
+| 00950 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 00951 | Parameter | pass | fail | skip | skip | skip | no |
+| 00952 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | yes |
+| 00953 | AssignmentRule, CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 00954 | AssignmentRule, Parameter | pass | fail | skip | skip | skip | no |
+| 00955 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
+| 00956 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 00957 | AssignmentRule, Parameter | pass | fail | skip | skip | skip | no |
+| 00958 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 00959 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
+| 00960 | CSymbolAvogadro, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 00961 | AssignmentRule, CSymbolAvogadro, Parameter | pass | fail | skip | skip | skip | no |
+| 00962 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | yes |
+| 00963 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | yes |
+| 00964 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | yes |
+| 00965 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | yes |
+| 00966 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | yes |
+| 00967 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | yes |
+| 00969 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 00970 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00971 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00972 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 00974 | AssignmentRule, Compartment, InitialAssignment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00975 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 00976 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 00977 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 00978 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | yes |
+| 00979 | CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 00980 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 00981 | AssignmentRule, CSymbolDelay, CSymbolTime, Compartment, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 00982 | AssignmentRule, CSymbolDelay, CSymbolTime, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 00983 | AlgebraicRule, AssignmentRule, CSymbolDelay, CSymbolTime, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 00984 | AssignmentRule, CSymbolDelay, CSymbolTime, Compartment, EventNoDelay, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 00985 | AssignmentRule, CSymbolDelay, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 00995 | EventNoDelay, Parameter | pass | fail | skip | skip | skip | no |
+| 00996 | EventNoDelay, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 00997 | EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | no |
+| 00998 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 00999 | AssignmentRule, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01000 | AssignmentRule, CSymbolAvogadro, CSymbolTime, Compartment, EventNoDelay, EventPriority, EventWithDelay, FunctionDefinition, InitialAssignment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01001 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 01002 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 01003 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 01004 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 01005 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 01006 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 01007 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 01008 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01009 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 01010 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 01011 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 01012 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 01013 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
+| 01014 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 01015 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 01016 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
+| 01017 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01018 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01019 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01020 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01021 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01022 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01023 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01024 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01025 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01026 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01030 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01031 | Compartment, Species, Reaction | pass | fail | skip | skip | skip | yes |
+| 01032 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 01033 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 01034 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
+| 01035 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 01036 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 01037 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 01038 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 01039 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 01040 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 01041 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01042 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01043 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01044 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | fail | skip | skip | skip | yes |
+| 01045 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 01046 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 01047 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 01048 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 01049 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 01050 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 01054 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | fail | skip | skip | skip | yes |
+| 01055 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01056 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01057 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01058 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01059 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01060 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01061 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01062 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01063 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01064 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01065 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 01066 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 01067 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 01068 | InitialAssignment, Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 01069 | InitialAssignment, Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 01070 | InitialAssignment, Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 01071 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 01072 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 01073 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 01074 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 01075 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 01076 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
+| 01077 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 01078 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 01079 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 01080 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 01081 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 01082 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | fail | pass | fail | yes |
+| 01083 | InitialAssignment, Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 01084 | InitialAssignment, Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 01085 | InitialAssignment, Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 01086 | InitialAssignment, Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
+| 01087 | InitialAssignment, Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 01088 | InitialAssignment, Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 01089 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01090 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01091 | InitialAssignment, Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
+| 01092 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 01093 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01094 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 01095 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 01096 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01097 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01098 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01099 | InitialAssignment, Compartment, Species, Reaction, Parameter, CSymbolTime | pass | fail | skip | skip | skip | yes |
+| 01100 | Compartment, Species, Reaction, Parameter, CSymbolTime, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 01101 | Compartment, Species, Reaction, Parameter, CSymbolTime, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 01102 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01103 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01104 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01105 | AssignmentRule, Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01106 | AssignmentRule, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01107 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01108 | AlgebraicRule, AssignmentRule, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01109 | AssignmentRule, CSymbolTime, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01110 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | fail | skip | skip | skip | yes |
+| 01111 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
+| 01112 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01113 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01114 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01115 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01116 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01117 | Compartment, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01118 | Compartment, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01119 | CSymbolTime, EventPriority, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01120 | Compartment, EventWithDelay, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01121 | AssignmentRule, CSymbolAvogadro, CSymbolTime, Compartment, FunctionDefinition, InitialAssignment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01122 | Compartment, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01123 | Compartment, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01184 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01185 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01197 | Compartment | pass | fail | skip | skip | skip | no |
+| 01198 | AssignmentRule, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01199 | AssignmentRule, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01200 | AssignmentRule, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01201 | AssignmentRule, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01202 | AssignmentRule, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01203 | AssignmentRule, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01204 | AssignmentRule, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01205 | AssignmentRule, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01206 | AssignmentRule, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01207 | AssignmentRule, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01208 | AssignmentRule, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01209 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01210 | AssignmentRule, Parameter | pass | fail | skip | skip | skip | no |
+| 01211 | CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip | no |
+| 01212 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | yes |
+| 01213 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01214 | CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01215 | Parameter, RateRule | pass | fail | skip | skip | skip | no |
+| 01216 | AssignmentRule, Parameter | pass | fail | skip | skip | skip | no |
+| 01217 | AssignmentRule, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01218 | AssignmentRule, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01219 | Compartment, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01220 | Compartment, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01221 | Compartment, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01222 | CSymbolTime, Compartment, EventNoDelay, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01223 | AssignmentRule, CSymbolTime, Compartment, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01224 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01225 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01226 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01227 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01228 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01229 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01230 | CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01231 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01232 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01233 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01234 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01235 | AssignmentRule, Parameter | pass | fail | skip | skip | skip | no |
+| 01236 | Parameter, RateRule | pass | fail | skip | skip | skip | no |
+| 01237 | CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip | no |
+| 01238 | EventNoDelay, Parameter | pass | fail | skip | skip | skip | no |
+| 01239 | EventNoDelay, Parameter | pass | fail | skip | skip | skip | no |
+| 01240 | CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip | no |
+| 01241 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01242 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | yes |
+| 01243 | CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01244 | AlgebraicRule, Parameter | pass | fail | skip | skip | skip | no |
+| 01245 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | no |
+| 01246 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01247 | Parameter | pass | fail | skip | skip | skip | no |
+| 01248 | CSymbolRateOf, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01249 | CSymbolRateOf, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01250 | CSymbolRateOf, InitialAssignment, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01251 | CSymbolRateOf, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01252 | CSymbolRateOf, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01253 | CSymbolRateOf, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | no |
+| 01254 | CSymbolRateOf, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01255 | AssignmentRule, CSymbolRateOf, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01256 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01257 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01258 | CSymbolRateOf, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01259 | CSymbolRateOf, Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01260 | CSymbolRateOf, CSymbolTime, EventNoDelay, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01261 | AssignmentRule, CSymbolRateOf, EventNoDelay, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01262 | CSymbolRateOf, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01263 | CSymbolRateOf, CSymbolTime, EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01264 | CSymbolRateOf, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01265 | CSymbolRateOf, Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01266 | CSymbolRateOf, CSymbolTime, EventNoDelay, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01267 | CSymbolRateOf, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01268 | CSymbolRateOf, CSymbolTime, EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01269 | CSymbolRateOf, CSymbolTime, Compartment, EventPriority, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01270 | CSymbolRateOf, CSymbolTime, Compartment, EventPriority, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01271 | FunctionDefinition, Parameter | pass | fail | skip | skip | skip | no |
+| 01272 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01273 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01274 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01275 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01276 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01277 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
+| 01278 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
+| 01279 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
+| 01280 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
+| 01281 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
+| 01282 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01283 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01284 | EventNoDelay, Parameter | pass | fail | skip | skip | skip | no |
+| 01285 | CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01286 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | yes |
+| 01287 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01288 | Compartment, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01289 | FunctionDefinition, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01290 | Parameter, RateRule | pass | pass | pass | pass | pass | yes |
+| 01291 | AssignmentRule, Parameter | pass | fail | skip | skip | skip | no |
+| 01292 | AlgebraicRule, Parameter | fail | fail | skip | skip | skip | no |
+| 01293 | CSymbolRateOf, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01294 | CSymbolRateOf, CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01295 | CSymbolRateOf, CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01296 | CSymbolRateOf, Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01297 | CSymbolRateOf, CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01298 | CSymbolRateOf, CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01299 | CSymbolRateOf, CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01300 | InitialAssignment, Parameter, Reaction | pass | fail | skip | skip | skip | no |
+| 01301 | AssignmentRule, Parameter, Reaction | pass | fail | skip | skip | skip | no |
+| 01302 | Parameter, RateRule, Reaction | pass | fail | skip | skip | skip | yes |
+| 01303 | CSymbolTime, EventNoDelay, Parameter, Reaction | pass | fail | skip | skip | skip | yes |
+| 01304 | CSymbolTime, EventNoDelay, Parameter, Reaction | pass | fail | skip | skip | skip | yes |
+| 01305 | CSymbolTime, EventWithDelay, Parameter, Reaction | pass | fail | skip | skip | skip | yes |
+| 01306 | AssignmentRule, CSymbolTime, Parameter, Reaction | pass | fail | skip | skip | skip | yes |
+| 01307 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01308 | Compartment, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01309 | Compartment, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01310 | Compartment | pass | fail | skip | skip | skip | no |
+| 01311 | FunctionDefinition, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01312 | FunctionDefinition, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01313 | FunctionDefinition, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01314 | FunctionDefinition, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01315 | FunctionDefinition, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01316 | CSymbolAvogadro, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01317 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
+| 01318 | AssignmentRule, CSymbolDelay, CSymbolTime, Parameter | fail | fail | skip | skip | skip | yes |
+| 01319 | AssignmentRule, CSymbolDelay, CSymbolTime, Parameter | fail | fail | skip | skip | skip | yes |
+| 01320 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01321 | AssignmentRule, CSymbolRateOf, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01322 | AssignmentRule, CSymbolRateOf, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01323 | CSymbolAvogadro, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01324 | EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01325 | EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01326 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01327 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01328 | CSymbolTime, EventNoDelay, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01329 | CSymbolTime, EventNoDelay, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01330 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | yes |
+| 01331 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | yes |
+| 01332 | EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | no |
+| 01333 | EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | no |
+| 01334 | EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | no |
+| 01335 | EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01336 | EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | no |
+| 01337 | EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | no |
+| 01338 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01339 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01340 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01341 | Compartment, Species | pass | fail | skip | skip | skip | no |
+| 01342 | Compartment, Species | pass | fail | skip | skip | skip | no |
+| 01343 | AssignmentRule, CSymbolTime, InitialAssignment, Parameter | pass | fail | skip | skip | skip | yes |
+| 01395 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01400 | AssignmentRule, CSymbolDelay, CSymbolRateOf, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01401 | AssignmentRule, CSymbolDelay, CSymbolRateOf, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 01402 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01403 | AssignmentRule, CSymbolDelay, CSymbolRateOf, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01404 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01405 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01406 | AssignmentRule, CSymbolDelay, CSymbolRateOf, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01407 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01408 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01409 | AssignmentRule, CSymbolDelay, CSymbolRateOf, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01410 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01411 | AssignmentRule, CSymbolDelay, Compartment, FunctionDefinition, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01412 | AssignmentRule, CSymbolDelay, FunctionDefinition, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 01413 | AssignmentRule, CSymbolDelay, FunctionDefinition, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 01414 | CSymbolDelay, Compartment, Parameter, RateRule, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01415 | CSymbolDelay, Compartment, Parameter, RateRule, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01416 | AssignmentRule, CSymbolDelay, Parameter, RateRule | fail | fail | skip | skip | skip | no |
+| 01417 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01418 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01419 | AssignmentRule, CSymbolDelay, Compartment, Parameter, RateRule, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01420 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01421 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01422 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | no |
+| 01423 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | no |
+| 01424 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01425 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01426 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01427 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01428 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01429 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01430 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01431 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | no |
+| 01432 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01433 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01434 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01436 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01438 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01440 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01442 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01444 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01445 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01446 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01447 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01448 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01449 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01450 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01451 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01452 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01453 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01454 | AssignmentRule, CSymbolDelay, Compartment, Parameter, RateRule, Species | fail | fail | skip | skip | skip | yes |
+| 01455 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01456 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01457 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01458 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01459 | CSymbolRateOf, Compartment, Reaction, Species | pass | fail | skip | skip | skip | no |
+| 01460 | CSymbolRateOf, Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01461 | AssignmentRule, CSymbolRateOf, Parameter, RateRule | pass | fail | skip | skip | skip | no |
+| 01462 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01463 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01464 | Compartment, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01465 | AssignmentRule, Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01466 | AssignmentRule, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | no |
+| 01478 | AssignmentRule, Compartment, FunctionDefinition, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01479 | AlgebraicRule, CSymbolAvogadro, Parameter | fail | fail | skip | skip | skip | no |
+| 01480 | AssignmentRule, CSymbolDelay, Compartment, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01482 | AlgebraicRule, CSymbolRateOf, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 01483 | AlgebraicRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01484 | AlgebraicRule, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01485 | AssignmentRule, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | no |
+| 01486 | AssignmentRule, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | no |
+| 01487 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | yes |
+| 01488 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | yes |
+| 01489 | FunctionDefinition, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01490 | AssignmentRule, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | no |
+| 01491 | AssignmentRule, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | no |
+| 01492 | AssignmentRule, FunctionDefinition, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01493 | AssignmentRule, FunctionDefinition, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01494 | FunctionDefinition, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01495 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | yes |
+| 01496 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | yes |
+| 01497 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | yes |
+| 01498 | AssignmentRule, Compartment, InitialAssignment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01499 | AlgebraicRule, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01500 | AlgebraicRule, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01501 | AlgebraicRule, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01502 | AlgebraicRule, Parameter | fail | fail | skip | skip | skip | no |
+| 01503 | AlgebraicRule, Parameter | fail | fail | skip | skip | skip | no |
+| 01504 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01505 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01506 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01507 | AssignmentRule, CSymbolTime, Compartment, EventWithDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01508 | AssignmentRule, CSymbolTime, Compartment, EventWithDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01509 | AssignmentRule, CSymbolTime, Compartment, EventWithDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01510 | AssignmentRule, Compartment, EventNoDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01511 | AssignmentRule, Compartment, EventWithDelay, Parameter, RateRule, Species | fail | fail | skip | skip | skip | yes |
+| 01512 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01513 | AssignmentRule, Compartment, InitialAssignment, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01514 | AssignmentRule, Compartment, InitialAssignment, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01515 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01516 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01518 | CSymbolDelay, EventWithDelay, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 01519 | CSymbolDelay, EventWithDelay, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 01520 | CSymbolDelay, EventWithDelay, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 01521 | CSymbolDelay, EventNoDelay, EventPriority, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 01522 | AssignmentRule, CSymbolDelay, CSymbolTime, EventNoDelay, Parameter | fail | fail | skip | skip | skip | yes |
+| 01523 | CSymbolDelay, EventWithDelay, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 01524 | CSymbolDelay, EventWithDelay, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 01525 | CSymbolRateOf, CSymbolTime, EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01526 | CSymbolRateOf, CSymbolTime, EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01527 | CSymbolRateOf, EventNoDelay, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01528 | CSymbolRateOf, CSymbolTime, EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01529 | CSymbolRateOf, CSymbolTime, EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01530 | CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01531 | EventNoDelay, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01532 | EventWithDelay, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01533 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | yes |
+| 01534 | AssignmentRule, CSymbolDelay, Compartment, InitialAssignment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01535 | AssignmentRule, CSymbolDelay, Compartment, InitialAssignment, Parameter, RateRule, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01536 | CSymbolDelay, CSymbolTime, Compartment, EventNoDelay, Parameter, RateRule, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01537 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01538 | AssignmentRule, CSymbolDelay, Compartment, Parameter, RateRule, Reaction, Species | fail | fail | skip | skip | skip | yes |
+| 01540 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01541 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01542 | AssignmentRule, CSymbolRateOf, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01543 | AssignmentRule, CSymbolRateOf, Compartment, InitialAssignment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01552 | AssignmentRule, Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01553 | Compartment, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01554 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01555 | AssignmentRule, Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01556 | Compartment, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01557 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01561 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01563 | Compartment, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01564 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01566 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01574 | AssignmentRule, Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01575 | AlgebraicRule, EventWithDelay, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 01576 | AlgebraicRule, EventWithDelay, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 01577 | AlgebraicRule, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 01578 | AlgebraicRule, EventNoDelay, Parameter | fail | fail | skip | skip | skip | no |
+| 01579 | AlgebraicRule, EventWithDelay, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 01580 | AssignmentRule, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01582 | AssignmentRule, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01583 | Compartment, EventNoDelay, EventPriority, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01584 | AssignmentRule, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01586 | AssignmentRule, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01588 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, InitialAssignment, Parameter | pass | fail | skip | skip | skip | yes |
+| 01589 | AlgebraicRule, CSymbolTime, EventNoDelay, EventPriority, Parameter | fail | fail | skip | skip | skip | yes |
+| 01590 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01591 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01592 | AssignmentRule, CSymbolDelay, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 01593 | AssignmentRule, CSymbolDelay, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | fail | fail | skip | skip | skip | yes |
+| 01594 | AssignmentRule, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01595 | AssignmentRule, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01596 | AssignmentRule, CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01597 | AssignmentRule, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01598 | AssignmentRule, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01599 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01600 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | no |
+| 01601 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01602 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | no |
+| 01603 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01604 | CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01605 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01626 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01627 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01631 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01633 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01635 | Compartment, RateRule, Reaction, Species | pass | fail | skip | skip | skip | no |
+| 01641 | CSymbolAvogadro, CSymbolTime, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01642 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01643 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01644 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01645 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01646 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01647 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01648 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01649 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01650 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01651 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01652 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01653 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01654 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01655 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01657 | AssignmentRule, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01658 | CSymbolAvogadro, CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01659 | CSymbolAvogadro, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01660 | CSymbolAvogadro, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01661 | CSymbolAvogadro, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | no |
+| 01662 | CSymbolAvogadro, CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | fail | skip | skip | skip | yes |
+| 01663 | CSymbolAvogadro, EventNoDelay, Parameter | pass | fail | skip | skip | skip | no |
+| 01664 | CSymbolAvogadro, CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01665 | CSymbolAvogadro, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01666 | Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01667 | Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01668 | Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01669 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01670 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01671 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01672 | CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01673 | CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01674 | CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01675 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01676 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01677 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01678 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01679 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01680 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01681 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01682 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01683 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01684 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01685 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01686 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01687 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01688 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01689 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01690 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01691 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01692 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01693 | EventNoDelay, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | no |
+| 01694 | EventNoDelay, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | no |
+| 01695 | EventNoDelay, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | no |
+| 01696 | EventNoDelay, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | no |
+| 01697 | EventNoDelay, Parameter | pass | fail | skip | skip | skip | no |
+| 01698 | EventNoDelay, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01699 | EventNoDelay, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01700 | EventNoDelay, InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01701 | EventWithDelay, FunctionDefinition, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01702 | EventWithDelay, FunctionDefinition, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
+| 01703 | Compartment, EventWithDelay, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01704 | Compartment, EventWithDelay, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01705 | CSymbolTime, Compartment, EventNoDelay, EventPriority, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01706 | CSymbolTime, Compartment, EventWithDelay, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01707 | CSymbolTime, Compartment, EventWithDelay, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01708 | CSymbolTime, Compartment, EventWithDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01709 | CSymbolTime, Compartment, EventWithDelay, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
+| 01710 | Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01711 | Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01712 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01713 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01714 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01715 | Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01716 | Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01717 | Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01718 | Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01719 | Compartment, EventNoDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01720 | CSymbolTime, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01721 | CSymbolTime, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01722 | CSymbolAvogadro, Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01723 | CSymbolAvogadro, Compartment, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01724 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01725 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01726 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01727 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01728 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01729 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01730 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01731 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01732 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01733 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01734 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01735 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01736 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01737 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01738 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01739 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01740 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01741 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01742 | Compartment, FunctionDefinition, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01744 | AssignmentRule, CSymbolTime, Compartment, FunctionDefinition, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01746 | Compartment, InitialAssignment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01748 | AssignmentRule, CSymbolTime, Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01754 | EventWithDelay, InitialAssignment, Parameter | pass | fail | skip | skip | skip | yes |
+| 01755 | EventWithDelay, InitialAssignment, Parameter | pass | fail | skip | skip | skip | yes |
+| 01756 | EventWithDelay, InitialAssignment, Parameter | pass | fail | skip | skip | skip | yes |
+| 01757 | EventWithDelay, InitialAssignment, Parameter | pass | fail | skip | skip | skip | yes |
+| 01758 | EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01759 | CSymbolTime, EventNoDelay, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01760 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01761 | Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01762 | CSymbolAvogadro, Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01763 | CSymbolAvogadro, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01766 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01767 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01768 | Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01769 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01770 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01771 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01772 | Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01773 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01774 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01775 | CSymbolAvogadro, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01776 | CSymbolAvogadro, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01777 | CSymbolAvogadro, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01779 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, Species | pass | fail | skip | skip | skip | yes |
+| 01780 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, Species | pass | fail | skip | skip | skip | yes |
+| 01781 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01782 | AssignmentRule, Parameter | pass | fail | skip | skip | skip | no |
+| 01783 | Parameter, RateRule | pass | fail | skip | skip | skip | no |
+| 01799 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01800 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01801 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01802 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01803 | Parameter | pass | fail | skip | skip | skip | no |
+| 01804 | Compartment, Species | pass | fail | skip | skip | skip | no |
+| 01805 | Compartment | pass | fail | skip | skip | skip | no |
+| 01806 | Compartment, Species | pass | fail | skip | skip | skip | no |
+| 01807 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01808 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01809 | Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01810 | Parameter | pass | fail | skip | skip | skip | no |
+| 01811 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01812 | Parameter | pass | fail | skip | skip | skip | no |
+| 01813 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01814 | Parameter | pass | fail | skip | skip | skip | no |
+| 01815 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01816 | Parameter | pass | fail | skip | skip | skip | no |
+| 01817 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01818 | Parameter | pass | fail | skip | skip | skip | no |
+| 01819 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
+| 01820 | Parameter | fail | fail | skip | skip | skip | yes |
+| 01821 | CSymbolTime, InitialAssignment, Parameter | fail | fail | skip | skip | skip | yes |
+| 01822 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, RateRule, Reaction, Species | pass | fail | skip | skip | skip | yes |
+| 01823 | AssignmentRule, CSymbolRateOf, Compartment, Parameter, RateRule, Species | pass | fail | skip | skip | skip | yes |
