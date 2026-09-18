@@ -127,6 +127,21 @@ def test_render_report_escapes_pipe_in_case_name() -> None:
     assert "A \\| B" in text
 
 
+def test_render_report_escapes_pipe_in_reasons() -> None:
+    # libopencor joins its issues with " | "
+    result = sample()
+    result.cases["00001"].stages["libopencor"] = StageResult(
+        "fail", "SimulationFailure: libopencor: SimulationError: run: Task | CVODE"
+    )
+    result.skipped["00007"] = "reason | with a pipe"
+    text = render_report(result)
+    assert (
+        "| SimulationFailure: libopencor: SimulationError: run: Task \\| CVODE | 1 | 00001 |"
+        in text
+    )
+    assert "| reason \\| with a pipe | 1 |" in text
+
+
 def test_reason_groups_tolerance_messages() -> None:
     a = _message(RuntimeError("S1 exceeds the tolerance by 0.5"))
     b = _message(RuntimeError("S2 exceeds the tolerance by nan"))

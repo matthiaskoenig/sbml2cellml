@@ -30,6 +30,19 @@ _NUMBER = re.compile(r"(?<=[ (,=])(?:nan|inf|[\d][\d.e+-]*)")
 _TOLERANCE = re.compile(r"exceeds the tolerance")
 
 
+def _cell(text: str) -> str:
+    """Escape a text for a markdown table cell.
+
+    Args:
+        text: free text, e.g. a failure reason (libopencor joins its issues
+            with ` | `) or a model name.
+
+    Returns:
+        The text with `|` escaped, so it does not split the cell.
+    """
+    return text.replace("|", "\\|")
+
+
 def _reason(message: str) -> str:
     """Group key of a failure message.
 
@@ -146,7 +159,7 @@ def render_report(
         ):
             examples = ", ".join(ids[:CASES_PER_REASON])
             more = f", ... ({len(ids)} in total)" if len(ids) > CASES_PER_REASON else ""
-            lines.append(f"| {reason} | {len(ids)} | {examples}{more} |")
+            lines.append(f"| {_cell(reason)} | {len(ids)} | {examples}{more} |")
         if mismatch_ids:
             tag_groups: dict[str, list[str]] = defaultdict(list)
             for cid in mismatch_ids:
@@ -170,7 +183,7 @@ def render_report(
 
     lines += ["## Skipped cases", "", "| reason | cases |", "| --- | --- |"]
     for reason, count in sorted(Counter(result.skipped.values()).items()):
-        lines.append(f"| {reason} | {count} |")
+        lines.append(f"| {_cell(reason)} | {count} |")
 
     name_header = "name | " if names else ""
     name_sep = "--- | " if names else ""
@@ -185,8 +198,7 @@ def render_report(
     ]
     for cid, case in sorted(result.cases.items()):
         statuses = " | ".join(case.stages[stage].status for stage in STAGES)
-        name = case.name.replace("|", "\\|")
-        name_cell = f"{name} | " if names else ""
+        name_cell = f"{_cell(case.name)} | " if names else ""
         if case.informative is None:
             informative_cell = ""
         else:
