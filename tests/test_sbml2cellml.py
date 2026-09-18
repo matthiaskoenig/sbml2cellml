@@ -486,6 +486,17 @@ def test_initial_assignment_to_nan_is_not_evaluated(
     assert "InitialAssignment for 'k1' not converted" in caplog.text
 
 
+def test_boundary_species_has_no_reaction_terms(tmp_path: Path) -> None:
+    model_sbml = simple_model("boundary")
+    model_sbml.getSpecies("S1").setBoundaryCondition(True)
+    sbml_path = write_sbml(tmp_path / "boundary.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    math_text = model.component(0).math().replace(" ", "").replace("\n", "")
+    # only S2 gets a differential equation
+    assert math_text.count("<diff/>") == 1
+    assert "<bvar><ci>time</ci></bvar><ci>S2</ci>" in math_text
+
+
 def test_nan_initial_value_logs_warning(
     tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:
