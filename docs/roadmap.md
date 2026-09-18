@@ -14,6 +14,7 @@
 - **Local parameters** of kinetic laws are not converted, so a kinetic law using one references an unknown name.
 - **Ids of species references and reactions** in formulas (a stoichiometry, a reaction rate) are not converted, they reference unknown names.
 - **N-ary relations** such as `a > b > c` are not split into binary ones; CellML only has binary relations.
+- **The delay and rateOf symbols** are not converted: CellML has no delays, and `rateOf(x)` would have to become the right-hand side of the equation of `x`.
 - **Unset initial values** of variables which no assignment rule sets are `1.0`, with a warning, instead of being computed, e.g., from an initial assignment.
 
 ### CellML to SBML

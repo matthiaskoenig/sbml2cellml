@@ -60,6 +60,20 @@ def test_process_leaves_infinity_and_nan_without_units() -> None:
     assert "units" not in mathml
 
 
+def test_process_writes_time_as_the_variable_of_integration() -> None:
+    """The SBML time symbol is the variable of integration `time` of CellML."""
+    mathml = process_mathml_for_cellml("k * time")
+    assert "csymbol" not in mathml
+    assert "<ci> time </ci>" in mathml
+
+
+def test_process_writes_avogadro_as_a_number() -> None:
+    mathml = process_mathml_for_cellml("avogadro * k")
+    assert "csymbol" not in mathml
+    assert 'cellml:units="dimensionless"' in mathml
+    assert "6.02214179" in mathml
+
+
 def test_process_raises_on_invalid_formula() -> None:
     with pytest.raises(MathMLError, match="does not parse"):
         process_mathml_for_cellml("k1 * (")

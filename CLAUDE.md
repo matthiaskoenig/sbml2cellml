@@ -70,8 +70,9 @@ on `develop` after the merge.
   structure and the validity of the example models.
 - `mathml.py`: libsbml renders formulas as MathML documents; the helpers strip
   the declaration and `math` element, map `sbml:units` to `cellml:units`,
-  make every number a real with units (`dimensionless` when it has none,
-  `normalize_numbers`) and wrap the equations into the component math.
+  make every number a real with units (`dimensionless` when it has none),
+  replace the time symbol by the variable `time` and avogadro by its value
+  (`normalize_math`) and wrap the equations into the component math.
 - `cellml.py`: libcellml `Parser`, `Printer`, `Validator` and `Analyser`
   wrappers; issues are returned, `errors()` filters level `ERROR`,
   `CellMLValidationError`.
