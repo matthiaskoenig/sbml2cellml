@@ -23,8 +23,24 @@ In the SBML to CellML direction units, events, initial assignments, function def
 If you have any questions or issues please [open an issue](https://github.com/matthiaskoenig/sbml2cellml/issues).
 
 # How to cite
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22829187.svg)](https://doi.org/10.5281/zenodo.22829187)
 
-The Zenodo DOI and the citation are available with the first release.
+If you use `sbml2cellml` please cite the archived software on [Zenodo](https://doi.org/10.5281/zenodo.22829187):
+
+> König, M. (2026). *sbml2cellml: conversion of SBML models to CellML* (Version 0.2.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22831545
+
+```bibtex
+@software{konig_sbml2cellml,
+  author    = {König, Matthias},
+  title     = {sbml2cellml: conversion of SBML models to CellML},
+  year      = {2026},
+  month     = sep,
+  version   = {0.2.0},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.22831545},
+  url       = {https://doi.org/10.5281/zenodo.22831545},
+}
+```
 
 # License
 - Source Code: [MIT](https://opensource.org/license/MIT)

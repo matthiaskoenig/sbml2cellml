@@ -55,7 +55,24 @@ The [Roadmap](roadmap.md) lists what comes next.
 
 ## Citation
 
-The citation information is available with the first release.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22829187.svg)](https://doi.org/10.5281/zenodo.22829187)
+
+If you use `sbml2cellml` please cite the archived software on [Zenodo](https://doi.org/10.5281/zenodo.22829187):
+
+> König, M. (2026). *sbml2cellml: conversion of SBML models to CellML* (Version 0.2.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22831545
+
+```bibtex
+@software{konig_sbml2cellml,
+  author    = {König, Matthias},
+  title     = {sbml2cellml: conversion of SBML models to CellML},
+  year      = {2026},
+  month     = sep,
+  version   = {0.2.0},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.22831545},
+  url       = {https://doi.org/10.5281/zenodo.22831545},
+}
+```
 
 ## License
 
