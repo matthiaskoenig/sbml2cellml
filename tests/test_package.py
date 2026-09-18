@@ -1,14 +1,27 @@
 """Tests of the package metadata and the test fixtures."""
 
+import importlib.metadata
 import logging
+import re
+from pathlib import Path
 
 import sbml2cellml
 from sbml2cellml import log
 from tests.conftest import GLIMEPIRIDE_MODELS, MODELS_DIR, TEST_MODEL_PATH
 
+ROOT = Path(__file__).parent.parent
 
-def test_version() -> None:
-    assert sbml2cellml.__version__ == "0.1.0"
+
+def test_version_is_consistent() -> None:
+    """The module, the installed metadata and the citation agree on the version.
+
+    `bump-my-version` updates the module and `CITATION.cff`; the metadata of the
+    editable install follows through the `cache-keys` of `[tool.uv]`.
+    """
+    version = sbml2cellml.__version__
+    assert re.fullmatch(r"\d+\.\d+\.\d+", version)
+    assert importlib.metadata.version("sbml2cellml") == version
+    assert f'version: "{version}"' in (ROOT / "CITATION.cff").read_text()
 
 
 def test_models_exist() -> None:

@@ -9,6 +9,7 @@ import libcellml
 import libsbml
 import pytest
 
+import sbml2cellml
 from sbml2cellml import cellml2sbml
 from sbml2cellml.cli import main, main_cellml2sbml
 from tests.conftest import MODELS_DIR, TEST_MODEL_PATH
@@ -77,7 +78,7 @@ def test_version(capsys: pytest.CaptureFixture[str]) -> None:
     with pytest.raises(SystemExit) as info:
         main(["--version"])
     assert info.value.code == 0
-    assert "0.1.0" in capsys.readouterr().out
+    assert sbml2cellml.__version__ in capsys.readouterr().out
 
 
 def test_entry_point_installed(tmp_path: Path) -> None:
@@ -148,7 +149,7 @@ def test_cellml2sbml_version(capsys: pytest.CaptureFixture[str]) -> None:
     with pytest.raises(SystemExit) as info:
         main_cellml2sbml(["--version"])
     assert info.value.code == 0
-    assert "0.1.0" in capsys.readouterr().out
+    assert sbml2cellml.__version__ in capsys.readouterr().out
 
 
 def test_cellml2sbml_entry_point_installed(tmp_path: Path) -> None:
