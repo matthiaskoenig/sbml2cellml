@@ -4,6 +4,8 @@
 
 ## Conversion gaps
 
+### SBML to CellML
+
 - **Units.** Every variable is `dimensionless` and the SBML unit definitions are not converted. Numbers with units in formulas (`cn` elements with `cellml:units`) reference units which do not exist in the CellML model, which libcellml reports as errors. The `time` variable has no unit either.
 - **Initial assignments** are skipped with a warning. The initial value would have to be computed from the assignment, e.g., with libroadrunner.
 - **Function definitions** are not inlined, so a formula calling a function references an unknown name.
