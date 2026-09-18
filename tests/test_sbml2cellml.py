@@ -17,9 +17,9 @@ from tests.sbml_models import simple_model, write_sbml
 VALID_MODELS = ["glimepiride_kidney", "glimepiride_liver"]
 #: models with known conversion gaps, see docs/roadmap.md
 INVALID_MODELS = {
-    "glimepiride_intestine": "function definition and units on numbers",
-    "glimepiride_body": "units on numbers in formulas",
-    "glimepiride_body_flat": "units on numbers in formulas",
+    "glimepiride_intestine": "function definition and SBML units on numbers",
+    "glimepiride_body": "SBML units on numbers and function definitions",
+    "glimepiride_body_flat": "SBML units on numbers and function definitions",
 }
 
 
@@ -183,6 +183,16 @@ def test_assigned_compartment_without_size_converts_with_one(
     assert v["cell"].initialValue() == ""
     assert float(v["S2"].initialValue()) == 4.0
     assert "Size of compartment 'cell' is not set" in caplog.text
+
+
+def test_numbers_without_units_convert_to_valid_cellml(tmp_path: Path) -> None:
+    """Integer, rational and e-notation numbers in formulas pass libcellml."""
+    model_sbml = simple_model("numbers")
+    law: libsbml.KineticLaw = model_sbml.getReaction("r1").getKineticLaw()
+    law.setMath(libsbml.parseL3Formula("2 * k1 * S1 * (3/4) + 1e-3"))
+    sbml_path = write_sbml(tmp_path / "numbers.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    assert errors(validate_model(model)) == []
 
 
 def test_nan_initial_value_logs_warning(

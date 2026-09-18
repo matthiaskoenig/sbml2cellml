@@ -28,6 +28,38 @@ def test_process_maps_sbml_units_to_cellml_units() -> None:
     assert "sbml:units" not in mathml
 
 
+@pytest.mark.parametrize("formula", ["2 * k", "2.5 * k", "1e-3 * k", "(3/4) * k"])
+def test_process_gives_numbers_without_units_dimensionless(formula: str) -> None:
+    """CellML requires units on every number; every variable is dimensionless."""
+    mathml = process_mathml_for_cellml(formula)
+    assert mathml.count("<cn") == 1
+    assert 'cellml:units="dimensionless"' in mathml
+
+
+def test_process_writes_integers_and_rationals_as_reals() -> None:
+    """CellML 2.0 numbers are real or e-notation."""
+    integer = process_mathml_for_cellml("2 * k")
+    assert 'type="integer"' not in integer
+    assert "> 2 </cn>" in integer
+    rational = process_mathml_for_cellml("(3/4) * k")
+    assert 'type="rational"' not in rational
+    assert "> 0.75 </cn>" in rational
+
+
+def test_process_keeps_e_notation_and_units_of_numbers() -> None:
+    assert 'type="e-notation"' in process_mathml_for_cellml("1e-3 * k")
+    mathml = process_mathml_for_cellml("2 second * k")
+    assert 'cellml:units="second"' in mathml
+    assert "dimensionless" not in mathml
+
+
+def test_process_leaves_infinity_and_nan_without_units() -> None:
+    mathml = process_mathml_for_cellml("INF + NaN * k")
+    assert "<infinity/>" in mathml
+    assert "<notanumber/>" in mathml
+    assert "units" not in mathml
+
+
 def test_process_raises_on_invalid_formula() -> None:
     with pytest.raises(MathMLError, match="does not parse"):
         process_mathml_for_cellml("k1 * (")

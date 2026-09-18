@@ -43,7 +43,7 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | rate rule | differential equation |
 | reaction | kinetic law added to the differential equation of every reactant and product |
 | unit definition | not yet, every variable is `dimensionless` |
-| units on numbers in formulas | not yet |
+| numbers in formulas | real numbers, `dimensionless` when they have no units; SBML unit definitions on numbers not yet |
 | initial assignment | not yet, a warning is logged |
 | function definition | not yet |
 | event | not yet, a warning is logged |

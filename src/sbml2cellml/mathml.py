@@ -6,8 +6,13 @@ one `math` element, so the rendered fragments are stripped of the declaration
 and the element, combined, and wrapped in a `math` element which declares the
 `cellml` namespace for the units of numbers. The `sbml:units` attribute of
 libsbml becomes `cellml:units`.
+
+CellML requires units on every number and only knows real and e-notation
+numbers: a number without units gets `dimensionless` (the units of every
+variable until units are converted), integers and rationals become reals.
 """
 
+import math
 import re
 
 import libsbml
@@ -20,6 +25,8 @@ MATH_CLOSE = "</math>"
 
 SBML_UNITS_ATTRIBUTE = "sbml:units"
 CELLML_UNITS_ATTRIBUTE = "cellml:units"
+#: units of a number without units
+NUMBER_UNITS = "dimensionless"
 
 #: opening math element of the CellML component math
 CELLML_MATH_OPEN = (
@@ -32,6 +39,25 @@ class MathMLError(ValueError):
     """A formula cannot be rendered as MathML."""
 
 
+def normalize_numbers(node: libsbml.ASTNode) -> None:
+    """Make the numbers of a formula valid CellML numbers, in place.
+
+    Integers and rationals become reals, a finite number without units gets
+    `NUMBER_UNITS`. Infinity and NaN stay as they are, they are written as
+    the `infinity` and `notanumber` constants, which have no units.
+
+    Args:
+        node: root of the libsbml AST of the formula.
+    """
+    if node.isNumber() and math.isfinite(node.getValue()):
+        if node.getType() in (libsbml.AST_INTEGER, libsbml.AST_RATIONAL):
+            node.setValue(float(node.getValue()))
+        if not node.isSetUnits():
+            node.setUnits(NUMBER_UNITS)
+    for k in range(node.getNumChildren()):
+        normalize_numbers(node.getChild(k))
+
+
 def process_mathml_for_cellml(formula: str) -> str:
     """Render a formula in SBML L3 syntax as a MathML fragment for CellML.
 
@@ -40,7 +66,7 @@ def process_mathml_for_cellml(formula: str) -> str:
 
     Returns:
         The MathML of the formula without xml declaration and `math` element,
-        with `cellml:units` attributes on numbers with units.
+        with `cellml:units` on every finite number (see `normalize_numbers`).
 
     Raises:
         MathMLError: if the formula does not parse.
@@ -50,6 +76,7 @@ def process_mathml_for_cellml(formula: str) -> str:
         raise MathMLError(
             f"Formula does not parse: '{formula}': {libsbml.getLastParseL3Error()}"
         )
+    normalize_numbers(ast)
     mathml: str = libsbml.writeMathMLToString(ast)
     mathml = XML_DECLARATION.sub("", mathml)
     mathml = MATH_OPEN.sub("", mathml, count=1)
