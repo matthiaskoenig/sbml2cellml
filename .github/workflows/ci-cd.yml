@@ -25,7 +25,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        # no windows for now: the win_amd64 wheels of libcellml 0.7.1 contain
+        # ARM64 binaries (https://github.com/cellml/libcellml/issues/1460)
+        os: [ubuntu-latest, macos-latest]
         python-version: ["3.13"]
 
     steps:
