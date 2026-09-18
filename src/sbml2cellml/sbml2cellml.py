@@ -91,8 +91,13 @@ def convert_sbml2cellml(
     _add_parameters(component, model_sbml, assigned)
     in_amount = _add_species(component, model_sbml, compartment_sizes, assigned)
     local_ids = _add_local_parameters(component, model_sbml)
+    _add_species_references(component, model_sbml, assigned)
+    rates = _kinetic_laws(model_sbml, local_ids)
+    reaction_ids = _referenced_reactions(model_sbml, rates)
+    for rid in reaction_ids:
+        _add_variable(component, rid, None)
 
-    reaction_terms = _collect_reaction_terms(model_sbml, in_amount, local_ids)
+    reaction_terms = _collect_reaction_terms(model_sbml, in_amount, rates)
 
     parts: list[str] = []
     for vid, formula in assignment_rules.items():
@@ -104,6 +109,9 @@ def convert_sbml2cellml(
     for vid, formula in reaction_terms.items():
         logger.info("d%s/dt = %s", vid, formula)
         parts.append(mathml.mathml_for_diff(vid=vid, formula=formula, ivid=TIME_ID))
+    for rid in reaction_ids:
+        logger.info("%s = %s (rate of reaction)", rid, rates[rid])
+        parts.append(mathml.mathml_for_assignment(vid=rid, formula=rates[rid]))
     component.setMath(mathml.cellml_math(parts))
 
     event: libsbml.Event
@@ -174,14 +182,20 @@ def _expand_function_definitions(doc: libsbml.SBMLDocument, mid: str) -> None:
     logger.info("Expanded %d function definitions of '%s'", count, mid)
 
 
-def _function_calls(node: libsbml.ASTNode | None, names: set[str]) -> None:
-    """Collect the names of the functions a formula calls."""
+def _collect_names(
+    node: libsbml.ASTNode | None, node_type: int, names: set[str]
+) -> None:
+    """Collect the names of the nodes of a type in a formula.
+
+    E.g. the functions it calls (`AST_FUNCTION`) or the ids it uses
+    (`AST_NAME`).
+    """
     if node is None:
         return
-    if node.getType() == libsbml.AST_FUNCTION:
+    if node.getType() == node_type:
         names.add(node.getName())
     for k in range(node.getNumChildren()):
-        _function_calls(node.getChild(k), names)
+        _collect_names(node.getChild(k), node_type, names)
 
 
 def _recursive_functions(model_sbml: libsbml.Model) -> list[str]:
@@ -197,7 +211,7 @@ def _recursive_functions(model_sbml: libsbml.Model) -> list[str]:
     definition: libsbml.FunctionDefinition
     for definition in model_sbml.getListOfFunctionDefinitions():
         names: set[str] = set()
-        _function_calls(definition.getMath(), names)
+        _collect_names(definition.getMath(), libsbml.AST_FUNCTION, names)
         calls[definition.getId()] = names
     recursive = []
     for fid in sorted(calls):
@@ -398,22 +412,43 @@ def _add_local_parameters(
     return local_ids
 
 
-def _collect_reaction_terms(
-    model_sbml: libsbml.Model,
-    in_amount: dict[str, bool],
-    local_ids: dict[str, dict[str, str]],
-) -> dict[str, str]:
-    """Collect the rate of change of every species from the kinetic laws.
+def _add_species_references(
+    component: libcellml.Component, model_sbml: libsbml.Model, assigned: set[str]
+) -> None:
+    """Add the species references with an id as variables.
 
-    The kinetic law of a reaction is in amount per time, with its local
-    parameters renamed to their variables (`local_ids`). It is subtracted
-    for every reactant and added for every product; for a species in
-    concentration the sum is divided by the size of its compartment.
+    The id of a species reference stands for its stoichiometry in formulas,
+    and rules may set it; the variable has the stoichiometry as initial
+    value, none when an assignment rule sets it.
+    """
+    reaction: libsbml.Reaction
+    for reaction in model_sbml.getListOfReactions():
+        references = [*reaction.getListOfReactants(), *reaction.getListOfProducts()]
+        for reference in references:
+            if not reference.isSetId():
+                continue
+            vid: str = reference.getId()
+            value = (
+                None
+                if vid in assigned
+                else _initial_value(vid, reference.getStoichiometry())
+            )
+            _add_variable(component, vid, value)
+            logger.info(
+                "'%s' variable for a stoichiometry of '%s'", vid, reaction.getId()
+            )
+
+
+def _kinetic_laws(
+    model_sbml: libsbml.Model, local_ids: dict[str, dict[str, str]]
+) -> dict[str, str]:
+    """The rate of every reaction with a kinetic law, amount per time.
 
     Returns:
-        The right hand side of `d species / d time`, by species id.
+        The formula of the kinetic law, its local parameters renamed to their
+        variables (`local_ids`), by reaction id.
     """
-    terms: dict[str, str] = {}
+    rates: dict[str, str] = {}
     reaction: libsbml.Reaction
     for reaction in model_sbml.getListOfReactions():
         klaw: libsbml.KineticLaw | None = reaction.getKineticLaw()
@@ -426,12 +461,74 @@ def _collect_reaction_terms(
         math: libsbml.ASTNode = klaw.getMath().deepCopy()
         for pid, vid in local_ids.get(reaction.getId(), {}).items():
             math.renameSIdRefs(pid, vid)
-        formula: str = libsbml.formulaToL3String(math)
+        rates[reaction.getId()] = libsbml.formulaToL3String(math)
+    return rates
+
+
+def _referenced_reactions(
+    model_sbml: libsbml.Model, rates: dict[str, str]
+) -> list[str]:
+    """Ids of the reactions a rule or a kinetic law uses as a name.
+
+    The id of a reaction stands for its rate in formulas; such a reaction
+    gets a variable of its rate.
+    """
+    names: set[str] = set()
+    rule: libsbml.Rule
+    for rule in model_sbml.getListOfRules():
+        _collect_names(rule.getMath(), libsbml.AST_NAME, names)
+    reaction: libsbml.Reaction
+    for reaction in model_sbml.getListOfReactions():
+        if reaction.getKineticLaw() is not None:
+            _collect_names(reaction.getKineticLaw().getMath(), libsbml.AST_NAME, names)
+    return [rid for rid in rates if rid in names]
+
+
+def _stoichiometry_factor(reaction_id: str, reference: libsbml.SpeciesReference) -> str:
+    """Factor of the kinetic law for a species reference, empty for 1."""
+    if reference.isSetId():
+        return f"{reference.getId()} * "
+    if not reference.isSetStoichiometry():
+        logger.warning(
+            "Stoichiometry of '%s' in reaction '%s' is not set, using 1.0.",
+            reference.getSpecies(),
+            reaction_id,
+        )
+        return ""
+    value: float = reference.getStoichiometry()
+    return "" if value == 1.0 else f"{value!r} * "
+
+
+def _collect_reaction_terms(
+    model_sbml: libsbml.Model,
+    in_amount: dict[str, bool],
+    rates: dict[str, str],
+) -> dict[str, str]:
+    """Collect the rate of change of every species from the kinetic laws.
+
+    The rate of a reaction (`rates`) is in amount per time. Multiplied with
+    the stoichiometry (the variable of a species reference with an id), it
+    is subtracted for every reactant and added for every product; for a
+    species in concentration the sum is divided by the size of its
+    compartment.
+
+    Returns:
+        The right hand side of `d species / d time`, by species id.
+    """
+    terms: dict[str, str] = {}
+    reaction: libsbml.Reaction
+    for reaction in model_sbml.getListOfReactions():
+        rid: str = reaction.getId()
+        if rid not in rates:
+            continue
+        formula = rates[rid]
         reference: libsbml.SpeciesReference
         for reference in reaction.getListOfReactants():
-            _append_term(terms, reference.getSpecies(), f"- ({formula})")
+            factor = _stoichiometry_factor(rid, reference)
+            _append_term(terms, reference.getSpecies(), f"- {factor}({formula})")
         for reference in reaction.getListOfProducts():
-            _append_term(terms, reference.getSpecies(), f"+ ({formula})")
+            factor = _stoichiometry_factor(rid, reference)
+            _append_term(terms, reference.getSpecies(), f"+ {factor}({formula})")
 
     for sid, formula in terms.items():
         if not in_amount[sid]:

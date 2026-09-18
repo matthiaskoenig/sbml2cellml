@@ -41,7 +41,9 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | species | variable in amount (`hasOnlySubstanceUnits`) or concentration |
 | assignment rule | equation; its target has no initial value, the equation defines it from the start |
 | rate rule | differential equation |
-| reaction | kinetic law added to the differential equation of every reactant and product |
+| reaction | kinetic law times the stoichiometry added to the differential equation of every reactant and product |
+| species reference with an id | variable of its stoichiometry, which rules may set |
+| reaction id in a formula | variable of the rate of the reaction |
 | unit definition | not yet, every variable is `dimensionless` |
 | numbers in formulas | real numbers, `dimensionless` when they have no units; SBML unit definitions on numbers not yet |
 | time and avogadro symbols | the variable of integration `time`, the number 6.02214179e23 |
