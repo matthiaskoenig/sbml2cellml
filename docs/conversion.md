@@ -25,7 +25,7 @@ A file without a model raises `SBML2CellMLConversionError`.
 
 ## Logging
 
-The package logs the conversion steps and the constructs it skips (events, initial assignments, algebraic rules, unset initial values) and does not print. Scripts enable the rich output of the package with
+The package logs the conversion steps and the constructs it skips (events, algebraic rules, initial assignments libsbml cannot evaluate, unset initial values) and does not print. Scripts enable the rich output of the package with
 
 ```python
 from sbml2cellml import log
