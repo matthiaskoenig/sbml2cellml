@@ -267,6 +267,16 @@ def test_function_definitions_libsbml_refuses_log_warning(
     assert "invalid" in caplog.text
 
 
+def test_time_and_avogadro_convert_to_valid_cellml(tmp_path: Path) -> None:
+    """A kinetic law with the time and avogadro symbols passes libcellml."""
+    model_sbml = simple_model("symbols")
+    law: libsbml.KineticLaw = model_sbml.getReaction("r1").getKineticLaw()
+    law.setMath(libsbml.parseL3Formula("k1 * S1 * time / avogadro"))
+    sbml_path = write_sbml(tmp_path / "symbols.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    assert errors(validate_model(model)) == []
+
+
 def test_nan_initial_value_logs_warning(
     tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:

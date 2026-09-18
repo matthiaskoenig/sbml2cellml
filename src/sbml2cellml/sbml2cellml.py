@@ -26,13 +26,12 @@ import libsbml
 
 from sbml2cellml import cellml, mathml
 from sbml2cellml.cellml import CellMLValidationError
+from sbml2cellml.mathml import TIME_ID
 
 logger = logging.getLogger(__name__)
 
 #: name of the single component which holds the model
 COMPONENT_ID = "sbml"
-#: name of the variable of integration
-TIME_ID = "time"
 #: units of every variable until units are converted
 UNITS_ID = "dimensionless"
 

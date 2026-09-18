@@ -34880,13 +34880,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -34894,14 +34894,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -34922,13 +34922,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -34936,14 +34936,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -34964,13 +34964,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -34978,14 +34978,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35007,13 +35007,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -35021,14 +35021,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35050,13 +35050,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-05,
@@ -35064,14 +35064,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35093,13 +35093,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -35107,14 +35107,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35135,13 +35135,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -35149,14 +35149,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35178,13 +35178,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-05,
@@ -35192,14 +35192,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35221,13 +35221,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -35235,14 +35235,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35264,13 +35264,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -35278,14 +35278,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35307,13 +35307,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -35321,14 +35321,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35350,13 +35350,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -35364,14 +35364,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35393,13 +35393,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.55,
+     "message": "S1 exceeds the tolerance by 0.15; S2 exceeds the tolerance by 2.55",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -35407,14 +35407,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.55,
+     "message": "S1 exceeds the tolerance by 0.15; S2 exceeds the tolerance by 2.55",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35436,13 +35436,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.0265,
+     "message": "S1 exceeds the tolerance by 0.00995; S2 exceeds the tolerance by 0.0132; S3 exceeds the tolerance by 0.0063; S4 exceeds the tolerance by 0.0265",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1e-05,
@@ -35450,14 +35450,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.0265,
+     "message": "S1 exceeds the tolerance by 0.00995; S2 exceeds the tolerance by 0.0132; S3 exceeds the tolerance by 0.0063; S4 exceeds the tolerance by 0.0265",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35479,13 +35479,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.743,
+     "message": "S1 exceeds the tolerance by 0.743; S2 exceeds the tolerance by 0.242; S3 exceeds the tolerance by 0.174; S4 exceeds the tolerance by 0.153",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -35493,14 +35493,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.743,
+     "message": "S1 exceeds the tolerance by 0.743; S2 exceeds the tolerance by 0.242; S3 exceeds the tolerance by 0.174; S4 exceeds the tolerance by 0.153",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35522,13 +35522,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.00015,
+     "message": "S2 exceeds the tolerance by 0.00015",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -35536,14 +35536,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.00015,
+     "message": "S2 exceeds the tolerance by 0.00015",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35565,13 +35565,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.000901,
+     "message": "S2 exceeds the tolerance by 0.00043; S3 exceeds the tolerance by 0.000182; S4 exceeds the tolerance by 0.000901",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -35579,14 +35579,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.000901,
+     "message": "S2 exceeds the tolerance by 0.00043; S3 exceeds the tolerance by 0.000182; S4 exceeds the tolerance by 0.000901",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35608,13 +35608,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.91,
+     "message": "S1 exceeds the tolerance by 1.82; S2 exceeds the tolerance by 0.174; S3 exceeds the tolerance by 0.743; S4 exceeds the tolerance by 1.91",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -35622,14 +35622,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.91,
+     "message": "S1 exceeds the tolerance by 1.82; S2 exceeds the tolerance by 0.174; S3 exceeds the tolerance by 0.743; S4 exceeds the tolerance by 1.91",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35651,13 +35651,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.0901,
+     "message": "S3 exceeds the tolerance by 0.0182; S4 exceeds the tolerance by 0.0901",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -35665,14 +35665,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.0901,
+     "message": "S3 exceeds the tolerance by 0.0182; S4 exceeds the tolerance by 0.0901",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35870,13 +35870,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -35884,14 +35884,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35914,13 +35914,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -35928,14 +35928,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -35957,13 +35957,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 15.7,
+     "message": "S1 exceeds the tolerance by 0.999; S2 exceeds the tolerance by 1.33; S3 exceeds the tolerance by 2; S4 exceeds the tolerance by 15.7",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -35971,14 +35971,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 15.7,
+     "message": "S1 exceeds the tolerance by 0.999; S2 exceeds the tolerance by 1.33; S3 exceeds the tolerance by 2; S4 exceeds the tolerance by 15.7",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -36219,13 +36219,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -36233,14 +36233,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -36262,13 +36262,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1.01e-07,
@@ -36276,14 +36276,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1.01e-07,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -36305,13 +36305,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.01,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.01,
@@ -36319,14 +36319,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.01,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -36345,13 +36345,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -36359,14 +36359,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -36385,13 +36385,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.001,
@@ -36399,14 +36399,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -36425,13 +36425,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -36439,14 +36439,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -36467,13 +36467,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.15,
+     "message": "S2 exceeds the tolerance by 0.15",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -36481,14 +36481,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.15,
+     "message": "S2 exceeds the tolerance by 0.15",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -36510,13 +36510,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.00488,
+     "message": "S2 exceeds the tolerance by 0.00182; S3 exceeds the tolerance by 0.000809; S4 exceeds the tolerance by 0.00488",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1e-05,
@@ -36524,14 +36524,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.00488,
+     "message": "S2 exceeds the tolerance by 0.00182; S3 exceeds the tolerance by 0.000809; S4 exceeds the tolerance by 0.00488",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -36553,13 +36553,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.223,
+     "message": "S1 exceeds the tolerance by 0.137; S2 exceeds the tolerance by 0.085; S3 exceeds the tolerance by 0.137; S4 exceeds the tolerance by 0.223",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -36567,14 +36567,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.223,
+     "message": "S1 exceeds the tolerance by 0.137; S2 exceeds the tolerance by 0.085; S3 exceeds the tolerance by 0.137; S4 exceeds the tolerance by 0.223",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -36596,13 +36596,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.04e-05,
+     "message": "S1 exceeds the tolerance by 1.22e-05; S2 exceeds the tolerance by 8.06e-06; S3 exceeds the tolerance by 1.32e-05; S4 exceeds the tolerance by 2.04e-05",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -36610,14 +36610,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.04e-05,
+     "message": "S1 exceeds the tolerance by 1.22e-05; S2 exceeds the tolerance by 8.06e-06; S3 exceeds the tolerance by 1.32e-05; S4 exceeds the tolerance by 2.04e-05",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -38100,7 +38100,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -38923,7 +38923,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -39086,7 +39086,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -39168,7 +39168,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -40394,7 +40394,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'S2ref' which does not correspond with any variable names present in component 'sbml'.",
      "status": "fail"
     }
    },
@@ -44511,13 +44511,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.0015,
+     "message": "S2 exceeds the tolerance by 0.0015",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -44525,14 +44525,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.0015,
+     "message": "S2 exceeds the tolerance by 0.0015",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -44557,13 +44557,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.0498,
+     "message": "S2 exceeds the tolerance by 0.0182; S3 exceeds the tolerance by 0.00808; S4 exceeds the tolerance by 0.0498",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -44571,14 +44571,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 0.0498,
+     "message": "S2 exceeds the tolerance by 0.0182; S3 exceeds the tolerance by 0.00808; S4 exceeds the tolerance by 0.0498",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -44603,13 +44603,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "S1 exceeds the tolerance by 2; S2 exceeds the tolerance by 1.12; S3 exceeds the tolerance by 0.199; S4 exceeds the tolerance by 1.12",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.001,
@@ -44617,14 +44617,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 2.0,
+     "message": "S1 exceeds the tolerance by 2; S2 exceeds the tolerance by 1.12; S3 exceeds the tolerance by 0.199; S4 exceeds the tolerance by 1.12",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -44994,7 +44994,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'Xref' which does not correspond with any variable names present in component 'sbml'.",
      "status": "fail"
     }
    },
@@ -45509,7 +45509,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'S2ref' which does not correspond with any variable names present in component 'sbml'.",
      "status": "fail"
     }
    },
@@ -46825,13 +46825,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.00022,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.00022,
@@ -46839,14 +46839,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.00022,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -49151,7 +49151,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -49235,7 +49235,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -49277,7 +49277,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -50769,7 +50769,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -51863,7 +51863,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -55052,7 +55052,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -55095,7 +55095,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -55425,7 +55425,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -56587,7 +56587,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -56698,13 +56698,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "P2 exceeds the tolerance by 3",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -56712,14 +56712,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.0,
+     "message": "P2 exceeds the tolerance by 3",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -56741,13 +56741,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -56755,14 +56755,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -56826,13 +56826,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.5,
+     "message": "P2 exceeds the tolerance by 1.5",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -56840,14 +56840,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 1.5,
+     "message": "P2 exceeds the tolerance by 1.5",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -56869,13 +56869,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.5,
+     "message": "P2 exceeds the tolerance by 3.5",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -56883,14 +56883,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.5,
+     "message": "P2 exceeds the tolerance by 3.5",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -58749,7 +58749,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -58793,7 +58793,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -58837,7 +58837,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -58881,7 +58881,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -58925,7 +58925,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] The type of variable 'time' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -60497,13 +60497,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -60511,14 +60511,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -63085,7 +63085,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'S1_stoich' which does not correspond with any variable names present in component 'sbml'.",
      "status": "fail"
     }
    },
@@ -63984,7 +63984,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'S1_stoich' which does not correspond with any variable names present in component 'sbml'.",
      "status": "fail"
     }
    },
@@ -64075,7 +64075,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: [ERROR] MathML ci element has the child text 'S1_stoich' which does not correspond with any variable names present in component 'sbml'.",
      "status": "fail"
     }
    },
@@ -64355,13 +64355,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.02e+24,
+     "message": "S1 exceeds the tolerance by 6.02e+24",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -64369,14 +64369,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.02e+24,
+     "message": "S1 exceeds the tolerance by 6.02e+24",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -64397,13 +64397,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.02e+24,
+     "message": "S1 exceeds the tolerance by 6.02e+24",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.00011,
@@ -64411,14 +64411,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 6.02e+24,
+     "message": "S1 exceeds the tolerance by 6.02e+24",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -64438,13 +64438,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.98,
+     "message": "S1 exceeds the tolerance by 3.98",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -64452,14 +64452,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.98,
+     "message": "S1 exceeds the tolerance by 3.98",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -64481,13 +64481,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.98,
+     "message": "S1 exceeds the tolerance by 3.98",
+     "status": "fail"
     },
     "reference": {
      "max_excess": -0.0002,
@@ -64495,14 +64495,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": 3.98,
+     "message": "S1 exceeds the tolerance by 3.98",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'csymbol' element that is not a supported MathML element.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [

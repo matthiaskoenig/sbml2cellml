@@ -44,6 +44,8 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | reaction | kinetic law added to the differential equation of every reactant and product |
 | unit definition | not yet, every variable is `dimensionless` |
 | numbers in formulas | real numbers, `dimensionless` when they have no units; SBML unit definitions on numbers not yet |
+| time and avogadro symbols | the variable of integration `time`, the number 6.02214179e23 |
+| delay and rateOf symbols | not yet |
 | initial assignment | not yet, a warning is logged |
 | function definition | calls replaced by the body of the function |
 | local parameter of a kinetic law | not yet |

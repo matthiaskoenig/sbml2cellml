@@ -10,6 +10,8 @@ libsbml becomes `cellml:units`.
 CellML requires units on every number and only knows real and e-notation
 numbers: a number without units gets `dimensionless` (the units of every
 variable until units are converted), integers and rationals become reals.
+CellML has no symbols either: the SBML time symbol becomes the variable of
+integration `TIME_ID`, avogadro its value.
 """
 
 import math
@@ -27,6 +29,8 @@ SBML_UNITS_ATTRIBUTE = "sbml:units"
 CELLML_UNITS_ATTRIBUTE = "cellml:units"
 #: units of a number without units
 NUMBER_UNITS = "dimensionless"
+#: name of the variable of integration, which the SBML time symbol becomes
+TIME_ID = "time"
 
 #: opening math element of the CellML component math
 CELLML_MATH_OPEN = (
@@ -39,23 +43,33 @@ class MathMLError(ValueError):
     """A formula cannot be rendered as MathML."""
 
 
-def normalize_numbers(node: libsbml.ASTNode) -> None:
-    """Make the numbers of a formula valid CellML numbers, in place.
+def normalize_math(node: libsbml.ASTNode) -> None:
+    """Make the numbers and symbols of a formula valid CellML, in place.
 
-    Integers and rationals become reals, a finite number without units gets
+    The time symbol becomes a reference to the variable of integration
+    `TIME_ID`, avogadro a number with libsbml's value. Integers and
+    rationals become reals, a finite number without units gets
     `NUMBER_UNITS`. Infinity and NaN stay as they are, they are written as
-    the `infinity` and `notanumber` constants, which have no units.
+    the `infinity` and `notanumber` constants, which have no units. The
+    delay and rateOf symbols stay, CellML has no counterpart for them.
 
     Args:
         node: root of the libsbml AST of the formula.
     """
+    if node.getType() == libsbml.AST_NAME_TIME:
+        node.setType(libsbml.AST_NAME)
+        node.setName(TIME_ID)
+        # else written as <ci definitionURL=".../symbols/time">
+        node.setDefinitionURL("")
+    elif node.getType() == libsbml.AST_NAME_AVOGADRO:
+        node.setValue(node.getReal())
     if node.isNumber() and math.isfinite(node.getValue()):
         if node.getType() in (libsbml.AST_INTEGER, libsbml.AST_RATIONAL):
             node.setValue(float(node.getValue()))
         if not node.isSetUnits():
             node.setUnits(NUMBER_UNITS)
     for k in range(node.getNumChildren()):
-        normalize_numbers(node.getChild(k))
+        normalize_math(node.getChild(k))
 
 
 def process_mathml_for_cellml(formula: str) -> str:
@@ -66,7 +80,8 @@ def process_mathml_for_cellml(formula: str) -> str:
 
     Returns:
         The MathML of the formula without xml declaration and `math` element,
-        with `cellml:units` on every finite number (see `normalize_numbers`).
+        with `cellml:units` on every finite number and the time and
+        avogadro symbols replaced (see `normalize_math`).
 
     Raises:
         MathMLError: if the formula does not parse.
@@ -76,7 +91,7 @@ def process_mathml_for_cellml(formula: str) -> str:
         raise MathMLError(
             f"Formula does not parse: '{formula}': {libsbml.getLastParseL3Error()}"
         )
-    normalize_numbers(ast)
+    normalize_math(ast)
     mathml: str = libsbml.writeMathMLToString(ast)
     mathml = XML_DECLARATION.sub("", mathml)
     mathml = MATH_OPEN.sub("", mathml, count=1)
