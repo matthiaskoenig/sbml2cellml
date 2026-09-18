@@ -56,7 +56,7 @@ def analyse(model: libcellml.Model) -> libcellml.AnalyserModel:
         if analyser.issue(k).level() == libcellml.Issue.Level.ERROR  # ty: ignore[unresolved-attribute]
     ]
     assert not errors, errors
-    return analyser.model()
+    return analyser.analyserModel()
 
 
 def multi_component_model() -> libcellml.Model:

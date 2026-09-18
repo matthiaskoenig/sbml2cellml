@@ -111,8 +111,8 @@ def converted() -> dict[str, str]:
     analyser_model = analyse(model)
     ids = VariableIds(analyser_model)
     formulas: dict[str, str] = {}
-    for k in range(analyser_model.equationCount()):
-        equation = analyser_model.equation(k)
+    for k in range(analyser_model.analyserEquationCount()):
+        equation = analyser_model.analyserEquation(k)
         ast = equation.ast()
         name = ast.leftChild().variable().name() if ast.leftChild().variable() else None
         if name in CASES:
@@ -132,9 +132,10 @@ def test_unsupported_node_raises() -> None:
     analyser_model = analyse(model)
     ids = VariableIds(analyser_model)
     ode = next(
-        analyser_model.equation(k)
-        for k in range(analyser_model.equationCount())
-        if analyser_model.equation(k).type() == libcellml.AnalyserEquation.Type.ODE  # ty: ignore[unresolved-attribute]
+        analyser_model.analyserEquation(k)
+        for k in range(analyser_model.analyserEquationCount())
+        if analyser_model.analyserEquation(k).type()
+        == libcellml.AnalyserEquation.Type.ODE  # ty: ignore[unresolved-attribute]
     )
     # the left side of an ODE holds a DIFF node, which has no place in an expression
     with pytest.raises(MathConversionError, match="diff"):

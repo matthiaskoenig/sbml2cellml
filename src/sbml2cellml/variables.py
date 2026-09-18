@@ -89,6 +89,29 @@ def equivalence_set(variable: Any) -> list[Any]:
     return list(seen.values())
 
 
+def analyser_variables(analyser_model: libcellml.AnalyserModel) -> list[Any]:
+    """Analyser variables of a model other than the voi and the states.
+
+    libcellml lists them by type; they are returned as constants, computed
+    constants, algebraic and external variables, the order of the single
+    variable list of libcellml 0.6 for ODE and algebraic models, so the
+    parameters and their ids come out as before.
+
+    Args:
+        analyser_model: model of a libcellml analyser.
+
+    Returns:
+        The analyser variables.
+    """
+    m = analyser_model
+    return (
+        [m.constant(k) for k in range(m.constantCount())]
+        + [m.computedConstant(k) for k in range(m.computedConstantCount())]
+        + [m.algebraicVariable(k) for k in range(m.algebraicVariableCount())]
+        + [m.externalVariable(k) for k in range(m.externalVariableCount())]
+    )
+
+
 class VariableIds:
     """SBML ids of the variables of an analysed CellML model."""
 
@@ -107,8 +130,8 @@ class VariableIds:
             representatives.append(voi.variable())
         for k in range(analyser_model.stateCount()):
             representatives.append(analyser_model.state(k).variable())
-        for k in range(analyser_model.variableCount()):
-            representatives.append(analyser_model.variable(k).variable())
+        for variable in analyser_variables(analyser_model):
+            representatives.append(variable.variable())
 
         counts = Counter(v.name() for v in representatives)
         used: set[str] = set()

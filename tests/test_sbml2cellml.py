@@ -14,9 +14,10 @@ from tests.conftest import GLIMEPIRIDE_MODELS, MODELS_DIR
 from tests.sbml_models import simple_model, write_sbml
 
 #: models the current converter renders as valid CellML
-VALID_MODELS = ["glimepiride_kidney", "glimepiride_liver"]
+VALID_MODELS = ["glimepiride_liver"]
 #: models with known conversion gaps, see docs/roadmap.md
 INVALID_MODELS = {
+    "glimepiride_kidney": "assignment rule target with an initial value (egfr)",
     "glimepiride_intestine": "function definition and units on numbers",
     "glimepiride_body": "units on numbers in formulas",
     "glimepiride_body_flat": "units on numbers in formulas",
