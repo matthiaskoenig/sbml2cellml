@@ -27,7 +27,7 @@ A pull request can only be merged once the four required checks are green:
 
 | check   | workflow      | content                                                             |
 | ------- | ------------- | --------------------------------------------------------------------|
-| `tests` | `ci-cd.yml`   | the test matrix, linux and macos with python 3.13                   |
+| `tests` | `ci-cd.yml`   | the test matrix, linux and macos with python 3.13 and 3.14          |
 | `ruff`  | `ruff.yml`    | `ruff check` and `ruff format --check`                              |
 | `ty`    | `ty.yml`      | `tox r -e ty`                                                       |
 | `docs`  | `docs.yml`    | the zensical build including the api reference and the agent files  |
@@ -100,7 +100,7 @@ A single sync creates the virtual environment in `.venv`, installs `sbml2cellml`
 uv sync --extra dev
 ```
 
-The `dev` extra contains everything used below, i.e., pytest, ruff, ty, tox, pre-commit, zensical and bump-my-version, together with the `simulate` extra, libopencor and libroadrunner for the roundtrip tests. libopencor is not on PyPI; `[tool.uv.index]` in `pyproject.toml` points uv at the wheels of its GitHub release, so `uv sync` installs it like any other dependency (pip users see [Installation](installation.md#simulation-with-libopencor)). The python version is taken from `.python-version` (3.13, the only supported version until libcellml ships a wheel for 3.14).
+The `dev` extra contains everything used below, i.e., pytest, ruff, ty, tox, pre-commit, zensical and bump-my-version, together with the `simulate` extra, libopencor and libroadrunner for the roundtrip tests. libopencor is not on PyPI; `[tool.uv.index]` in `pyproject.toml` points uv at the wheels of its GitHub release, so `uv sync` installs it like any other dependency (pip users see [Installation](installation.md#simulation-with-libopencor)). The python version is taken from `.python-version` (3.14, the newest supported version; 3.13 is supported as well).
 
 The tools are then run either with `uv run <command>`, which uses the environment without activating it, or from the activated environment:
 
@@ -122,20 +122,20 @@ From now on every commit is checked with ruff (lint and format) and ty, i.e., th
 
 ## Testing
 
-The tests are written with pytest, tox runs them against the supported python version.
+The tests are written with pytest, tox runs them against the supported python versions.
 
-The tox environments are `py3.13` and `ty` (see `envlist` in `tox.ini`); the test environment is run with
+The tox environments are `py3.13`, `py3.14` and `ty` (see `envlist` in `tox.ini`); a test environment is run with
 ```bash
-tox r -e py3.13
+tox r -e py3.14
 ```
-and both environments, in parallel, with
+and all environments, in parallel, with
 ```bash
 tox run-parallel
 ```
 
 The tox environments are created from `uv.lock` by tox-uv (`runner = uv-venv-lock-runner` in `tox.ini`), which is what makes the libopencor index available to them.
 
-This needs the interpreter to be available, which uv installs with `uv python install 3.13`. Continuous integration runs the same environment as `uvx --with tox-uv tox -e py3.13`.
+This needs the interpreters to be available, which uv installs with `uv python install 3.13 3.14`. Continuous integration runs the same environments as `uvx --with tox-uv tox -e py3.13` and `-e py3.14`.
 
 To run the tests directly against the development environment use
 
@@ -262,7 +262,7 @@ the release is prepared on a branch and tagged once that pull request is merged:
 8. test the installation from pypi in a fresh environment:
 
     ```bash
-    uv venv --python 3.13
+    uv venv --python 3.14
     uv pip install sbml2cellml
     ```
 

@@ -1,6 +1,6 @@
 # Installation
 
-`sbml2cellml` requires python 3.13 and is available from [pypi](https://pypi.org/project/sbml2cellml). The dependencies [python-libsbml](https://pypi.org/project/python-libsbml/) and [libcellml](https://pypi.org/project/libcellml/) ship wheels for Linux, macOS and Windows; libcellml has no wheel for python 3.14 yet, which is why 3.14 is not supported.
+`sbml2cellml` requires python 3.13 or 3.14 and is available from [pypi](https://pypi.org/project/sbml2cellml). The dependencies [python-libsbml](https://pypi.org/project/python-libsbml/) and [libcellml](https://pypi.org/project/libcellml/) ship wheels for Linux, macOS and Windows.
 
 !!! warning "Windows"
 
