@@ -68,7 +68,10 @@ on `develop` after the merge.
   a kinetic law become variables `<reaction>_<parameter>` (`unique_sid`).
   Kinetic laws are multiplied with the stoichiometry (no factor for 1); a
   species reference with an id is a variable of its stoichiometry, a reaction
-  whose id a formula uses a variable of its rate. Events, initial
+  whose id a formula uses a variable of its rate. A model without rate rules,
+  reactions and uses of time gets no `time` variable (CellML knows the
+  variable of integration only from a differential equation); `simulate`
+  runs such an algebraic model as a steady state. Events, initial
   assignments, algebraic rules and unset initial values (set to 1.0) are logged
   as warnings. The generated CellML is a fixed contract: tests compare the
   structure and the validity of the example models.

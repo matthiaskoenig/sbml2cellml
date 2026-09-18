@@ -32,7 +32,7 @@ The conversion is validated with [libcellml](https://libcellml.org/); the result
 
 ## What is converted
 
-The converter puts every SBML compartment, parameter and species as a variable into a single CellML component, together with the variable of integration `time`.
+The converter puts every SBML compartment, parameter and species as a variable into a single CellML component, together with the variable of integration `time` when the model has differential equations (rate rules or reactions).
 
 | SBML | CellML |
 | --- | --- |

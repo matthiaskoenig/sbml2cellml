@@ -8,12 +8,15 @@ import logging
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
 
 logger = logging.getLogger(__name__)
 
+#: first column of the timecourse of a model without variable of integration
+STEADY_STATE_TIME = "time"
 #: how to install libopencor, the message of the ImportError
 LIBOPENCOR_INSTALL = (
     "libopencor is not installed. It is not on PyPI; install the wheel for "
@@ -83,12 +86,16 @@ def run_timecourse(
     Returns:
         The timecourse with the variable of integration in the first column
         followed by the states, the algebraic variables, the constants and
-        the computed constants, and the units of every column.
+        the computed constants, and the units of every column. A model
+        without a variable of integration (an algebraic model, which
+        libopencor solves as a steady state) has the same values at every
+        time point, in a first column `time` of the requested time points.
 
     Raises:
         ImportError: if libopencor is not installed.
         SimulationError: if libopencor reports issues, e.g., for a model which
-            is not valid or not fully constrained.
+            is not valid or not fully constrained, or two result columns get
+            the same name.
     """
     libopencor = _libopencor()
     path = Path(cellml_path).resolve()
@@ -100,16 +107,19 @@ def run_timecourse(
     document = libopencor.SedDocument(file)
     _raise_on_issues("document", document.issues)
 
-    # the timecourse settings of the simulation libopencor created for the file
+    # the timecourse settings of the simulation libopencor created for the
+    # file; an algebraic model gets a steady state simulation instead
     simulation = document.simulations[0]
-    simulation.initial_time = start
-    simulation.output_start_time = start
-    simulation.output_end_time = end
-    simulation.number_of_steps = steps
-    if relative_tolerance is not None:
-        simulation.ode_solver.relative_tolerance = relative_tolerance
-    if absolute_tolerance is not None:
-        simulation.ode_solver.absolute_tolerance = absolute_tolerance
+    steady_state = isinstance(simulation, libopencor.SedSteadyState)
+    if not steady_state:
+        simulation.initial_time = start
+        simulation.output_start_time = start
+        simulation.output_end_time = end
+        simulation.number_of_steps = steps
+        if relative_tolerance is not None:
+            simulation.ode_solver.relative_tolerance = relative_tolerance
+        if absolute_tolerance is not None:
+            simulation.ode_solver.absolute_tolerance = absolute_tolerance
 
     instance = document.instantiate()
     _raise_on_issues("instance", instance.issues)
@@ -117,27 +127,45 @@ def run_timecourse(
     _raise_on_issues("run", instance.issues)
 
     task = instance.tasks[0]
-    voi = _variable_name(task.voi_name)
-    data: dict[str, Any] = {voi: task.voi}
-    units: dict[str, str] = {voi: task.voi_unit}
-    for k in range(task.state_count):
-        name = _variable_name(task.state_name(k))
-        data[name] = task.state(k)
-        units[name] = task.state_unit(k)
-    for k in range(task.algebraic_variable_count):
-        name = _variable_name(task.algebraic_variable_name(k))
-        data[name] = task.algebraic_variable(k)
-        units[name] = task.algebraic_variable_unit(k)
+    data: dict[str, Any] = {}
+    units: dict[str, str] = {}
 
-    rows = len(task.voi)
+    def add(name: str, values: Any, unit: str) -> None:
+        # the component prefix is dropped, so two variables, or a variable
+        # and the time points of a steady state, may get the same name
+        if name in data:
+            raise SimulationError(f"result: the name '{name}' occurs twice")
+        data[name] = values
+        units[name] = unit
+
+    if steady_state:
+        # one value per variable, repeated at the requested time points
+        rows = steps + 1
+        add(STEADY_STATE_TIME, np.linspace(start, end, rows), "")
+    else:
+        rows = len(task.voi)
+        add(_variable_name(task.voi_name), task.voi, task.voi_unit)
+    for k in range(task.state_count):
+        add(_variable_name(task.state_name(k)), task.state(k), task.state_unit(k))
+    for k in range(task.algebraic_variable_count):
+        values = task.algebraic_variable(k)
+        add(
+            _variable_name(task.algebraic_variable_name(k)),
+            [_scalar(values)] * rows if steady_state else values,
+            task.algebraic_variable_unit(k),
+        )
     for k in range(task.constant_count):
-        name = _variable_name(task.constant_name(k))
-        data[name] = [_scalar(task.constant(k))] * rows
-        units[name] = task.constant_unit(k)
+        add(
+            _variable_name(task.constant_name(k)),
+            [_scalar(task.constant(k))] * rows,
+            task.constant_unit(k),
+        )
     for k in range(task.computed_constant_count):
-        name = _variable_name(task.computed_constant_name(k))
-        data[name] = [_scalar(task.computed_constant(k))] * rows
-        units[name] = task.computed_constant_unit(k)
+        add(
+            _variable_name(task.computed_constant_name(k)),
+            [_scalar(task.computed_constant(k))] * rows,
+            task.computed_constant_unit(k),
+        )
 
     logger.info("Simulated '%s': %d rows, %d columns", path, steps + 1, len(data))
     return pd.DataFrame(data), units

@@ -266,3 +266,11 @@ def test_requested_frame_many_variables_without_warning() -> None:
         out = requested_frame(df, {}, settings)
     assert list(out.columns) == ["time", *names]
     assert out["p199"].tolist() == [1.0, 2.0]
+
+
+def test_requested_frame_duplicate_columns_raise() -> None:
+    """E.g. roadrunner's time column and a parameter with the id `time`."""
+    df = pd.DataFrame([[0.0, 10.0], [1.0, 10.0]], columns=["time", "time"])
+    settings = Settings(0.0, 1.0, 1, ("time",), 0, 0, frozenset(), frozenset())
+    with pytest.raises(CompareError, match="duplicate column names"):
+        requested_frame(df, {}, settings)

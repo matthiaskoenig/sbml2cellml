@@ -399,6 +399,23 @@ def test_reaction_id_in_a_formula_is_the_rate(tmp_path: Path) -> None:
     assert "r1" in variables(model)
 
 
+def test_model_without_differential_equations_has_no_time(tmp_path: Path) -> None:
+    """CellML knows the variable of integration only from a differential
+    equation; an algebraic model without one would have `time` of unknown type."""
+    doc = libsbml.SBMLDocument(3, 2)
+    model_sbml: libsbml.Model = doc.createModel()
+    model_sbml.setId("algebraic")
+    k: libsbml.Parameter = model_sbml.createParameter()
+    k.setId("k")
+    k.setValue(2.0)
+    k.setConstant(True)
+    _with_rule(model_sbml, "p", "k + k")
+    sbml_path = write_sbml(tmp_path / "algebraic.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    assert errors(validate_model(model)) == []
+    assert TIME_ID not in variables(model)
+
+
 def test_nan_initial_value_logs_warning(
     tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:

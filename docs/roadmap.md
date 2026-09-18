@@ -12,6 +12,8 @@
 - **Algebraic rules** are skipped with a warning.
 - **stoichiometryMath** of level 2 species references is not converted, the stoichiometry attribute is used.
 - **N-ary relations** such as `a > b > c` are not split into binary ones; CellML only has binary relations.
+- **Time without differential equations.** CellML knows the variable of integration only from a differential equation: a model without one has no `time` variable, and a formula using time in such a model cannot be converted.
+- **An SBML id `time`** collides with the variable of integration `time` of the CellML model and with the time column of the simulation results.
 - **The delay and rateOf symbols** are not converted: CellML has no delays, and `rateOf(x)` would have to become the right-hand side of the equation of `x`.
 - **Unset initial values** of variables which no assignment rule sets are `1.0`, with a warning, instead of being computed, e.g., from an initial assignment.
 

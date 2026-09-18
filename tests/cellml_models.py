@@ -215,3 +215,16 @@ def underconstrained_model() -> libcellml.Model:
         math(ode("x", "t", "<apply><times/><ci>k</ci><ci>x</ci></apply>"))
     )
     return model
+
+
+def algebraic_model() -> libcellml.Model:
+    """No variable of integration: the constant `a = 2` and `b = 2 * a`."""
+    model = libcellml.Model("algebraic")
+    component = libcellml.Component("main")
+    model.addComponent(component)
+    variable(component, "a", "dimensionless", 2.0)
+    variable(component, "b", "dimensionless")
+    component.setMath(
+        math(assignment("b", f"<apply><times/>{cn('2')}<ci>a</ci></apply>"))
+    )
+    return model

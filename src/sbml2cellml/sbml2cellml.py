@@ -112,6 +112,11 @@ def convert_sbml2cellml(
     for rid in reaction_ids:
         logger.info("%s = %s (rate of reaction)", rid, rates[rid])
         parts.append(mathml.mathml_for_assignment(vid=rid, formula=rates[rid]))
+    if not (rate_rules or reaction_terms or _uses_time(model_sbml)):
+        # CellML knows the variable of integration only from a differential
+        # equation, an unused one has an unknown type: the model is algebraic
+        component.removeVariable(TIME_ID)
+        logger.info("No differential equation, '%s' is algebraic", mid)
     component.setMath(mathml.cellml_math(parts))
 
     event: libsbml.Event
@@ -482,6 +487,21 @@ def _referenced_reactions(
         if reaction.getKineticLaw() is not None:
             _collect_names(reaction.getKineticLaw().getMath(), libsbml.AST_NAME, names)
     return [rid for rid in rates if rid in names]
+
+
+def _uses_time(model_sbml: libsbml.Model) -> bool:
+    """Whether a rule or a kinetic law uses the time symbol."""
+    names: set[str] = set()
+    rule: libsbml.Rule
+    for rule in model_sbml.getListOfRules():
+        _collect_names(rule.getMath(), libsbml.AST_NAME_TIME, names)
+    reaction: libsbml.Reaction
+    for reaction in model_sbml.getListOfReactions():
+        if reaction.getKineticLaw() is not None:
+            _collect_names(
+                reaction.getKineticLaw().getMath(), libsbml.AST_NAME_TIME, names
+            )
+    return bool(names)
 
 
 def _stoichiometry_factor(reaction_id: str, reference: libsbml.SpeciesReference) -> str:
