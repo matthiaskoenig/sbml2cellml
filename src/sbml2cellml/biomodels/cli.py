@@ -32,7 +32,7 @@ from sbml2cellml.testsuite.results import STAGES, SuiteResult, improvements, reg
 
 DEFAULT_MODELS = Path("biomodels") / "models.json"
 DEFAULT_RESULTS = Path("biomodels") / "results.json"
-DEFAULT_REPORT = Path("docs") / "biomodels.md"
+DEFAULT_REPORT = Path("biomodels") / "report.md"
 #: fraction of the requested ids whose download may fail before `run` gives
 #: up instead of writing a mostly empty result (e.g. a BioModels outage)
 DOWNLOAD_FAILURE_FRACTION = 0.05
@@ -48,7 +48,7 @@ BIOMODELS_INTRO = (
     "assignment rule, with a relative tolerance of 1e-3 and an absolute "
     "tolerance of 1e-6. A `reference` failure means roadrunner cannot simulate "
     "the model, it says nothing about the converters. See "
-    "[Development](development.md#biomodels-check) for how to run it."
+    "[README.md](README.md) for how to run it."
 )
 
 

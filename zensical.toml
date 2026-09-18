@@ -19,7 +19,6 @@ nav = [
   ] },
   { "Roadmap" = "roadmap.md" },
   { "SBML test suite" = "testsuite.md" },
-  { "BioModels" = "biomodels.md" },
   { "API reference" = [
     { "Overview" = "api/index.md" },
     { "sbml2cellml" = "api/sbml2cellml.md" },
@@ -43,12 +42,6 @@ nav = [
       { "results" = "api/testsuite.results.md" },
       { "report" = "api/testsuite.report.md" },
       { "cli" = "api/testsuite.cli.md" },
-    ] },
-    { "sbml2cellml.biomodels" = [
-      { "models" = "api/biomodels.models.md" },
-      { "cases" = "api/biomodels.cases.md" },
-      { "runner" = "api/biomodels.runner.md" },
-      { "cli" = "api/biomodels.cli.md" },
     ] },
   ] },
   { "Contributing" = "development.md" },
