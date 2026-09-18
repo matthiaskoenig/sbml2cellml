@@ -45,7 +45,8 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | unit definition | not yet, every variable is `dimensionless` |
 | numbers in formulas | real numbers, `dimensionless` when they have no units; SBML unit definitions on numbers not yet |
 | initial assignment | not yet, a warning is logged |
-| function definition | not yet |
+| function definition | calls replaced by the body of the function |
+| local parameter of a kinetic law | not yet |
 | event | not yet, a warning is logged |
 | algebraic rule | not yet, a warning is logged |
 

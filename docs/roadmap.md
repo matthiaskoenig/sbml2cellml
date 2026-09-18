@@ -8,10 +8,11 @@
 
 - **Units.** Every variable is `dimensionless` and the SBML unit definitions are not converted. A number without units in a formula is `dimensionless` too, but a number with the units of an SBML unit definition (e.g., `2 mM`) references units which do not exist in the CellML model, which libcellml reports as an error. The `time` variable has no unit either.
 - **Initial assignments** are skipped with a warning. The initial value would have to be computed from the assignment, e.g., with libroadrunner.
-- **Function definitions** are not inlined, so a formula calling a function references an unknown name.
 - **Events** are skipped with a warning. CellML 2.0 has no events; a subset could be expressed with resets.
 - **Algebraic rules** are skipped with a warning.
 - **Stoichiometry** of reactants and products is not applied to the kinetic law.
+- **Local parameters** of kinetic laws are not converted, so a kinetic law using one references an unknown name.
+- **Ids of species references and reactions** in formulas (a stoichiometry, a reaction rate) are not converted, they reference unknown names.
 - **N-ary relations** such as `a > b > c` are not split into binary ones; CellML only has binary relations.
 - **Unset initial values** of variables which no assignment rule sets are `1.0`, with a warning, instead of being computed, e.g., from an initial assignment.
 

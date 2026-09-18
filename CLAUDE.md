@@ -58,7 +58,10 @@ on `develop` after the merge.
 
 - `sbml2cellml.py`: `convert_sbml2cellml(sbml_path, cellml_path=None, validate=True)`.
   One CellML component `sbml`, one variable per compartment, parameter and
-  species plus `time`, all `dimensionless`. Assignment rules become equations
+  species plus `time`, all `dimensionless`. The calls of function definitions
+  are expanded first with libsbml's `expandFunctionDefinitions` conversion
+  (recursive ones are skipped with a warning, libsbml crashes on them when
+  read from a file). Assignment rules become equations
   (their targets get no initial value), rate rules and kinetic laws
   differential equations; a concentration species
   gets its reaction terms divided by the compartment. Events, initial
