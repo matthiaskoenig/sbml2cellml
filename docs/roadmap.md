@@ -13,7 +13,7 @@
 - **Algebraic rules** are skipped with a warning.
 - **Stoichiometry** of reactants and products is not applied to the kinetic law.
 - **Unset initial values** are set to `1.0` with a warning instead of being computed from the rules.
-- **Assignment rule targets** keep the value of the SBML element as `initial_value`. libcellml then treats the rule as a nonlinear equation with that value as the initial guess, so the model is a DAE: libopencor reports the initial guess instead of the assigned value at the start time, and `cellml2sbml` rejects the model (`... is of type 'dae'`). The BioModels check shows it on the non-species variables it compares, e.g., `BIOMD0000000271`.
+- **Assignment rule targets** keep an `initial_value`: the value of the SBML element or, when it has none, the `1.0` of the previous item. A variable with an initial value and an equation is not what CellML expects, the libcellml analyser reports the variables of the rule as underconstrained and the validation rejects the model (e.g., the glimepiride kidney model and the `... is underconstrained` failures of the [SBML test suite](testsuite.md#sbml2cellml)).
 
 ### CellML to SBML
 

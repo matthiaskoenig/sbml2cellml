@@ -1561,13 +1561,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00038' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -1576,13 +1576,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -3464,13 +3464,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00087' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -3479,13 +3479,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -3507,13 +3507,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00088' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -3522,13 +3522,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -3550,13 +3550,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00089' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -3565,13 +3565,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -3593,13 +3593,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00090' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -3608,13 +3608,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -3635,13 +3635,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00091' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -3650,13 +3650,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -5448,13 +5448,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00137' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -5463,13 +5463,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -5491,13 +5491,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00138' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -5506,13 +5506,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -6049,13 +6049,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00151' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -6064,13 +6064,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -6092,13 +6092,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00152' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -6107,13 +6107,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -6135,13 +6135,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00153' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.01e-06,
@@ -6150,13 +6150,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -6178,13 +6178,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00154' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1e-05,
@@ -6193,13 +6193,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -6221,13 +6221,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00155' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.01e-06,
@@ -6236,13 +6236,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -6265,13 +6265,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00156' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1e-05,
@@ -6280,13 +6280,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -6309,13 +6309,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00157' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -6.51e-07,
@@ -6324,13 +6324,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -6353,13 +6353,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00158' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -6368,13 +6368,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -6397,13 +6397,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00159' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.02e-08,
@@ -6412,13 +6412,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -6441,13 +6441,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00160' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -6456,13 +6456,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -12088,13 +12088,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00295' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -12103,13 +12103,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -12132,13 +12132,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00296' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -12147,13 +12147,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -12175,13 +12175,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00297' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -12190,13 +12190,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -12219,13 +12219,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00298' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.1e-05,
@@ -12234,13 +12234,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -12263,13 +12263,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00299' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -12278,13 +12278,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -12306,13 +12306,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00300' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -12321,13 +12321,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -12349,13 +12349,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00301' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.1e-08,
@@ -12364,13 +12364,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -12392,13 +12392,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00302' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.1e-08,
@@ -12407,13 +12407,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -12435,13 +12435,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00303' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.1e-07,
@@ -12450,13 +12450,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -12479,13 +12479,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00304' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.00011,
@@ -12494,13 +12494,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -12524,13 +12524,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00305' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1e-06,
@@ -12539,13 +12539,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -12569,13 +12569,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00306' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1e-08,
@@ -12584,13 +12584,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -12613,13 +12613,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00307' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.1e-08,
@@ -12628,13 +12628,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -12657,13 +12657,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00308' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1e-08,
@@ -12672,13 +12672,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -12700,13 +12700,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00309' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1e-05,
@@ -12715,13 +12715,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'S4' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -24727,13 +24727,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00607' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.07e-08,
@@ -24742,13 +24742,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -24771,13 +24771,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00608' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -24786,13 +24786,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -24815,13 +24815,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00611' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -24830,13 +24830,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -24859,13 +24859,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00612' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -24874,13 +24874,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -25168,13 +25168,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00619' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -25183,13 +25183,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -25212,13 +25212,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00620' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -25227,13 +25227,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -25255,13 +25255,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00621' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -25270,13 +25270,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -25299,13 +25299,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00622' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -25314,13 +25314,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -25343,13 +25343,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00623' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -25358,13 +25358,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -25386,13 +25386,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00624' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -25401,13 +25401,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -27827,13 +27827,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00679' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -27842,13 +27842,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -27872,13 +27872,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00680' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -27887,13 +27887,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -27916,13 +27916,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00681' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -27931,13 +27931,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -27961,13 +27961,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00682' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -27976,13 +27976,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -28006,13 +28006,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00683' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -28021,13 +28021,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -28050,13 +28050,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00684' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -28065,13 +28065,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -28275,13 +28275,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00689' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -28290,13 +28290,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -28320,13 +28320,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00690' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -28335,13 +28335,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -28725,13 +28725,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00699' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -28740,13 +28740,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -28770,13 +28770,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00700' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -28785,13 +28785,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -28815,13 +28815,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00701' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -28830,13 +28830,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -28860,13 +28860,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00702' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -28875,13 +28875,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -29085,13 +29085,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00707' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -29100,13 +29100,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -29129,13 +29129,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00708' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -29144,13 +29144,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -30626,13 +30626,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00749' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -30641,13 +30641,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -30670,13 +30670,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00750' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -30685,13 +30685,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -31509,13 +31509,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00769' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -31524,13 +31524,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -31553,13 +31553,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00770' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.001,
@@ -31568,13 +31568,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -31860,13 +31860,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00777' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": null,
@@ -31875,13 +31875,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -38530,13 +38530,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00946' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'fakeC' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'C' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.0011,
@@ -38545,13 +38545,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'fakeC' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -38621,13 +38621,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case00948' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'fakeC' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'C' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.000123,
@@ -38636,13 +38636,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'fakeC' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -40999,13 +40999,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case01014' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -41014,13 +41014,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -41044,13 +41044,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case01015' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1.01e-08,
@@ -41059,13 +41059,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -43954,13 +43954,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case01087' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k1' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S3' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1e-07,
@@ -43969,13 +43969,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k1' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [
@@ -44001,13 +44001,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "CellML2SBMLConversionError: CellML model 'case01088' is of type 'dae', only ODE and algebraic models are supported.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: file: CellML file | Analyser: variable 'k3' in component 'sbml' is underconstrained.; CellML file | Analyser: variable 'S4' in component 'sbml' is underconstrained.",
-     "status": "fail"
+     "message": "sbml2cellml failed",
+     "status": "skip"
     },
     "reference": {
      "max_excess": -1e-08,
@@ -44016,13 +44016,13 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "cellml2sbml failed",
+     "message": "sbml2cellml failed",
      "status": "skip"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "",
-     "status": "pass"
+     "message": "CellMLValidationError: [ERROR] Variable 'k3' in component 'sbml' is underconstrained.",
+     "status": "fail"
     }
    },
    "test_tags": [

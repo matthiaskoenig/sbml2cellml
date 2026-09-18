@@ -12,9 +12,9 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | stage | pass | fail | skip | pass rate |
 | --- | --- | --- | --- | --- |
 | reference | 1384 | 151 | 0 | 90.2% |
-| sbml2cellml | 526 | 1009 | 0 | 34.3% |
-| libopencor | 137 | 389 | 1009 | 8.9% |
-| cellml2sbml | 458 | 68 | 1009 | 29.8% |
+| sbml2cellml | 458 | 1077 | 0 | 29.8% |
+| libopencor | 137 | 321 | 1077 | 8.9% |
+| cellml2sbml | 458 | 0 | 1077 | 29.8% |
 | roundtrip | 137 | 321 | 1077 | 8.9% |
 
 135 of the 137 cases with a passing libopencor stage are informative: the reference moves more than the tolerance band for at least one variable.
@@ -42,6 +42,7 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | CellMLValidationError: MathML ci element has the child text '...' which does not correspond with any variable names present in component '...'. | 192 | 00025, 00027, 00034, 00035, 00057, 00078, 00079, 00080, 00084, 00085, ... (192 in total) |
 | CellMLValidationError: The type of variable '...' in component '...' is unknown. | 145 | 00920, 00921, 00922, 00930, 00931, 00934, 00935, 00949, 00950, 00952, ... (145 in total) |
 | CellMLValidationError: Math has a '...' element that is not a supported MathML element. | 144 | 00028, 00173, 00851, 00852, 00853, 00854, 00855, 00856, 00857, 00858, ... (144 in total) |
+| CellMLValidationError: Variable '...' in component '...' is underconstrained. | 68 | 00038, 00087, 00088, 00089, 00090, 00091, 00137, 00138, 00151, 00152, ... (68 in total) |
 | MathMLError: Formula does not parse: '...': Error when parsing input '...' at position N: NULL input. | 11 | 01235, 01236, 01416, 01461, 01464, 01465, 01552, 01553, 01555, 01556, ... (11 in total) |
 | CellMLValidationError: Component '...' contains multiple variables with the name '...'. Valid variable names must be unique to their component. | 2 | 01820, 01821 |
 | CellMLValidationError: Variable '...' in component '...' has an invalid initial value '...'. Initial values must be a real number string or a variable reference | 1 | 00951 |
@@ -51,7 +52,6 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | reason | cases | examples |
 | --- | --- | --- |
 | numerical mismatch | 321 | 00003, 00007, 00008, 00009, 00011, 00012, 00013, 00016, 00017, 00022, ... (321 in total) |
-| SimulationFailure: libopencor: SimulationError: file: CellML file \| Analyser: variable '...' in component '...' is underconstrained.; CellML file \| Analyser: va | 68 | 00038, 00087, 00088, 00089, 00090, 00091, 00137, 00138, 00151, 00152, ... (68 in total) |
 
 | tags | cases | examples |
 | --- | --- | --- |
@@ -100,12 +100,6 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | Concentration, NonConstantCompartment, NonUnityCompartment | 1 | 00947 |
 | Concentration, NonUnityStoichiometry | 1 | 00583 |
 | NonConstantParameter | 1 | 00182 |
-
-### cellml2sbml
-
-| reason | cases | examples |
-| --- | --- | --- |
-| CellML2SBMLConversionError: CellML model '...' is of type '...', only ODE and algebraic models are supported. | 68 | 00038, 00087, 00088, 00089, 00090, 00091, 00137, 00138, 00151, 00152, ... (68 in total) |
 
 ### roundtrip
 
@@ -210,7 +204,7 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 00035 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
 | 00036 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
 | 00037 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | fail | pass | fail | yes |
-| 00038 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00038 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00039 | Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
 | 00040 | Compartment, Species, Parameter, AlgebraicRule, RateRule | fail | pass | fail | pass | fail | yes |
 | 00041 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
@@ -255,11 +249,11 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 00084 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
 | 00085 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
 | 00086 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
-| 00087 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00088 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00089 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00090 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00091 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00087 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00088 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00089 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00090 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00091 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00092 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00093 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00094 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
@@ -301,8 +295,8 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 00133 | Compartment, Parameter, Species, Reaction, FunctionDefinition | pass | fail | skip | skip | skip | yes |
 | 00135 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
 | 00136 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
-| 00137 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00138 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00137 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00138 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00139 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00140 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00141 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
@@ -315,16 +309,16 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 00148 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00149 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00150 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
-| 00151 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00152 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00153 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00154 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00155 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00156 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00157 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00158 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00159 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00160 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00151 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00152 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00153 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00154 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00155 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00156 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00157 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00158 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00159 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00160 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00161 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
 | 00162 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
 | 00163 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
@@ -459,21 +453,21 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 00292 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
 | 00293 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
 | 00294 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
-| 00295 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00296 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00297 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00298 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00299 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00300 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00301 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00302 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00303 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00304 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00305 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00306 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00307 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00308 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00309 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00295 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00296 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00297 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00298 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00299 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00300 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00301 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00302 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00303 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00304 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00305 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00306 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00307 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00308 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00309 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00310 | Compartment, Species, Reaction, Parameter, AssignmentRule, RateRule | pass | fail | skip | skip | skip | yes |
 | 00311 | Compartment, Species, Reaction, Parameter, AssignmentRule, RateRule | pass | fail | skip | skip | skip | yes |
 | 00312 | Compartment, Species, Reaction, Parameter, AssignmentRule, RateRule | pass | fail | skip | skip | skip | yes |
@@ -754,22 +748,22 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 00604 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
 | 00605 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
 | 00606 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | fail | skip | skip | skip | yes |
-| 00607 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00608 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00611 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 00612 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 00607 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00608 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00611 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 00612 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00613 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip | yes |
 | 00614 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip | yes |
 | 00615 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip | yes |
 | 00616 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
 | 00617 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
 | 00618 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
-| 00619 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
-| 00620 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
-| 00621 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
-| 00622 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
-| 00623 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
-| 00624 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00619 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00620 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00621 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00622 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00623 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00624 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
 | 00625 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, FunctionDefinition | pass | fail | skip | skip | skip | yes |
 | 00626 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, FunctionDefinition | pass | fail | skip | skip | skip | yes |
 | 00627 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, FunctionDefinition | pass | fail | skip | skip | skip | yes |
@@ -824,18 +818,18 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 00676 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
 | 00677 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
 | 00678 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
-| 00679 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
-| 00680 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
-| 00681 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
-| 00682 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
-| 00683 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
-| 00684 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00679 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00680 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00681 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00682 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00683 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00684 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
 | 00685 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00686 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00687 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip | yes |
 | 00688 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
-| 00689 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
-| 00690 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00689 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00690 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
 | 00691 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00692 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00693 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
@@ -844,16 +838,16 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 00696 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip | yes |
 | 00697 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
 | 00698 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
-| 00699 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
-| 00700 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
-| 00701 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
-| 00702 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00699 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00700 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00701 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00702 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
 | 00703 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00704 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 00705 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | fail | fail | skip | skip | skip | yes |
 | 00706 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | fail | skip | skip | skip | yes |
-| 00707 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
-| 00708 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00707 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00708 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
 | 00709 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
 | 00710 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
 | 00711 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
@@ -887,8 +881,8 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 00746 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
 | 00747 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
 | 00748 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00749 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
-| 00750 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | fail | skip | yes |
+| 00749 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
+| 00750 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | fail | skip | skip | skip | yes |
 | 00751 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
 | 00752 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
 | 00753 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |
@@ -907,15 +901,15 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 00766 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00767 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00768 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
-| 00769 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
-| 00770 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | fail | skip | yes |
+| 00769 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
+| 00770 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | fail | skip | skip | skip | yes |
 | 00771 | Compartment, Species, Reaction, Parameter, EventWithDelay, InitialAssignment | pass | pass | fail | pass | fail | yes |
 | 00772 | Compartment, Species, Reaction, Parameter, EventWithDelay, InitialAssignment | pass | pass | fail | pass | fail | yes |
 | 00773 | Compartment, Species, Reaction, Parameter, EventWithDelay, InitialAssignment | pass | pass | fail | pass | fail | yes |
 | 00774 | Compartment, Species, Reaction, Parameter, EventWithDelay, EventNoDelay | pass | pass | fail | pass | fail | yes |
 | 00775 | Compartment, Species, Reaction, Parameter, EventWithDelay, EventNoDelay | pass | pass | fail | pass | fail | yes |
 | 00776 | Compartment, Species, Reaction, Parameter, EventWithDelay, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00777 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay, AlgebraicRule | fail | pass | fail | fail | skip | yes |
+| 00777 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay, AlgebraicRule | fail | fail | skip | skip | skip | yes |
 | 00778 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay, InitialAssignment | fail | pass | fail | pass | fail | yes |
 | 00779 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay, InitialAssignment | fail | pass | fail | pass | fail | yes |
 | 00780 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay, InitialAssignment | fail | pass | fail | pass | fail | yes |
@@ -1072,9 +1066,9 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 00943 | AssignmentRule, CSymbolDelay, CSymbolTime, InitialAssignment, Parameter | fail | fail | skip | skip | skip | yes |
 | 00944 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 00945 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 00946 | AssignmentRule, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | fail | skip | yes |
+| 00946 | AssignmentRule, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
 | 00947 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 00948 | AssignmentRule, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | fail | skip | yes |
+| 00948 | AssignmentRule, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
 | 00949 | Parameter | pass | fail | skip | skip | skip | no |
 | 00950 | InitialAssignment, Parameter | pass | fail | skip | skip | skip | no |
 | 00951 | Parameter | pass | fail | skip | skip | skip | no |
@@ -1129,8 +1123,8 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 01011 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
 | 01012 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
 | 01013 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
-| 01014 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 01015 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 01014 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 01015 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 01016 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 01017 | Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
 | 01018 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
@@ -1196,8 +1190,8 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 01084 | InitialAssignment, Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
 | 01085 | InitialAssignment, Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
 | 01086 | InitialAssignment, Compartment, Species, Reaction, Parameter, AlgebraicRule | fail | pass | fail | pass | fail | yes |
-| 01087 | InitialAssignment, Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
-| 01088 | InitialAssignment, Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | fail | fail | skip | yes |
+| 01087 | InitialAssignment, Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
+| 01088 | InitialAssignment, Compartment, Species, Reaction, Parameter, AssignmentRule | pass | fail | skip | skip | skip | yes |
 | 01089 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
 | 01090 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
 | 01091 | InitialAssignment, Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | fail | skip | skip | skip | yes |

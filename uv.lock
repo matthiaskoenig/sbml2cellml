@@ -24,8 +24,8 @@ name = "anyio"
 version = "4.15.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "idna" },
-    { name = "typing-extensions", marker = "python_full_version < '3.15'" },
+    { name = "idna", marker = "sys_platform != 'emscripten'" },
+    { name = "typing-extensions", marker = "python_full_version < '3.15' and sys_platform != 'emscripten'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/a9/d2/f4d173e22df740bc37b1db102b386ba719b66e95b0f0d751f556b387e6d2/anyio-4.15.1.tar.gz", hash = "sha256:9f28306018cbd6d329e64a36d58256edff76dd996fe423bc957326e578b82a94", size = 276966, upload-time = "2026-09-05T10:42:39.44Z" }
 wheels = [
@@ -419,8 +419,8 @@ name = "httpcore2"
 version = "2.13.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "h11" },
-    { name = "truststore" },
+    { name = "h11", marker = "sys_platform != 'emscripten'" },
+    { name = "truststore", marker = "sys_platform != 'emscripten'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/15/8c/e925b1c92018abb3a1863ce1549d76d2381e334d21d65d4ac8f65dabd78a/httpcore2-2.13.0.tar.gz", hash = "sha256:2adc8be4fb285fbcd6d894298db3b52c177e74b6674eda3a76bd36be3292a3db", size = 67740, upload-time = "2026-09-14T14:18:04.717Z" }
 wheels = [
@@ -585,14 +585,23 @@ wheels = [
 
 [[package]]
 name = "libcellml"
-version = "0.6.3"
+version = "0.7.1"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4f/c9/a780230f7c098e5b0d663db15763a426c4f11a4fe3dd48e1684e575ec198/libcellml-0.6.3-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:17926629b5b7aed0fa8d05a3ee86defe7a4595d7d28389b754eb9261830a6478", size = 1739613, upload-time = "2024-11-11T08:13:28.767Z" },
-    { url = "https://files.pythonhosted.org/packages/6b/b8/da4182775f850ca6842fdf13149fd231a681c0525836e964029029a10853/libcellml-0.6.3-cp313-cp313-macosx_11_0_x86_64.whl", hash = "sha256:c12d5270cef4e08dfb95360052be2941b9a5326e68dad08ad00a40f5e2f98ffe", size = 1823133, upload-time = "2024-11-11T08:13:30.991Z" },
-    { url = "https://files.pythonhosted.org/packages/5b/6a/2a2d27203e8d030a4199ddb4ce4311043d47b5fcc24e27e813db4ece9fea/libcellml-0.6.3-cp313-cp313-manylinux_2_17_x86_64.whl", hash = "sha256:88d773125220a9bbe36fff6457ce08357170cbdcf2c2851c4c8ca12248a09f8e", size = 2191761, upload-time = "2024-11-11T08:13:32.689Z" },
-    { url = "https://files.pythonhosted.org/packages/58/e6/869c1059cdfae88c1a585d782fd55ef5b289f5456fc1923e08c39ee35b70/libcellml-0.6.3-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:a33af039684806eb1ae508999779321bba48671a1d89b97911df1e41b0345ddc", size = 2173418, upload-time = "2024-11-11T08:13:34.836Z" },
-    { url = "https://files.pythonhosted.org/packages/42/00/791a2710e96c1d936c0b90b4208ee762afe9e9c51e1d9cf3b0a8bda56134/libcellml-0.6.3-cp313-cp313-win_amd64.whl", hash = "sha256:325137eb1bba662dc44e771ef1aa55f1e350001221d8a1e10213177db0b359a7", size = 2339884, upload-time = "2024-11-11T08:13:36.537Z" },
+    { url = "https://files.pythonhosted.org/packages/6e/64/616c31581bf06b925ee2338f7b6cb56523c22d7372667e4f5feda6799769/libcellml-0.7.1-cp313-cp313-macosx_14_0_arm64.whl", hash = "sha256:06001520bce51f6d1038fc741f283ed7cd7183f8fbb5d4d0ac56bec0f972e603", size = 1801704, upload-time = "2026-09-18T01:59:52.966Z" },
+    { url = "https://files.pythonhosted.org/packages/bd/72/32dce4bea85b73fac0388728d53e7f92f46a3b9cbd1420cb72bc91a12562/libcellml-0.7.1-cp313-cp313-macosx_14_0_x86_64.whl", hash = "sha256:acc118ea8d9dc1bbb1ad06414af6f4cfe921ae6e3c17a7c07090c0ec51cd6ed6", size = 1887754, upload-time = "2026-09-18T01:59:54.615Z" },
+    { url = "https://files.pythonhosted.org/packages/97/88/17084d02ee9cd6fd0003cd0986a56489e4a43547a3c4baf349c06b7bf0a9/libcellml-0.7.1-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:af56bb9f832d0b9fdf04c6f556d52cd96993abf9936ef7305730b18d74d53f8b", size = 2256941, upload-time = "2026-09-18T01:59:55.958Z" },
+    { url = "https://files.pythonhosted.org/packages/ad/1a/83f6760991462d84a6c31c2bf784850e2e3c6fd243b820feec78aef95bf0/libcellml-0.7.1-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:febc28b286a25014f68f7a06f69032eaa60abc3e3bff222c24f5217c7f4b75d8", size = 2407665, upload-time = "2026-09-18T01:59:57.406Z" },
+    { url = "https://files.pythonhosted.org/packages/88/82/e578295749c4ca5cde40befc33c87b8d19bdb79bdc1e0932e7b724c9ec83/libcellml-0.7.1-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:1db426b9016b180d09dd29491e4f604869b753c7f28e7c6361f59916dc53a479", size = 2253326, upload-time = "2026-09-18T01:59:58.648Z" },
+    { url = "https://files.pythonhosted.org/packages/47/b3/0f992c5cad2d04808c066fc9efa06ab976966a9a84d5f0066e4c96a9dc21/libcellml-0.7.1-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:beca52e77704b0d3fd571dfe39b50d1d5bf147505b97b444349d023bd01983e8", size = 2398991, upload-time = "2026-09-18T02:00:00.082Z" },
+    { url = "https://files.pythonhosted.org/packages/a0/6b/69d4756864c6c5e79123b72684284730fafa950beb6e3bc0c0af45bb9662/libcellml-0.7.1-cp313-cp313-win_amd64.whl", hash = "sha256:8d959e4b86f600e2fab50897f1b364269503915b4f6b40b903313668160a334b", size = 2171312, upload-time = "2026-09-18T01:54:19.163Z" },
+    { url = "https://files.pythonhosted.org/packages/a3/c4/b49b36a77173c247431a64b6982d4fcf6129fb3a90d972901edd77e3cbfc/libcellml-0.7.1-cp314-cp314-macosx_14_0_arm64.whl", hash = "sha256:2b223fc418865636c10f5d42b4f617ceb0910f5bb219599ebb650cffbff2d561", size = 1803082, upload-time = "2026-09-18T02:00:01.443Z" },
+    { url = "https://files.pythonhosted.org/packages/14/62/eb57af609f93124c6c58ff984a30eaf4137e8fc74d78f9c28698ee170566/libcellml-0.7.1-cp314-cp314-macosx_14_0_x86_64.whl", hash = "sha256:79dc49006ab49cf2945cb52399581a4cb797a10591df059ac1f84e4356d24f44", size = 1889841, upload-time = "2026-09-18T02:00:02.787Z" },
+    { url = "https://files.pythonhosted.org/packages/1f/d5/3fe66ddc9e281c67488d858f8728237f00daa9fe117f7138bf1da4c58a30/libcellml-0.7.1-cp314-cp314-manylinux_2_28_aarch64.whl", hash = "sha256:3ec48a7e30849eaf6f2f114c787fb23fd9fe5a93fec1fd7c7cf8a83a1a9dcc94", size = 2257845, upload-time = "2026-09-18T02:00:04.218Z" },
+    { url = "https://files.pythonhosted.org/packages/07/f0/e49461998a4eb3c544329e71fb3487bd79808fe5324d18ab143a661c9687/libcellml-0.7.1-cp314-cp314-manylinux_2_28_x86_64.whl", hash = "sha256:9136a08ea50723268864ea4f8dc61f94c03fb42a5d8be383598a8f582a8bb600", size = 2408637, upload-time = "2026-09-18T02:00:05.676Z" },
+    { url = "https://files.pythonhosted.org/packages/be/c0/af295619f90c3c3d5afe5707eda3fb6af79cd03c62c95a6703c293ed38e2/libcellml-0.7.1-cp314-cp314-musllinux_1_2_aarch64.whl", hash = "sha256:085f977bb5089e1cd76fd4d5380a10ee3e435b6e2e081010321f11df376a39b9", size = 2253991, upload-time = "2026-09-18T02:00:06.992Z" },
+    { url = "https://files.pythonhosted.org/packages/f4/39/846b021191dd32c1039200d9c80d1b80f13064601756938a3402473eca2c/libcellml-0.7.1-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:7ec946316e15abdf7076cefc6422bf87afddd3da34e8946b4608d64b8e36122a", size = 2398902, upload-time = "2026-09-18T02:00:08.641Z" },
+    { url = "https://files.pythonhosted.org/packages/a0/5a/4dff93f87370e15ab757a8e1c7648465f232144e652d001835d3839756c0/libcellml-0.7.1-cp314-cp314-win_amd64.whl", hash = "sha256:fdafdc4a021db865d32290084504e252b6ebdb203ef9f0390387d98d9d1583aa", size = 2232333, upload-time = "2026-09-18T01:54:20.435Z" },
 ]
 
 [[package]]
@@ -1476,7 +1485,7 @@ testsuite = [
 [package.metadata]
 requires-dist = [
     { name = "bump-my-version", marker = "extra == 'dev'", specifier = ">=1.5.1" },
-    { name = "libcellml", specifier = ">=0.6.3" },
+    { name = "libcellml", specifier = ">=0.7.1" },
     { name = "libopencor", marker = "extra == 'dev'", specifier = "==1.20260803.0", index = "https://github.com/opencor/libopencor/releases/expanded_assets/v1.20260803.0" },
     { name = "libroadrunner", marker = "extra == 'dev'", specifier = ">=2.10.0" },
     { name = "libroadrunner", marker = "extra == 'testsuite'", specifier = ">=2.10.0" },

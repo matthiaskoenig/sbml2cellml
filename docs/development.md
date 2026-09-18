@@ -27,7 +27,7 @@ A pull request can only be merged once the four required checks are green:
 
 | check   | workflow      | content                                                             |
 | ------- | ------------- | --------------------------------------------------------------------|
-| `tests` | `ci-cd.yml`   | the test matrix, linux, macos and windows with python 3.13          |
+| `tests` | `ci-cd.yml`   | the test matrix, linux and macos with python 3.13                   |
 | `ruff`  | `ruff.yml`    | `ruff check` and `ruff format --check`                              |
 | `ty`    | `ty.yml`      | `tox r -e ty`                                                       |
 | `docs`  | `docs.yml`    | the zensical build including the api reference and the agent files  |

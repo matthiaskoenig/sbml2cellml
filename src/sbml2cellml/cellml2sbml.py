@@ -25,7 +25,7 @@ from sbml2cellml.sbmlmath import (
     variable_node,
 )
 from sbml2cellml.units import UnitsConversionError, add_units, unit_id
-from sbml2cellml.variables import VariableIds
+from sbml2cellml.variables import VariableIds, analyser_variables
 
 logger = logging.getLogger(__name__)
 
@@ -118,7 +118,7 @@ def _analyse(model: libcellml.Model) -> Any:
     analyser.analyseModel(model)
     issues = [analyser.issue(k) for k in range(analyser.issueCount())]
     errors = cellml.errors(issues)
-    analyser_model = analyser.model()
+    analyser_model = analyser.analyserModel()
     if errors:
         type_name = (
             libcellml.AnalyserModel.typeAsString(analyser_model.type())
@@ -184,10 +184,9 @@ def build_document(model: libcellml.Model, analyser_model: Any) -> libsbml.SBMLD
         _add_parameter(
             model_sbml, analyser_model.state(k), ids, unit_ids, constant=False
         )
-    for k in range(analyser_model.variableCount()):
-        variable = analyser_model.variable(k)
+    for variable in analyser_variables(analyser_model):
         variable_type = variable.type()
-        if variable_type == VariableType.EXTERNAL:
+        if variable_type == VariableType.EXTERNAL_VARIABLE:
             raise MathConversionError(
                 f"External variable '{variable.variable().name()}' is not supported."
             )
@@ -198,8 +197,8 @@ def build_document(model: libcellml.Model, analyser_model: Any) -> libsbml.SBMLD
         )
         _add_parameter(model_sbml, variable, ids, unit_ids, constant=constant)
 
-    for k in range(analyser_model.equationCount()):
-        _add_equation(model_sbml, analyser_model.equation(k), ids)
+    for k in range(analyser_model.analyserEquationCount()):
+        _add_equation(model_sbml, analyser_model.analyserEquation(k), ids)
 
     _add_events(model_sbml, model, ids)
     return doc
@@ -247,13 +246,30 @@ def _add_parameter(
         logger.info("%s initialised from '%s'", sid, reference)
 
 
+def _equation_variables(equation: Any) -> list[Any]:
+    """Analyser variables an equation computes: states, then the others by type."""
+    return (
+        [equation.state(k) for k in range(equation.stateCount())]
+        + [
+            equation.computedConstant(k)
+            for k in range(equation.computedConstantCount())
+        ]
+        + [
+            equation.algebraicVariable(k)
+            for k in range(equation.algebraicVariableCount())
+        ]
+        + [
+            equation.externalVariable(k)
+            for k in range(equation.externalVariableCount())
+        ]
+    )
+
+
 def _add_equation(model_sbml: libsbml.Model, equation: Any, ids: VariableIds) -> None:
     """Add the rule or initial assignment of an equation."""
     equation_type = equation.type()
     type_name = libcellml.AnalyserEquation.typeAsString(equation_type)
-    names = [
-        equation.variable(k).variable().name() for k in range(equation.variableCount())
-    ]
+    names = [variable.variable().name() for variable in _equation_variables(equation)]
     if equation_type in (EquationType.NLA, EquationType.EXTERNAL):
         raise MathConversionError(
             f"Equation of type '{type_name}' for {names} is not supported."
@@ -284,8 +300,8 @@ def _add_equation(model_sbml: libsbml.Model, equation: Any, ids: VariableIds) ->
         )
     sid = ids.id_for(left.variable())
     if equation_type in (
-        EquationType.TRUE_CONSTANT,
-        EquationType.VARIABLE_BASED_CONSTANT,
+        EquationType.CONSTANT,
+        EquationType.COMPUTED_CONSTANT,
     ):
         assignment: libsbml.InitialAssignment = model_sbml.createInitialAssignment()
         assignment.setSymbol(sid)

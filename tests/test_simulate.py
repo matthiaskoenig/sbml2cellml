@@ -50,7 +50,10 @@ def test_run_timecourse_liver(tmp_path: Path) -> None:
 def test_run_timecourse_underconstrained_raises(tmp_path: Path) -> None:
     """Known conversion gap, see docs/roadmap.md."""
     cellml_path = tmp_path / "kidney.cellml"
-    convert_sbml2cellml(MODELS_DIR / "glimepiride_kidney.xml", cellml_path=cellml_path)
+    # the validation rejects the model already; libopencor has to as well
+    convert_sbml2cellml(
+        MODELS_DIR / "glimepiride_kidney.xml", cellml_path=cellml_path, validate=False
+    )
     with pytest.raises(SimulationError, match="underconstrained"):
         run_timecourse(cellml_path)
 
