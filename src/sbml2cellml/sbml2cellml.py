@@ -12,6 +12,10 @@ unit definitions and the units of numbers are converted, the units of the
 variables when the unit annotation of the model is complete
 (`sbml2cellml.cellmlunits`), else all variables are `dimensionless`.
 
+Every formula stays the AST libsbml reads from the model, new formulas are
+built from nodes (`sbml2cellml.astnodes`): as text an id such as `avogadro`,
+`pi` or `NaN` would be read back as the symbol of that name.
+
 CellML has no functions: the calls of SBML function definitions are replaced
 by the bodies of the functions (libsbml's `expandFunctionDefinitions`
 conversion) before the conversion, and the initial assignments are evaluated
@@ -30,7 +34,7 @@ from pathlib import Path
 import libcellml
 import libsbml
 
-from sbml2cellml import cellml, mathml
+from sbml2cellml import astnodes, cellml, mathml
 from sbml2cellml.cellml import CellMLValidationError
 from sbml2cellml.cellmlunits import CellMLUnits
 from sbml2cellml.mathml import TIME_ID
@@ -85,6 +89,7 @@ def convert_sbml2cellml(
     _expand(doc, mid, recursive, FUNCTION_DEFINITIONS)
     formulas = _collect_formulas(doc.getModel())
     _rate_of_in_initial_assignments(doc.getModel(), formulas)
+    _drop_initial_assignments_without_math(doc.getModel())
     _expand(doc, mid, recursive, INITIAL_ASSIGNMENTS)
     # the conversions rewrite the document, its model is read again
     model_sbml = doc.getModel()
@@ -125,21 +130,25 @@ def convert_sbml2cellml(
 
     parts: list[str] = []
     for vid, formula in assignment_rules.items():
-        logger.info("%s = %s", vid, formula)
+        logger.info("%s = %s", vid, astnodes.text(formula))
         parts.append(mathml.mathml_for_assignment(vid, formula, number_units))
     for sid, amount in formulas.amounts.items():
-        formula = f"{amount.variable} / {amount.compartment}"
-        logger.info("%s = %s (concentration of an amount)", sid, formula)
+        formula = astnodes.apply(
+            libsbml.AST_DIVIDE,
+            astnodes.name(amount.variable),
+            astnodes.name(amount.compartment),
+        )
+        logger.info("%s = %s (concentration of an amount)", sid, astnodes.text(formula))
         parts.append(mathml.mathml_for_assignment(sid, formula, number_units))
     for vid, formula in formulas.algebraic_rules.items():
-        logger.info("0 = %s (determines %s)", formula, vid)
+        logger.info("0 = %s (determines %s)", astnodes.text(formula), vid)
         parts.append(mathml.mathml_for_algebraic(formula, number_units))
     parts.extend(_constants_of_algebraic_rules(component, formulas))
     for vid, formula in [*rate_rules.items(), *reaction_terms.items()]:
-        logger.info("d%s/dt = %s", vid, formula)
+        logger.info("d%s/dt = %s", vid, astnodes.text(formula))
         parts.append(mathml.mathml_for_diff(vid, formula, TIME_ID, number_units))
     for rid in reaction_ids:
-        logger.info("%s = %s (rate of reaction)", rid, rates[rid])
+        logger.info("%s = %s (rate of reaction)", rid, astnodes.text(rates[rid]))
         parts.append(mathml.mathml_for_assignment(rid, rates[rid], number_units))
     parts.extend(
         _non_finite_initial_values(component, set(rate_rules) | set(reaction_terms))
@@ -203,7 +212,8 @@ def _expand(
     values (`INITIAL_ASSIGNMENTS`). libsbml refuses an invalid document (e.g.
     a call of an undefined function) and crashes on a recursive function
     definition read from a file, which is therefore checked first. The initial
-    assignments are evaluated `_without_rate_rules`. What is
+    assignments are evaluated `_without_rate_rules`; libsbml leaves the ones
+    which are NaN, see `_assign_nan`. What is
     not expanded stays, with a warning: the calls, which the validation of
     the CellML reports as unknown names, and the initial assignments, which
     are not converted.
@@ -232,6 +242,7 @@ def _expand(
     if expansion is INITIAL_ASSIGNMENTS:
         with _without_rate_rules(doc):
             status = doc.convert(properties)
+            _assign_nan(doc.getModel())
     else:
         # the calls in the rate rules are expanded too
         status = doc.convert(properties)
@@ -250,6 +261,105 @@ def _expand(
         )
     if left < count:
         logger.info("Expanded %d %s of '%s'", count - left, what.lower(), mid)
+
+
+def _drop_initial_assignments_without_math(model_sbml: libsbml.Model) -> None:
+    """Remove the initial assignments without math, which have no effect.
+
+    SBML allows them since L3V2; libsbml reports a failure for them when it
+    expands the initial assignments.
+    """
+    for k in reversed(range(model_sbml.getNumInitialAssignments())):
+        assignment: libsbml.InitialAssignment = model_sbml.getInitialAssignment(k)
+        if not assignment.isSetMath():
+            logger.info(
+                "InitialAssignment for '%s' has no math and is ignored",
+                assignment.getSymbol(),
+            )
+            model_sbml.removeInitialAssignment(k)
+
+
+def _assign_nan(model_sbml: libsbml.Model) -> None:
+    """Set the variables of the initial assignments which are NaN, in place.
+
+    libsbml leaves an initial assignment which it evaluates to NaN, the value
+    of the formula (`NaN`, `0 / 0`, a formula with a variable which is NaN)
+    as well as the sign of a formula it cannot evaluate. The value is NaN
+    when libsbml knows all of the formula: no call of a function definition,
+    no rateOf or delay symbol and only ids of compartments, parameters,
+    species and species references, none of which has an initial assignment
+    libsbml cannot evaluate. Such an assignment is removed and its variable
+    set to NaN (see `_non_finite_initial_values`), the others stay.
+
+    Args:
+        model_sbml: the SBML model after the expansion of the initial
+            assignments, without its rate rules (`_without_rate_rules`).
+    """
+    left: dict[str, libsbml.ASTNode] = {
+        assignment.getSymbol(): assignment.getMath()
+        for assignment in model_sbml.getListOfInitialAssignments()
+    }
+    names_of: dict[str, set[str]] = {}
+    for sid, formula in left.items():
+        names_of[sid] = set()
+        _collect_names(formula, libsbml.AST_NAME, names_of[sid])
+    known = {
+        sid
+        for sid, formula in left.items()
+        if _is_known(model_sbml, formula, names_of[sid])
+    }
+    shrinks = True
+    while shrinks:
+        unknown = set(left) - known
+        through_unknown = {sid for sid in known if names_of[sid] & unknown}
+        known -= through_unknown
+        shrinks = bool(through_unknown)
+
+    libsbml.SBMLTransforms.mapComponentValues(model_sbml)
+    values = {
+        sid: libsbml.SBMLTransforms.evaluateASTNode(left[sid], model_sbml)
+        for sid in known
+    }
+    libsbml.SBMLTransforms.clearComponentValues(model_sbml)
+    for sid, value in values.items():
+        if not math.isnan(value):
+            continue
+        _set_quantity(model_sbml.getElementBySId(sid), math.nan)
+        model_sbml.removeInitialAssignment(sid)
+        logger.info("%s = NaN (initial assignment)", sid)
+
+
+#: nodes of a formula whose value libsbml does not know
+_UNKNOWN_NODES = (
+    libsbml.AST_FUNCTION,
+    libsbml.AST_FUNCTION_RATE_OF,
+    libsbml.AST_FUNCTION_DELAY,
+)
+
+
+def _is_known(
+    model_sbml: libsbml.Model, formula: libsbml.ASTNode, ids: set[str]
+) -> bool:
+    """Whether libsbml knows the value of every part of a formula.
+
+    Args:
+        model_sbml: the SBML model.
+        formula: the formula.
+        ids: the ids the formula uses.
+    """
+    names: set[str] = set()
+    for node_type in _UNKNOWN_NODES:
+        _collect_names(formula, node_type, names)
+    return not names and all(
+        isinstance(
+            model_sbml.getElementBySId(sid),
+            libsbml.Compartment
+            | libsbml.Parameter
+            | libsbml.Species
+            | libsbml.SpeciesReference,
+        )
+        for sid in ids
+    )
 
 
 @contextmanager
@@ -300,20 +410,20 @@ class _Amount:
 
 @dataclass
 class _Formulas:
-    """The formulas of a model in SBML L3 syntax, without rateOf symbols."""
+    """The formulas of a model as libsbml ASTs, without rateOf symbols."""
 
     #: right-hand side by the id of the variable an assignment rule sets
-    assignment_rules: dict[str, str]
+    assignment_rules: dict[str, libsbml.ASTNode]
     #: right-hand side of `d x / d time` by the id of a rate rule target
-    rate_rules: dict[str, str]
+    rate_rules: dict[str, libsbml.ASTNode]
     #: right-hand side of `d species / d time` from the reactions
-    reaction_terms: dict[str, str]
+    reaction_terms: dict[str, libsbml.ASTNode]
     #: rate by reaction id
-    rates: dict[str, str]
+    rates: dict[str, libsbml.ASTNode]
     #: variable id of every local parameter, by reaction and parameter id
     local_ids: dict[str, dict[str, str]]
     #: formula of `0 = formula` by the id of the variable the rule determines
-    algebraic_rules: dict[str, str]
+    algebraic_rules: dict[str, libsbml.ASTNode]
     #: variable of the amount by the id of a species in concentration whose
     #: compartment changes
     amounts: dict[str, _Amount]
@@ -324,7 +434,7 @@ class _Formulas:
         return set(self.assignment_rules) | set(self.algebraic_rules)
 
     @property
-    def derivatives(self) -> dict[str, str]:
+    def derivatives(self) -> dict[str, libsbml.ASTNode]:
         """Right-hand side of `d x / d time` by id, what `rateOf(x)` stands for.
 
         The concentration `S = A / C` of a species with a variable of its
@@ -332,9 +442,18 @@ class _Formulas:
         """
         derivatives = {**self.rate_rules, **self.reaction_terms}
         for sid, amount in self.amounts.items():
-            rate = self.reaction_terms.get(amount.variable, "0")
-            cid = amount.compartment
-            derivatives[sid] = f"(({rate}) - {sid} * rateOf({cid})) / {cid}"
+            compartment = astnodes.name(amount.compartment)
+            dilution = astnodes.apply(
+                libsbml.AST_TIMES,
+                astnodes.name(sid),
+                astnodes.apply(libsbml.AST_FUNCTION_RATE_OF, compartment),
+            )
+            rate = self.reaction_terms.get(amount.variable, astnodes.number(0.0))
+            derivatives[sid] = astnodes.apply(
+                libsbml.AST_DIVIDE,
+                astnodes.apply(libsbml.AST_MINUS, rate, dilution),
+                compartment,
+            )
         return derivatives
 
 
@@ -397,10 +516,9 @@ def _rate_of_in_initial_assignments(
     for assignment in model_sbml.getListOfInitialAssignments():
         if not assignment.isSetMath():
             continue
-        formula: str = libsbml.formulaToL3String(assignment.getMath())
-        expanded = _expand_rate_of(formula, derivatives, formulas.computed)
-        if expanded != formula:
-            assignment.setMath(libsbml.parseL3Formula(expanded))
+        math: libsbml.ASTNode = assignment.getMath()
+        if _uses_rate_of(math):
+            assignment.setMath(_expand_rate_of(math, derivatives, formulas.computed))
 
 
 def _collect_names(
@@ -602,7 +720,7 @@ def _value_at_start(model_sbml: libsbml.Model, sid: str) -> float:
     with _without_rate_rules(model_sbml.getSBMLDocument()):
         libsbml.SBMLTransforms.mapComponentValues(model_sbml)
         value: float = libsbml.SBMLTransforms.evaluateASTNode(
-            libsbml.parseL3Formula(sid), model_sbml
+            astnodes.name(sid), model_sbml
         )
         libsbml.SBMLTransforms.clearComponentValues(model_sbml)
     return value
@@ -697,23 +815,25 @@ def _size(cid: str, sid: str, compartment_sizes: dict[str, float]) -> float:
 
 def _collect_rules(
     model_sbml: libsbml.Model,
-) -> tuple[dict[str, str], dict[str, str], list[str]]:
+) -> tuple[
+    dict[str, libsbml.ASTNode], dict[str, libsbml.ASTNode], list[libsbml.ASTNode]
+]:
     """Collect the rules as formulas.
 
     Returns:
         The assignment rules and the rate rules, formula by variable id, and
         the formulas of the algebraic rules.
     """
-    assignment_rules: dict[str, str] = {}
-    rate_rules: dict[str, str] = {}
-    algebraic_rules: list[str] = []
+    assignment_rules: dict[str, libsbml.ASTNode] = {}
+    rate_rules: dict[str, libsbml.ASTNode] = {}
+    algebraic_rules: list[libsbml.ASTNode] = []
     rule: libsbml.Rule
     for rule in model_sbml.getListOfRules():
         if not rule.isSetMath():
             # allowed since SBML L3V2, the rule has no effect
             logger.info("Rule for '%s' has no math and is ignored", rule.getVariable())
             continue
-        formula: str = libsbml.formulaToL3String(rule.getMath())
+        formula: libsbml.ASTNode = rule.getMath().deepCopy()
         if rule.getTypeCode() == libsbml.SBML_ASSIGNMENT_RULE:
             assignment_rules[rule.getVariable()] = formula
         elif rule.getTypeCode() == libsbml.SBML_RATE_RULE:
@@ -724,8 +844,8 @@ def _collect_rules(
 
 
 def _match_algebraic_rules(
-    model_sbml: libsbml.Model, rules: list[str], determined: set[str]
-) -> dict[str, str]:
+    model_sbml: libsbml.Model, rules: list[libsbml.ASTNode], determined: set[str]
+) -> dict[str, libsbml.ASTNode]:
     """Match every algebraic rule with the variable it determines.
 
     An algebraic rule `0 = formula` determines a variable of its formula
@@ -774,7 +894,7 @@ def _match_algebraic_rules(
     candidates: list[list[str]] = []
     for formula in rules:
         names: set[str] = set()
-        _collect_names(libsbml.parseL3Formula(formula), libsbml.AST_NAME, names)
+        _collect_names(formula, libsbml.AST_NAME, names)
         candidates.append(sorted(sid for sid in names if free(sid)))
 
     rule_of: dict[str, int] = {}
@@ -794,7 +914,7 @@ def _match_algebraic_rules(
         if not assign(k, set()):
             logger.warning(
                 "AlgebraicRule '%s' not converted, it determines no variable.",
-                formula,
+                astnodes.text(formula),
             )
     # a rule follows the rules which determine the other unknowns it uses:
     # the libcellml analyser finds a model with guesses overconstrained
@@ -849,7 +969,9 @@ def _local_parameter_ids(
 
 
 def _changing(
-    model_sbml: libsbml.Model, assignment_rules: dict[str, str], solved: set[str]
+    model_sbml: libsbml.Model,
+    assignment_rules: dict[str, libsbml.ASTNode],
+    solved: set[str],
 ) -> set[str]:
     """Ids of the variables which change in time.
 
@@ -877,11 +999,10 @@ def _changing(
 
     names_of: dict[str, set[str]] = {}
     for vid, formula in assignment_rules.items():
-        node: libsbml.ASTNode | None = libsbml.parseL3Formula(formula)
         names: set[str] = set()
-        _collect_names(node, libsbml.AST_NAME, names)
+        _collect_names(formula, libsbml.AST_NAME, names)
         times: set[str] = set()
-        _collect_names(node, libsbml.AST_NAME_TIME, times)
+        _collect_names(formula, libsbml.AST_NAME_TIME, times)
         if times:
             changing.add(vid)
         names_of[vid] = names
@@ -997,14 +1118,14 @@ def _add_species_references(
 
 def _kinetic_laws(
     model_sbml: libsbml.Model, local_ids: dict[str, dict[str, str]]
-) -> dict[str, str]:
+) -> dict[str, libsbml.ASTNode]:
     """The rate of every reaction with a kinetic law, amount per time.
 
     Returns:
         The formula of the kinetic law, its local parameters renamed to their
         variables (`local_ids`), by reaction id.
     """
-    rates: dict[str, str] = {}
+    rates: dict[str, libsbml.ASTNode] = {}
     reaction: libsbml.Reaction
     for reaction in model_sbml.getListOfReactions():
         klaw: libsbml.KineticLaw | None = reaction.getKineticLaw()
@@ -1017,12 +1138,12 @@ def _kinetic_laws(
         math: libsbml.ASTNode = klaw.getMath().deepCopy()
         for pid, vid in local_ids.get(reaction.getId(), {}).items():
             math.renameSIdRefs(pid, vid)
-        rates[reaction.getId()] = libsbml.formulaToL3String(math)
+        rates[reaction.getId()] = math
     return rates
 
 
 def _referenced_reactions(
-    model_sbml: libsbml.Model, rates: dict[str, str]
+    model_sbml: libsbml.Model, rates: dict[str, libsbml.ASTNode]
 ) -> list[str]:
     """Ids of the reactions a rule or a kinetic law uses as a name.
 
@@ -1106,9 +1227,8 @@ def _solve_algebraic_rules(model_sbml: libsbml.Model, formulas: _Formulas) -> No
         model_sbml: the SBML model, the values are set in place.
         formulas: the formulas of the model.
     """
-    for sid, formula in formulas.algebraic_rules.items():
+    for sid, node in formulas.algebraic_rules.items():
         element: libsbml.SBase = model_sbml.getElementBySId(sid)
-        node: libsbml.ASTNode = libsbml.parseL3Formula(formula)
         original = _quantity(element)
 
         def residual(
@@ -1178,7 +1298,7 @@ def _constants_of_algebraic_rules(
     names: set[str] = set()
     for vid, formula in formulas.algebraic_rules.items():
         rule_names: set[str] = set()
-        _collect_names(libsbml.parseL3Formula(formula), libsbml.AST_NAME, rule_names)
+        _collect_names(formula, libsbml.AST_NAME, rule_names)
         names |= rule_names
         # the unknown of another algebraic rule cannot be stated as a
         # constant, it loses its guess instead
@@ -1194,18 +1314,19 @@ def _constants_of_algebraic_rules(
             continue
         value: str = variable.initialValue()
         variable.removeInitialValue()
-        formula = NON_FINITE.get(value, value)
-        logger.info("%s = %s (constant of an algebraic rule)", name, formula)
+        logger.info("%s = %s (constant of an algebraic rule)", name, value)
         parts.append(
             mathml.mathml_for_assignment(
-                name, formula, number_units=variable.units().name()
+                name,
+                astnodes.number(float(value)),
+                number_units=variable.units().name(),
             )
         )
     return parts
 
 
-#: L3 formula of the non-finite initial values libcellml writes
-NON_FINITE = {"inf": "INF", "-inf": "-INF", "nan": "NaN"}
+#: the non-finite initial values as libcellml writes them
+NON_FINITE = {"inf", "-inf", "nan"}
 
 
 def _non_finite_initial_values(
@@ -1229,18 +1350,29 @@ def _non_finite_initial_values(
     parts: list[str] = []
     for k in range(component.variableCount()):
         variable: libcellml.Variable = component.variable(k)
-        formula = NON_FINITE.get(variable.initialValue())
-        if formula is None or variable.name() in states:
+        value: str = variable.initialValue()
+        if value not in NON_FINITE or variable.name() in states:
             continue
         variable.removeInitialValue()
-        logger.info("%s = %s (non-finite initial value)", variable.name(), formula)
-        parts.append(mathml.mathml_for_assignment(vid=variable.name(), formula=formula))
+        logger.info("%s = %s (non-finite initial value)", variable.name(), value)
+        parts.append(
+            mathml.mathml_for_assignment(variable.name(), astnodes.number(float(value)))
+        )
     return parts
 
 
+def _uses_rate_of(node: libsbml.ASTNode) -> bool:
+    """Whether a formula has a rateOf symbol."""
+    return node.getType() == libsbml.AST_FUNCTION_RATE_OF or any(
+        _uses_rate_of(node.getChild(k)) for k in range(node.getNumChildren())
+    )
+
+
 def _expand_rate_of(
-    formula: str, derivatives: dict[str, str], assigned: set[str]
-) -> str:
+    formula: libsbml.ASTNode,
+    derivatives: dict[str, libsbml.ASTNode],
+    assigned: set[str],
+) -> libsbml.ASTNode:
     """Replace the rateOf symbols of a formula by the rates they stand for.
 
     `rateOf(x)` becomes the right-hand side of the differential equation of
@@ -1250,24 +1382,21 @@ def _expand_rate_of(
     SBML does not allow); the validation of the CellML reports it then.
 
     Args:
-        formula: formula in SBML L3 syntax.
+        formula: the formula, which is not changed.
         derivatives: right-hand side of `d x / d time` by id.
         assigned: ids which an assignment rule sets.
 
     Returns:
         The formula without the rateOf symbols which could be replaced.
     """
-    if "rateOf" not in formula:
+    if not _uses_rate_of(formula):
         return formula
-    ast: libsbml.ASTNode | None = libsbml.parseL3Formula(formula)
-    if ast is None:
-        return formula  # reported when the formula is rendered
-    return libsbml.formulaToL3String(_replace_rate_of(ast, derivatives, assigned, ()))
+    return _replace_rate_of(formula.deepCopy(), derivatives, assigned, ())
 
 
 def _replace_rate_of(
     node: libsbml.ASTNode,
-    derivatives: dict[str, str],
+    derivatives: dict[str, libsbml.ASTNode],
     assigned: set[str],
     path: tuple[str, ...],
 ) -> libsbml.ASTNode:
@@ -1292,11 +1421,11 @@ def _replace_rate_of(
                 target,
             )
             return node
-        rate: libsbml.ASTNode | None = libsbml.parseL3Formula(
-            derivatives.get(target, "0")
+        rate: libsbml.ASTNode = (
+            derivatives[target].deepCopy()
+            if target in derivatives
+            else astnodes.number(0.0)
         )
-        if rate is None:
-            return node
         return _replace_rate_of(rate, derivatives, assigned, (*path, target))
     for k in range(node.getNumChildren()):
         child: libsbml.ASTNode = node.getChild(k)
@@ -1306,24 +1435,28 @@ def _replace_rate_of(
     return node
 
 
-def _stoichiometry_factor(reaction_id: str, reference: libsbml.SpeciesReference) -> str:
-    """Factor of the kinetic law for a species reference, empty for 1."""
+def _stoichiometry_factor(
+    reaction_id: str, reference: libsbml.SpeciesReference
+) -> libsbml.ASTNode | None:
+    """Factor of the kinetic law for a species reference, `None` for 1."""
     if reference.isSetId():
-        return f"{reference.getId()} * "
+        return astnodes.name(reference.getId())
     if not reference.isSetStoichiometry():
         logger.warning(
             "Stoichiometry of '%s' in reaction '%s' is not set, using 1.0.",
             reference.getSpecies(),
             reaction_id,
         )
-        return ""
+        return None
     value: float = reference.getStoichiometry()
-    return "" if value == 1.0 else f"{value!r} * "
+    return None if value == 1.0 else astnodes.number(value)
 
 
 def _collect_reaction_terms(
-    model_sbml: libsbml.Model, rates: dict[str, str], amounts: dict[str, _Amount]
-) -> dict[str, str]:
+    model_sbml: libsbml.Model,
+    rates: dict[str, libsbml.ASTNode],
+    amounts: dict[str, _Amount],
+) -> dict[str, libsbml.ASTNode]:
     """Collect the rate of change of every species from the kinetic laws.
 
     The rate of a reaction (`rates`) is in amount per time. Multiplied with
@@ -1339,27 +1472,32 @@ def _collect_reaction_terms(
         The right hand side of `d variable / d time`, by the id of the
         species or of the variable of its amount.
     """
-    terms: dict[str, str] = {}
+    terms: dict[str, list[tuple[int, libsbml.ASTNode]]] = {}
     reaction: libsbml.Reaction
     for reaction in model_sbml.getListOfReactions():
         rid: str = reaction.getId()
         if rid not in rates:
             continue
-        formula = rates[rid]
         reference: libsbml.SpeciesReference
         for sign, references in (
-            ("-", reaction.getListOfReactants()),
-            ("+", reaction.getListOfProducts()),
+            (libsbml.AST_MINUS, reaction.getListOfReactants()),
+            (libsbml.AST_PLUS, reaction.getListOfProducts()),
         ):
             for reference in references:
                 sid: str = reference.getSpecies()
                 if model_sbml.getSpecies(sid).getBoundaryCondition():
                     continue
                 factor = _stoichiometry_factor(rid, reference)
-                _append_term(terms, sid, f"{sign} {factor}({formula})")
+                term = (
+                    rates[rid]
+                    if factor is None
+                    else astnodes.apply(libsbml.AST_TIMES, factor, rates[rid])
+                )
+                terms.setdefault(sid, []).append((sign, term))
 
-    result: dict[str, str] = {}
-    for sid, formula in terms.items():
+    result: dict[str, libsbml.ASTNode] = {}
+    for sid, signed_terms in terms.items():
+        formula = astnodes.signed_sum(signed_terms)
         species: libsbml.Species = model_sbml.getSpecies(sid)
         # the conversion factor of the species, else of the model, converts
         # the extent of the reactions into the amount of the species
@@ -1369,16 +1507,18 @@ def _collect_reaction_terms(
             else model_sbml.getConversionFactor()
         )
         if factor_id:
-            formula = f"{factor_id} * ({formula})"
+            formula = astnodes.apply(
+                libsbml.AST_TIMES, astnodes.name(factor_id), formula
+            )
         if sid in amounts:
             result[amounts[sid].variable] = formula
             continue
         if not species.getHasOnlySubstanceUnits():
-            formula = f"1.0 dimensionless/{species.getCompartment()} * ({formula})"
+            per_size = astnodes.apply(
+                libsbml.AST_DIVIDE,
+                astnodes.number(1.0, mathml.NUMBER_UNITS),
+                astnodes.name(species.getCompartment()),
+            )
+            formula = astnodes.apply(libsbml.AST_TIMES, per_size, formula)
         result[sid] = formula
     return result
-
-
-def _append_term(terms: dict[str, str], sid: str, term: str) -> None:
-    """Append a term to the rate of change of a species."""
-    terms[sid] = f"{terms[sid]} {term}" if sid in terms else term

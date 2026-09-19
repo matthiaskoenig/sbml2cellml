@@ -17,12 +17,12 @@ A `roadrunner` failure means roadrunner itself cannot simulate the case (algebra
 | stage | total | pass | fail | skip | pass rate |
 | --- | --- | --- | --- | --- | --- |
 | roadrunner | 1535 | 1384 | 151 | 0 | 90.2% |
-| sbml2cellml | 1535 | 1462 | 73 | 0 | 95.2% |
-| libopencor | 1535 | 1038 | 424 | 73 | 67.6% |
-| cellml2sbml | 1535 | 1462 | 0 | 73 | 95.2% |
-| roundtrip | 1535 | 956 | 506 | 73 | 62.3% |
+| sbml2cellml | 1535 | 1464 | 71 | 0 | 95.4% |
+| libopencor | 1535 | 1044 | 420 | 71 | 68.0% |
+| cellml2sbml | 1535 | 1464 | 0 | 71 | 95.4% |
+| roundtrip | 1535 | 962 | 502 | 71 | 62.7% |
 
-937 of the 1038 cases with a passing libopencor stage are informative: the expected results move more than the tolerance band for at least one variable.
+939 of the 1044 cases with a passing libopencor stage are informative: the expected results move more than the tolerance band for at least one variable.
 
 ## Failure reasons
 
@@ -211,7 +211,7 @@ The test tags of the cases with a numerical mismatch:
 
 ### sbml2cellml
 
-73 of 1535 cases fail.
+71 of 1535 cases fail.
 
 **48 cases**
 
@@ -354,29 +354,9 @@ The test tags of the cases with a numerical mismatch:
 01480: CellMLValidationError: CellML model 'case01480' converted from '01480-sbml-l3v2.xml' has 2 errors:
     [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
     [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01486: CellMLValidationError: CellML model 'case01486' converted from '01486-sbml-l3v2.xml' has 22 errors:
+01486: CellMLValidationError: CellML model 'case01486' converted from '01486-sbml-l3v2.xml' has 2 errors:
     [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.
     [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.
 01495: CellMLValidationError: CellML model 'case01495' converted from '01495-sbml-l3v2.xml' has 2 errors:
     [ERROR] Math has a 'quotient' element that is not a supported MathML element.
     [ERROR] Math has a 'quotient' element that is not a supported MathML element.
@@ -624,36 +604,11 @@ The test tags of the cases with a numerical mismatch:
     [ERROR] Math has a 'gt' element without exactly two MathML siblings.
 ```
 
-**2 cases**
-
-```text
-01490: CellMLValidationError: CellML model 'case_01490' converted from '01490-sbml-l3v2.xml' has 6 errors:
-    [ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.
-01491: CellMLValidationError: CellML model 'case_01491' converted from '01491-sbml-l3v2.xml' has 12 errors:
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-    [ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.
-```
-
 ### libopencor
 
-424 of 1535 cases fail.
+420 of 1535 cases fail.
 
-**422 cases, numerical mismatch**
+**418 cases, numerical mismatch**
 
 ```text
 00026: S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 1.13
@@ -880,7 +835,6 @@ The test tags of the cases with a numerical mismatch:
 00946: S1 exceeds the tolerance by 13.6; C exceeds the tolerance by 9
 00947: S1 exceeds the tolerance by 1.87; C exceeds the tolerance by 9
 00948: S1 exceeds the tolerance by 1.87; C exceeds the tolerance by 9
-00950: R exceeds the tolerance by inf
 00952: S exceeds the tolerance by 100
 00953: S exceeds the tolerance by 99
 00962: S exceeds the tolerance by 100
@@ -1069,15 +1023,12 @@ The test tags of the cases with a numerical mismatch:
 01757: P1 exceeds the tolerance by 23.5
 01758: P1 exceeds the tolerance by 1.5
 01759: P1 exceeds the tolerance by 2.5
-01761: S1 exceeds the tolerance by 6.02e+24
-01763: S1 exceeds the tolerance by 3.98
 01769: k0 exceeds the tolerance by 4
 01770: k0 exceeds the tolerance by 4
 01771: k0 exceeds the tolerance by 4
 01772: k0 exceeds the tolerance by 4
 01779: C1 exceeds the tolerance by 0.3; S1 exceeds the tolerance by 0.9; x exceeds the tolerance by 1.5
 01780: C1 exceeds the tolerance by 0.3; S1 exceeds the tolerance by 0.9; x exceeds the tolerance by 1.5
-01813: s exceeds the tolerance by inf
 ```
 
 **2 cases**
@@ -1091,7 +1042,7 @@ The test tags of the cases with a numerical mismatch:
 
 | tags | cases | ids |
 | --- | --- | --- |
-| Amount | 77 | 00026, 00041, 00071, 00072, 00073, 00074, 00348, 00349, 00350, 00351, 00352, 00353, 00354, 00355, 00356, 00357, 00358, 00359, 00360, 00361, 00363, 00364, 00366, 00367, 00399, 00400, 00401, 00405, 00407, 00408, 00409, 00410, 00411, 00412, 00415, 00416, 00417, 00418, 00423, 00424, 00620, 00623, 00638, 00646, 00647, 00648, 00649, 00650, 00651, 00654, 00657, 00661, 00662, 00665, 00666, 00751, 00752, 00753, 00754, 00760, 00773, 00774, 00775, 00778, 00791, 00845, 00846, 00847, 00848, 00883, 00884, 00885, 00886, 00930, 00931, 01761, 01763 |
+| Amount | 75 | 00026, 00041, 00071, 00072, 00073, 00074, 00348, 00349, 00350, 00351, 00352, 00353, 00354, 00355, 00356, 00357, 00358, 00359, 00360, 00361, 00363, 00364, 00366, 00367, 00399, 00400, 00401, 00405, 00407, 00408, 00409, 00410, 00411, 00412, 00415, 00416, 00417, 00418, 00423, 00424, 00620, 00623, 00638, 00646, 00647, 00648, 00649, 00650, 00651, 00654, 00657, 00661, 00662, 00665, 00666, 00751, 00752, 00753, 00754, 00760, 00773, 00774, 00775, 00778, 00791, 00845, 00846, 00847, 00848, 00883, 00884, 00885, 00886, 00930, 00931 |
 | NonConstantParameter | 26 | 00172, 00396, 00397, 00398, 00402, 00403, 00404, 00453, 00455, 00979, 01119, 01214, 01260, 01262, 01263, 01266, 01267, 01268, 01303, 01304, 01305, 01521, 01658, 01659, 01662, 01664 |
 | Amount, InitialValueReassigned | 25 | 00619, 00621, 00622, 00624, 00634, 00635, 00636, 00637, 00639, 00652, 00653, 00655, 00656, 00663, 00755, 00756, 00761, 00762, 00771, 00772, 00777, 00779, 00780, 00789, 00790 |
 | Amount, BoundaryCondition | 17 | 00375, 00376, 00377, 00378, 00379, 00380, 00381, 00382, 00383, 00432, 00433, 00434, 00436, 00437, 00438, 00439, 00440 |
@@ -1132,7 +1083,6 @@ The test tags of the cases with a numerical mismatch:
 | EventIsNotPersistent, EventIsPersistent, EventUsesTriggerTimeValues, NonConstantParameter, RandomEventExecution | 2 | 00965, 00966 |
 | EventIsNotPersistent, NonConstantParameter | 2 | 00963, 00967 |
 | EventIsPersistent, EventT0Firing, NonConstantParameter | 2 | 01337, 01758 |
-| InitialValueReassigned | 2 | 00950, 01813 |
 | InitialValueReassigned, NonConstantParameter | 2 | 01261, 01577 |
 | 0D-Compartment, Amount, EventIsPersistent | 1 | 00422 |
 | Amount, AssignedConstantStoichiometry, AssignedVariableStoichiometry, BoundaryCondition, ConstantSpecies, ConversionFactors, EventIsNotPersistent, EventIsPersistent, EventT0Firing, EventUsesAssignmentTimeValues, EventUsesTriggerTimeValues, HasOnlySubstanceUnits, InitialValueReassigned, LocalParameters, MultiCompartment, NonConstantCompartment, NonConstantParameter, NonUnityCompartment, NonUnityStoichiometry, ReversibleReaction, SpeciesReferenceInMath | 1 | 01000 |
@@ -1210,9 +1160,9 @@ The test tags of the cases with a numerical mismatch:
 
 ### roundtrip
 
-506 of 1535 cases fail.
+502 of 1535 cases fail.
 
-**404 cases, numerical mismatch**
+**400 cases, numerical mismatch**
 
 ```text
 00026: S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 1.13
@@ -1426,7 +1376,6 @@ The test tags of the cases with a numerical mismatch:
 00946: S1 exceeds the tolerance by 13.6; C exceeds the tolerance by 9
 00947: S1 exceeds the tolerance by 1.87; C exceeds the tolerance by 9
 00948: S1 exceeds the tolerance by 1.87; C exceeds the tolerance by 9
-00950: R exceeds the tolerance by inf
 00952: S exceeds the tolerance by 100
 00953: S exceeds the tolerance by 99
 00962: S exceeds the tolerance by 100
@@ -1610,15 +1559,12 @@ The test tags of the cases with a numerical mismatch:
 01757: P1 exceeds the tolerance by 23.5
 01758: P1 exceeds the tolerance by 1.5
 01759: P1 exceeds the tolerance by 2.5
-01761: S1 exceeds the tolerance by 6.02e+24
-01763: S1 exceeds the tolerance by 3.98
 01769: k0 exceeds the tolerance by 4
 01770: k0 exceeds the tolerance by 4
 01771: k0 exceeds the tolerance by 4
 01772: k0 exceeds the tolerance by 4
 01779: C1 exceeds the tolerance by 0.3; S1 exceeds the tolerance by 0.9; x exceeds the tolerance by 1.5
 01780: C1 exceeds the tolerance by 0.3; S1 exceeds the tolerance by 0.9; x exceeds the tolerance by 1.5
-01813: s exceeds the tolerance by inf
 ```
 
 **100 cases**
@@ -1737,7 +1683,7 @@ The test tags of the cases with a numerical mismatch:
 
 | tags | cases | ids |
 | --- | --- | --- |
-| Amount | 71 | 00026, 00041, 00071, 00072, 00073, 00074, 00348, 00349, 00350, 00351, 00352, 00353, 00354, 00355, 00356, 00357, 00358, 00359, 00360, 00361, 00363, 00364, 00366, 00367, 00399, 00400, 00401, 00405, 00407, 00408, 00409, 00410, 00411, 00412, 00415, 00416, 00417, 00418, 00423, 00424, 00620, 00623, 00638, 00646, 00647, 00648, 00649, 00650, 00651, 00654, 00657, 00751, 00752, 00753, 00754, 00773, 00774, 00775, 00791, 00845, 00846, 00847, 00848, 00883, 00884, 00885, 00886, 00930, 00931, 01761, 01763 |
+| Amount | 69 | 00026, 00041, 00071, 00072, 00073, 00074, 00348, 00349, 00350, 00351, 00352, 00353, 00354, 00355, 00356, 00357, 00358, 00359, 00360, 00361, 00363, 00364, 00366, 00367, 00399, 00400, 00401, 00405, 00407, 00408, 00409, 00410, 00411, 00412, 00415, 00416, 00417, 00418, 00423, 00424, 00620, 00623, 00638, 00646, 00647, 00648, 00649, 00650, 00651, 00654, 00657, 00751, 00752, 00753, 00754, 00773, 00774, 00775, 00791, 00845, 00846, 00847, 00848, 00883, 00884, 00885, 00886, 00930, 00931 |
 | NonConstantParameter | 26 | 00172, 00396, 00397, 00398, 00402, 00403, 00404, 00453, 00455, 00979, 01119, 01214, 01260, 01262, 01263, 01266, 01267, 01268, 01303, 01304, 01305, 01521, 01658, 01659, 01662, 01664 |
 | Amount, InitialValueReassigned | 19 | 00619, 00621, 00622, 00624, 00634, 00635, 00636, 00637, 00639, 00652, 00653, 00655, 00656, 00755, 00756, 00771, 00772, 00789, 00790 |
 | Amount, BoundaryCondition | 17 | 00375, 00376, 00377, 00378, 00379, 00380, 00381, 00382, 00383, 00432, 00433, 00434, 00436, 00437, 00438, 00439, 00440 |
@@ -1778,7 +1724,6 @@ The test tags of the cases with a numerical mismatch:
 | EventIsNotPersistent, NonConstantParameter | 2 | 00963, 00967 |
 | EventIsPersistent, EventT0Firing, NonConstantParameter | 2 | 01337, 01758 |
 | EventT0Firing, InitialValueReassigned, NonConstantParameter | 2 | 01698, 01699 |
-| InitialValueReassigned | 2 | 00950, 01813 |
 | 0D-Compartment, Amount, EventIsPersistent | 1 | 00422 |
 | Amount, AssignedConstantStoichiometry, AssignedVariableStoichiometry, BoundaryCondition, ConstantSpecies, ConversionFactors, EventIsNotPersistent, EventIsPersistent, EventT0Firing, EventUsesAssignmentTimeValues, EventUsesTriggerTimeValues, HasOnlySubstanceUnits, InitialValueReassigned, LocalParameters, MultiCompartment, NonConstantCompartment, NonConstantParameter, NonUnityCompartment, NonUnityStoichiometry, ReversibleReaction, SpeciesReferenceInMath | 1 | 01000 |
 | Amount, AssignedVariableStoichiometry, DelayInEventAssignment, NonConstantParameter, NonUnityStoichiometry | 1 | 01536 |
@@ -2766,7 +2711,7 @@ The test tags of the cases with a numerical mismatch:
 | 00947 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 00948 | AssignmentRule, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 00949 | Parameter | pass | pass | pass | pass | pass | no |
-| 00950 | InitialAssignment, Parameter | pass | pass | fail | pass | fail | no |
+| 00950 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 00951 | Parameter | pass | pass | pass | pass | pass | no |
 | 00952 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | fail | yes |
 | 00953 | AssignmentRule, CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | fail | yes |
@@ -3146,8 +3091,8 @@ The test tags of the cases with a numerical mismatch:
 | 01487 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | yes |
 | 01488 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | yes |
 | 01489 | FunctionDefinition, InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
-| 01490 | AssignmentRule, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | no |
-| 01491 | AssignmentRule, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | no |
+| 01490 | AssignmentRule, FunctionDefinition, Parameter | pass | pass | pass | pass | pass | no |
+| 01491 | AssignmentRule, FunctionDefinition, Parameter | pass | pass | pass | pass | pass | no |
 | 01492 | AssignmentRule, FunctionDefinition, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 01493 | AssignmentRule, FunctionDefinition, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 01494 | FunctionDefinition, InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
@@ -3353,9 +3298,9 @@ The test tags of the cases with a numerical mismatch:
 | 01758 | EventWithDelay, Parameter | pass | pass | fail | pass | fail | yes |
 | 01759 | CSymbolTime, EventNoDelay, EventWithDelay, Parameter | pass | pass | fail | pass | fail | yes |
 | 01760 | Compartment, Reaction, Species | pass | pass | pass | pass | pass | yes |
-| 01761 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01761 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01762 | CSymbolAvogadro, Compartment, Reaction, Species | pass | pass | pass | pass | pass | yes |
-| 01763 | CSymbolAvogadro, Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01763 | CSymbolAvogadro, Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01766 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01767 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01768 | Compartment, Parameter, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
@@ -3387,7 +3332,7 @@ The test tags of the cases with a numerical mismatch:
 | 01810 | Parameter | pass | pass | pass | pass | pass | no |
 | 01811 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 01812 | Parameter | pass | pass | pass | pass | pass | no |
-| 01813 | InitialAssignment, Parameter | pass | pass | fail | pass | fail | no |
+| 01813 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 01814 | Parameter | pass | pass | pass | pass | pass | no |
 | 01815 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 01816 | Parameter | pass | pass | pass | pass | pass | no |

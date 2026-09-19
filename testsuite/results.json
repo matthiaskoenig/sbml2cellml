@@ -38704,9 +38704,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": Infinity,
-     "message": "R exceeds the tolerance by inf",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": -0.0001,
@@ -38714,9 +38714,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": Infinity,
-     "message": "R exceeds the tolerance by inf",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -55009,7 +55009,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: CellML model 'case01486' converted from '01486-sbml-l3v2.xml' has 22 errors:\n[ERROR] Math has a 'factorial' element that is not a supported MathML element.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] Math has a 'factorial' element that is not a supported MathML element.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.",
+     "message": "CellMLValidationError: CellML model 'case01486' converted from '01486-sbml-l3v2.xml' has 2 errors:\n[ERROR] Math has a 'factorial' element that is not a supported MathML element.\n[ERROR] Math has a 'factorial' element that is not a supported MathML element.",
      "status": "fail"
     }
    },
@@ -55157,13 +55157,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": -0.0002,
@@ -55171,14 +55171,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: CellML model 'case_01490' converted from '01490-sbml-l3v2.xml' has 6 errors:\n[ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'x' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -55197,13 +55197,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": -0.0001,
@@ -55211,14 +55211,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: CellML model 'case_01491' converted from '01491-sbml-l3v2.xml' has 12 errors:\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.\n[ERROR] MathML ci element has the child text 'y' which does not correspond with any variable names present in component 'sbml'.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -64401,9 +64401,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 6.02e+24,
-     "message": "S1 exceeds the tolerance by 6.02e+24",
-     "status": "fail"
+     "max_excess": -0.00011,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": -0.00011,
@@ -64411,9 +64411,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 6.02e+24,
-     "message": "S1 exceeds the tolerance by 6.02e+24",
-     "status": "fail"
+     "max_excess": -0.00011,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -64485,9 +64485,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 3.98,
-     "message": "S1 exceeds the tolerance by 3.98",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": -0.0002,
@@ -64495,9 +64495,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 3.98,
-     "message": "S1 exceeds the tolerance by 3.98",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -65862,9 +65862,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": Infinity,
-     "message": "s exceeds the tolerance by inf",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": -0.0001,
@@ -65872,9 +65872,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": Infinity,
-     "message": "s exceeds the tolerance by inf",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,

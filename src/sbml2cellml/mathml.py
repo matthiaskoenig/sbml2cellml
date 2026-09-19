@@ -14,6 +14,12 @@ rationals become reals.
 CellML has no symbols either: the SBML time symbol becomes the variable of
 integration `TIME_ID`, avogadro its value.
 An n-ary operator with less than two arguments is replaced by its value.
+The negation of a product which starts with a negation is cancelled, libcellml
+generates code for it which does not compile (`cancel_negations`).
+
+A formula is a libsbml AST, or text in the syntax of libsbml (`k1 * S1`), in
+which a name which is a symbol of the syntax (`avogadro`, `pi`, `NaN`, `time`)
+is that symbol and not an id of the model; the converter passes ASTs.
 """
 
 import math
@@ -87,6 +93,8 @@ def simplify_operators(node: libsbml.ASTNode) -> libsbml.ASTNode:
 
 #: CellML units of the SBML units of a number
 type UnitsNames = Callable[[str], str]
+#: a formula as libsbml AST or as text in the syntax of libsbml
+type Formula = libsbml.ASTNode | str
 
 
 def normalize_math(
@@ -99,7 +107,10 @@ def normalize_math(
     The time symbol becomes a reference to the variable of integration
     `TIME_ID`, avogadro a number with libsbml's value. Integers and
     rationals become reals, a finite number without units gets
-    `number_units`, the units of a number with units their CellML name.
+    `number_units`, the units of a number with units their CellML name. A
+    negative number becomes the negative of a number: the code libcellml
+    generates for the negative of a negative number is `--1.0`, a decrement
+    in C which does not compile.
     Infinity and NaN stay as they are, they are written as
     the `infinity` and `notanumber` constants, which have no units. The
     delay and rateOf symbols stay, CellML has no counterpart for them.
@@ -117,6 +128,8 @@ def normalize_math(
         node.setDefinitionURL("")
     elif node.getType() == libsbml.AST_NAME_AVOGADRO:
         node.setValue(node.getReal())
+    if node.isNumber() and math.isfinite(node.getValue()) and node.getValue() < 0:
+        _negate(node)
     if node.isNumber() and math.isfinite(node.getValue()):
         if node.getType() in (libsbml.AST_INTEGER, libsbml.AST_RATIONAL):
             node.setValue(float(node.getValue()))
@@ -128,13 +141,70 @@ def normalize_math(
         normalize_math(node.getChild(k), units, number_units)
 
 
-def process_mathml_for_cellml(
-    formula: str, units: UnitsNames | None = None, number_units: str = NUMBER_UNITS
-) -> str:
-    """Render a formula in SBML L3 syntax as a MathML fragment for CellML.
+def _negate(node: libsbml.ASTNode) -> None:
+    """Turn a negative number into the negative of a number, in place."""
+    number: libsbml.ASTNode = node.deepCopy()
+    if number.getType() == libsbml.AST_REAL_E:
+        number.setValue(-number.getMantissa(), number.getExponent())
+    else:
+        number.setValue(-float(number.getValue()))
+    if node.isSetUnits():
+        # a new value removes the units
+        number.setUnits(node.getUnits())
+    node.setType(libsbml.AST_MINUS)
+    node.addChild(number)
+
+
+def _is_negation(node: libsbml.ASTNode) -> bool:
+    """Whether a node is a unary minus."""
+    return bool(node.getType() == libsbml.AST_MINUS and node.getNumChildren() == 1)
+
+
+def cancel_negations(node: libsbml.ASTNode) -> libsbml.ASTNode:
+    """Cancel the negation of a product or quotient which starts with a negation.
+
+    libcellml 0.7.1 generates the code of a negated product without
+    parentheses: `-((-2) * a)` becomes `--2.0*a`, a decrement in C, and the
+    model does not compile in libopencor. `-((-a) * b)` is `a * b` and
+    `-((-a) / b)` is `a / b`, exactly. A negative number is such a negation
+    once `normalize_math` has run. Other negations are generated with
+    parentheses and stay.
 
     Args:
-        formula: formula in the SBML level 3 infix syntax, e.g., `k1 * S1`.
+        node: root of the libsbml AST of the formula, changed in place.
+
+    Returns:
+        The root, which is another node when the root itself was replaced.
+    """
+    for k in range(node.getNumChildren()):
+        child: libsbml.ASTNode = node.getChild(k)
+        cancelled = cancel_negations(child)
+        if cancelled is not child:
+            node.replaceChild(k, cancelled.deepCopy(), True)
+    if not _is_negation(node):
+        return node
+    product: libsbml.ASTNode = node.getChild(0)
+    parent: libsbml.ASTNode | None = None
+    first = product
+    while (
+        first.getType() in (libsbml.AST_TIMES, libsbml.AST_DIVIDE)
+        and first.getNumChildren() > 0
+    ):
+        parent, first = first, first.getChild(0)
+    if parent is None or not _is_negation(first):
+        return node
+    parent.replaceChild(0, first.getChild(0).deepCopy(), True)
+    return product.deepCopy()
+
+
+def process_mathml_for_cellml(
+    formula: Formula, units: UnitsNames | None = None, number_units: str = NUMBER_UNITS
+) -> str:
+    """Render a formula as a MathML fragment for CellML.
+
+    Args:
+        formula: the AST of the formula, which is not changed, or the formula
+            in the SBML level 3 infix syntax, e.g., `k1 * S1`.
         units: CellML units of the SBML units of a number, see
             `normalize_math`.
         number_units: CellML units of a number without units.
@@ -145,15 +215,20 @@ def process_mathml_for_cellml(
         avogadro symbols replaced (see `normalize_math`).
 
     Raises:
-        MathMLError: if the formula does not parse.
+        MathMLError: if a formula given as text does not parse.
     """
-    ast: libsbml.ASTNode | None = libsbml.parseL3Formula(formula)
-    if ast is None:
-        raise MathMLError(
-            f"Formula does not parse: '{formula}': {libsbml.getLastParseL3Error()}"
-        )
+    ast: libsbml.ASTNode | None
+    if isinstance(formula, str):
+        ast = libsbml.parseL3Formula(formula)
+        if ast is None:
+            raise MathMLError(
+                f"Formula does not parse: '{formula}': {libsbml.getLastParseL3Error()}"
+            )
+    else:
+        ast = formula.deepCopy()
     ast = simplify_operators(ast)
     normalize_math(ast, units, number_units)
+    ast = cancel_negations(ast)
     mathml: str = libsbml.writeMathMLToString(ast)
     mathml = XML_DECLARATION.sub("", mathml)
     mathml = MATH_OPEN.sub("", mathml, count=1)
@@ -164,7 +239,7 @@ def process_mathml_for_cellml(
 
 def mathml_for_assignment(
     vid: str,
-    formula: str,
+    formula: Formula,
     units: UnitsNames | None = None,
     number_units: str = NUMBER_UNITS,
 ) -> str:
@@ -172,7 +247,7 @@ def mathml_for_assignment(
 
     Args:
         vid: id of the assigned variable.
-        formula: right hand side in SBML L3 infix syntax.
+        formula: right hand side, see `process_mathml_for_cellml`.
         units: CellML units of the SBML units of a number, see
             `normalize_math`.
         number_units: CellML units of a number without units, e.g. the units
@@ -190,11 +265,12 @@ def mathml_for_assignment(
 """
 
 
-def mathml_for_algebraic(formula: str, units: UnitsNames | None = None) -> str:
+def mathml_for_algebraic(formula: Formula, units: UnitsNames | None = None) -> str:
     """MathML of the implicit equation `0 = formula`.
 
     Args:
-        formula: the expression which is zero, in SBML L3 infix syntax.
+        formula: the expression which is zero, see
+            `process_mathml_for_cellml`.
         units: CellML units of the SBML units of a number, see
             `normalize_math`.
 
@@ -211,13 +287,13 @@ def mathml_for_algebraic(formula: str, units: UnitsNames | None = None) -> str:
 
 
 def mathml_for_diff(
-    vid: str, formula: str, ivid: str = "t", units: UnitsNames | None = None
+    vid: str, formula: Formula, ivid: str = "t", units: UnitsNames | None = None
 ) -> str:
     """MathML of the differential equation `d vid / d ivid = formula`.
 
     Args:
         vid: id of the state variable.
-        formula: right hand side in SBML L3 infix syntax.
+        formula: right hand side, see `process_mathml_for_cellml`.
         ivid: id of the variable of integration.
         units: CellML units of the SBML units of a number, see
             `normalize_math`.

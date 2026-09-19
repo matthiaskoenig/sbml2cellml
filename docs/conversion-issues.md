@@ -6,7 +6,7 @@ The remaining issues of the conversion, i.e., what the current version does not 
 
 - **Units of an incomplete annotation.** The units of the variables are converted when every variable has units in the SBML model, see [Units](conversion.md#units); with a single compartment, species or parameter without units every variable stays `dimensionless`. A number without units in a formula is always `dimensionless`, CellML requires units on every number and SBML has none to give.
 - **Unit warnings of libcellml.** The CellML specification applies the exponent of a unit to its prefix but not to its multiplier, which `libcellml.Units.scalingFactor` follows and the converter writes. The unit check of the libcellml 0.7.1 analyser applies the exponent to the multiplier as well, so it warns about equations with units such as `per_min` (`(60 second)^-1` in SBML, `1/60 second^-1` in CellML) which are consistent ([cellml/libcellml#1463](https://github.com/cellml/libcellml/issues/1463)). The warnings do not make a model invalid.
-- **Initial assignments** are evaluated to initial values (libsbml's `expandInitialAssignments`), so the CellML model has the value but not the formula; libsbml does not evaluate an assignment to NaN, which stays unconverted with a warning.
+- **Initial assignments** are evaluated to initial values (libsbml's `expandInitialAssignments`), so the CellML model has the value but not the formula. An assignment which libsbml cannot evaluate (a call of a recursive function definition, a rateOf with a local parameter, a delay, or the value of such an assignment) stays unconverted with a warning.
 - **An infinite or NaN initial value of a state** cannot be expressed: CellML initial values are real numbers (a constant gets the equation `x = INF` instead).
 - **Events** are skipped with a warning. CellML 2.0 has no events; a subset could be expressed with resets.
 - **Coupled algebraic rules**, which determine their variables only together (`x + y = 4`, `x - y = 2`), cannot be analysed by libcellml; an algebraic rule which determines no variable is skipped with a warning.
@@ -16,7 +16,6 @@ The remaining issues of the conversion, i.e., what the current version does not 
 - **An SBML id `time`** collides with the variable of integration `time` of the CellML model and with the time column of the simulation results.
 - **The delay symbol** is not converted, CellML has no delays.
 - **rateOf** of a variable whose rate depends on itself, or which an assignment rule sets, is not converted; in an initial assignment neither when the rate has a local parameter. The rate of a concentration in a compartment which changes needs the rate of the compartment, so it is converted when a rate rule changes the compartment and not when an assignment or algebraic rule does.
-- **An SBML id which is a symbol of the formula syntax** (`avogadro`, `pi`, `NaN`, `true`, ...) is read as that symbol: the converter handles formulas as text in the syntax of libsbml, which cannot tell the two apart (test cases 01761, 01763).
 - **Unset initial values** of variables which no assignment rule or initial assignment sets are `1.0`, with a warning.
 
 ## CellML to SBML
