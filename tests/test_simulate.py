@@ -15,7 +15,12 @@ from sbml2cellml.cellml import write_model
 from sbml2cellml.simulate import SimulationError, plot_timecourse, run_timecourse
 from tests.cellml_models import algebraic_model, underconstrained_model
 from tests.conftest import MODELS_DIR, TEST_MODEL_PATH
-from tests.sbml_models import growing_compartment_model, simple_model, write_sbml
+from tests.sbml_models import (
+    growing_compartment_model,
+    simple_model,
+    symbol_ids_model,
+    write_sbml,
+)
 
 pytest.importorskip("libopencor")
 matplotlib.use("Agg")
@@ -164,6 +169,15 @@ def test_run_timecourse_rate_of_in_a_changing_compartment(tmp_path: Path) -> Non
     # dA1/dt = -k1 [S1], dcell/dt = 0.5 cell
     rate = (-0.5 * df["S1"] - df["S1"] * 0.5 * df["cell"]) / df["cell"]
     assert np.allclose(df["rate_s1"], rate, rtol=1e-6)
+
+
+def test_run_timecourse_ids_which_are_symbols(tmp_path: Path) -> None:
+    """d[NaN]/dt = -k1 [NaN] avogadro / pi = -0.5 [NaN] with the parameter 2."""
+    sbml_path = write_sbml(tmp_path / "symbol_ids.xml", symbol_ids_model())
+    cellml_path = tmp_path / "symbol_ids.cellml"
+    convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
+    df, _ = run_timecourse(cellml_path, end=4.0, steps=8)
+    assert np.allclose(df["NaN"], 10.0 * np.exp(-0.5 * df["time"]), rtol=1e-5)
 
 
 def test_run_timecourse_applies_conversion_factors(tmp_path: Path) -> None:

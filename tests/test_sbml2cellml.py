@@ -16,6 +16,7 @@ from tests.sbml_models import (
     delay_model,
     growing_compartment_model,
     simple_model,
+    symbol_ids_model,
     write_sbml,
 )
 
@@ -386,6 +387,37 @@ def test_time_and_avogadro_convert_to_valid_cellml(tmp_path: Path) -> None:
     assert errors(validate_model(model)) == []
 
 
+def test_ids_which_are_symbols_of_the_formula_syntax_stay_variables(
+    tmp_path: Path,
+) -> None:
+    """`avogadro`, `pi` and `NaN` are ids of the model, not the symbols."""
+    sbml_path = write_sbml(tmp_path / "symbol_ids.xml", symbol_ids_model())
+    model = convert_sbml2cellml(sbml_path)
+    assert errors(validate_model(model)) == []
+    math_text = model.component(0).math().replace(" ", "").replace("\n", "")
+    for sid in ("avogadro", "pi", "NaN"):
+        assert f"<ci>{sid}</ci>" in math_text
+    for symbol in ("6.02214179", "<pi/>", "<notanumber/>"):
+        assert symbol not in math_text
+
+
+def test_avogadro_symbol_next_to_a_parameter_avogadro(tmp_path: Path) -> None:
+    model_sbml = symbol_ids_model("avogadro_twice")
+    klaw: libsbml.KineticLaw = model_sbml.getReaction("r1").getKineticLaw()
+    klaw.setMath(
+        libsbml.readMathMLFromString(
+            '<math xmlns="http://www.w3.org/1998/Math/MathML"><apply><divide/>'
+            '<csymbol encoding="text" definitionURL="http://www.sbml.org/sbml/'
+            'symbols/avogadro">avogadro</csymbol><ci>avogadro</ci></apply></math>'
+        )
+    )
+    sbml_path = write_sbml(tmp_path / "avogadro_twice.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    math_text = model.component(0).math().replace(" ", "").replace("\n", "")
+    assert math_text.count("6.02214179") == 2  # in the terms of NaN and S2
+    assert math_text.count("<ci>avogadro</ci>") == 2
+
+
 def _with_local_parameters(model_sbml: libsbml.Model) -> libsbml.Model:
     """Kinetic laws `k * S1` (r1, local k = 0.5) and `k * S2` (r2, local k = 2)."""
     r1: libsbml.Reaction = model_sbml.getReaction("r1")
@@ -611,21 +643,72 @@ def test_non_finite_initial_values_become_equations(tmp_path: Path) -> None:
     assert "<notanumber/>" in math_text
 
 
-def test_initial_assignment_to_nan_is_not_evaluated(
+def _initial_assignment(model_sbml: libsbml.Model, symbol: str, formula: str) -> None:
+    ia: libsbml.InitialAssignment = model_sbml.createInitialAssignment()
+    ia.setSymbol(symbol)
+    ia.setMath(libsbml.parseL3Formula(formula))
+
+
+def test_initial_assignment_to_nan(
     tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:
-    """libsbml does not evaluate an initial assignment to NaN; it stays."""
+    """libsbml leaves an initial assignment to NaN, the converter sets it.
+
+    Also the assignment which is NaN through another one.
+    """
     model_sbml = simple_model("nan_assignment")
-    ia: libsbml.InitialAssignment = model_sbml.createInitialAssignment()
-    ia.setSymbol("k1")
-    ia.setMath(libsbml.parseL3Formula("NaN"))
+    _parameter(model_sbml, "p", 3.0, constant=True)
+    _parameter(model_sbml, "q", 3.0, constant=True)
+    _initial_assignment(model_sbml, "k1", "NaN")
+    _initial_assignment(model_sbml, "p", "0 / 0")
+    _initial_assignment(model_sbml, "q", "2 * p")
     sbml_path = write_sbml(tmp_path / "nan_assignment.xml", model_sbml)
     with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
-        convert_sbml2cellml(sbml_path, validate=False)
-    assert "Initial assignments of 'nan_assignment' could not be expanded (1 of 1)" in (
-        caplog.text
-    )
-    assert "InitialAssignment for 'k1' not converted" in caplog.text
+        model = convert_sbml2cellml(sbml_path)
+    assert caplog.text == ""
+    assert errors(validate_model(model)) == []
+    v = variables(model)
+    assert [v[pid].initialValue() for pid in ("k1", "p", "q")] == ["", "", ""]
+    assert model.component(0).math().count("<notanumber/>") == 3
+
+
+def test_initial_assignment_libsbml_cannot_evaluate_stays(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    """NaN is not the value of a formula libsbml cannot evaluate.
+
+    The rate of S1 has a local parameter, which is no element of the model;
+    `q` is unknown through `p`.
+    """
+    model_sbml = _with_local_parameters(simple_model("not_evaluated"))
+    _parameter(model_sbml, "p", 3.0, constant=True)
+    _parameter(model_sbml, "q", 4.0, constant=True)
+    _initial_assignment(model_sbml, "p", "rateOf(S1)")
+    _initial_assignment(model_sbml, "q", "2 * p")
+    sbml_path = write_sbml(tmp_path / "not_evaluated.xml", model_sbml)
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        v = variables(convert_sbml2cellml(sbml_path, validate=False))
+    assert "could not be expanded (2 of 2)" in caplog.text
+    assert "InitialAssignment for 'p' not converted" in caplog.text
+    assert "InitialAssignment for 'q' not converted" in caplog.text
+    assert float(v["p"].initialValue()) == 3.0
+    assert float(v["q"].initialValue()) == 4.0
+
+
+def test_initial_assignment_without_math_has_no_effect(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    """SBML L3V2 allows it; the other initial assignments are evaluated."""
+    model_sbml = simple_model("no_math_assignment")
+    _parameter(model_sbml, "p", 3.0, constant=True)
+    model_sbml.createInitialAssignment().setSymbol("p")
+    _initial_assignment(model_sbml, "k1", "2 * p")
+    sbml_path = write_sbml(tmp_path / "no_math_assignment.xml", model_sbml)
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        v = variables(convert_sbml2cellml(sbml_path))
+    assert caplog.text == ""
+    assert float(v["p"].initialValue()) == 3.0
+    assert float(v["k1"].initialValue()) == 6.0
 
 
 def test_boundary_species_has_no_reaction_terms(tmp_path: Path) -> None:

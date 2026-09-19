@@ -53,10 +53,11 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | units of a compartment, parameter or species | units of the variable when the unit annotation of the model is complete, else every variable is `dimensionless`, see [Units](conversion.md#units) |
 | numbers in formulas | real numbers with their units, `dimensionless` when they have none |
 | time and avogadro symbols | the variable of integration `time`, the number 6.02214179e23 |
+| id which is a symbol of the formula syntax of libsbml (`avogadro`, `pi`, `NaN`, `true`) | variable of that name like every other id: the formulas are converted as the MathML trees of the model, never as text |
 | rateOf symbol | the right-hand side of the differential equation of its variable, 0 without one |
 | delay symbol | not yet |
 | rule or kinetic law without math | ignored, it has no effect |
-| initial assignment | evaluated to the initial value (not to NaN, a warning is logged) |
+| initial assignment | evaluated to the initial value; without math it has no effect |
 | infinite or NaN value | the equation `x = INF` (or `-INF`, `NaN`), not for a state |
 | function definition | calls replaced by the body of the function |
 | local parameter of a kinetic law | variable `<reaction>_<parameter>` (numeric suffix when taken) |

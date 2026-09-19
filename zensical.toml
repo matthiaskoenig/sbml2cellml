@@ -30,6 +30,7 @@ nav = [
     { "cellml" = "api/cellml.md" },
     { "sbml" = "api/sbml.md" },
     { "mathml" = "api/mathml.md" },
+    { "astnodes" = "api/astnodes.md" },
     { "sbmlmath" = "api/sbmlmath.md" },
     { "units" = "api/units.md" },
     { "cellmlunits" = "api/cellmlunits.md" },

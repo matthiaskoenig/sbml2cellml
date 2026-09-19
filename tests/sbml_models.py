@@ -73,6 +73,28 @@ def growing_compartment_model(mid: str = "growing") -> libsbml.Model:
     return model
 
 
+def symbol_ids_model(mid: str = "symbol_ids") -> libsbml.Model:
+    """`simple_model` whose ids are symbols of the formula syntax of libsbml.
+
+    The compartment is `pi`, the species S1 `NaN` and the parameter `avogadro`
+    (2.0) is a factor of the kinetic law `k1 * NaN * avogadro`. The formula is
+    parsed with the model, which makes its ids names and not symbols.
+    """
+    model = simple_model(mid)
+    model.getCompartment("cell").setId("pi")
+    model.getSpecies("S1").setId("NaN")
+    for species in model.getListOfSpecies():
+        species.setCompartment("pi")
+    model.getReaction("r1").getReactant(0).setSpecies("NaN")
+    p: libsbml.Parameter = model.createParameter()
+    p.setId("avogadro")
+    p.setValue(2.0)
+    p.setConstant(True)
+    klaw: libsbml.KineticLaw = model.getReaction("r1").getKineticLaw()
+    klaw.setMath(libsbml.parseL3FormulaWithModel("k1 * NaN * avogadro", model))
+    return model
+
+
 def unit_definition(
     model: libsbml.Model, uid: str, *units: tuple[int, float, int, float]
 ) -> libsbml.UnitDefinition:

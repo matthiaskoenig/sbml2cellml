@@ -66,7 +66,11 @@ on `develop` after the merge.
   are expanded first with libsbml's `expandFunctionDefinitions` conversion and
   the initial assignments evaluated to initial values with
   `expandInitialAssignments` (both skipped with a warning when a function is
-  recursive, libsbml crashes on it when read from a file). libsbml evaluates
+  recursive, libsbml crashes on it when read from a file). libsbml leaves an
+  initial assignment it evaluates to NaN: `_assign_nan` sets the variable to
+  NaN when libsbml knows all of the formula (`_is_known`), so the NaN is its
+  value and not the sign of a formula libsbml cannot evaluate; initial
+  assignments without math are dropped before. libsbml evaluates
   formulas `_without_rate_rules` in the model (initial assignments, algebraic
   rules at the start): it takes the rate rule of a variable without a value
   yet for its value and crashes when the rate depends on the variable.
@@ -120,6 +124,12 @@ on `develop` after the merge.
   make every number a real with units (`dimensionless` when it has none),
   replace the time symbol by the variable `time` and avogadro by its value
   (`normalize_math`) and wrap the equations into the component math.
+- `astnodes.py`: construction of formulas as libsbml ASTs (`name`, `number`,
+  `apply`, `signed_sum`; `text` for logs only). The converter never turns a
+  formula into text and back: the L3 parser reads an id such as `avogadro`,
+  `pi`, `NaN` or `true` as the symbol of that name. The formulas of
+  `_Formulas` are the ASTs of the model (copies), the mathml helpers take an
+  AST (or text, for callers outside the converter).
 - `cellml.py`: libcellml `Parser`, `Printer`, `Validator` and `Analyser`
   wrappers; issues are returned, `errors()` filters level `ERROR`,
   `CellMLValidationError`.

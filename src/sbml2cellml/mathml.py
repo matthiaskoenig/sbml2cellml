@@ -14,6 +14,10 @@ rationals become reals.
 CellML has no symbols either: the SBML time symbol becomes the variable of
 integration `TIME_ID`, avogadro its value.
 An n-ary operator with less than two arguments is replaced by its value.
+
+A formula is a libsbml AST, or text in the syntax of libsbml (`k1 * S1`), in
+which a name which is a symbol of the syntax (`avogadro`, `pi`, `NaN`, `time`)
+is that symbol and not an id of the model; the converter passes ASTs.
 """
 
 import math
@@ -87,6 +91,8 @@ def simplify_operators(node: libsbml.ASTNode) -> libsbml.ASTNode:
 
 #: CellML units of the SBML units of a number
 type UnitsNames = Callable[[str], str]
+#: a formula as libsbml AST or as text in the syntax of libsbml
+type Formula = libsbml.ASTNode | str
 
 
 def normalize_math(
@@ -129,12 +135,13 @@ def normalize_math(
 
 
 def process_mathml_for_cellml(
-    formula: str, units: UnitsNames | None = None, number_units: str = NUMBER_UNITS
+    formula: Formula, units: UnitsNames | None = None, number_units: str = NUMBER_UNITS
 ) -> str:
-    """Render a formula in SBML L3 syntax as a MathML fragment for CellML.
+    """Render a formula as a MathML fragment for CellML.
 
     Args:
-        formula: formula in the SBML level 3 infix syntax, e.g., `k1 * S1`.
+        formula: the AST of the formula, which is not changed, or the formula
+            in the SBML level 3 infix syntax, e.g., `k1 * S1`.
         units: CellML units of the SBML units of a number, see
             `normalize_math`.
         number_units: CellML units of a number without units.
@@ -145,13 +152,17 @@ def process_mathml_for_cellml(
         avogadro symbols replaced (see `normalize_math`).
 
     Raises:
-        MathMLError: if the formula does not parse.
+        MathMLError: if a formula given as text does not parse.
     """
-    ast: libsbml.ASTNode | None = libsbml.parseL3Formula(formula)
-    if ast is None:
-        raise MathMLError(
-            f"Formula does not parse: '{formula}': {libsbml.getLastParseL3Error()}"
-        )
+    ast: libsbml.ASTNode | None
+    if isinstance(formula, str):
+        ast = libsbml.parseL3Formula(formula)
+        if ast is None:
+            raise MathMLError(
+                f"Formula does not parse: '{formula}': {libsbml.getLastParseL3Error()}"
+            )
+    else:
+        ast = formula.deepCopy()
     ast = simplify_operators(ast)
     normalize_math(ast, units, number_units)
     mathml: str = libsbml.writeMathMLToString(ast)
@@ -164,7 +175,7 @@ def process_mathml_for_cellml(
 
 def mathml_for_assignment(
     vid: str,
-    formula: str,
+    formula: Formula,
     units: UnitsNames | None = None,
     number_units: str = NUMBER_UNITS,
 ) -> str:
@@ -172,7 +183,7 @@ def mathml_for_assignment(
 
     Args:
         vid: id of the assigned variable.
-        formula: right hand side in SBML L3 infix syntax.
+        formula: right hand side, see `process_mathml_for_cellml`.
         units: CellML units of the SBML units of a number, see
             `normalize_math`.
         number_units: CellML units of a number without units, e.g. the units
@@ -190,11 +201,12 @@ def mathml_for_assignment(
 """
 
 
-def mathml_for_algebraic(formula: str, units: UnitsNames | None = None) -> str:
+def mathml_for_algebraic(formula: Formula, units: UnitsNames | None = None) -> str:
     """MathML of the implicit equation `0 = formula`.
 
     Args:
-        formula: the expression which is zero, in SBML L3 infix syntax.
+        formula: the expression which is zero, see
+            `process_mathml_for_cellml`.
         units: CellML units of the SBML units of a number, see
             `normalize_math`.
 
@@ -211,13 +223,13 @@ def mathml_for_algebraic(formula: str, units: UnitsNames | None = None) -> str:
 
 
 def mathml_for_diff(
-    vid: str, formula: str, ivid: str = "t", units: UnitsNames | None = None
+    vid: str, formula: Formula, ivid: str = "t", units: UnitsNames | None = None
 ) -> str:
     """MathML of the differential equation `d vid / d ivid = formula`.
 
     Args:
         vid: id of the state variable.
-        formula: right hand side in SBML L3 infix syntax.
+        formula: right hand side, see `process_mathml_for_cellml`.
         ivid: id of the variable of integration.
         units: CellML units of the SBML units of a number, see
             `normalize_math`.
