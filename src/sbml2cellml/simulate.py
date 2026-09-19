@@ -17,6 +17,10 @@ logger = logging.getLogger(__name__)
 
 #: first column of the timecourse of a model without variable of integration
 STEADY_STATE_TIME = "time"
+#: internal steps of the ODE solver between two time points of the output.
+#: The 500 of libopencor end the simulation of many models ("mxstep steps
+#: taken before reaching tout"), mostly with tight tolerances or few outputs
+MAXIMUM_NUMBER_OF_STEPS = 100_000
 #: how to install libopencor, the message of the ImportError
 LIBOPENCOR_INSTALL = (
     "libopencor is not installed. It is not on PyPI; install the wheel for "
@@ -70,6 +74,7 @@ def run_timecourse(
     steps: int = 100,
     relative_tolerance: float | None = None,
     absolute_tolerance: float | None = None,
+    maximum_number_of_steps: int = MAXIMUM_NUMBER_OF_STEPS,
 ) -> tuple[pd.DataFrame, dict[str, str]]:
     """Run a uniform timecourse of a CellML model.
 
@@ -82,6 +87,8 @@ def run_timecourse(
             libopencor default when `None`.
         absolute_tolerance: absolute tolerance of the ODE solver, the
             libopencor default when `None`.
+        maximum_number_of_steps: number of internal steps the ODE solver may
+            take between two time points of the output.
 
     Returns:
         The timecourse with the variable of integration in the first column
@@ -120,6 +127,7 @@ def run_timecourse(
             simulation.ode_solver.relative_tolerance = relative_tolerance
         if absolute_tolerance is not None:
             simulation.ode_solver.absolute_tolerance = absolute_tolerance
+        simulation.ode_solver.maximum_number_of_steps = maximum_number_of_steps
 
     instance = document.instantiate()
     _raise_on_issues("instance", instance.issues)

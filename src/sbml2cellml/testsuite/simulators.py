@@ -19,6 +19,7 @@ def simulate_sbml(
     steps: int,
     relative_tolerance: float | None = None,
     absolute_tolerance: float | None = None,
+    maximum_number_of_steps: int | None = None,
 ) -> dict[str, Any]:
     """Uniform timecourse of an SBML model with roadrunner.
 
@@ -32,6 +33,8 @@ def simulate_sbml(
             roadrunner default when `None`.
         absolute_tolerance: absolute tolerance of the integrator, the
             roadrunner default when `None`.
+        maximum_number_of_steps: internal steps of the integrator between
+            two time points, the roadrunner default (20000) when `None`.
 
     Returns:
         `columns` (the selections with `time` first) and `rows`.
@@ -44,6 +47,8 @@ def simulate_sbml(
         rr.integrator.setValue("relative_tolerance", relative_tolerance)
     if absolute_tolerance is not None:
         rr.integrator.setValue("absolute_tolerance", absolute_tolerance)
+    if maximum_number_of_steps is not None:
+        rr.integrator.setValue("maximum_num_steps", maximum_number_of_steps)
     rr.timeCourseSelections = ["time", *selections]
     result = rr.simulate(start, end, steps + 1)
     return {
@@ -59,6 +64,7 @@ def simulate_cellml(
     steps: int,
     relative_tolerance: float | None = None,
     absolute_tolerance: float | None = None,
+    maximum_number_of_steps: int | None = None,
 ) -> dict[str, Any]:
     """Uniform timecourse of a CellML model with libopencor.
 
@@ -71,11 +77,13 @@ def simulate_cellml(
             libopencor default when `None`.
         absolute_tolerance: absolute tolerance of the ODE solver, the
             libopencor default when `None`.
+        maximum_number_of_steps: internal steps of the ODE solver between
+            two time points, the default of `run_timecourse` when `None`.
 
     Returns:
         `columns` (`time` first, then every variable) and `rows`.
     """
-    from sbml2cellml.simulate import run_timecourse
+    from sbml2cellml.simulate import MAXIMUM_NUMBER_OF_STEPS, run_timecourse
 
     df, _ = run_timecourse(
         Path(cellml_path),
@@ -84,6 +92,11 @@ def simulate_cellml(
         steps=steps,
         relative_tolerance=relative_tolerance,
         absolute_tolerance=absolute_tolerance,
+        maximum_number_of_steps=(
+            MAXIMUM_NUMBER_OF_STEPS
+            if maximum_number_of_steps is None
+            else maximum_number_of_steps
+        ),
     )
     return {"columns": list(df.columns), "rows": df.to_numpy().tolist()}
 
