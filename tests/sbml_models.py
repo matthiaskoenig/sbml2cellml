@@ -61,3 +61,50 @@ def simple_model(mid: str = "simple") -> libsbml.Model:
     klaw.setMath(libsbml.parseL3Formula("k1 * S1"))
     _SBML_DOCUMENTS.append(doc)
     return model
+
+
+def unit_definition(
+    model: libsbml.Model, uid: str, *units: tuple[int, float, int, float]
+) -> libsbml.UnitDefinition:
+    """Add a unit definition from `(kind, exponent, scale, multiplier)` units."""
+    definition: libsbml.UnitDefinition = model.createUnitDefinition()
+    definition.setId(uid)
+    for kind, exponent, scale, multiplier in units:
+        unit: libsbml.Unit = definition.createUnit()
+        unit.setKind(kind)
+        unit.setExponent(exponent)
+        unit.setScale(scale)
+        unit.setMultiplier(multiplier)
+    return definition
+
+
+def annotated_model(mid: str = "annotated") -> libsbml.Model:
+    """`simple_model` with a complete unit annotation.
+
+    Substance and extent in `mmole`, time in `min`, volume in `litre`
+    (model units), `k1` in `per_min`.
+    """
+    model = simple_model(mid)
+    unit_definition(model, "mmole", (libsbml.UNIT_KIND_MOLE, 1.0, -3, 1.0))
+    unit_definition(model, "min", (libsbml.UNIT_KIND_SECOND, 1.0, 0, 60.0))
+    unit_definition(model, "per_min", (libsbml.UNIT_KIND_SECOND, -1.0, 0, 60.0))
+    model.setSubstanceUnits("mmole")
+    model.setExtentUnits("mmole")
+    model.setTimeUnits("min")
+    model.setVolumeUnits("litre")
+    # without the dimensions the units of the model do not apply
+    model.getCompartment("cell").setSpatialDimensions(3.0)
+    model.getParameter("k1").setUnits("per_min")
+    return model
+
+
+def delay_model(mid: str = "delayed") -> libsbml.Model:
+    """`simple_model` with the delay symbol in the kinetic law.
+
+    CellML has no delays: the model is a known conversion gap, its CellML
+    is not valid.
+    """
+    model = simple_model(mid)
+    klaw: libsbml.KineticLaw = model.getReaction("r1").getKineticLaw()
+    klaw.setMath(libsbml.parseL3Formula("k1 * delay(S1, 1)"))
+    return model

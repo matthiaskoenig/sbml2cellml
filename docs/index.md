@@ -6,7 +6,8 @@
 ## Features
 
 - conversion of compartments, parameters, species, assignment and rate rules and reactions into a single CellML component
-- conversion of CellML models to SBML: parameters with rules, unit definitions, resets as events, imports resolved
+- conversion of the units: unit definitions, the units of numbers and, for a model with a complete unit annotation, the units of every variable
+- conversion of CellML models to SBML: parameters with rules, unit definitions and units of numbers, resets as events, imports resolved
 - validation of the result with [libcellml](https://libcellml.org/)
 - timecourse simulation of the SBML with [roadrunner](https://www.libroadrunner.org/) and of the CellML with [libopencor](https://opencor.ws/libopencor/), both optional, see [Simulation](simulation.md)
 - the `sbml2cellml` and `cellml2sbml` command lines
@@ -45,8 +46,10 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | conversion factor of a species or the model | factor of the reaction terms of the species |
 | species reference with an id | variable of its stoichiometry, which rules may set |
 | reaction id in a formula | variable of the rate of the reaction |
-| unit definition | not yet, every variable is `dimensionless` |
-| numbers in formulas | real numbers, `dimensionless` when they have no units; SBML unit definitions on numbers not yet |
+| unit definition | units of the same name; the scale becomes the prefix, the multiplier `m` of a unit with the exponent `e` becomes `m^e` (CellML applies the exponent to the prefix only) |
+| unit kinds `item` and `avogadro` | new base units `item`, dimensionless units `avogadro` with the multiplier 6.02214179e23; every other unit kind is a standard unit of CellML |
+| units of a compartment, parameter or species | units of the variable when the unit annotation of the model is complete, else every variable is `dimensionless`, see [Units](conversion.md#units) |
+| numbers in formulas | real numbers with their units, `dimensionless` when they have none |
 | time and avogadro symbols | the variable of integration `time`, the number 6.02214179e23 |
 | rateOf symbol | the right-hand side of the differential equation of its variable, 0 without one |
 | delay symbol | not yet |

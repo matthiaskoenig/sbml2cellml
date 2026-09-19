@@ -4,7 +4,8 @@ The remaining issues of the conversion, i.e., what the current version does not 
 
 ## SBML to CellML
 
-- **Units.** Every variable is `dimensionless` and the SBML unit definitions are not converted. A number without units in a formula is `dimensionless` too, but a number with the units of an SBML unit definition (e.g., `2 mM`) references units which do not exist in the CellML model, which libcellml reports as an error. The `time` variable has no unit either.
+- **Units of an incomplete annotation.** The units of the variables are converted when every variable has units in the SBML model, see [Units](conversion.md#units); with a single compartment, species or parameter without units every variable stays `dimensionless`. A number without units in a formula is always `dimensionless`, CellML requires units on every number and SBML has none to give.
+- **Unit warnings of libcellml.** The CellML specification applies the exponent of a unit to its prefix but not to its multiplier, which `libcellml.Units.scalingFactor` follows and the converter writes. The unit check of the libcellml 0.7.1 analyser applies the exponent to the multiplier as well, so it warns about equations with units such as `per_min` (`(60 second)^-1` in SBML, `1/60 second^-1` in CellML) which are consistent. The warnings do not make a model invalid.
 - **Initial assignments** are evaluated to initial values (libsbml's `expandInitialAssignments`), so the CellML model has the value but not the formula; libsbml does not evaluate an assignment to NaN, which stays unconverted with a warning.
 - **An infinite or NaN initial value of a state** cannot be expressed: CellML initial values are real numbers (a constant gets the equation `x = INF` instead).
 - **Events** are skipped with a warning. CellML 2.0 has no events; a subset could be expressed with resets.
@@ -20,5 +21,5 @@ The remaining issues of the conversion, i.e., what the current version does not 
 ## CellML to SBML
 
 - **External variables** are not supported and raise `CellML2SBMLConversionError`; a system of coupled implicit equations cannot be analysed by libcellml.
-- **Units on numbers** in formulas are not carried into the SBML math.
+- **New base units** (units without a unit) have no SBML counterpart and are `dimensionless` in SBML, with a warning; only new base units named `item` become the SBML unit kind.
 - **Resets** trigger on the equality of the test variable and the test value; a continuous simulator may not fire this trigger, see the [limitations](conversion.md#limitations).

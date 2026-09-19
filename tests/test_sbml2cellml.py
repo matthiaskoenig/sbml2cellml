@@ -12,16 +12,7 @@ from sbml2cellml import convert_sbml2cellml
 from sbml2cellml.cellml import CellMLValidationError, errors, read_model, validate_model
 from sbml2cellml.sbml2cellml import COMPONENT_ID, TIME_ID, SBML2CellMLConversionError
 from tests.conftest import GLIMEPIRIDE_MODELS, MODELS_DIR
-from tests.sbml_models import simple_model, write_sbml
-
-#: models the current converter renders as valid CellML
-VALID_MODELS = ["glimepiride_kidney", "glimepiride_liver"]
-#: models with known conversion gaps, see docs/conversion-issues.md
-INVALID_MODELS = {
-    "glimepiride_intestine": "SBML units on numbers",
-    "glimepiride_body": "SBML units on numbers",
-    "glimepiride_body_flat": "SBML units on numbers",
-}
+from tests.sbml_models import delay_model, simple_model, write_sbml
 
 
 def variables(model: libcellml.Model) -> dict[str, libcellml.Variable]:
@@ -64,22 +55,29 @@ def test_convert_glimepiride_structure(name: str, tmp_path: Path) -> None:
     read_model(cellml_path)
 
 
-@pytest.mark.parametrize("name", VALID_MODELS)
+@pytest.mark.parametrize("name", GLIMEPIRIDE_MODELS)
 def test_convert_glimepiride_valid(name: str) -> None:
+    """The models have a complete unit annotation and units on numbers."""
     model = convert_sbml2cellml(MODELS_DIR / f"{name}.xml", validate=False)
     assert errors(validate_model(model)) == []
+    component = model.component(COMPONENT_ID)
+    units = {
+        component.variable(k).units().name() for k in range(component.variableCount())
+    }
+    assert "dimensionless" in units and len(units) > 5
 
 
-@pytest.mark.parametrize("name", list(INVALID_MODELS))
-def test_convert_glimepiride_invalid(name: str) -> None:
-    """Known conversion gaps, remove the model from INVALID_MODELS once fixed."""
-    model = convert_sbml2cellml(MODELS_DIR / f"{name}.xml", validate=False)
-    assert errors(validate_model(model)), INVALID_MODELS[name]
+def test_convert_delay_invalid(tmp_path: Path) -> None:
+    """Known conversion gap, see docs/conversion-issues.md: CellML has no delay."""
+    path = write_sbml(tmp_path / "delay.xml", delay_model())
+    model = convert_sbml2cellml(path, validate=False)
+    assert errors(validate_model(model))
 
 
-def test_validate_raises_for_invalid_model() -> None:
+def test_validate_raises_for_invalid_model(tmp_path: Path) -> None:
+    path = write_sbml(tmp_path / "delay.xml", delay_model())
     with pytest.raises(CellMLValidationError):
-        convert_sbml2cellml(MODELS_DIR / "glimepiride_body.xml", validate=True)
+        convert_sbml2cellml(path, validate=True)
 
 
 def test_validate_passes_for_valid_model(tmp_path: Path) -> None:

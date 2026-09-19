@@ -50,9 +50,26 @@ sbml2cellml model.xml -v                   # log the conversion steps
 
 The command exits with 1 and the message on stderr when the input does not exist, has no model, or the validation fails.
 
-### Example models
+### Units
 
-`examples/models/` in the repository holds the glimepiride models of [matthiaskoenig/glconversion-issues.mdmodel](https://github.com/matthiaskoenig/glimepiride-model), which `examples/glimepiride_example.py` converts. The liver and kidney models convert to valid CellML, the intestine and body models hit the [known issues](conversion-issues.md) of the converter.
+Every unit definition becomes CellML units of the same name, and every number in a formula keeps its units (`2 mM` is `<cn cellml:units="mM">2</cn>`, a number without units is `dimensionless`). The unit kinds of SBML are the standard units of CellML, except for `item` (new base units) and `avogadro` (dimensionless units with its value as multiplier).
+
+The variables get units when the unit annotation of the SBML model is complete, i.e., when the units of every variable are known:
+
+| variable | units |
+| --- | --- |
+| `time` | `timeUnits` of the model |
+| compartment | its `units`, else the `volumeUnits`, `areaUnits` or `lengthUnits` of the model by its `spatialDimensions` |
+| parameter, local parameter | its `units` |
+| species with `hasOnlySubstanceUnits` | its `substanceUnits`, else the `substanceUnits` of the model |
+| other species (a concentration) | the units of the substance per the units of the compartment: the unit definition of the model which is identical to it (e.g., `mM`), else new units `mmole_per_litre` |
+| stoichiometry of a species reference | `dimensionless` |
+| rate of a reaction | `extentUnits` per `timeUnits` of the model |
+
+SBML level 1 and 2 have the units `substance`, `time`, `volume`, `area` and `length` built in, which count as set. Units which are not set are unknown in SBML, not dimensionless: when the units of one variable are missing, all variables stay `dimensionless` and a warning names the variables without units. The values are the same either way, CellML does not convert units within a component.
+
+
+`examples/models/` in the repository holds the glimepiride models of [matthiaskoenig/glconversion-issues.mdmodel](https://github.com/matthiaskoenig/glimepiride-model), which `examples/glimepiride_example.py` converts. All of them convert to valid CellML; their unit annotation is complete, so the CellML variables have the units of the SBML models.
 
 ## CellML to SBML
 
@@ -89,7 +106,9 @@ CellML has no species, compartments or reactions: every variable becomes a param
 | state (`dx/dt = ...`) | `parameter constant="false"` with a rate rule |
 | initial value given as a variable name | initial assignment |
 | standard units | the SBML unit kind of the same name |
-| custom units | unit definition expanded to base kinds |
+| custom units | unit definition expanded to base kinds; the prefix becomes the scale, the multiplier `m` of a unit with the exponent `e` the multiplier `m^(1/e)` (SBML applies the exponent to the multiplier as well) |
+| units of a number | `sbml:units` of the number, by the id of the unit definition |
+| new base units `item` | the unit kind `item` |
 | variable written only by a reset | parameter constant="false" (an event assignment needs a non-constant target) |
 | reset | event with the trigger `test_variable == test_value`, priority `-order`, one event assignment |
 | components and connections | one flat namespace; a variable name used by several unconnected variables is prefixed with its component (`cell_x`), the CellML name is kept as `name`; the model id and event ids also get a numeric suffix when they collide with a variable id |
@@ -100,5 +119,5 @@ CellML has no species, compartments or reactions: every variable becomes a param
 ### Limitations
 
 - A system of coupled implicit equations (`x + y = 4`, `x - y = 2`) cannot be analysed by libcellml, and external variables are not supported; both raise `CellML2SBMLConversionError`.
-- Units on numbers in formulas are not carried into the SBML math (the analyser AST has none); libsbml reports them as unit warnings.
+- New base units other than `item` have no SBML counterpart and are `dimensionless`, with a warning.
 - A reset triggers on the equality of the test variable and the test value. A continuous simulator detects the equality only when the test variable crosses the test value at an integrator step, so a reset may not fire in SBML simulators; the roundtrip harness reports this per model.
