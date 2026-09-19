@@ -1,7 +1,7 @@
 # The documentation is available as markdown for agents and language models:
 #   https://matthiaskoenig.github.io/sbml2cellml/llms.txt      index of all pages
 #   https://matthiaskoenig.github.io/sbml2cellml/llms-full.txt the complete documentation
-# Every page is served as markdown next to its html, e.g. /roadmap.md for /roadmap/.
+# Every page is served as markdown next to its html, e.g. /conversion-issues.md for /conversion-issues/.
 
 User-agent: *
 Allow: /

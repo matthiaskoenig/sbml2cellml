@@ -1,5 +1,5 @@
 # sbml2cellml: conversion between SBML and CellML
-[![GitHub Actions CI/CD Status](https://github.com/matthiaskoenig/sbml2cellml/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/matthiaskoenig/sbml2cellml/actions/workflows/ci-cd.yml) [![Documentation](https://img.shields.io/badge/docs-sbml2cellml-008080.svg)](https://matthiaskoenig.github.io/sbml2cellml) [![Version](https://img.shields.io/pypi/v/sbml2cellml.svg)](https://pypi.org/project/sbml2cellml/) [![Python Versions](https://img.shields.io/pypi/pyversions/sbml2cellml.svg)](https://pypi.org/project/sbml2cellml/) [![MIT License](https://img.shields.io/pypi/l/sbml2cellml.svg)](https://opensource.org/licenses/MIT)
+[![GitHub Actions CI/CD Status](https://github.com/matthiaskoenig/sbml2cellml/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/matthiaskoenig/sbml2cellml/actions/workflows/ci-cd.yml) [![Documentation](https://img.shields.io/badge/docs-sbml2cellml-008080.svg)](https://matthiaskoenig.github.io/sbml2cellml) [![Version](https://img.shields.io/pypi/v/sbml2cellml)](https://pypi.org/project/sbml2cellml/) [![Python Versions](https://img.shields.io/pypi/pyversions/sbml2cellml)](https://pypi.org/project/sbml2cellml/) [![MIT License](https://img.shields.io/pypi/l/sbml2cellml)](https://opensource.org/licenses/MIT)
 
 `sbml2cellml` converts between the [Systems Biology Markup Language (SBML)](https://sbml.org) and [CellML 2.0](https://cellml.org), with documentation available from [https://matthiaskoenig.github.io/sbml2cellml](https://matthiaskoenig.github.io/sbml2cellml).
 
@@ -8,7 +8,7 @@ Features include
 - conversion of compartments, parameters, species, assignment and rate rules and reactions into a single CellML component
 - conversion of CellML models to SBML: parameters with rules, unit definitions, resets as events, imports resolved
 - validation of the result with libcellml
-- timecourse simulation of the CellML with libopencor
+- timecourse simulation of the SBML with roadrunner and of the CellML with libopencor, both optional
 - the `sbml2cellml` and `cellml2sbml` command lines
 - the SBML test suite harness: every semantic case through both converters and both simulators, results on the [SBML test suite](https://matthiaskoenig.github.io/sbml2cellml/testsuite/) page
 
@@ -18,7 +18,15 @@ sbml2cellml model.xml -o model.cellml
 cellml2sbml model.cellml -o model.xml
 ```
 
-In the SBML to CellML direction units, events, initial assignments, function definitions and algebraic rules are not converted yet, see the [roadmap](https://matthiaskoenig.github.io/sbml2cellml/roadmap/).
+In the SBML to CellML direction units, events and delays are not converted yet, see the [conversion issues](https://matthiaskoenig.github.io/sbml2cellml/conversion-issues/).
+
+# SBML test suite
+Every semantic case of the [SBML test suite](https://github.com/sbmlteam/sbml-test-suite) is simulated with roadrunner (`reference`), converted to CellML (`sbml2cellml`), simulated with libopencor (`libopencor`), converted back to SBML (`cellml2sbml`) and simulated with roadrunner again (`roundtrip`). The details are on the [SBML test suite](https://matthiaskoenig.github.io/sbml2cellml/testsuite/) page.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/testsuite_dark.svg">
+  <img alt="Cases of the SBML test suite which pass, fail and skip the stages of the roundtrip" src="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/testsuite.svg">
+</picture>
 
 If you have any questions or issues please [open an issue](https://github.com/matthiaskoenig/sbml2cellml/issues).
 

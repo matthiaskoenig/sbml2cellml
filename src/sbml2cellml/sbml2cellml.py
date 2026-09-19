@@ -13,8 +13,8 @@ by the bodies of the functions (libsbml's `expandFunctionDefinitions`
 conversion) before the conversion, and the initial assignments are evaluated
 to initial values (`expandInitialAssignments`).
 
-Not supported yet (logged as warning, see docs/roadmap.md): unit definitions,
-events and algebraic rules.
+Not supported yet (logged as warning, see docs/conversion-issues.md): unit
+definitions and events.
 """
 
 import logging

@@ -2,8 +2,9 @@
 
 import re
 from collections import Counter, defaultdict
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
+from sbml2cellml.testsuite.figure import dark_path, write_figures
 from sbml2cellml.testsuite.results import STAGES, SuiteResult
 
 #: intro paragraphs of the SBML test suite report
@@ -17,6 +18,9 @@ TESTSUITE_INTRO = (
     "A `reference` failure means roadrunner itself cannot simulate the case (algebraic rules, "
     "delays), it says nothing about the converters."
 )
+#: bar diagram of the SBML test suite report, relative to the report; written
+#: by `sbml2cellml.testsuite.figure.write_figures`
+TESTSUITE_FIGURE = "images/testsuite.svg"
 #: case ids listed per failure reason
 CASES_PER_REASON = 10
 #: length of a grouped failure reason
@@ -86,6 +90,7 @@ def render_report(
     intro: str = TESTSUITE_INTRO,
     command: str = "sbml2cellml-testsuite",
     names: bool = False,
+    figure: str | None = None,
 ) -> str:
     """Render the report.
 
@@ -96,6 +101,9 @@ def render_report(
             `result.suite`.
         command: command named in the generated-by header.
         names: whether the cases table gets a `name` column.
+        figure: path of the bar diagram relative to the report, shown in the
+            summary together with its variant for dark backgrounds
+            (`sbml2cellml.testsuite.figure`); no figure when `None`.
 
     Returns:
         The markdown page.
@@ -110,15 +118,26 @@ def render_report(
         "",
         f"{len(result.cases)} cases run, {len(result.skipped)} skipped.",
         "",
-        "| stage | pass | fail | skip | pass rate |",
-        "| --- | --- | --- | --- | --- |",
     ]
+    if figure is not None:
+        # the site shows the variant matching its color scheme
+        alt = "Cases which pass, fail and skip the stages"
+        dark = dark_path(PurePosixPath(figure))
+        lines += [
+            f"![{alt}]({figure}#only-light)",
+            f"![{alt}]({dark}#only-dark)",
+            "",
+        ]
+    lines += [
+        "| stage | total | pass | fail | skip | pass rate |",
+        "| --- | --- | --- | --- | --- | --- |",
+    ]
+    total = len(result.cases)
     for stage in STAGES:
         counts = result.counts(stage)
-        total = len(result.cases) or 1
         lines.append(
-            f"| {stage} | {counts['pass']} | {counts['fail']} | {counts['skip']} | "
-            f"{100 * counts['pass'] / total:.1f}% |"
+            f"| {stage} | {total} | {counts['pass']} | {counts['fail']} | "
+            f"{counts['skip']} | {100 * counts['pass'] / (total or 1):.1f}% |"
         )
 
     passing_libopencor = [
@@ -148,8 +167,11 @@ def render_report(
                     mismatch_ids.append(cid)
         if not groups:
             continue
+        failed = sum(len(ids) for ids in groups.values())
         lines += [
             f"### {stage}",
+            "",
+            f"{failed} of {total} cases fail.",
             "",
             "| reason | cases | examples |",
             "| --- | --- | --- |",
@@ -218,8 +240,9 @@ def write_report(
     intro: str = TESTSUITE_INTRO,
     command: str = "sbml2cellml-testsuite",
     names: bool = False,
+    figure: str | None = None,
 ) -> None:
-    """Write the report.
+    """Write the report and, with `figure`, its bar diagram.
 
     Args:
         result: a suite run.
@@ -229,8 +252,20 @@ def write_report(
             `result.suite`.
         command: command named in the generated-by header.
         names: whether the cases table gets a `name` column.
+        figure: path of the bar diagram relative to the report, written for
+            light and dark backgrounds; no figure when `None`.
     """
-    Path(path).write_text(
-        render_report(result, title=title, intro=intro, command=command, names=names),
+    path = Path(path)
+    path.write_text(
+        render_report(
+            result,
+            title=title,
+            intro=intro,
+            command=command,
+            names=names,
+            figure=figure,
+        ),
         encoding="utf-8",
     )
+    if figure is not None:
+        write_figures(result, path.parent / figure, title=title)

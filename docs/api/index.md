@@ -30,4 +30,5 @@ The `sbml2cellml-testsuite` command runs the [SBML test suite](https://github.co
 | [testsuite.runner](testsuite.runner.md) | The pipeline of the harness, five stages per case |
 | [testsuite.results](testsuite.results.md) | Results of a suite run: per case and stage, JSON, regressions |
 | [testsuite.report](testsuite.report.md) | Markdown report of a suite run, the page `docs/testsuite.md` |
+| [testsuite.figure](testsuite.figure.md) | Bar diagram of a suite run, the figures `docs/images/testsuite*.svg` |
 | [testsuite.cli](testsuite.cli.md) | The `sbml2cellml-testsuite` command |
