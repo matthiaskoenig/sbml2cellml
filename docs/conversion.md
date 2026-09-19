@@ -62,6 +62,7 @@ The variables get units when the unit annotation of the SBML model is complete, 
 | compartment | its `units`, else the `volumeUnits`, `areaUnits` or `lengthUnits` of the model by its `spatialDimensions` |
 | parameter, local parameter | its `units` |
 | species with `hasOnlySubstanceUnits` | its `substanceUnits`, else the `substanceUnits` of the model |
+| variable `<species>_amount` of a species in concentration whose compartment changes | the units of the substance, as for a species with `hasOnlySubstanceUnits` |
 | other species (a concentration) | the units of the substance per the units of the compartment: the unit definition of the model which is identical to it (e.g., `mM`), else new units `mmole_per_litre` |
 | stoichiometry of a species reference | `dimensionless` |
 | rate of a reaction | `extentUnits` per `timeUnits` of the model |

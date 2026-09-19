@@ -74,7 +74,17 @@ on `develop` after the merge.
   become equations
   (their targets get no initial value), rate rules and kinetic laws
   differential equations; a concentration species
-  gets its reaction terms divided by the compartment. The local parameters of
+  gets its reaction terms divided by the compartment. A concentration
+  species in a compartment which changes in time (`_changing`: the target of
+  a rate or algebraic rule, or of an assignment rule which uses time or a
+  changing variable; not an assignment rule of constants such as a volume
+  from a body weight) and which no rule determines gets a second variable
+  `<species>_amount` (`_amounts`, `unique_sid`) with the reaction terms and
+  the initial amount, and the equation `species = amount / compartment`:
+  SBML keeps the amount when the size changes. `rateOf` of such a species is
+  `(dA/dt - S * rateOf(C)) / C` (`_Formulas.derivatives`). The initial size
+  of a compartment an assignment rule sets is evaluated by libsbml
+  (`_value_at_start`). The local parameters of
   a kinetic law become variables `<reaction>_<parameter>` (`unique_sid`).
   Kinetic laws are multiplied with the stoichiometry (no factor for 1) and do
   not change boundary species, the sum is multiplied with the conversion

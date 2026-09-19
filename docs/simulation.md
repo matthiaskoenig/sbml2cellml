@@ -34,7 +34,7 @@ result = rr.simulate(0, 100, steps=100)
 df = pd.DataFrame(result, columns=result.colnames)
 ```
 
-The columns are `time` and the floating species, a species `S1` as concentration `[S1]`. The converted CellML model has one variable per compartment, parameter and species, named by the SBML id, where a species is a concentration unless it has `hasOnlySubstanceUnits`. To get the same columns from roadrunner select them before the simulation:
+The columns are `time` and the floating species, a species `S1` as concentration `[S1]`. The converted CellML model has one variable per compartment, parameter and species, named by the SBML id, where a species is a concentration unless it has `hasOnlySubstanceUnits` (a species in concentration whose compartment changes in time has the additional variable `<species>_amount`). To get the same columns from roadrunner select them before the simulation:
 
 ```python
 rr.timeCourseSelections = ["time", "[S1]", "k1", "compartment"]

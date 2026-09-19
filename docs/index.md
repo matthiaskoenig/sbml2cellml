@@ -41,9 +41,10 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | compartment | variable with the size as initial value |
 | parameter | variable with the value as initial value |
 | species | variable in amount (`hasOnlySubstanceUnits`) or concentration |
+| species in concentration whose compartment changes in time | a second variable `<species>_amount` which the reactions change, and the equation `species = amount / compartment`: the amount is kept when the size changes, not the concentration |
 | assignment rule | equation; its target has no initial value, the equation defines it from the start |
 | rate rule | differential equation |
-| reaction | kinetic law times the stoichiometry added to the differential equation of every reactant and product which is not a boundary species |
+| reaction | kinetic law times the stoichiometry added to the differential equation of every reactant and product which is not a boundary species, divided by the size of the compartment for a species in concentration |
 | conversion factor of a species or the model | factor of the reaction terms of the species |
 | species reference with an id | variable of its stoichiometry, which rules may set |
 | reaction id in a formula | variable of the rate of the reaction |

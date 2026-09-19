@@ -15,7 +15,7 @@ from sbml2cellml.cellml import write_model
 from sbml2cellml.simulate import SimulationError, plot_timecourse, run_timecourse
 from tests.cellml_models import algebraic_model, underconstrained_model
 from tests.conftest import MODELS_DIR, TEST_MODEL_PATH
-from tests.sbml_models import simple_model, write_sbml
+from tests.sbml_models import growing_compartment_model, simple_model, write_sbml
 
 pytest.importorskip("libopencor")
 matplotlib.use("Agg")
@@ -121,6 +121,49 @@ def test_run_timecourse_boundary_species_is_not_changed_by_reactions(
     df, _ = run_timecourse(cellml_path, end=4.0, steps=4)
     assert np.allclose(df["S1"], 10.0)
     assert np.allclose(df["S2"], 4.0 + 5.0 * df["time"])
+
+
+def test_run_timecourse_changing_compartment_keeps_the_amount(tmp_path: Path) -> None:
+    """The compartment grows, the reaction moves amount from S1 to S2.
+
+    With cell = 2 exp(0.5 t) and the rate k1 [S1] = 0.5 A1 / cell the amount
+    A1 = [S1] cell follows dA1/dt = -0.25 exp(-0.5 t) A1, so
+    A1 = 20 exp(0.5 (exp(-0.5 t) - 1)), and S2 gets what S1 loses.
+    """
+    sbml_path = write_sbml(tmp_path / "growing.xml", growing_compartment_model())
+    cellml_path = tmp_path / "growing.cellml"
+    convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
+    df, _ = run_timecourse(
+        cellml_path,
+        end=4.0,
+        steps=8,
+        relative_tolerance=1e-10,
+        absolute_tolerance=1e-12,
+    )
+    cell = 2.0 * np.exp(0.5 * df["time"])
+    amount = 20.0 * np.exp(0.5 * (np.exp(-0.5 * df["time"]) - 1.0))
+    assert np.allclose(df["cell"], cell, rtol=1e-6)
+    assert np.allclose(df["S1_amount"], amount, rtol=1e-6)
+    assert np.allclose(df["S1"], amount / cell, rtol=1e-6)
+    assert np.allclose(df["S2"], 4.0 + 20.0 - amount, rtol=1e-6)
+
+
+def test_run_timecourse_rate_of_in_a_changing_compartment(tmp_path: Path) -> None:
+    """rateOf of a concentration: d[S1]/dt = (dA1/dt - [S1] dcell/dt) / cell."""
+    model_sbml = growing_compartment_model("growing_rate_of")
+    p = model_sbml.createParameter()
+    p.setId("rate_s1")
+    p.setConstant(False)
+    assignment = model_sbml.createAssignmentRule()
+    assignment.setVariable("rate_s1")
+    assignment.setMath(libsbml.parseL3Formula("rateOf(S1)"))
+    sbml_path = write_sbml(tmp_path / "growing_rate_of.xml", model_sbml)
+    cellml_path = tmp_path / "growing_rate_of.cellml"
+    convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
+    df, _ = run_timecourse(cellml_path, end=4.0, steps=8)
+    # dA1/dt = -k1 [S1], dcell/dt = 0.5 cell
+    rate = (-0.5 * df["S1"] - df["S1"] * 0.5 * df["cell"]) / df["cell"]
+    assert np.allclose(df["rate_s1"], rate, rtol=1e-6)
 
 
 def test_run_timecourse_applies_conversion_factors(tmp_path: Path) -> None:

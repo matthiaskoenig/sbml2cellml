@@ -48,6 +48,19 @@ def test_complete_annotation_gives_every_variable_its_units(tmp_path: Path) -> N
     ]
 
 
+def test_amount_of_a_species_in_a_changing_compartment_has_substance_units(
+    tmp_path: Path,
+) -> None:
+    model_sbml = annotated_model("growing")
+    model_sbml.getCompartment("cell").setConstant(False)
+    rule: libsbml.RateRule = model_sbml.createRateRule()
+    rule.setVariable("cell")
+    rule.setMath(libsbml.parseL3Formula("k1 * cell"))
+    units = variable_units(convert(model_sbml, tmp_path))
+    assert units["S1"] == "mmole_per_litre"
+    assert units["S1_amount"] == "mmole"
+
+
 def test_multiplier_is_outside_of_the_exponent(tmp_path: Path) -> None:
     """SBML `(60 * second)^-1` is CellML `1/60 * second^-1`."""
     model = convert(annotated_model(), tmp_path)

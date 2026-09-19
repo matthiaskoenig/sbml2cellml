@@ -12,7 +12,12 @@ from sbml2cellml import convert_sbml2cellml
 from sbml2cellml.cellml import CellMLValidationError, errors, read_model, validate_model
 from sbml2cellml.sbml2cellml import COMPONENT_ID, TIME_ID, SBML2CellMLConversionError
 from tests.conftest import GLIMEPIRIDE_MODELS, MODELS_DIR
-from tests.sbml_models import delay_model, simple_model, write_sbml
+from tests.sbml_models import (
+    delay_model,
+    growing_compartment_model,
+    simple_model,
+    write_sbml,
+)
 
 
 def variables(model: libcellml.Model) -> dict[str, libcellml.Variable]:
@@ -129,6 +134,101 @@ def test_amount_given_for_concentration_species(tmp_path: Path) -> None:
     assert float(v["S1"].initialValue()) == 3.0
 
 
+def test_species_in_a_changing_compartment_is_a_state_in_amount(
+    tmp_path: Path,
+) -> None:
+    """The reactions change the amount, the concentration follows the size."""
+    sbml_path = write_sbml(tmp_path / "growing.xml", growing_compartment_model())
+    model = convert_sbml2cellml(sbml_path)
+    v = variables(model)
+    assert set(v) == {TIME_ID, "cell", "k1", "S1", "S1_amount", "S2"}
+    # the concentration 10 in the compartment of size 2
+    assert float(v["S1_amount"].initialValue()) == 20.0
+    assert v["S1"].initialValue() == ""
+    assert float(v["S2"].initialValue()) == 4.0
+    math_text = model.component(0).math().replace(" ", "").replace("\n", "")
+    assert "<bvar><ci>time</ci></bvar><ci>S1_amount</ci>" in math_text
+    assert "<bvar><ci>time</ci></bvar><ci>S1</ci>" not in math_text
+    assert (
+        "<eq/><ci>S1</ci><apply><divide/><ci>S1_amount</ci><ci>cell</ci></apply>"
+        in math_text
+    )
+
+
+def test_species_without_reactions_in_a_changing_compartment(tmp_path: Path) -> None:
+    """Its amount is constant, not its concentration."""
+    model_sbml = growing_compartment_model("no_reaction")
+    model_sbml.removeReaction("r1")
+    sbml_path = write_sbml(tmp_path / "no_reaction.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    v = variables(model)
+    assert float(v["S1_amount"].initialValue()) == 20.0
+    assert v["S1"].initialValue() == ""
+    math_text = model.component(0).math().replace(" ", "").replace("\n", "")
+    assert "<bvar><ci>time</ci></bvar><ci>S1_amount</ci>" not in math_text
+
+
+def test_species_with_a_rule_in_a_changing_compartment_stays_a_concentration(
+    tmp_path: Path,
+) -> None:
+    """A rate rule of a species is the rate of its concentration."""
+    model_sbml = growing_compartment_model("ruled")
+    model_sbml.removeReaction("r1")
+    rule: libsbml.RateRule = model_sbml.createRateRule()
+    rule.setVariable("S1")
+    rule.setMath(libsbml.parseL3Formula("k1"))
+    sbml_path = write_sbml(tmp_path / "ruled.xml", model_sbml)
+    v = variables(convert_sbml2cellml(sbml_path))
+    assert set(v) == {TIME_ID, "cell", "k1", "S1", "S2"}
+    assert float(v["S1"].initialValue()) == 10.0
+
+
+def test_amount_variable_id_avoids_existing_ids(tmp_path: Path) -> None:
+    model_sbml = growing_compartment_model("amount_id")
+    _parameter(model_sbml, "S1_amount", 1.0, constant=True)
+    sbml_path = write_sbml(tmp_path / "amount_id.xml", model_sbml)
+    v = variables(convert_sbml2cellml(sbml_path))
+    assert float(v["S1_amount"].initialValue()) == 1.0
+    assert float(v["S1_amount_2"].initialValue()) == 20.0
+
+
+def test_initial_amount_with_the_size_an_assignment_rule_gives(
+    tmp_path: Path,
+) -> None:
+    """The rule gives the size at the start, not the size attribute.
+
+    A rule of constants does not change the compartment, its species stay
+    concentrations.
+    """
+    model_sbml = simple_model("assigned_size_amount")
+    cell: libsbml.Compartment = model_sbml.getCompartment("cell")
+    cell.setConstant(False)
+    _with_rule(model_sbml, "cell", "8 * k1")  # 4, the size attribute is 2
+    s1: libsbml.Species = model_sbml.getSpecies("S1")
+    s1.unsetInitialConcentration()
+    s1.setInitialAmount(6.0)  # concentration species, amount given
+    s2: libsbml.Species = model_sbml.getSpecies("S2")
+    s2.unsetInitialAmount()
+    s2.setInitialConcentration(3.0)  # amount species, concentration given
+    sbml_path = write_sbml(tmp_path / "assigned_size_amount.xml", model_sbml)
+    v = variables(convert_sbml2cellml(sbml_path))
+    assert set(v) == {TIME_ID, "cell", "k1", "S1", "S2"}
+    assert float(v["S1"].initialValue()) == 1.5
+    assert float(v["S2"].initialValue()) == 12.0
+
+
+def test_species_in_a_compartment_an_assignment_rule_changes(tmp_path: Path) -> None:
+    """A rule which uses time changes the compartment."""
+    model_sbml = simple_model("assigned_changing")
+    model_sbml.getCompartment("cell").setConstant(False)
+    _with_rule(model_sbml, "volume", "4 + time")
+    _with_rule(model_sbml, "cell", "volume")
+    sbml_path = write_sbml(tmp_path / "assigned_changing.xml", model_sbml)
+    v = variables(convert_sbml2cellml(sbml_path))
+    assert v["S1"].initialValue() == ""
+    assert float(v["S1_amount"].initialValue()) == 40.0
+
+
 def _model_with_assignment_rules() -> libsbml.Model:
     """`simple_model` with a valued parameter and an unset species set by rules."""
     model_sbml = simple_model("rules")
@@ -177,9 +277,12 @@ def test_assigned_compartment_without_size_converts_with_one(
     cell: libsbml.Compartment = model_sbml.getCompartment("cell")
     cell.unsetSize()
     cell.setConstant(False)
+    unset: libsbml.Parameter = model_sbml.createParameter()
+    unset.setId("unset")
+    unset.setConstant(True)
     rule: libsbml.AssignmentRule = model_sbml.createAssignmentRule()
     rule.setVariable("cell")
-    rule.setMath(libsbml.parseL3Formula("k1 + k1"))
+    rule.setMath(libsbml.parseL3Formula("k1 + unset"))  # cannot be evaluated
     s2: libsbml.Species = model_sbml.getSpecies("S2")
     s2.unsetInitialAmount()
     s2.setInitialConcentration(4.0)  # amount species, concentration given
@@ -667,15 +770,13 @@ def test_algebraic_rule_is_solved_at_the_start(tmp_path: Path) -> None:
     _algebraic_rule(model_sbml, "cell - 2.5")
     _parameter(model_sbml, "x", 1.0, constant=False)
     _algebraic_rule(model_sbml, "x * x - 9")
-    s1: libsbml.Species = model_sbml.getSpecies("S1")
-    s1.unsetInitialConcentration()
-    s1.setInitialAmount(6.0)  # a concentration variable: 6 / 2.5
     sbml_path = write_sbml(tmp_path / "solved.xml", model_sbml)
     model = convert_sbml2cellml(sbml_path)
     assert errors(validate_model(model)) == []
     v = variables(model)
     assert float(v["cell"].initialValue()) == 2.5
-    assert float(v["S1"].initialValue()) == pytest.approx(2.4)
+    # the concentration 10 as the amount in the compartment of size 2.5
+    assert float(v["S1_amount"].initialValue()) == pytest.approx(25.0)
     assert float(v["x"].initialValue()) == pytest.approx(3.0)
 
 
