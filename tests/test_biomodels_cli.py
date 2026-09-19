@@ -42,7 +42,7 @@ def test_cli_run_with_ids(tmp_path: Path, capsys: pytest.CaptureFixture[str]) ->
     assert report_path.is_file()
     out = capsys.readouterr().out
     assert "BIOMD_A" in out
-    assert "reference: " in out
+    assert "roadrunner: " in out
 
 
 def test_cli_run_with_models_file(tmp_path: Path) -> None:
@@ -110,6 +110,10 @@ def test_cli_report(tmp_path: Path) -> None:
     assert report_path.is_file()
     text = report_path.read_text(encoding="utf-8")
     assert "BioModels" in text
+    # the tolerances of the comparison and of the solver
+    assert "a relative tolerance of `1e-3` and an absolute tolerance of `1e-6`" in text
+    assert "(relative/absolute `1e-9`/`1e-12`)" in text
+    assert "{solver}" not in text
     # the bar diagram of the report, for light and dark backgrounds
     assert "(images/biomodels.svg#only-light)" in text
     assert (tmp_path / "images" / "biomodels.svg").is_file()

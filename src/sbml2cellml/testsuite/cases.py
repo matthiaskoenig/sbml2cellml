@@ -222,8 +222,8 @@ class Case:
     """One semantic test case.
 
     `expected` is `None` for a case without expected results (e.g. a model
-    from a model repository): the reference simulation itself becomes the
-    expected results for the later stages. `name` is a display name (e.g. the model
+    from a model repository): the roadrunner simulation of the original model
+    becomes the expected results for the later stages. `name` is a display name (e.g. the model
     name), empty for the SBML test suite cases.
     """
 

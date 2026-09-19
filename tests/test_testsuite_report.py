@@ -10,6 +10,7 @@ from sbml2cellml.testsuite.report import (
     TESTSUITE_FIGURE,
     _reason,
     render_report,
+    tolerance_text,
     write_report,
 )
 from sbml2cellml.testsuite.results import STAGES, CaseResult, StageResult, SuiteResult
@@ -52,8 +53,16 @@ def test_render_report() -> None:
     assert "| libopencor | 3 | 1 | 2 | 0 | 33.3% |" in text
     assert "### libopencor\n\n2 of 3 cases fail." in text
     assert "![" not in text
-    assert "numerical mismatch" in text
-    assert "SimulationFailure: roadrunner: RuntimeError: x" in text
+    # every failing case with its complete error, the mismatches in one group
+    assert (
+        "**2 cases, numerical mismatch**\n\n```text\n"
+        "00002: S1 exceeds the tolerance by 0.5\n"
+        "00006: S2 exceeds the tolerance by 0.3\n```" in text
+    )
+    assert (
+        "**1 case**\n\n```text\n"
+        "00002: SimulationFailure: roadrunner: RuntimeError: x\n```" in text
+    )
     assert "| package comp | 2 |" in text
     assert "| 00002 | Compartment | pass | pass | fail | pass | fail |" in text
     assert "—" not in text
@@ -101,8 +110,8 @@ def test_render_report_informative_summary() -> None:
     text = render_report(result)
     assert (
         "1 of the 1 cases with a passing libopencor stage are informative: "
-        "the reference moves more than the tolerance band for at least one "
-        "variable." in text
+        "the expected results move more than the tolerance band for at least "
+        "one variable." in text
     )
 
 
@@ -126,7 +135,7 @@ def test_render_report_omits_tags_table_when_every_group_is_empty() -> None:
     )
     text = render_report(result)
     assert "numerical mismatch" in text
-    assert "| tags | cases | examples |" not in text
+    assert "| tags | cases | ids |" not in text
 
 
 def test_render_report_escapes_pipe_in_case_name() -> None:
@@ -136,19 +145,61 @@ def test_render_report_escapes_pipe_in_case_name() -> None:
     assert "A \\| B" in text
 
 
-def test_render_report_escapes_pipe_in_reasons() -> None:
-    # libopencor joins its issues with " | "
+def test_render_report_escapes_pipe_in_skip_reasons() -> None:
     result = sample()
-    result.cases["00001"].stages["libopencor"] = StageResult(
-        "fail", "SimulationFailure: libopencor: SimulationError: run: Task | CVODE"
-    )
     result.skipped["00007"] = "reason | with a pipe"
     text = render_report(result)
-    assert (
-        "| SimulationFailure: libopencor: SimulationError: run: Task \\| CVODE | 1 | 00001 |"
-        in text
-    )
     assert "| reason \\| with a pipe | 1 |" in text
+
+
+def test_render_report_shows_errors_verbatim() -> None:
+    # libopencor joins its issues with " | " and points at the code of a
+    # compiler error; nothing is escaped, replaced or shortened in the block
+    message = (
+        "SimulationFailure: libopencor: SimulationError: instance: Task | Compiler: "
+        "expression is not assignable:\n"
+        "  298 |     rates[3] = --(0.00166112956810631*states[1])*constants[155];\n"
+        "      |                ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+        + ", ".join(f"'{k}'" for k in range(200))
+    )
+    result = sample()
+    result.cases["00001"].stages["libopencor"] = StageResult("fail", message)
+    text = render_report(result)
+    first, *rest = message.split("\n")
+    block = "\n".join([f"00001: {first}", *(f"    {line}" for line in rest)])
+    assert f"```text\n{block}\n```" in text
+    assert "'...'" not in text and "in total" not in text
+
+
+def test_render_report_lists_every_case_of_a_group() -> None:
+    ok = {stage: StageResult("pass") for stage in STAGES}
+    cases = {}
+    for k in range(25):
+        stages = dict(ok)
+        stages["roadrunner"] = StageResult(
+            "fail", f"RuntimeError: The formula '0 = S{k}' is not supported."
+        )
+        cases[f"{k:05}"] = CaseResult(f"{k:05}", ["Amount"], ["Compartment"], stages)
+    text = render_report(SuiteResult("3.5.0", "0.1.0", cases, {}))
+    assert "**25 cases**" in text
+    for k in range(25):
+        assert f"{k:05}: RuntimeError: The formula '0 = S{k}' is not supported." in text
+
+
+def test_render_report_documents_the_tolerances() -> None:
+    text = render_report(sample())
+    assert "`|value - expected| <= absolute + relative * |expected|`" in text
+    assert "(relative/absolute `1e-9`/`1e-12`)" in text
+    assert "repeated with `1e-8`/`1e-10` and `1e-7`/`1e-9`" in text
+    assert "up to 100000 internal steps" in text
+    assert "{solver}" not in text
+
+
+def test_tolerance_text() -> None:
+    assert tolerance_text(1e-9) == "1e-9"
+    assert tolerance_text(1e-12) == "1e-12"
+    assert tolerance_text(0.001) == "1e-3"
+    assert tolerance_text(2.5e-4) == "2.5e-4"
 
 
 def test_reason_groups_tolerance_messages() -> None:
@@ -171,6 +222,8 @@ def test_reason_groups_cellml_validation_messages() -> None:
     a = message("00004", 8)
     b = message("00014", 12)
     assert _reason(a) == _reason(b)
+    # the further issues of a model do not split the group
+    assert _reason(a + "\n[ERROR] Another issue.") == _reason(a)
 
 
 def test_reason_handles_message_ending_with_error_marker() -> None:
@@ -213,10 +266,17 @@ def test_render_report_groups_failure_reasons() -> None:
         cases[cid] = CaseResult(cid, ["Amount"], ["Compartment"], stages)
     result = SuiteResult("3.5.0", "0.1.0", cases, {})
     text = render_report(result)
-    assert "| numerical mismatch | 2 |" in text
-    assert text.count("numerical mismatch") == 1
-    assert "| CellMLValidationError: Math cn element with the attribute" in text
-    assert text.count("CellMLValidationError: Math cn element with the attribute") == 1
+    assert "**2 cases, numerical mismatch**" in text
+    assert text.count("**2 cases") == 2
+    assert (
+        "**2 cases**\n\n```text\n"
+        "00020: CellMLValidationError: CellML model 'case00020' converted from "
+        "'00020-sbml-l3v2.xml' has 8 errors:\n"
+        "    [ERROR] Math cn element with the attribute 'type'.\n"
+        "00021: CellMLValidationError: CellML model 'case00021' converted from "
+        "'00021-sbml-l3v2.xml' has 12 errors:\n"
+        "    [ERROR] Math cn element with the attribute 'type'.\n```" in text
+    )
 
 
 def test_render_report_figure() -> None:
@@ -264,7 +324,7 @@ def test_cli_run_and_report(tmp_path: Path, capsys: pytest.CaptureFixture[str]) 
     figure = tmp_path / TESTSUITE_FIGURE
     assert figure.is_file()
     out = capsys.readouterr().out
-    assert "00001" in out and "reference" in out
+    assert "00001" in out and "roadrunner" in out
     report.unlink()
     figure.unlink()
     assert main(["report", "--results", str(results), "--output", str(report)]) == 0

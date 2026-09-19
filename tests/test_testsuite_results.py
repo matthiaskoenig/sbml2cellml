@@ -80,7 +80,7 @@ def test_json_rounds_max_excess(tmp_path: Path) -> None:
 def test_counts() -> None:
     result = suite("fail")
     assert result.counts("roundtrip") == {"pass": 0, "fail": 1, "skip": 1}
-    assert result.counts("reference") == {"pass": 1, "fail": 0, "skip": 1}
+    assert result.counts("roadrunner") == {"pass": 1, "fail": 0, "skip": 1}
 
 
 def test_regressions_and_improvements() -> None:

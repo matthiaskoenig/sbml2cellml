@@ -1,0 +1,13 @@
+/* The errors of the test suite and BioModels reports are `text` blocks with
+   long lines: wrap them, so the complete error is readable without scrolling.
+   The wrapped part of a line is indented, so the start of a case stands out. */
+.md-typeset .language-text pre > code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.md-typeset .language-text pre > code > span[id^="__span"] {
+  display: block;
+  padding-left: 4ch;
+  text-indent: -4ch;
+}

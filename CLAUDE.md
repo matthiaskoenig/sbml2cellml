@@ -145,7 +145,9 @@ on `develop` after the merge.
   formatting (ruff `G`), it never prints.
 - `testsuite/`: `sbml2cellml-testsuite run|report` runs the SBML test suite
   through both converters and both simulators. `cases.py` downloads and reads
-  the cases; `compare.py` checks a simulation against the expected results;
+  the cases; `compare.py` checks a simulation against the expected results
+  (`|value - expected| <= absolute + relative * |expected|` with the
+  tolerances of the settings of the case, not the tolerances of the solver);
   `runner.py`'s `SOLVER_SETTINGS` are the solver settings of every
   simulation (tolerances 1e-9/1e-12, 100000 internal steps between two time
   points; relaxed tolerances only when CVODE fails, `_simulate`);
@@ -153,9 +155,13 @@ on `develop` after the merge.
   inside `worker.py`'s `SimulatorWorker` processes (one process per
   simulator for the whole run, roadrunner and libopencor bundle different
   LLVM versions); `runner.py` is the five-stage pipeline
-  (`reference`/`sbml2cellml`/`libopencor`/`cellml2sbml`/`roundtrip`) per
-  case; `results.py` is `SuiteResult` (JSON) with `regressions`/
-  `improvements`; `report.py` renders `docs/testsuite.md`; `figure.py` its
+  (`roadrunner`/`sbml2cellml`/`libopencor`/`cellml2sbml`/`roundtrip`) per
+  case, a failed stage keeps the complete text of its exception (`_message`);
+  `results.py` is `SuiteResult` (JSON) with `regressions`/
+  `improvements`; `report.py` renders `docs/testsuite.md` (the solver
+  settings of the intro come from `SOLVER_SETTINGS`, the failing cases are
+  grouped by `_reason` and listed with their complete errors in fenced
+  blocks, nothing is shortened or replaced); `figure.py` its
   bar diagram `docs/images/testsuite.svg` and `testsuite_dark.svg` (also in
   `README.md`); `cli.py` is the
   `sbml2cellml-testsuite` entry point.
@@ -165,9 +171,10 @@ on `develop` after the merge.
   queries and downloads the models through the BioModels REST API, cached on
   disk, and reads/writes the selection `biomodels/models.json`; `cases.py`
   builds a case for a downloaded model with the generic timecourse (0 to 100
-  time units, 100 steps); `runner.py` turns a list of ids into cases (skipping
+  time units, 100 steps; comparison tolerances `RELATIVE` 1e-3 and `ABSOLUTE`
+  1e-6); `runner.py` turns a list of ids into cases (skipping
   a failed download or a model without variables) and calls
-  `sbml2cellml.testsuite.runner.run_suite`, whose `reference` stage uses the
+  `sbml2cellml.testsuite.runner.run_suite`, whose `roadrunner` stage uses the
   roadrunner simulation of the original model as the expected results since
   BioModels has none; `cli.py` is the `sbml2cellml-biomodels` entry point,
   which renders the report `docs/biomodels.md` with the report and figure
