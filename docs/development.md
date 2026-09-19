@@ -233,6 +233,20 @@ downloads the suite into `~/.cache/sbml2cellml` on first use (`SBML2CELLML_CACHE
 
 roadrunner and libopencor bundle different LLVM versions and crash once both have JIT-compiled in one process (see [Testing](#testing)); the harness therefore runs each simulator in its own worker process (`sbml2cellml.testsuite.worker`) for the whole run, instead of starting a subprocess per call.
 
+## BioModels { #biomodels }
+
+`sbml2cellml.biomodels` runs the manually curated SBML models of [BioModels](https://www.biomodels.org) (about 1075) through the pipeline of the SBML test suite, reusing `sbml2cellml.testsuite`, so the converters are measured against published models in addition to the test cases. These models have no expected results: the `reference` stage simulates the original SBML with roadrunner over a generic timecourse (0 to 100 time units, 100 steps), and its result is what the `libopencor` and `roundtrip` simulations are compared with, using the tolerances of the test suite (`1e-3` relative, `1e-6` absolute). A `reference` failure means roadrunner cannot simulate the model, it says nothing about the converters; models with an SBML package or without a variable (no species and no target of a rate rule or assignment rule) are skipped.
+
+```bash
+uv run sbml2cellml-biomodels run
+```
+
+downloads every model into `~/.cache/sbml2cellml/biomodels` on first use (cached for later runs), runs the pipeline, prints the regressions and improvements against the committed results and writes `biomodels/results.json`, the page [BioModels](biomodels.md) (`docs/biomodels.md`) and its bar diagram `docs/images/biomodels.svg` (`biomodels_dark.svg` for dark backgrounds, also shown in `README.md`). `--ids BIOMD0000000001,BIOMD0000000012` and `--count N` restrict the run to a subset or the first N ids of the selection, for a quick check; give such a run its own `--results` and `--report`. `uv run sbml2cellml-biomodels report` rerenders the report and the figures from the results file.
+
+The check is run locally and not in continuous integration: it takes about 20 minutes and depends on the BioModels web service. The generated files are committed; rerun the check after changes of the converters, review the regressions and commit the regenerated files with the change.
+
+`uv run sbml2cellml-biomodels update` refreshes the committed selection `biomodels/models.json` (the date, the search query and the sorted ids) from the current BioModels search; it is run occasionally, not with every check.
+
 ## Release
 
 A release is made from `develop`. Since `develop` only accepts pull requests,

@@ -12,6 +12,7 @@
 - timecourse simulation of the SBML with [roadrunner](https://www.libroadrunner.org/) and of the CellML with [libopencor](https://opencor.ws/libopencor/), both optional, see [Simulation](simulation.md)
 - the `sbml2cellml` and `cellml2sbml` command lines
 - the SBML test suite harness: every semantic case through both converters and both simulators, results on the [SBML test suite](testsuite.md) page
+- the same check for the manually curated models of [BioModels](https://www.biomodels.org), results on the [BioModels](biomodels.md) page
 
 ## Quickstart
 
@@ -64,7 +65,7 @@ The converter puts every SBML compartment, parameter and species as a variable i
 
 The reverse direction, [CellML to SBML](conversion.md#cellml-to-sbml), maps every variable to a parameter with rules and converts units and resets.
 
-The [conversion issues](conversion-issues.md) list what is not converted yet, the [SBML test suite](testsuite.md) page how many of the semantic test cases pass.
+The [conversion issues](conversion-issues.md) list what is not converted yet, the [SBML test suite](testsuite.md) and [BioModels](biomodels.md) pages how many of the semantic test cases and of the curated models pass.
 
 The [release notes](release-notes/index.md) list the changes of every version.
 

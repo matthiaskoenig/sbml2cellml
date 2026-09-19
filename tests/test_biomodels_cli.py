@@ -108,7 +108,12 @@ def test_cli_report(tmp_path: Path) -> None:
     )
     assert code == 0
     assert report_path.is_file()
-    assert "BioModels" in report_path.read_text(encoding="utf-8")
+    text = report_path.read_text(encoding="utf-8")
+    assert "BioModels" in text
+    # the bar diagram of the report, for light and dark backgrounds
+    assert "(images/biomodels.svg#only-light)" in text
+    assert (tmp_path / "images" / "biomodels.svg").is_file()
+    assert (tmp_path / "images" / "biomodels_dark.svg").is_file()
 
 
 def test_cli_missing_models_file(

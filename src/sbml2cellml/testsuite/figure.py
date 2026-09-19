@@ -71,20 +71,26 @@ def dark_path[P: PurePath](path: P) -> P:
 
 
 def render_figure(
-    result: SuiteResult, title: str = "SBML test suite", dark: bool = False
+    result: SuiteResult,
+    title: str | None = None,
+    dark: bool = False,
+    cases: str = "cases",
 ) -> Figure:
     """Render the bar diagram.
 
     Args:
         result: a suite run.
-        title: start of the title, followed by the version of the suite and
-            the number of cases.
+        title: start of the title, followed by the number of cases; the
+            SBML test suite with its version when `None`.
         dark: whether the figure is for a dark background.
+        cases: what a case is, in the title and on the axis, e.g. `models`.
 
     Returns:
         The figure with a transparent background.
     """
     theme = _DARK if dark else _LIGHT
+    if title is None:
+        title = f"SBML test suite {result.suite}"
     total = len(result.cases)
     fig = Figure(figsize=(8.0, 3.6), layout="constrained")
     fig.patch.set_alpha(0.0)
@@ -136,9 +142,9 @@ def render_figure(
     ax.set_xlim(0, (total or 1) * 1.09)
     ax.set_xticks([tick for tick in ax.get_xticks() if tick <= total])
     ax.spines["bottom"].set_bounds(0, total)
-    ax.set_xlabel("cases", color=theme.text_secondary, fontsize=10)
+    ax.set_xlabel(cases, color=theme.text_secondary, fontsize=10)
     ax.set_title(
-        f"{title} {result.suite}: {total} cases, pass rate per stage",
+        f"{title}: {total} {cases}, pass rate per stage",
         loc="left",
         color=theme.text,
         fontsize=12,
@@ -177,7 +183,10 @@ def render_figure(
 
 
 def write_figures(
-    result: SuiteResult, path: Path, title: str = "SBML test suite"
+    result: SuiteResult,
+    path: Path,
+    title: str | None = None,
+    cases: str = "cases",
 ) -> None:
     """Write the bar diagram for light and for dark backgrounds.
 
@@ -185,7 +194,8 @@ def write_figures(
         result: a suite run.
         path: SVG file of the figure for light backgrounds, overwritten; the
             figure for dark backgrounds goes to `dark_path(path)`.
-        title: start of the title of the figure.
+        title: start of the title of the figure, see `render_figure`.
+        cases: what a case is, see `render_figure`.
     """
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -194,7 +204,7 @@ def write_figures(
     with mpl.rc_context({"svg.fonttype": "path", "svg.hashsalt": "sbml2cellml"}):
         for file, dark in ((path, False), (dark_path(path), True)):
             buffer = io.StringIO()
-            render_figure(result, title=title, dark=dark).savefig(
+            render_figure(result, title=title, dark=dark, cases=cases).savefig(
                 buffer, format="svg", metadata={"Date": None}
             )
             # matplotlib ends lines with spaces, which the pre-commit hooks
