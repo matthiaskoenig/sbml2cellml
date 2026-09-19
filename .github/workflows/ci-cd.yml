@@ -111,7 +111,7 @@ jobs:
     - name: Create GitHub release
       uses: softprops/action-gh-release@v3
       with:
-        body_path: "release-notes/${{ github.ref_name }}.md"
+        body_path: "docs/release-notes/${{ github.ref_name }}.md"
         draft: false
         prerelease: false
 

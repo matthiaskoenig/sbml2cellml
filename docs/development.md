@@ -239,7 +239,7 @@ A release is made from `develop`. Since `develop` only accepts pull requests,
 the release is prepared on a branch and tagged once that pull request is merged:
 
 1. branch off `develop`: `git switch -c release/x.y.z develop`
-2. write the release notes for the version in `release-notes/x.y.z.md`
+2. write the release notes for the version in `docs/release-notes/x.y.z.md` and add the page to the `Release notes` section of `nav` in `zensical.toml` and to the overview `docs/release-notes/index.md`, newest first. The notes are part of the [documentation](release-notes/index.md) and the body of the GitHub release; `tests/test_package.py` fails when the current version has no notes or a page is missing in the navigation or the overview
 3. make sure everything passes: `tox run-parallel`, `ruff check`, `tox r -e ty`
 4. check the version bump: `uvx bump-my-version bump [major|minor|patch] --dry-run -vv`
 5. bump the version: `uvx bump-my-version bump [major|minor|patch]`, which updates `src/sbml2cellml/__init__.py` and `CITATION.cff` and commits. It does not create the tag; a squash or rebase merge would rewrite the commit and leave the tag behind on a commit which is not part of `develop`
@@ -255,7 +255,7 @@ the release is prepared on a branch and tagged once that pull request is merged:
 
     This starts the `CI-CD` workflow, which runs the test matrix, publishes to
     [pypi](https://pypi.org/project/sbml2cellml/), creates the GitHub release
-    from `release-notes/x.y.z.md` and fast-forwards `main` to the tagged commit.
+    from `docs/release-notes/x.y.z.md` and fast-forwards `main` to the tagged commit.
     Check the version before pushing, a tag cannot be moved or deleted
     afterwards.
 

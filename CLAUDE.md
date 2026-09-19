@@ -51,7 +51,7 @@ the rulesets in `.github/rulesets/` (applied with `apply.sh`) require the
 is fast-forwarded by the `sync-main` job of the release workflow. Release
 steps are in `docs/development.md`: release branch,
 `uvx bump-my-version bump [major|minor|patch]` (updates `__init__.py` and
-`CITATION.cff`, no tag), release notes in `release-notes/`, pull request, tag
+`CITATION.cff`, no tag), release notes in `docs/release-notes/`, pull request, tag
 on `develop` after the merge.
 
 ## Architecture
@@ -180,7 +180,10 @@ on `develop` after the merge.
   `tests/test_simulate.py`); fixing a gap means removing its test, not
   weakening the assertion.
 - No em dash in any text, use `-`.
-- Release notes go in `release-notes/` as part of a release commit.
+- Release notes go in `docs/release-notes/x.y.z.md` as part of a release
+  commit, with an entry in the nav of `zensical.toml` and in the overview
+  `docs/release-notes/index.md` (`tests/test_package.py` checks both); the
+  release workflow uses the file as body of the GitHub release.
 - `references/` holds the CellML specification and libopencor notes, it is not
   part of the documentation site.
 - Test models built with libcellml live in `tests/cellml_models.py`;

@@ -24,6 +24,22 @@ def test_version_is_consistent() -> None:
     assert f'version: "{version}"' in (ROOT / "CITATION.cff").read_text()
 
 
+def test_release_notes_are_in_the_documentation() -> None:
+    """Every release has its notes, in the navigation and in the overview.
+
+    The notes of the current version exist before it is bumped, so a release
+    cannot be made without them.
+    """
+    notes_dir = ROOT / "docs" / "release-notes"
+    versions = {path.stem for path in notes_dir.glob("*.md")} - {"index"}
+    assert sbml2cellml.__version__ in versions
+    nav = (ROOT / "zensical.toml").read_text()
+    overview = (notes_dir / "index.md").read_text()
+    for version in versions:
+        assert f'{{ "{version}" = "release-notes/{version}.md" }}' in nav, version
+        assert f"| [{version}]({version}.md) |" in overview, version
+
+
 def test_models_exist() -> None:
     assert TEST_MODEL_PATH.is_file()
     for name in GLIMEPIRIDE_MODELS:
