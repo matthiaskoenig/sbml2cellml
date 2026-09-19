@@ -19,7 +19,8 @@ Not supported yet (logged as warning, see docs/conversion-issues.md): events.
 
 import logging
 import math
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -194,7 +195,8 @@ def _expand(
     (`FUNCTION_DEFINITIONS`), the initial assignments evaluated to initial
     values (`INITIAL_ASSIGNMENTS`). libsbml refuses an invalid document (e.g.
     a call of an undefined function) and crashes on a recursive function
-    definition read from a file, which is therefore checked first. What is
+    definition read from a file, which is therefore checked first. The initial
+    assignments are evaluated `_without_rate_rules`. What is
     not expanded stays, with a warning: the calls, which the validation of
     the CellML reports as unknown names, and the initial assignments, which
     are not converted.
@@ -220,7 +222,12 @@ def _expand(
         return
     properties = libsbml.ConversionProperties()
     properties.addOption(option, True)
-    status = doc.convert(properties)
+    if expansion is INITIAL_ASSIGNMENTS:
+        with _without_rate_rules(doc):
+            status = doc.convert(properties)
+    else:
+        # the calls in the rate rules are expanded too
+        status = doc.convert(properties)
     # libsbml may expand a part and report a failure, e.g. an initial
     # assignment to NaN, which it cannot evaluate
     left = count_of(doc.getModel())
@@ -236,6 +243,42 @@ def _expand(
         )
     if left < count:
         logger.info("Expanded %d %s of '%s'", count - left, what.lower(), mid)
+
+
+@contextmanager
+def _without_rate_rules(doc: libsbml.SBMLDocument) -> Iterator[None]:
+    """Take the rate rules out of the model while libsbml evaluates formulas.
+
+    libsbml evaluates a variable without a value yet (it has an initial
+    assignment, or its value is NaN) by the math of its rule, also of a rate
+    rule: the rate becomes the value, and libsbml crashes when the rate depends
+    on the variable. The rate rules go back to the end of the rules, in their
+    order; the converter reads the formulas of the rules before
+    (`_collect_formulas`).
+
+    Args:
+        doc: the SBML document; its model may be replaced meanwhile.
+
+    Raises:
+        SBML2CellMLConversionError: if libsbml does not take a rule back.
+    """
+    model_sbml: libsbml.Model = doc.getModel()
+    rules: list[libsbml.Rule] = [
+        model_sbml.removeRule(k)
+        for k in reversed(range(model_sbml.getNumRules()))
+        if model_sbml.getRule(k).isRate()
+    ]
+    try:
+        yield
+    finally:
+        model_sbml = doc.getModel()
+        for rule in reversed(rules):
+            status: int = model_sbml.addRule(rule)
+            if status != libsbml.LIBSBML_OPERATION_SUCCESS:
+                raise SBML2CellMLConversionError(
+                    f"Rate rule for '{rule.getVariable()}' could not be added: "
+                    f"{libsbml.OperationReturnValue_toString(status)}"
+                )
 
 
 @dataclass
@@ -898,7 +941,8 @@ def _solve_algebraic_rules(model_sbml: libsbml.Model, formulas: _Formulas) -> No
             return libsbml.SBMLTransforms.evaluateASTNode(node, model_sbml)
 
         x0 = 1.0 if original is None else original
-        solution = _secant(residual, x0)
+        with _without_rate_rules(model_sbml.getSBMLDocument()):
+            solution = _secant(residual, x0)
         libsbml.SBMLTransforms.clearComponentValues(model_sbml)
         if solution is None:
             logger.info("Algebraic rule for '%s' not solved at the start", sid)

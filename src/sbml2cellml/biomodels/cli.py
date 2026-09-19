@@ -12,7 +12,11 @@ too many ids failed to download (`DOWNLOAD_FAILURE_FRACTION`, e.g. a
 BioModels outage) or when no case was left to run, and, when `--results`
 already exists, prints its regressions and improvements against the new run.
 `update` refreshes the selection file from the current BioModels search.
-`report` renders a results file.
+`report` renders a results file. `run` and `report` write the bar diagram of
+the report next to it (`images/biomodels.svg` and `images/biomodels_dark.svg`).
+
+The check is run locally, not in continuous integration: it downloads and
+simulates more than a thousand models.
 """
 
 import argparse
@@ -32,7 +36,11 @@ from sbml2cellml.testsuite.results import STAGES, SuiteResult, improvements, reg
 
 DEFAULT_MODELS = Path("biomodels") / "models.json"
 DEFAULT_RESULTS = Path("biomodels") / "results.json"
-DEFAULT_REPORT = Path("biomodels") / "report.md"
+DEFAULT_REPORT = Path("docs") / "biomodels.md"
+#: bar diagram of the report, relative to the report
+BIOMODELS_FIGURE = "images/biomodels.svg"
+#: start of the title of the bar diagram
+BIOMODELS_FIGURE_TITLE = "BioModels, manually curated"
 #: fraction of the requested ids whose download may fail before `run` gives
 #: up instead of writing a mostly empty result (e.g. a BioModels outage)
 DOWNLOAD_FAILURE_FRACTION = 0.05
@@ -48,7 +56,7 @@ BIOMODELS_INTRO = (
     "assignment rule, with a relative tolerance of 1e-3 and an absolute "
     "tolerance of 1e-6. A `reference` failure means roadrunner cannot simulate "
     "the model, it says nothing about the converters. See "
-    "[README.md](README.md) for how to run it."
+    "[Development](development.md#biomodels) for how to run it."
 )
 
 
@@ -170,6 +178,9 @@ def _run(args: argparse.Namespace) -> int:
         intro=BIOMODELS_INTRO,
         command="sbml2cellml-biomodels",
         names=True,
+        figure=BIOMODELS_FIGURE,
+        figure_title=BIOMODELS_FIGURE_TITLE,
+        figure_cases="models",
     )
     print(f"{results_path}\n{report_path}")
     return 0
@@ -202,6 +213,9 @@ def _report(args: argparse.Namespace) -> int:
         intro=BIOMODELS_INTRO,
         command="sbml2cellml-biomodels",
         names=True,
+        figure=BIOMODELS_FIGURE,
+        figure_title=BIOMODELS_FIGURE_TITLE,
+        figure_cases="models",
     )
     print(output)
     return 0

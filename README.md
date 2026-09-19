@@ -12,6 +12,7 @@ Features include
 - timecourse simulation of the SBML with roadrunner and of the CellML with libopencor, both optional
 - the `sbml2cellml` and `cellml2sbml` command lines
 - the SBML test suite harness: every semantic case through both converters and both simulators, results on the [SBML test suite](https://matthiaskoenig.github.io/sbml2cellml/testsuite/) page
+- the same check for the manually curated models of [BioModels](https://www.biomodels.org), results on the [BioModels](https://matthiaskoenig.github.io/sbml2cellml/biomodels/) page
 
 ```bash
 pip install sbml2cellml
@@ -27,6 +28,14 @@ Every semantic case of the [SBML test suite](https://github.com/sbmlteam/sbml-te
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/testsuite_dark.svg">
   <img alt="Cases of the SBML test suite which pass, fail and skip the stages of the roundtrip" src="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/testsuite.svg">
+</picture>
+
+# BioModels
+The manually curated SBML models of [BioModels](https://www.biomodels.org) go through the same roundtrip. They have no expected results, so the roadrunner simulation of the original model over 100 time units (`reference`) is what the libopencor simulation of the CellML (`libopencor`) and the roadrunner simulation of the SBML converted back (`roundtrip`) are compared with. The details are on the [BioModels](https://matthiaskoenig.github.io/sbml2cellml/biomodels/) page.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/biomodels_dark.svg">
+  <img alt="Curated models of BioModels which pass, fail and skip the stages of the roundtrip" src="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/biomodels.svg">
 </picture>
 
 If you have any questions or issues please [open an issue](https://github.com/matthiaskoenig/sbml2cellml/issues).

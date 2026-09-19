@@ -20,6 +20,7 @@ nav = [
   { "Status" = [
     { "Conversion issues" = "conversion-issues.md" },
     { "SBML test suite" = "testsuite.md" },
+    { "BioModels" = "biomodels.md" },
   ] },
   { "API reference" = [
     { "Overview" = "api/index.md" },
@@ -46,6 +47,12 @@ nav = [
       { "report" = "api/testsuite.report.md" },
       { "figure" = "api/testsuite.figure.md" },
       { "cli" = "api/testsuite.cli.md" },
+    ] },
+    { "sbml2cellml.biomodels" = [
+      { "models" = "api/biomodels.models.md" },
+      { "cases" = "api/biomodels.cases.md" },
+      { "runner" = "api/biomodels.runner.md" },
+      { "cli" = "api/biomodels.cli.md" },
     ] },
   ] },
   { "Release notes" = [

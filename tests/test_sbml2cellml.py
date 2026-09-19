@@ -428,6 +428,47 @@ def test_initial_assignments_give_initial_values(tmp_path: Path) -> None:
     assert float(v["S1"].initialValue()) == 6.0
 
 
+def _model_with_initial_assignment_and_rate_rule(name: str, rate: str) -> libsbml.Model:
+    """x = 5 at the start with dx/dt = rate, p = 1 / x and q = 2 * x at the start."""
+    model_sbml = simple_model(name)
+    for pid in ("x", "p", "q"):
+        parameter: libsbml.Parameter = model_sbml.createParameter()
+        parameter.setId(pid)
+        parameter.setConstant(False)
+    for symbol, formula in (("x", "5"), ("q", "2 * x")):
+        ia: libsbml.InitialAssignment = model_sbml.createInitialAssignment()
+        ia.setSymbol(symbol)
+        ia.setMath(libsbml.parseL3Formula(formula))
+    rate_rule: libsbml.RateRule = model_sbml.createRateRule()
+    rate_rule.setVariable("x")
+    rate_rule.setMath(libsbml.parseL3Formula(rate))
+    rule: libsbml.AssignmentRule = model_sbml.createAssignmentRule()
+    rule.setVariable("p")
+    rule.setMath(libsbml.parseL3Formula("1 / x"))
+    return model_sbml
+
+
+def test_initial_assignment_of_a_rate_rule_target(tmp_path: Path) -> None:
+    """libsbml takes the rate of x for its value: q = 2 * 3 instead of 2 * 5."""
+    model_sbml = _model_with_initial_assignment_and_rate_rule("rate_target", "3")
+    sbml_path = write_sbml(tmp_path / "rate_target.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    v = variables(model)
+    assert float(v["x"].initialValue()) == 5.0
+    assert float(v["q"].initialValue()) == 10.0
+    # the rate rule is still converted
+    assert "<diff/>" in model.component(0).math()
+
+
+def test_initial_assignment_of_a_rate_rule_target_in_its_rate(tmp_path: Path) -> None:
+    """libsbml crashes: it evaluates the rate p = 1 / x of x for the value of x."""
+    model_sbml = _model_with_initial_assignment_and_rate_rule("rate_cycle", "p")
+    sbml_path = write_sbml(tmp_path / "rate_cycle.xml", model_sbml)
+    v = variables(convert_sbml2cellml(sbml_path))
+    assert float(v["x"].initialValue()) == 5.0
+    assert float(v["q"].initialValue()) == 10.0
+
+
 def test_initial_assignments_with_recursive_functions_are_not_expanded(
     tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:
@@ -636,6 +677,24 @@ def test_algebraic_rule_is_solved_at_the_start(tmp_path: Path) -> None:
     assert float(v["cell"].initialValue()) == 2.5
     assert float(v["S1"].initialValue()) == pytest.approx(2.4)
     assert float(v["x"].initialValue()) == pytest.approx(3.0)
+
+
+@pytest.mark.parametrize("rate", ["3", "-x"])
+def test_algebraic_rule_with_a_rate_rule_target_without_value(
+    rate: str, tmp_path: Path
+) -> None:
+    """libsbml takes the rate of x for its unknown value: y = 3, a crash for -x."""
+    model_sbml = simple_model("unknown_state")
+    _parameter(model_sbml, "x", math.nan, constant=False)
+    _parameter(model_sbml, "y", 1.0, constant=False)
+    rule: libsbml.RateRule = model_sbml.createRateRule()
+    rule.setVariable("x")
+    rule.setMath(libsbml.parseL3Formula(rate))
+    _algebraic_rule(model_sbml, "y - x")
+    sbml_path = write_sbml(tmp_path / "unknown_state.xml", model_sbml)
+    v = variables(convert_sbml2cellml(sbml_path, validate=False))
+    # not solved at the start: y keeps its value
+    assert float(v["y"].initialValue()) == 1.0
 
 
 def test_algebraic_rule_without_a_free_variable_logs_warning(

@@ -24,6 +24,12 @@ def test_render_figure() -> None:
     assert "3.5.0" in ax.get_title(loc="left")
 
 
+def test_render_figure_title_and_cases() -> None:
+    ax = render_figure(sample(), title="BioModels", cases="models").axes[0]
+    assert ax.get_title(loc="left") == "BioModels: 3 models, pass rate per stage"
+    assert ax.get_xlabel() == "models"
+
+
 def test_render_figure_without_cases() -> None:
     fig = render_figure(SuiteResult("3.5.0", "0.1.0"))
     assert len(fig.axes[0].patches) == 0

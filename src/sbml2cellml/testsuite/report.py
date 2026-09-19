@@ -241,6 +241,8 @@ def write_report(
     command: str = "sbml2cellml-testsuite",
     names: bool = False,
     figure: str | None = None,
+    figure_title: str | None = None,
+    figure_cases: str = "cases",
 ) -> None:
     """Write the report and, with `figure`, its bar diagram.
 
@@ -254,6 +256,9 @@ def write_report(
         names: whether the cases table gets a `name` column.
         figure: path of the bar diagram relative to the report, written for
             light and dark backgrounds; no figure when `None`.
+        figure_title: start of the title of the figure, the SBML test suite
+            with its version when `None`.
+        figure_cases: what a case is in the figure, e.g. `models`.
     """
     path = Path(path)
     path.write_text(
@@ -268,4 +273,6 @@ def write_report(
         encoding="utf-8",
     )
     if figure is not None:
-        write_figures(result, path.parent / figure, title=title)
+        write_figures(
+            result, path.parent / figure, title=figure_title, cases=figure_cases
+        )
