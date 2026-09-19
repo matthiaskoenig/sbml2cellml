@@ -37,9 +37,10 @@ sbml2cellml model.xml -o model.cellml
 cellml2sbml model.cellml -o model.xml
 
 uv run sbml2cellml-testsuite run        # full SBML test suite, writes testsuite/results.json, docs/testsuite.md and docs/images/testsuite*.svg
-tox r -e testsuite                      # gating test against the committed results (SBML2CELLML_TESTSUITE=1)
+tox r -e testsuite                      # gating test against the committed results (SBML2CELLML_TESTSUITE=1), python 3.14 only, as in CI
 
 # local only, not in CI (about 20 minutes, the models are cached in ~/.cache/sbml2cellml/biomodels)
+tox r -e biomodels                      # the run below in the locked environment with python 3.14
 uv run sbml2cellml-biomodels run        # curated BioModels selection, writes biomodels/results.json, docs/biomodels.md and docs/images/biomodels*.svg
 uv run sbml2cellml-biomodels update     # refresh the committed selection biomodels/models.json
 uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the figures from the results file

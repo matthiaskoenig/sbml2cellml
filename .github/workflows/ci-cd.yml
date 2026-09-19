@@ -51,16 +51,16 @@ jobs:
         python-version: ${{ matrix.python-version }}
         enable-cache: true
     - name: Cache the SBML test suite
-      # the complete SBML test suite runs on linux only
-      if: runner.os == 'Linux'
+      # the complete SBML test suite runs on linux with python 3.14 only
+      if: runner.os == 'Linux' && matrix.python-version == '3.14'
       uses: actions/cache@v6
       with:
         path: ~/.cache/sbml2cellml
         key: sbml-test-suite-3.5.0
     - name: Test with tox
       env:
-        # the complete SBML test suite runs on linux only
-        SBML2CELLML_TESTSUITE: ${{ runner.os == 'Linux' && '1' || '' }}
+        # the complete SBML test suite runs on linux with python 3.14 only
+        SBML2CELLML_TESTSUITE: ${{ runner.os == 'Linux' && matrix.python-version == '3.14' && '1' || '' }}
       run:
         uvx --with tox-uv tox -e py${{ matrix.python-version }}
 

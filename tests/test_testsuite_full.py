@@ -1,6 +1,6 @@
 """The complete SBML test suite, gated on regressions.
 
-Enabled with `SBML2CELLML_TESTSUITE=1` (the linux CI job, `tox -e testsuite`).
+Enabled with `SBML2CELLML_TESTSUITE=1` (the linux CI job of python 3.14, `tox -e testsuite`).
 Downloads the suite into the cache, runs every runnable case and compares
 with the committed `testsuite/results.json`; the rendered report must equal
 the committed `docs/testsuite.md`. Improvements are printed: rerun

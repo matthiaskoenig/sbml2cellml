@@ -12,6 +12,7 @@ The check is run locally and not in continuous integration, it downloads and sim
 
 ```bash
 uv run sbml2cellml-biomodels run
+tox r -e biomodels    # the same in the locked environment with python 3.14
 ```
 
 How the check works and its options are described in [Development](https://matthiaskoenig.github.io/sbml2cellml/development/#biomodels).
