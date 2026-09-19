@@ -530,9 +530,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 3800.0,
-     "message": "PRPP exceeds the tolerance by 5.01; IMP exceeds the tolerance by 80.7; SAMP exceeds the tolerance by 0.0626; ATP exceeds the tolerance by 1.11e+03; SAM exceeds the tolerance by 0.313; Ade exceeds the tolerance by 69.8; XMP exceeds the tolerance by 13.1; GTP exceeds the tolerance by 299; dATP exceeds the tolerance by 0.582; dGTP exceeds the tolerance by 0.378; RNA exceeds the tolerance by 3.8e+03; HX exceeds the tolerance by 223; Xa exceeds the tolerance by 91.8; Gua exceeds the tolerance by 768; UA exceeds the tolerance by 108",
-     "status": "fail"
+     "max_excess": -0.000199,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -540,9 +540,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 3800.0,
-     "message": "PRPP exceeds the tolerance by 5.01; IMP exceeds the tolerance by 80.7; SAMP exceeds the tolerance by 0.0626; ATP exceeds the tolerance by 1.11e+03; SAM exceeds the tolerance by 0.313; Ade exceeds the tolerance by 69.8; XMP exceeds the tolerance by 13.1; GTP exceeds the tolerance by 299; dATP exceeds the tolerance by 0.582; dGTP exceeds the tolerance by 0.378; RNA exceeds the tolerance by 3.8e+03; HX exceeds the tolerance by 223; Xa exceeds the tolerance by 91.8; Gua exceeds the tolerance by 768; UA exceeds the tolerance by 108",
-     "status": "fail"
+     "max_excess": -0.000199,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -1476,9 +1476,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 74400.0,
-     "message": "ADPi exceeds the tolerance by 421; ATPi exceeds the tolerance by 478; PCri exceeds the tolerance by 2.76; PCr exceeds the tolerance by 0.126; ATP exceeds the tolerance by 0.0709; Pi exceeds the tolerance by 7.44e+04; P exceeds the tolerance by 6.16e+03",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -1486,9 +1486,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 74400.0,
-     "message": "ADPi exceeds the tolerance by 421; ATPi exceeds the tolerance by 478; PCri exceeds the tolerance by 2.76; PCr exceeds the tolerance by 0.126; ATP exceeds the tolerance by 0.0709; Pi exceeds the tolerance by 7.44e+04; P exceeds the tolerance by 6.16e+03",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -5950,9 +5950,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: instance: Task instance | Runtime | Compiler: the given code could not be compiled.; Task instance | Runtime | Compiler: expression is not assignable:\n  298 |     rates[3] = 1.0/constants[22]*--(constants[156]+-(0.00166112956810631*states[1]+constants[156])*states[3])*constants[155]*constants[22];\n      |                                  ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~; Task instance | Runtime | Compiler: expression is not assignable:\n  304 |     rates[22] = 1.0/constants[22]*--(constants[179]+-(0.00166112956810631*states[0]+constants[179])*states[22])*constants[178]*constants[22];\n      |                                   ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -7395,9 +7395,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0 and h = 4.06e-12, the corrector convergence test failed repeatedly or with |h| = hmin.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -7405,9 +7405,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_CONV_FAILURE: Convergence test failures occurred too many times (= MXNCF = 10) during one internal timestep or occurred with |h| = hmin.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -14383,9 +14383,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.897,
-     "message": "RuBP exceeds the tolerance by 0.15; PGA exceeds the tolerance by 0.614; TP exceeds the tolerance by 0.0256; HeP exceeds the tolerance by 0.412; TPGA exceeds the tolerance by 0.0554; E4P exceeds the tolerance by 0.0333; S7P exceeds the tolerance by 0.0371; Ru5P exceeds the tolerance by 0.279; GG exceeds the tolerance by 0.0887; ATP exceeds the tolerance by 0.764; ADP exceeds the tolerance by 0.766; UTP exceeds the tolerance by 0.0591; UDP exceeds the tolerance by 0.061; Pi exceeds the tolerance by 0.897; TPc exceeds the tolerance by 0.0113; HePc exceeds the tolerance by 0.019; Suc exceeds the tolerance by 0.0303; Pic exceeds the tolerance by 0.0372; v_15 exceeds the tolerance by 0.00184",
-     "status": "fail"
+     "max_excess": -7.12e-06,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -14393,9 +14393,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.897,
-     "message": "RuBP exceeds the tolerance by 0.15; PGA exceeds the tolerance by 0.614; TP exceeds the tolerance by 0.0256; HeP exceeds the tolerance by 0.412; TPGA exceeds the tolerance by 0.0554; E4P exceeds the tolerance by 0.0333; S7P exceeds the tolerance by 0.0371; Ru5P exceeds the tolerance by 0.279; GG exceeds the tolerance by 0.0887; ATP exceeds the tolerance by 0.764; ADP exceeds the tolerance by 0.766; UTP exceeds the tolerance by 0.0591; UDP exceeds the tolerance by 0.061; Pi exceeds the tolerance by 0.897; TPc exceeds the tolerance by 0.0113; HePc exceeds the tolerance by 0.019; Suc exceeds the tolerance by 0.0303; Pic exceeds the tolerance by 0.0372; v_15 exceeds the tolerance by 0.00184",
-     "status": "fail"
+     "max_excess": -7.12e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -14421,9 +14421,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 51.8,
-     "message": "RuBP exceeds the tolerance by 27.6; PGA exceeds the tolerance by 4.4; TP exceeds the tolerance by 0.22; Ru5P exceeds the tolerance by 0.121; Pi exceeds the tolerance by 51.8; ATP exceeds the tolerance by 0.671; ADP exceeds the tolerance by 0.67; totRuBP exceeds the tolerance by 0.926",
-     "status": "fail"
+     "max_excess": -5.11e-05,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -14431,9 +14431,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 51.8,
-     "message": "RuBP exceeds the tolerance by 27.6; PGA exceeds the tolerance by 4.4; TP exceeds the tolerance by 0.22; Ru5P exceeds the tolerance by 0.121; Pi exceeds the tolerance by 51.8; ATP exceeds the tolerance by 0.671; ADP exceeds the tolerance by 0.67; totRuBP exceeds the tolerance by 0.926",
-     "status": "fail"
+     "max_excess": -5.11e-05,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -14459,9 +14459,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.25,
-     "message": "RuBP exceeds the tolerance by 0.0545; PGA exceeds the tolerance by 1.39; DPGA exceeds the tolerance by 0.0237; GAP exceeds the tolerance by 0.00277; DHAP exceeds the tolerance by 0.061; FBP exceeds the tolerance by 0.00306; F6P exceeds the tolerance by 0.129; E4P exceeds the tolerance by 0.000549; SBP exceeds the tolerance by 0.0204; S7P exceeds the tolerance by 0.106; X5P exceeds the tolerance by 0.0122; R5P exceeds the tolerance by 0.0205; Ru5P exceeds the tolerance by 0.0082; G6P exceeds the tolerance by 0.297; G1P exceeds the tolerance by 0.0173; ATP exceeds the tolerance by 0.00512; ADP exceeds the tolerance by 0.00659; Pi exceeds the tolerance by 2.25",
-     "status": "fail"
+     "max_excess": -1.01e-06,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -14469,9 +14469,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.25,
-     "message": "RuBP exceeds the tolerance by 0.0545; PGA exceeds the tolerance by 1.39; DPGA exceeds the tolerance by 0.0237; GAP exceeds the tolerance by 0.00277; DHAP exceeds the tolerance by 0.061; FBP exceeds the tolerance by 0.00306; F6P exceeds the tolerance by 0.129; E4P exceeds the tolerance by 0.000549; SBP exceeds the tolerance by 0.0204; S7P exceeds the tolerance by 0.106; X5P exceeds the tolerance by 0.0122; R5P exceeds the tolerance by 0.0205; Ru5P exceeds the tolerance by 0.0082; G6P exceeds the tolerance by 0.297; G1P exceeds the tolerance by 0.0173; ATP exceeds the tolerance by 0.00512; ADP exceeds the tolerance by 0.00659; Pi exceeds the tolerance by 2.25",
-     "status": "fail"
+     "max_excess": -1.01e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -14497,9 +14497,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.02,
-     "message": "RuBP exceeds the tolerance by 0.0055; E exceeds the tolerance by 1.59e-05; ER exceeds the tolerance by 0.00101; EPP exceeds the tolerance by 0.000236; EPG exceeds the tolerance by 0.000265; EP exceeds the tolerance by 0.000809; EOP exceeds the tolerance by 0.00234; PGA exceeds the tolerance by 0.00372; TP exceeds the tolerance by 0.00175; GAP exceeds the tolerance by 0.000876; DHAP exceeds the tolerance by 0.000876; FBP exceeds the tolerance by 6.01e-06; HeP exceeds the tolerance by 0.000474; F6P exceeds the tolerance by 0.000157; G6P exceeds the tolerance by 0.000157; G1P exceeds the tolerance by 0.000157; E4P exceeds the tolerance by 0.000686; SBP exceeds the tolerance by 3.42e-06; S7P exceeds the tolerance by 5.17e-05; PeP exceeds the tolerance by 0.000937; X5P exceeds the tolerance by 0.000312; R5P exceeds the tolerance by 0.000312; Ru5P exceeds the tolerance by 0.000312; ADPG exceeds the tolerance by 0.000138; ATP exceeds the tolerance by 0.000118; ADP exceeds the tolerance by 0.00012; Pi exceeds the tolerance by 0.00838; CO2 exceeds the tolerance by 6.13e-06; PGAc exceeds the tolerance by 0.00117; TPc exceeds the tolerance by 0.00731; GAPc exceeds the tolerance by 0.00366; DHAPc exceeds the tolerance by 0.00366; FBPc exceeds the tolerance by 1.24e-05; F26BPc exceeds the tolerance by 1.57e-05; HePc exceeds the tolerance by 7.83e-05; F6Pc exceeds the tolerance by 2.55e-05; G6Pc exceeds the tolerance by 2.55e-05; G1Pc exceeds the tolerance by 2.54e-05; UDPGc exceeds the tolerance by 0.000432; Pic exceeds the tolerance by 0.00853; W4 exceeds the tolerance by 2.02",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -14507,9 +14507,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2.02,
-     "message": "RuBP exceeds the tolerance by 0.0055; E exceeds the tolerance by 1.59e-05; ER exceeds the tolerance by 0.00101; EPP exceeds the tolerance by 0.000236; EPG exceeds the tolerance by 0.000265; EP exceeds the tolerance by 0.000809; EOP exceeds the tolerance by 0.00234; PGA exceeds the tolerance by 0.00372; TP exceeds the tolerance by 0.00175; GAP exceeds the tolerance by 0.000876; DHAP exceeds the tolerance by 0.000876; FBP exceeds the tolerance by 6.01e-06; HeP exceeds the tolerance by 0.000474; F6P exceeds the tolerance by 0.000157; G6P exceeds the tolerance by 0.000157; G1P exceeds the tolerance by 0.000157; E4P exceeds the tolerance by 0.000686; SBP exceeds the tolerance by 3.42e-06; S7P exceeds the tolerance by 5.17e-05; PeP exceeds the tolerance by 0.000937; X5P exceeds the tolerance by 0.000312; R5P exceeds the tolerance by 0.000312; Ru5P exceeds the tolerance by 0.000312; ADPG exceeds the tolerance by 0.000138; ATP exceeds the tolerance by 0.000118; ADP exceeds the tolerance by 0.00012; Pi exceeds the tolerance by 0.00838; CO2 exceeds the tolerance by 6.13e-06; PGAc exceeds the tolerance by 0.00117; TPc exceeds the tolerance by 0.00731; GAPc exceeds the tolerance by 0.00366; DHAPc exceeds the tolerance by 0.00366; FBPc exceeds the tolerance by 1.24e-05; F26BPc exceeds the tolerance by 1.57e-05; HePc exceeds the tolerance by 7.83e-05; F6Pc exceeds the tolerance by 2.55e-05; G6Pc exceeds the tolerance by 2.55e-05; G1Pc exceeds the tolerance by 2.54e-05; UDPGc exceeds the tolerance by 0.000432; Pic exceeds the tolerance by 0.00853; W4 exceeds the tolerance by 2.02",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -14535,9 +14535,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 8.88,
-     "message": "PGA exceeds the tolerance by 5.89; DPGA exceeds the tolerance by 0.586; GAP exceeds the tolerance by 0.0543; DHAP exceeds the tolerance by 1.09; TP exceeds the tolerance by 1.14; FBP exceeds the tolerance by 0.0234; F6P exceeds the tolerance by 0.121; G6P exceeds the tolerance by 0.279; G1P exceeds the tolerance by 0.0162; HeP exceeds the tolerance by 0.417; E4P exceeds the tolerance by 0.618; SBP exceeds the tolerance by 1.67; S7P exceeds the tolerance by 0.602; X5P exceeds the tolerance by 0.114; R5P exceeds the tolerance by 0.192; Ru5P exceeds the tolerance by 0.0767; PeP exceeds the tolerance by 0.383; RuBP exceeds the tolerance by 4.46; ATP exceeds the tolerance by 1.25; ADP exceeds the tolerance by 1.25; Pi exceeds the tolerance by 8.88; PGCA exceeds the tolerance by 0.000159; GCA exceeds the tolerance by 0.0171; GCEA exceeds the tolerance by 0.523; HPRc exceeds the tolerance by 0.000169; GCAc exceeds the tolerance by 0.00219; GOAc exceeds the tolerance by 0.000726; GLYc exceeds the tolerance by 0.0805; SERc exceeds the tolerance by 0.0229; GCEAc exceeds the tolerance by 0.508; PGAc exceeds the tolerance by 0.0878; GAPc exceeds the tolerance by 0.00473; DHAPc exceeds the tolerance by 0.0946; TPc exceeds the tolerance by 0.0994; FBPc exceeds the tolerance by 0.00521; F6Pc exceeds the tolerance by 0.00474; G6Pc exceeds the tolerance by 0.0109; G1Pc exceeds the tolerance by 0.000636; HePc exceeds the tolerance by 0.0163; F26BPc exceeds the tolerance by 0.00137; SucPc exceeds the tolerance by 7.8e-05; Succ exceeds the tolerance by 0.000279; UDPc exceeds the tolerance by 0.000129; Pic exceeds the tolerance by 0.18; PiTc exceeds the tolerance by 0.18; K52a exceeds the tolerance by 0.0489",
-     "status": "fail"
+     "max_excess": -9.99e-07,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -14545,9 +14545,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 8.88,
-     "message": "PGA exceeds the tolerance by 5.89; DPGA exceeds the tolerance by 0.586; GAP exceeds the tolerance by 0.0543; DHAP exceeds the tolerance by 1.09; TP exceeds the tolerance by 1.14; FBP exceeds the tolerance by 0.0234; F6P exceeds the tolerance by 0.121; G6P exceeds the tolerance by 0.279; G1P exceeds the tolerance by 0.0162; HeP exceeds the tolerance by 0.417; E4P exceeds the tolerance by 0.618; SBP exceeds the tolerance by 1.67; S7P exceeds the tolerance by 0.602; X5P exceeds the tolerance by 0.114; R5P exceeds the tolerance by 0.192; Ru5P exceeds the tolerance by 0.0767; PeP exceeds the tolerance by 0.383; RuBP exceeds the tolerance by 4.46; ATP exceeds the tolerance by 1.25; ADP exceeds the tolerance by 1.25; Pi exceeds the tolerance by 8.88; PGCA exceeds the tolerance by 0.000159; GCA exceeds the tolerance by 0.0171; GCEA exceeds the tolerance by 0.523; HPRc exceeds the tolerance by 0.000169; GCAc exceeds the tolerance by 0.00219; GOAc exceeds the tolerance by 0.000726; GLYc exceeds the tolerance by 0.0805; SERc exceeds the tolerance by 0.0229; GCEAc exceeds the tolerance by 0.508; PGAc exceeds the tolerance by 0.0878; GAPc exceeds the tolerance by 0.00473; DHAPc exceeds the tolerance by 0.0946; TPc exceeds the tolerance by 0.0994; FBPc exceeds the tolerance by 0.00521; F6Pc exceeds the tolerance by 0.00474; G6Pc exceeds the tolerance by 0.0109; G1Pc exceeds the tolerance by 0.000636; HePc exceeds the tolerance by 0.0163; F26BPc exceeds the tolerance by 0.00137; SucPc exceeds the tolerance by 7.8e-05; Succ exceeds the tolerance by 0.000279; UDPc exceeds the tolerance by 0.000129; Pic exceeds the tolerance by 0.18; PiTc exceeds the tolerance by 0.18; K52a exceeds the tolerance by 0.0489",
-     "status": "fail"
+     "max_excess": -9.99e-07,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -20516,9 +20516,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0 and h = 1.31e-10, the corrector convergence test failed repeatedly or with |h| = hmin.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -20526,9 +20526,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_CONV_FAILURE: Convergence test failures occurred too many times (= MXNCF = 10) during one internal timestep or occurred with |h| = hmin.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -25552,9 +25552,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 214.0,
-     "message": "Pi_curve exceeds the tolerance by 214",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -25562,9 +25562,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 214.0,
-     "message": "Pi_curve exceeds the tolerance by 214",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -26777,9 +26777,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 185.0,
-     "message": "Pi exceeds the tolerance by 96; THFGlu exceeds the tolerance by 0.0989; myTHFGlu exceeds the tolerance by 0.000312; MTHFGlu exceeds the tolerance by 0.00409; Met exceeds the tolerance by 0.199; dTMP exceeds the tolerance by 0.0524; meTHFGlu exceeds the tolerance by 0.00802; fTHFGlu exceeds the tolerance by 0.204; fmtRNA exceeds the tolerance by 74.2; COTwo exceeds the tolerance by 119; ADP exceeds the tolerance by 185; NADP exceeds the tolerance by 118; SAmDLp exceeds the tolerance by 0.00224; Formyl exceeds the tolerance by 52.1; ffTHFGlu exceeds the tolerance by 0.000148",
-     "status": "fail"
+     "max_excess": -1.14e-06,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -26787,9 +26787,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 185.0,
-     "message": "Pi exceeds the tolerance by 96; THFGlu exceeds the tolerance by 0.0989; myTHFGlu exceeds the tolerance by 0.000312; MTHFGlu exceeds the tolerance by 0.00409; Met exceeds the tolerance by 0.199; dTMP exceeds the tolerance by 0.0524; meTHFGlu exceeds the tolerance by 0.00802; fTHFGlu exceeds the tolerance by 0.204; fmtRNA exceeds the tolerance by 74.2; COTwo exceeds the tolerance by 119; ADP exceeds the tolerance by 185; NADP exceeds the tolerance by 118; SAmDLp exceeds the tolerance by 0.00224; Formyl exceeds the tolerance by 52.1; ffTHFGlu exceeds the tolerance by 0.000148",
-     "status": "fail"
+     "max_excess": -1.14e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -35948,9 +35948,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 3910000000.0,
-     "message": "R exceeds the tolerance by 3.91e+09; L exceeds the tolerance by 3.45e+05; E exceeds the tolerance by 3.78e+04; V exceeds the tolerance by 3.02e+06",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -35958,9 +35958,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 3910000000.0,
-     "message": "R exceeds the tolerance by 3.91e+09; L exceeds the tolerance by 3.45e+05; E exceeds the tolerance by 3.78e+04; V exceeds the tolerance by 3.02e+06",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -37958,9 +37958,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2430000000.0,
-     "message": "Target_cells exceeds the tolerance by 2.69e+07; Infected_cells exceeds the tolerance by 4.38e+06; Infected_cells_antiviral exceeds the tolerance by 2.11e+07; Refractory_cells exceeds the tolerance by 1.11e+08; Virions exceeds the tolerance by 1.72e+09; IFN exceeds the tolerance by 2.43e+09; Fraction_target_cells_remaining exceeds the tolerance by 0.0672",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -37968,9 +37968,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 2430000000.0,
-     "message": "Target_cells exceeds the tolerance by 2.69e+07; Infected_cells exceeds the tolerance by 4.38e+06; Infected_cells_antiviral exceeds the tolerance by 2.11e+07; Refractory_cells exceeds the tolerance by 1.11e+08; Virions exceeds the tolerance by 1.72e+09; IFN exceeds the tolerance by 2.43e+09; Fraction_target_cells_remaining exceeds the tolerance by 0.0672",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
