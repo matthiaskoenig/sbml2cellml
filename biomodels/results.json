@@ -12638,9 +12638,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1360.0,
-     "message": "TGF_beta_ex exceeds the tolerance by 0.00116; T2R_surf exceeds the tolerance by 0.000244; T2R_endo exceeds the tolerance by 0.00105; LRC_surf exceeds the tolerance by 7.14e-06; LRC_endo exceeds the tolerance by 8.43e-06; PSmad2_PSmad2_c exceeds the tolerance by 4.71e-06; PSmad2_PSmad2_n exceeds the tolerance by 2.39e-05; TGF_beta_ns exceeds the tolerance by 2.79e-05; totalNumT2R exceeds the tolerance by 1.24; totalNumLRC exceeds the tolerance by 0.0243; medium_TGF_beta_amount exceeds the tolerance by 1.36e+03",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -12648,9 +12648,9 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 1360.0,
-     "message": "TGF_beta_ex exceeds the tolerance by 0.00116; T2R_surf exceeds the tolerance by 0.000244; T2R_endo exceeds the tolerance by 0.00105; LRC_surf exceeds the tolerance by 7.14e-06; LRC_endo exceeds the tolerance by 8.43e-06; PSmad2_PSmad2_c exceeds the tolerance by 4.71e-06; PSmad2_PSmad2_n exceeds the tolerance by 2.39e-05; TGF_beta_ns exceeds the tolerance by 2.79e-05; totalNumT2R exceeds the tolerance by 1.24; totalNumLRC exceeds the tolerance by 0.0243; medium_TGF_beta_amount exceeds the tolerance by 1.36e+03",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -39745,5 +39745,5 @@
   "BIOMD0000001097": "package fbc"
  },
  "suite": "biomodels",
- "version": "0.3.4"
+ "version": "0.3.5"
 }

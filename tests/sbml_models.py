@@ -63,6 +63,16 @@ def simple_model(mid: str = "simple") -> libsbml.Model:
     return model
 
 
+def growing_compartment_model(mid: str = "growing") -> libsbml.Model:
+    """`simple_model` whose compartment grows: `d cell / d time = 0.5 * cell`."""
+    model = simple_model(mid)
+    model.getCompartment("cell").setConstant(False)
+    rule: libsbml.RateRule = model.createRateRule()
+    rule.setVariable("cell")
+    rule.setMath(libsbml.parseL3Formula("0.5 * cell"))
+    return model
+
+
 def unit_definition(
     model: libsbml.Model, uid: str, *units: tuple[int, float, int, float]
 ) -> libsbml.UnitDefinition:

@@ -4,7 +4,10 @@ The conversion puts every SBML compartment, parameter and species as a variable
 into a single CellML component `sbml`, together with the variable of
 integration `time`. Assignment rules become equations, rate rules and the
 kinetic laws of the reactions become differential equations. The target of an
-assignment rule has no initial value, the rule defines it at all times. The
+assignment rule has no initial value, the rule defines it at all times. A
+species in concentration whose compartment changes gets a second variable
+`<species>_amount`: the reactions change the amount, the concentration is the
+amount per size of the compartment. The
 unit definitions and the units of numbers are converted, the units of the
 variables when the unit annotation of the model is complete
 (`sbml2cellml.cellmlunits`), else all variables are `dimensionless`.
@@ -105,16 +108,16 @@ def convert_sbml2cellml(
         logger.info("No differential equation, '%s' is algebraic", mid)
 
     cellml_units = CellMLUnits(model_sbml, model)
-    units = _variable_units(
-        model_sbml, cellml_units, formulas.local_ids, reaction_ids, has_time
-    )
+    units = _variable_units(model_sbml, cellml_units, formulas, reaction_ids, has_time)
     number_units = cellml_units.number_units
 
     if has_time:
         _add_variable(component, TIME_ID, None, units)
     compartment_sizes = _add_compartments(component, model_sbml, assigned, units)
     _add_parameters(component, model_sbml, assigned, units)
-    _add_species(component, model_sbml, compartment_sizes, assigned, units)
+    _add_species(
+        component, model_sbml, compartment_sizes, assigned, formulas.amounts, units
+    )
     _add_local_parameters(component, model_sbml, formulas.local_ids, units)
     _add_species_references(component, model_sbml, assigned, units)
     for rid in reaction_ids:
@@ -124,6 +127,10 @@ def convert_sbml2cellml(
     for vid, formula in assignment_rules.items():
         logger.info("%s = %s", vid, formula)
         parts.append(mathml.mathml_for_assignment(vid, formula, number_units))
+    for sid, amount in formulas.amounts.items():
+        formula = f"{amount.variable} / {amount.compartment}"
+        logger.info("%s = %s (concentration of an amount)", sid, formula)
+        parts.append(mathml.mathml_for_assignment(sid, formula, number_units))
     for vid, formula in formulas.algebraic_rules.items():
         logger.info("0 = %s (determines %s)", formula, vid)
         parts.append(mathml.mathml_for_algebraic(formula, number_units))
@@ -281,6 +288,16 @@ def _without_rate_rules(doc: libsbml.SBMLDocument) -> Iterator[None]:
                 )
 
 
+@dataclass(frozen=True)
+class _Amount:
+    """The variable of the amount of a species in concentration."""
+
+    #: id of the variable of the amount
+    variable: str
+    #: id of the compartment of the species
+    compartment: str
+
+
 @dataclass
 class _Formulas:
     """The formulas of a model in SBML L3 syntax, without rateOf symbols."""
@@ -297,11 +314,28 @@ class _Formulas:
     local_ids: dict[str, dict[str, str]]
     #: formula of `0 = formula` by the id of the variable the rule determines
     algebraic_rules: dict[str, str]
+    #: variable of the amount by the id of a species in concentration whose
+    #: compartment changes
+    amounts: dict[str, _Amount]
 
     @property
     def computed(self) -> set[str]:
         """Ids which an assignment or algebraic rule computes."""
         return set(self.assignment_rules) | set(self.algebraic_rules)
+
+    @property
+    def derivatives(self) -> dict[str, str]:
+        """Right-hand side of `d x / d time` by id, what `rateOf(x)` stands for.
+
+        The concentration `S = A / C` of a species with a variable of its
+        amount has the rate `(dA/dt - S * dC/dt) / C`.
+        """
+        derivatives = {**self.rate_rules, **self.reaction_terms}
+        for sid, amount in self.amounts.items():
+            rate = self.reaction_terms.get(amount.variable, "0")
+            cid = amount.compartment
+            derivatives[sid] = f"(({rate}) - {sid} * rateOf({cid})) / {cid}"
+        return derivatives
 
 
 def _collect_formulas(model_sbml: libsbml.Model) -> _Formulas:
@@ -315,13 +349,27 @@ def _collect_formulas(model_sbml: libsbml.Model) -> _Formulas:
     algebraic_rules = _match_algebraic_rules(
         model_sbml, algebraic, set(assignment_rules) | set(rate_rules)
     )
-    local_ids = _local_parameter_ids(model_sbml)
-    rates = _kinetic_laws(model_sbml, local_ids)
-    reaction_terms = _collect_reaction_terms(model_sbml, rates)
-    result = _Formulas(
-        assignment_rules, rate_rules, reaction_terms, rates, local_ids, algebraic_rules
+    model_sbml.populateAllElementIdList()
+    ids: libsbml.IdList = model_sbml.getAllElementIdList()
+    used = {ids.at(k) for k in range(ids.size())} | {TIME_ID}
+    local_ids = _local_parameter_ids(model_sbml, used)
+    determined = set(assignment_rules) | set(rate_rules) | set(algebraic_rules)
+    changing = _changing(
+        model_sbml, assignment_rules, set(rate_rules) | set(algebraic_rules)
     )
-    derivatives = {**rate_rules, **reaction_terms}
+    amounts = _amounts(model_sbml, determined, changing, used)
+    rates = _kinetic_laws(model_sbml, local_ids)
+    reaction_terms = _collect_reaction_terms(model_sbml, rates, amounts)
+    result = _Formulas(
+        assignment_rules,
+        rate_rules,
+        reaction_terms,
+        rates,
+        local_ids,
+        algebraic_rules,
+        amounts,
+    )
+    derivatives = result.derivatives
     for formulas in (
         assignment_rules,
         rate_rules,
@@ -344,7 +392,7 @@ def _rate_of_in_initial_assignments(
     with a local parameter stays unevaluated, the variable of the local
     parameter is not part of the SBML model.
     """
-    derivatives = {**formulas.rate_rules, **formulas.reaction_terms}
+    derivatives = formulas.derivatives
     assignment: libsbml.InitialAssignment
     for assignment in model_sbml.getListOfInitialAssignments():
         if not assignment.isSetMath():
@@ -423,7 +471,7 @@ def _set_value(is_set: bool, value: float) -> float | None:
 def _variable_units(
     model_sbml: libsbml.Model,
     cellml_units: CellMLUnits,
-    local_ids: dict[str, dict[str, str]],
+    formulas: _Formulas,
     reaction_ids: list[str],
     has_time: bool,
 ) -> dict[str, str]:
@@ -437,7 +485,8 @@ def _variable_units(
     Args:
         model_sbml: the SBML model.
         cellml_units: the CellML units of the model.
-        local_ids: variable id of every local parameter.
+        formulas: the formulas of the model, with the variables of the local
+            parameters and of the amounts.
         reaction_ids: ids of the reactions which are variables of their rate.
         has_time: whether the model has the variable of integration.
 
@@ -457,7 +506,10 @@ def _variable_units(
     species: libsbml.Species
     for species in model_sbml.getListOfSpecies():
         units[species.getId()] = cellml_units.of_species(species)
-    for rid, ids in local_ids.items():
+        if species.getId() in formulas.amounts:
+            amount = formulas.amounts[species.getId()]
+            units[amount.variable] = cellml_units.of_amount(species)
+    for rid, ids in formulas.local_ids.items():
         klaw: libsbml.KineticLaw = model_sbml.getReaction(rid).getKineticLaw()
         for pid, vid in ids.items():
             units[vid] = cellml_units.of_parameter(klaw.getParameter(pid))
@@ -517,15 +569,16 @@ def _add_compartments(
 
     Returns:
         The initial size of every compartment by id, which converts the
-        initial values of its species; NaN for a compartment an assignment
-        rule sets whose size attribute is unset.
+        initial values of its species. An assignment rule gives the size of
+        its compartment at the start (the size attribute does not count);
+        NaN when it cannot be evaluated.
     """
     sizes: dict[str, float] = {}
     compartment: libsbml.Compartment
     for compartment in model_sbml.getListOfCompartments():
         cid: str = compartment.getId()
         if cid in assigned:
-            sizes[cid] = compartment.getSize()
+            sizes[cid] = _value_at_start(model_sbml, cid)
             _add_variable(component, cid, None, units)
         else:
             sizes[cid] = _initial_value(
@@ -534,6 +587,25 @@ def _add_compartments(
             _add_variable(component, cid, sizes[cid], units)
         logger.info("'%s' variable for compartment", cid)
     return sizes
+
+
+def _value_at_start(model_sbml: libsbml.Model, sid: str) -> float:
+    """The value of a variable at the start, evaluated by libsbml.
+
+    libsbml takes the value of the target of an assignment rule from the
+    rule. The formulas are evaluated `_without_rate_rules`.
+
+    Returns:
+        The value, NaN when libsbml cannot evaluate it (e.g. a rule which
+        uses a variable without a value).
+    """
+    with _without_rate_rules(model_sbml.getSBMLDocument()):
+        libsbml.SBMLTransforms.mapComponentValues(model_sbml)
+        value: float = libsbml.SBMLTransforms.evaluateASTNode(
+            libsbml.parseL3Formula(sid), model_sbml
+        )
+        libsbml.SBMLTransforms.clearComponentValues(model_sbml)
+    return value
 
 
 def _add_parameters(
@@ -562,6 +634,7 @@ def _add_species(
     model_sbml: libsbml.Model,
     compartment_sizes: dict[str, float],
     assigned: set[str],
+    amounts: dict[str, _Amount],
     units: dict[str, str],
 ) -> None:
     """Add the species as variables.
@@ -569,14 +642,16 @@ def _add_species(
     A species with `hasOnlySubstanceUnits` is a variable in amount, every other
     species a variable in concentration; the initial value is converted with
     the size of the compartment when it is given in the other quantity. A
-    species an assignment rule sets has no initial value.
+    species an assignment rule sets has no initial value. A species in
+    concentration with a variable of its amount (`amounts`) has none either,
+    the initial value in amount goes to that variable.
 
     """
     species: libsbml.Species
     for species in model_sbml.getListOfSpecies():
         sid: str = species.getId()
         cid: str = species.getCompartment()
-        amount = species.getHasOnlySubstanceUnits()
+        amount = species.getHasOnlySubstanceUnits() or sid in amounts
 
         initial: float | None
         if sid in assigned:
@@ -589,7 +664,16 @@ def _add_species(
             initial = value * _size(cid, sid, compartment_sizes) if amount else value
         else:
             initial = _initial_value(sid, None)
-        _add_variable(component, sid, initial, units)
+        if sid in amounts:
+            _add_variable(component, sid, None, units)
+            _add_variable(component, amounts[sid].variable, initial, units)
+            logger.info(
+                "'%s' variable for the amount of species '%s'",
+                amounts[sid].variable,
+                sid,
+            )
+        else:
+            _add_variable(component, sid, initial, units)
         logger.info("'%s' variable for species", sid)
 
 
@@ -731,7 +815,9 @@ def _match_algebraic_rules(
     return {variable_of[k]: rules[k] for k in ordered}
 
 
-def _local_parameter_ids(model_sbml: libsbml.Model) -> dict[str, dict[str, str]]:
+def _local_parameter_ids(
+    model_sbml: libsbml.Model, used: set[str]
+) -> dict[str, dict[str, str]]:
     """Variable ids of the local parameters of the kinetic laws.
 
     A local parameter is only visible in its kinetic law, and several
@@ -739,13 +825,14 @@ def _local_parameter_ids(model_sbml: libsbml.Model) -> dict[str, dict[str, str]]
     own, `<reaction>_<parameter>`, with a numeric suffix when that id is
     taken by another element of the model.
 
+    Args:
+        model_sbml: the SBML model.
+        used: ids taken so far, the new ids are added.
+
     Returns:
         The variable id of every local parameter, by reaction id and local
         parameter id.
     """
-    model_sbml.populateAllElementIdList()
-    ids: libsbml.IdList = model_sbml.getAllElementIdList()
-    used = {ids.at(k) for k in range(ids.size())} | {TIME_ID}
     local_ids: dict[str, dict[str, str]] = {}
     reaction: libsbml.Reaction
     for reaction in model_sbml.getListOfReactions():
@@ -759,6 +846,100 @@ def _local_parameter_ids(model_sbml: libsbml.Model) -> dict[str, dict[str, str]]
             vid = unique_sid(f"{reaction.getId()}_{pid}", used)
             local_ids.setdefault(reaction.getId(), {})[pid] = vid
     return local_ids
+
+
+def _changing(
+    model_sbml: libsbml.Model, assignment_rules: dict[str, str], solved: set[str]
+) -> set[str]:
+    """Ids of the variables which change in time.
+
+    The targets of rate and algebraic rules, the species which reactions
+    change, the rates of the reactions, the targets of assignment rules which
+    use time or a variable which changes, and the concentration of a species
+    in a compartment which changes. An assignment rule of constants (e.g. a
+    volume from a body weight) does not change its target.
+
+    Args:
+        model_sbml: the SBML model.
+        assignment_rules: formula by the id of the target.
+        solved: ids which rate and algebraic rules determine.
+    """
+    changing = set(solved)
+    reaction: libsbml.Reaction
+    for reaction in model_sbml.getListOfReactions():
+        changing.add(reaction.getId())
+        for reference in [
+            *reaction.getListOfReactants(),
+            *reaction.getListOfProducts(),
+        ]:
+            if not model_sbml.getSpecies(reference.getSpecies()).getBoundaryCondition():
+                changing.add(reference.getSpecies())
+
+    names_of: dict[str, set[str]] = {}
+    for vid, formula in assignment_rules.items():
+        node: libsbml.ASTNode | None = libsbml.parseL3Formula(formula)
+        names: set[str] = set()
+        _collect_names(node, libsbml.AST_NAME, names)
+        times: set[str] = set()
+        _collect_names(node, libsbml.AST_NAME_TIME, times)
+        if times:
+            changing.add(vid)
+        names_of[vid] = names
+
+    grows = True
+    while grows:
+        size = len(changing)
+        changing |= {vid for vid, names in names_of.items() if names & changing}
+        species: libsbml.Species
+        for species in model_sbml.getListOfSpecies():
+            if (
+                species.getCompartment() in changing
+                and not species.getHasOnlySubstanceUnits()
+            ):
+                changing.add(species.getId())
+        grows = len(changing) > size
+    return changing
+
+
+def _amounts(
+    model_sbml: libsbml.Model,
+    determined: set[str],
+    changing: set[str],
+    used: set[str],
+) -> dict[str, _Amount]:
+    """The species in concentration which need a variable of their amount.
+
+    Reactions change the amount of a species, and a species nothing changes
+    keeps its amount, also a constant one or a boundary species. The
+    concentration follows when the size of the compartment changes, so a
+    species in a compartment which changes becomes the equation
+    `species = amount / compartment` with the amount as the variable the
+    reactions change. A species which a rule determines itself stays as it
+    is: the rule gives its concentration or the rate of it.
+
+    Args:
+        model_sbml: the SBML model.
+        determined: ids which assignment, rate and algebraic rules determine.
+        changing: ids of the variables which change in time (`_changing`).
+        used: ids taken so far, the new ids are added.
+
+    Returns:
+        The variable `<species>_amount` (with a numeric suffix when that id
+        is taken) by species id.
+    """
+    amounts: dict[str, _Amount] = {}
+    species: libsbml.Species
+    for species in model_sbml.getListOfSpecies():
+        sid: str = species.getId()
+        cid: str = species.getCompartment()
+        if (
+            species.getHasOnlySubstanceUnits()
+            or sid in determined
+            or cid not in changing
+        ):
+            continue
+        amounts[sid] = _Amount(unique_sid(f"{sid}_amount", used), cid)
+    return amounts
 
 
 def _add_local_parameters(
@@ -1141,7 +1322,7 @@ def _stoichiometry_factor(reaction_id: str, reference: libsbml.SpeciesReference)
 
 
 def _collect_reaction_terms(
-    model_sbml: libsbml.Model, rates: dict[str, str]
+    model_sbml: libsbml.Model, rates: dict[str, str], amounts: dict[str, _Amount]
 ) -> dict[str, str]:
     """Collect the rate of change of every species from the kinetic laws.
 
@@ -1150,10 +1331,13 @@ def _collect_reaction_terms(
     is subtracted for every reactant and added for every product which is not
     a boundary species (reactions do not change those). The sum is multiplied
     with the conversion factor of the species or else of the model, and for a
-    species in concentration divided by the size of its compartment.
+    species in concentration divided by the size of its compartment. A
+    species in concentration with a variable of its amount (`amounts`, its
+    compartment changes) gets the rate of change of that variable.
 
     Returns:
-        The right hand side of `d species / d time`, by species id.
+        The right hand side of `d variable / d time`, by the id of the
+        species or of the variable of its amount.
     """
     terms: dict[str, str] = {}
     reaction: libsbml.Reaction
@@ -1174,6 +1358,7 @@ def _collect_reaction_terms(
                 factor = _stoichiometry_factor(rid, reference)
                 _append_term(terms, sid, f"{sign} {factor}({formula})")
 
+    result: dict[str, str] = {}
     for sid, formula in terms.items():
         species: libsbml.Species = model_sbml.getSpecies(sid)
         # the conversion factor of the species, else of the model, converts
@@ -1185,10 +1370,13 @@ def _collect_reaction_terms(
         )
         if factor_id:
             formula = f"{factor_id} * ({formula})"
+        if sid in amounts:
+            result[amounts[sid].variable] = formula
+            continue
         if not species.getHasOnlySubstanceUnits():
             formula = f"1.0 dimensionless/{species.getCompartment()} * ({formula})"
-        terms[sid] = formula
-    return terms
+        result[sid] = formula
+    return result
 
 
 def _append_term(terms: dict[str, str], sid: str, term: str) -> None:

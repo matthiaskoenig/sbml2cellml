@@ -15,7 +15,8 @@ The remaining issues of the conversion, i.e., what the current version does not 
 - **Time without differential equations.** CellML knows the variable of integration only from a differential equation: a model without one has no `time` variable, and a formula using time in such a model cannot be converted.
 - **An SBML id `time`** collides with the variable of integration `time` of the CellML model and with the time column of the simulation results.
 - **The delay symbol** is not converted, CellML has no delays.
-- **rateOf** of a variable whose rate depends on itself, or which an assignment rule sets, is not converted; in an initial assignment neither when the rate has a local parameter.
+- **rateOf** of a variable whose rate depends on itself, or which an assignment rule sets, is not converted; in an initial assignment neither when the rate has a local parameter. The rate of a concentration in a compartment which changes needs the rate of the compartment, so it is converted when a rate rule changes the compartment and not when an assignment or algebraic rule does.
+- **An SBML id which is a symbol of the formula syntax** (`avogadro`, `pi`, `NaN`, `true`, ...) is read as that symbol: the converter handles formulas as text in the syntax of libsbml, which cannot tell the two apart (test cases 01761, 01763).
 - **Unset initial values** of variables which no assignment rule or initial assignment sets are `1.0`, with a warning.
 
 ## CellML to SBML

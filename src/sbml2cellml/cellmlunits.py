@@ -352,6 +352,18 @@ class CellMLUnits:
         """CellML units of a parameter, `None` when it has none."""
         return self.name(parameter.getUnits()) if parameter.isSetUnits() else None
 
+    def _substance_reference(self, species: libsbml.Species) -> str | None:
+        """SBML unit reference of the substance of a species."""
+        if species.isSetSubstanceUnits():
+            reference: str = species.getSubstanceUnits()
+            return reference
+        return self._model_units("substance")
+
+    def of_amount(self, species: libsbml.Species) -> str | None:
+        """CellML units of the amount of a species, `None` when unknown."""
+        substance = self._substance_reference(species)
+        return self.name(substance) if substance else None
+
     def of_species(self, species: libsbml.Species) -> str | None:
         """CellML units of a species, `None` when unknown.
 
@@ -359,11 +371,7 @@ class CellMLUnits:
         compartment no dimensions, else the concentration substance per
         size of the compartment.
         """
-        substance = (
-            species.getSubstanceUnits()
-            if species.isSetSubstanceUnits()
-            else self._model_units("substance")
-        )
+        substance = self._substance_reference(species)
         if not substance:
             return None
         if species.getHasOnlySubstanceUnits():
