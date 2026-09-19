@@ -1619,7 +1619,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * k1 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (-1 dimensionless * k1 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -1661,7 +1661,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * k2 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (-1 dimensionless * k2 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -7325,7 +7325,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * k1 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (-1 dimensionless * k1 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -7408,7 +7408,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S1 + S2 + -1 * k1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (S1 + S2 + -1 dimensionless * k1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -21735,7 +21735,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 - T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 - T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -21777,7 +21777,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (-1 dimensionless * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -21819,7 +21819,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -0.9)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (k2 + -0.9 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -21862,7 +21862,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -1 * k3 + -0.2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (k2 + -1 dimensionless * k3 + -0.2 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -21905,7 +21905,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (S4 + -1 dimensionless * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -21947,7 +21947,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k1 + -0.1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (k1 + -0.1 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -21990,7 +21990,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -0.2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (k2 + -0.2 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22033,7 +22033,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -0.25)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (k2 + -0.25 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22076,7 +22076,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (C + -1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (C + -1 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22119,7 +22119,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (C + -1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (C + -1 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22162,7 +22162,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (C + -1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (C + -1 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22205,7 +22205,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (C + -1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (C + -1 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22248,7 +22248,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22291,7 +22291,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (C + -1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (C + -1 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22334,7 +22334,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (C + -1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (C + -1 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22377,7 +22377,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (S4 + -1 dimensionless * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22420,7 +22420,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (C + -2.5)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (C + -2.5 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22464,7 +22464,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (C + -0.75)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (C + -0.75 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22508,7 +22508,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22551,7 +22551,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22594,7 +22594,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22637,7 +22637,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (S4 + -1 dimensionless * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22680,7 +22680,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (S4 + -1 dimensionless * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22723,7 +22723,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (S4 + -1 dimensionless * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22766,7 +22766,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + S2 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + S2 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22809,7 +22809,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + S4 + -1 * S5)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (-1 dimensionless * S1 + S4 + -1 dimensionless * S5)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22852,7 +22852,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22895,7 +22895,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22938,7 +22938,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (S4 + -1 dimensionless * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22981,7 +22981,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (S4 + -1 dimensionless * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23024,7 +23024,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23067,7 +23067,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (S4 + -1 dimensionless * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23111,7 +23111,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23154,7 +23154,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (-1 dimensionless * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23197,7 +23197,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -1 * 0.9)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (k2 + -1 dimensionless * 0.9 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23241,7 +23241,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -1 * k3 + -0.2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (k2 + -1 dimensionless * k3 + -0.2 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23285,7 +23285,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23328,7 +23328,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (X0 + X1 + T + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (X0 + X1 + T + -1 dimensionless * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23368,7 +23368,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * p4 + -1 * p3)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * p4 + -1 dimensionless * p3)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23408,7 +23408,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (p1 + p2 + p3 + -1 * p4)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (p1 + p2 + p3 + -1 dimensionless * p4)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23448,7 +23448,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -0.9)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (k2 + -0.9 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23489,7 +23489,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (p4 + -1 * p1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (p4 + -1 dimensionless * p1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -24919,7 +24919,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -24963,7 +24963,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -25007,7 +25007,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -25580,7 +25580,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -25625,7 +25625,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -25670,7 +25670,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -26910,7 +26910,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * k1 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (-1 dimensionless * k1 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -26954,7 +26954,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * k1 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (-1 dimensionless * k1 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -26998,7 +26998,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * k1 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (-1 dimensionless * k1 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27042,7 +27042,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (-1 dimensionless * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27085,7 +27085,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27128,7 +27128,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -0.9)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (k2 + -0.9 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27172,7 +27172,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -0.9)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (k2 + -0.9 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27217,7 +27217,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (-1 dimensionless * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27260,7 +27260,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27572,7 +27572,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27617,7 +27617,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27662,7 +27662,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -28200,7 +28200,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -28560,7 +28560,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -28605,7 +28605,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -29010,7 +29010,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -31132,7 +31132,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (-1 dimensionless * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -31176,7 +31176,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S1 * (1 + k3) + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (S1 * (1 dimensionless + k3) + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -31221,7 +31221,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -1 * 0.9)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (k2 + -1 dimensionless * 0.9 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -31875,7 +31875,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -2.5)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (k2 + -2.5 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -31920,7 +31920,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (-1 dimensionless * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -31964,7 +31964,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (-1 dimensionless * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -32009,7 +32009,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (-1 dimensionless * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -34596,7 +34596,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (kf + -0.75)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (kf + -0.75 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -35709,7 +35709,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (S4 + -1 dimensionless * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -42184,7 +42184,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (kf + -0.75)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (kf + -0.75 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -42487,7 +42487,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (S4 + -1 dimensionless * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43785,7 +43785,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43831,7 +43831,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - ((k3 + 1 dimensionless) * S1 + -1 dimensionless * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43877,7 +43877,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (S4 + -1 dimensionless * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43923,7 +43923,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (S4 + -1 dimensionless * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -44941,7 +44941,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (X - p1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (X - p1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -49720,7 +49720,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (p1 - true)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (p1 - true)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -54746,7 +54746,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula ' 1e23 - P1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula ' 1e23 dimensionless - P1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -54832,7 +54832,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (2 - P1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (2 dimensionless - P1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -54876,7 +54876,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula ' C) * 2 - P1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula ' C) * 2 dimensionless - P1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -54920,7 +54920,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (P1 - S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (P1 - S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -55560,7 +55560,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (P0 - S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (P0 - S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -55605,7 +55605,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (P0 - S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (P0 - S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -55650,7 +55650,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (P0 - S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (P0 - S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -55692,7 +55692,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (P2 - abs(-1))' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (P2 - abs(-1 dimensionless))' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -55732,7 +55732,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (P1 - 0)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (P1 - 0 dimensionless)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -58007,7 +58007,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k1 - k2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (k1 - k2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -58050,7 +58050,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k1 - k2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (k1 - k2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -58095,7 +58095,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (10 - k1 - k2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (10 dimensionless - k1 - k2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -58136,7 +58136,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (10 - k1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (10 dimensionless - k1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -58179,7 +58179,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k1 - k2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (k1 - k2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -58512,7 +58512,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (Q + R - S)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (Q + R - S)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -66578,5 +66578,5 @@
   "01798": "no L3V2 file"
  },
  "suite": "3.5.0",
- "version": "0.3.0"
+ "version": "0.3.1"
 }
