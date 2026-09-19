@@ -1608,9 +1608,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 3.5,
-     "message": "S1 exceeds the tolerance by 3.5; S2 exceeds the tolerance by 0.5",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -1618,8 +1618,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 3.5,
-     "message": "S1 exceeds the tolerance by 3.5; S2 exceeds the tolerance by 0.5",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * k1 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -1650,9 +1650,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 3.5,
-     "message": "S1 exceeds the tolerance by 3.5; S2 exceeds the tolerance by 0.5",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -1660,8 +1660,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 3.5,
-     "message": "S1 exceeds the tolerance by 3.5; S2 exceeds the tolerance by 0.5",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * k2 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -7314,9 +7314,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.7,
-     "message": "S1 exceeds the tolerance by 2.7; S2 exceeds the tolerance by 0.498",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -7324,8 +7324,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 2.7,
-     "message": "S1 exceeds the tolerance by 2.7; S2 exceeds the tolerance by 0.498",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * k1 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -7397,9 +7397,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.9,
-     "message": "S1 exceeds the tolerance by 1.9; S2 exceeds the tolerance by 0.495",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -7407,8 +7407,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 1.9,
-     "message": "S1 exceeds the tolerance by 1.9; S2 exceeds the tolerance by 0.495",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S1 + S2 + -1 * k1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -21724,9 +21724,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.917,
-     "message": "X1 exceeds the tolerance by 0.917; T exceeds the tolerance by 0.917; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -21734,8 +21734,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.917,
-     "message": "X1 exceeds the tolerance by 0.917; T exceeds the tolerance by 0.917; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 - T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -21776,9 +21776,9 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": -0.01,
-     "message": "",
-     "status": "pass"
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -21808,9 +21808,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00274,
-     "message": "S1 exceeds the tolerance by 0.00153; S2 exceeds the tolerance by 0.00274; S3 exceeds the tolerance by 0.00154; S4 exceeds the tolerance by 0.00221",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -21818,8 +21818,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.00274,
-     "message": "S1 exceeds the tolerance by 0.00153; S2 exceeds the tolerance by 0.00274; S3 exceeds the tolerance by 0.00154; S4 exceeds the tolerance by 0.00221",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -0.9)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -21851,9 +21851,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.000274,
-     "message": "S1 exceeds the tolerance by 0.000153; S2 exceeds the tolerance by 0.000274; S3 exceeds the tolerance by 0.000154; S4 exceeds the tolerance by 0.000221",
-     "status": "fail"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -21861,8 +21861,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.000274,
-     "message": "S1 exceeds the tolerance by 0.000153; S2 exceeds the tolerance by 0.000274; S3 exceeds the tolerance by 0.000154; S4 exceeds the tolerance by 0.000221",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -1 * k3 + -0.2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -21894,9 +21894,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00792,
-     "message": "S4 exceeds the tolerance by 0.00792",
-     "status": "fail"
+     "max_excess": -1.02e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -21904,8 +21904,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.00792,
-     "message": "S4 exceeds the tolerance by 0.00792",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -21936,9 +21936,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.696,
-     "message": "X0 exceeds the tolerance by 0.696; X1 exceeds the tolerance by 0.542; T exceeds the tolerance by 0.448",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -21946,8 +21946,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.696,
-     "message": "X0 exceeds the tolerance by 0.696; X1 exceeds the tolerance by 0.542; T exceeds the tolerance by 0.448",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k1 + -0.1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -21979,9 +21979,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.642,
-     "message": "X1 exceeds the tolerance by 0.642; T exceeds the tolerance by 0.642",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -21989,8 +21989,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.642,
-     "message": "X1 exceeds the tolerance by 0.642; T exceeds the tolerance by 0.642",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -0.2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22022,9 +22022,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.71e-05,
-     "message": "S1 exceeds the tolerance by 4.71e-05; S2 exceeds the tolerance by 4.71e-05; S3 exceeds the tolerance by 4.71e-05",
-     "status": "fail"
+     "max_excess": -1e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22032,8 +22032,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 4.71e-05,
-     "message": "S1 exceeds the tolerance by 4.71e-05; S2 exceeds the tolerance by 4.71e-05; S3 exceeds the tolerance by 4.71e-05",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -0.25)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22075,9 +22075,9 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": -0.001,
-     "message": "",
-     "status": "pass"
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (C + -1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -22118,9 +22118,9 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": -1.01e-06,
-     "message": "",
-     "status": "pass"
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (C + -1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -22161,9 +22161,9 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": -0.001,
-     "message": "",
-     "status": "pass"
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (C + -1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -22204,9 +22204,9 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": -0.001,
-     "message": "",
-     "status": "pass"
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (C + -1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -22237,9 +22237,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.611,
-     "message": "X1 exceeds the tolerance by 0.611; T exceeds the tolerance by 0.611; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22247,8 +22247,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.611,
-     "message": "X1 exceeds the tolerance by 0.611; T exceeds the tolerance by 0.611; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22290,9 +22290,9 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": -0.000108,
-     "message": "",
-     "status": "pass"
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (C + -1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -22333,9 +22333,9 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": -1.02e-05,
-     "message": "",
-     "status": "pass"
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (C + -1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -22366,9 +22366,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 9.74e-05,
-     "message": "S4 exceeds the tolerance by 9.74e-05",
-     "status": "fail"
+     "max_excess": -9.2e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22376,8 +22376,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 9.74e-05,
-     "message": "S4 exceeds the tolerance by 9.74e-05",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22419,9 +22419,9 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": -0.001,
-     "message": "",
-     "status": "pass"
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (C + -2.5)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -22453,9 +22453,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00935,
-     "message": "S1 exceeds the tolerance by 0.00935; S2 exceeds the tolerance by 0.00934; S3 exceeds the tolerance by 0.00934",
-     "status": "fail"
+     "max_excess": -0.000103,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22463,8 +22463,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.00935,
-     "message": "S1 exceeds the tolerance by 0.00935; S2 exceeds the tolerance by 0.00934; S3 exceeds the tolerance by 0.00934",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (C + -0.75)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22497,9 +22497,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.18,
-     "message": "X1 exceeds the tolerance by 1.18; T exceeds the tolerance by 1.18; S1 exceeds the tolerance by 0.234",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22507,8 +22507,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 1.18,
-     "message": "X1 exceeds the tolerance by 1.18; T exceeds the tolerance by 1.18; S1 exceeds the tolerance by 0.234",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22540,9 +22540,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.611,
-     "message": "T exceeds the tolerance by 0.611; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22550,8 +22550,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.611,
-     "message": "T exceeds the tolerance by 0.611; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22583,9 +22583,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.611,
-     "message": "X1 exceeds the tolerance by 0.611; T exceeds the tolerance by 0.611; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22593,8 +22593,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.611,
-     "message": "X1 exceeds the tolerance by 0.611; T exceeds the tolerance by 0.611; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22626,9 +22626,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00098,
-     "message": "S4 exceeds the tolerance by 0.00098",
-     "status": "fail"
+     "max_excess": -9.94e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22636,8 +22636,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.00098,
-     "message": "S4 exceeds the tolerance by 0.00098",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22669,9 +22669,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.000249,
-     "message": "S4 exceeds the tolerance by 0.000249",
-     "status": "fail"
+     "max_excess": -1.1e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22679,8 +22679,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.000249,
-     "message": "S4 exceeds the tolerance by 0.000249",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22712,9 +22712,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.0203,
-     "message": "S4 exceeds the tolerance by 0.0203",
-     "status": "fail"
+     "max_excess": -0.000108,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22722,8 +22722,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.0203,
-     "message": "S4 exceeds the tolerance by 0.0203",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22755,9 +22755,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.276,
-     "message": "X1 exceeds the tolerance by 0.276; T exceeds the tolerance by 0.276; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22765,8 +22765,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.276,
-     "message": "X1 exceeds the tolerance by 0.276; T exceeds the tolerance by 0.276; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + S2 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22798,9 +22798,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.000963,
-     "message": "S4 exceeds the tolerance by 0.000963",
-     "status": "fail"
+     "max_excess": -9.96e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22808,8 +22808,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.000963,
-     "message": "S4 exceeds the tolerance by 0.000963",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + S4 + -1 * S5)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22841,9 +22841,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.22,
-     "message": "X1 exceeds the tolerance by 1.22; T exceeds the tolerance by 1.22; S1 exceeds the tolerance by 0.202",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22851,8 +22851,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 1.22,
-     "message": "X1 exceeds the tolerance by 1.22; T exceeds the tolerance by 1.22; S1 exceeds the tolerance by 0.202",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22884,9 +22884,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.104,
-     "message": "X1 exceeds the tolerance by 0.104; T exceeds the tolerance by 0.104; S1 exceeds the tolerance by 0.0338",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22894,8 +22894,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.104,
-     "message": "X1 exceeds the tolerance by 0.104; T exceeds the tolerance by 0.104; S1 exceeds the tolerance by 0.0338",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22927,9 +22927,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00846,
-     "message": "S4 exceeds the tolerance by 0.00846",
-     "status": "fail"
+     "max_excess": -1.02e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22937,8 +22937,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.00846,
-     "message": "S4 exceeds the tolerance by 0.00846",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -22970,9 +22970,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.94e-05,
-     "message": "S4 exceeds the tolerance by 4.94e-05",
-     "status": "fail"
+     "max_excess": -5.82e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22980,8 +22980,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 4.94e-05,
-     "message": "S4 exceeds the tolerance by 4.94e-05",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23013,9 +23013,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.917,
-     "message": "X1 exceeds the tolerance by 0.917; T exceeds the tolerance by 0.917; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -23023,8 +23023,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.917,
-     "message": "X1 exceeds the tolerance by 0.917; T exceeds the tolerance by 0.917; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23056,9 +23056,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00792,
-     "message": "S4 exceeds the tolerance by 0.00792",
-     "status": "fail"
+     "max_excess": -1.02e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -23066,8 +23066,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.00792,
-     "message": "S4 exceeds the tolerance by 0.00792",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23100,9 +23100,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.815,
-     "message": "X1 exceeds the tolerance by 0.815; T exceeds the tolerance by 0.815; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -23110,8 +23110,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.815,
-     "message": "X1 exceeds the tolerance by 0.815; T exceeds the tolerance by 0.815; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23153,9 +23153,9 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": -0.01,
-     "message": "",
-     "status": "pass"
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -23186,9 +23186,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00273,
-     "message": "S1 exceeds the tolerance by 0.00151; S2 exceeds the tolerance by 0.00273; S3 exceeds the tolerance by 0.00152; S4 exceeds the tolerance by 0.00221",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -23196,8 +23196,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.00273,
-     "message": "S1 exceeds the tolerance by 0.00151; S2 exceeds the tolerance by 0.00273; S3 exceeds the tolerance by 0.00152; S4 exceeds the tolerance by 0.00221",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -1 * 0.9)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23230,9 +23230,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.000274,
-     "message": "S1 exceeds the tolerance by 0.000153; S2 exceeds the tolerance by 0.000274; S3 exceeds the tolerance by 0.000154; S4 exceeds the tolerance by 0.000221",
-     "status": "fail"
+     "max_excess": -1e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -23240,8 +23240,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.000274,
-     "message": "S1 exceeds the tolerance by 0.000153; S2 exceeds the tolerance by 0.000274; S3 exceeds the tolerance by 0.000154; S4 exceeds the tolerance by 0.000221",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -1 * k3 + -0.2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23274,9 +23274,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.729,
-     "message": "X1 exceeds the tolerance by 0.729; T exceeds the tolerance by 0.729; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -23284,8 +23284,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.729,
-     "message": "X1 exceeds the tolerance by 0.729; T exceeds the tolerance by 0.729; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23327,9 +23327,9 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": -0.01,
-     "message": "",
-     "status": "pass"
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (X0 + X1 + T + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -23357,9 +23357,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.611,
-     "message": "p2 exceeds the tolerance by 0.611; p3 exceeds the tolerance by 0.611; p4 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -23367,8 +23367,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.611,
-     "message": "p2 exceeds the tolerance by 0.611; p3 exceeds the tolerance by 0.611; p4 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * p4 + -1 * p3)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23407,9 +23407,9 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": -0.01,
-     "message": "",
-     "status": "pass"
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (p1 + p2 + p3 + -1 * p4)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -23437,9 +23437,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.73e-06,
-     "message": "p1 exceeds the tolerance by 1.54e-06; p2 exceeds the tolerance by 2.73e-06; p3 exceeds the tolerance by 1.55e-06; p4 exceeds the tolerance by 2.21e-06",
-     "status": "fail"
+     "max_excess": -8.77e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -23447,8 +23447,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 2.73e-06,
-     "message": "p1 exceeds the tolerance by 1.54e-06; p2 exceeds the tolerance by 2.73e-06; p3 exceeds the tolerance by 1.55e-06; p4 exceeds the tolerance by 2.21e-06",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -0.9)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -23478,9 +23478,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.000903,
-     "message": "p4 exceeds the tolerance by 0.000903",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -23488,8 +23488,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.000903,
-     "message": "p4 exceeds the tolerance by 0.000903",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (p4 + -1 * p1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -24908,9 +24908,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.611,
-     "message": "X1 exceeds the tolerance by 0.611; T exceeds the tolerance by 0.611; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -24918,8 +24918,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.611,
-     "message": "X1 exceeds the tolerance by 0.611; T exceeds the tolerance by 0.611; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -24952,9 +24952,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.458,
-     "message": "X1 exceeds the tolerance by 0.458; T exceeds the tolerance by 0.458; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -24962,8 +24962,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.458,
-     "message": "X1 exceeds the tolerance by 0.458; T exceeds the tolerance by 0.458; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -24996,9 +24996,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.729,
-     "message": "X1 exceeds the tolerance by 0.729; T exceeds the tolerance by 0.729; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -25006,8 +25006,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.729,
-     "message": "X1 exceeds the tolerance by 0.729; T exceeds the tolerance by 0.729; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -25569,9 +25569,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.611,
-     "message": "X1 exceeds the tolerance by 0.611; T exceeds the tolerance by 0.611; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -25579,8 +25579,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.611,
-     "message": "X1 exceeds the tolerance by 0.611; T exceeds the tolerance by 0.611; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -25614,9 +25614,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.458,
-     "message": "X1 exceeds the tolerance by 0.458; T exceeds the tolerance by 0.458; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -25624,8 +25624,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.458,
-     "message": "X1 exceeds the tolerance by 0.458; T exceeds the tolerance by 0.458; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -25659,9 +25659,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.729,
-     "message": "X1 exceeds the tolerance by 0.729; T exceeds the tolerance by 0.729; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -25669,8 +25669,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.729,
-     "message": "X1 exceeds the tolerance by 0.729; T exceeds the tolerance by 0.729; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -26899,9 +26899,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 2.0,
-     "message": "S1 exceeds the tolerance by 2; S2 exceeds the tolerance by 0.496",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -26909,8 +26909,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 2.0,
-     "message": "S1 exceeds the tolerance by 2; S2 exceeds the tolerance by 0.496",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * k1 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -26943,9 +26943,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.49,
-     "message": "S1 exceeds the tolerance by 4.49; S2 exceeds the tolerance by 0.49",
-     "status": "fail"
+     "max_excess": -0.01,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -26953,8 +26953,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 4.49,
-     "message": "S1 exceeds the tolerance by 4.49; S2 exceeds the tolerance by 0.49",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * k1 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -26987,9 +26987,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 3.5,
-     "message": "S1 exceeds the tolerance by 3.5; S2 exceeds the tolerance by 0.499",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -26997,8 +26997,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 3.5,
-     "message": "S1 exceeds the tolerance by 3.5; S2 exceeds the tolerance by 0.499",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * k1 + S1 + S2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27041,8 +27041,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.99,
-     "message": "X1 exceeds the tolerance by 0.99; S1 exceeds the tolerance by 0.99",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27074,8 +27074,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.42,
-     "message": "X1 exceeds the tolerance by 1.42; T exceeds the tolerance by 0.917; S1 exceeds the tolerance by 0.1",
+     "max_excess": 0.499,
+     "message": "X1 exceeds the tolerance by 0.499",
      "status": "fail"
     },
     "reference": {
@@ -27084,8 +27084,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 1.42,
-     "message": "X1 exceeds the tolerance by 1.42; T exceeds the tolerance by 0.917; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27117,8 +27117,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.000685,
-     "message": "S1 exceeds the tolerance by 1.54e-05; S2 exceeds the tolerance by 2.74e-05; S3 exceeds the tolerance by 1.54e-05; S4 exceeds the tolerance by 0.000685",
+     "max_excess": 0.000662,
+     "message": "S4 exceeds the tolerance by 0.000662",
      "status": "fail"
     },
     "reference": {
@@ -27127,8 +27127,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.000685,
-     "message": "S1 exceeds the tolerance by 1.54e-05; S2 exceeds the tolerance by 2.74e-05; S3 exceeds the tolerance by 1.54e-05; S4 exceeds the tolerance by 0.000685",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -0.9)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27161,8 +27161,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.000643,
-     "message": "S1 exceeds the tolerance by 1.53e-05; S2 exceeds the tolerance by 2.74e-05; S3 exceeds the tolerance by 1.54e-05; S4 exceeds the tolerance by 0.000643",
+     "max_excess": 0.00062,
+     "message": "S4 exceeds the tolerance by 0.00062",
      "status": "fail"
     },
     "reference": {
@@ -27171,8 +27171,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.000643,
-     "message": "S1 exceeds the tolerance by 1.53e-05; S2 exceeds the tolerance by 2.74e-05; S3 exceeds the tolerance by 1.54e-05; S4 exceeds the tolerance by 0.000643",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -0.9)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27216,8 +27216,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 1.57,
-     "message": "X1 exceeds the tolerance by 1.57; S1 exceeds the tolerance by 1.57",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27249,8 +27249,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.16,
-     "message": "X1 exceeds the tolerance by 1.16; T exceeds the tolerance by 0.917; S1 exceeds the tolerance by 0.1",
+     "max_excess": 0.245,
+     "message": "X1 exceeds the tolerance by 0.245",
      "status": "fail"
     },
     "reference": {
@@ -27259,8 +27259,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 1.16,
-     "message": "X1 exceeds the tolerance by 1.16; T exceeds the tolerance by 0.917; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27561,9 +27561,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.276,
-     "message": "X1 exceeds the tolerance by 0.276; T exceeds the tolerance by 0.276; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -27571,8 +27571,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.276,
-     "message": "X1 exceeds the tolerance by 0.276; T exceeds the tolerance by 0.276; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27606,9 +27606,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.611,
-     "message": "X1 exceeds the tolerance by 0.611; T exceeds the tolerance by 0.611; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -27616,8 +27616,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.611,
-     "message": "X1 exceeds the tolerance by 0.611; T exceeds the tolerance by 0.611; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -27651,9 +27651,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.0945,
-     "message": "X1 exceeds the tolerance by 0.0945; T exceeds the tolerance by 0.0945; S1 exceeds the tolerance by 0.0841",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -27661,8 +27661,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.0945,
-     "message": "X1 exceeds the tolerance by 0.0945; T exceeds the tolerance by 0.0945; S1 exceeds the tolerance by 0.0841",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -28189,9 +28189,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.611,
-     "message": "X1 exceeds the tolerance by 0.611; T exceeds the tolerance by 0.611; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -28199,8 +28199,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.611,
-     "message": "X1 exceeds the tolerance by 0.611; T exceeds the tolerance by 0.611; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -28549,9 +28549,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.611,
-     "message": "X1 exceeds the tolerance by 0.611; T exceeds the tolerance by 0.611; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -28559,8 +28559,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.611,
-     "message": "X1 exceeds the tolerance by 0.611; T exceeds the tolerance by 0.611; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -28594,9 +28594,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.18,
-     "message": "X1 exceeds the tolerance by 1.18; T exceeds the tolerance by 1.18; S1 exceeds the tolerance by 0.234",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -28604,8 +28604,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 1.18,
-     "message": "X1 exceeds the tolerance by 1.18; T exceeds the tolerance by 1.18; S1 exceeds the tolerance by 0.234",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -28999,9 +28999,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.729,
-     "message": "X1 exceeds the tolerance by 0.729; T exceeds the tolerance by 0.729; S1 exceeds the tolerance by 0.1",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -29009,8 +29009,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.729,
-     "message": "X1 exceeds the tolerance by 0.729; T exceeds the tolerance by 0.729; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -31131,8 +31131,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.99,
-     "message": "X1 exceeds the tolerance by 0.99; S1 exceeds the tolerance by 0.99",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -31165,8 +31165,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.42,
-     "message": "X1 exceeds the tolerance by 1.42; T exceeds the tolerance by 0.917; S1 exceeds the tolerance by 0.1",
+     "max_excess": 0.499,
+     "message": "X1 exceeds the tolerance by 0.499",
      "status": "fail"
     },
     "reference": {
@@ -31175,8 +31175,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 1.42,
-     "message": "X1 exceeds the tolerance by 1.42; T exceeds the tolerance by 0.917; S1 exceeds the tolerance by 0.1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S1 * (1 + k3) + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -31210,8 +31210,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.0685,
-     "message": "S1 exceeds the tolerance by 0.00153; S2 exceeds the tolerance by 0.00274; S3 exceeds the tolerance by 0.00154; S4 exceeds the tolerance by 0.0685",
+     "max_excess": 0.0662,
+     "message": "S4 exceeds the tolerance by 0.0662",
      "status": "fail"
     },
     "reference": {
@@ -31220,8 +31220,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.0685,
-     "message": "S1 exceeds the tolerance by 0.00153; S2 exceeds the tolerance by 0.00274; S3 exceeds the tolerance by 0.00154; S4 exceeds the tolerance by 0.0685",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -1 * 0.9)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -31864,8 +31864,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.325,
-     "message": "S1 exceeds the tolerance by 0.325; S2 exceeds the tolerance by 0.325; S3 exceeds the tolerance by 0.243",
+     "max_excess": 0.228,
+     "message": "S2 exceeds the tolerance by 0.228; S3 exceeds the tolerance by 0.171",
      "status": "fail"
     },
     "reference": {
@@ -31874,8 +31874,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.325,
-     "message": "S1 exceeds the tolerance by 0.325; S2 exceeds the tolerance by 0.325; S3 exceeds the tolerance by 0.243",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k2 + -2.5)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -31919,8 +31919,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 1.57,
-     "message": "X1 exceeds the tolerance by 1.57; S1 exceeds the tolerance by 1.57",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -31963,8 +31963,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 1.57,
-     "message": "X1 exceeds the tolerance by 1.57; S1 exceeds the tolerance by 1.57",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -32008,8 +32008,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 1.57,
-     "message": "X1 exceeds the tolerance by 1.57; S1 exceeds the tolerance by 1.57",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (-1 * S1 + T + X0 + X1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -34585,9 +34585,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00043,
-     "message": "S1 exceeds the tolerance by 0.000428; S2 exceeds the tolerance by 0.000427; S3 exceeds the tolerance by 0.00043",
-     "status": "fail"
+     "max_excess": -1.02e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -34595,8 +34595,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.00043,
-     "message": "S1 exceeds the tolerance by 0.000428; S2 exceeds the tolerance by 0.000427; S3 exceeds the tolerance by 0.00043",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (kf + -0.75)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -35698,9 +35698,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 9.95e-05,
-     "message": "S4 exceeds the tolerance by 9.95e-05",
-     "status": "fail"
+     "max_excess": -6.93e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -35708,8 +35708,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 9.95e-05,
-     "message": "S4 exceeds the tolerance by 9.95e-05",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -42173,9 +42173,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.00043,
-     "message": "S1 exceeds the tolerance by 0.000428; S2 exceeds the tolerance by 0.000427; S3 exceeds the tolerance by 0.00043",
-     "status": "fail"
+     "max_excess": -1.02e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -42183,8 +42183,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.00043,
-     "message": "S1 exceeds the tolerance by 0.000428; S2 exceeds the tolerance by 0.000427; S3 exceeds the tolerance by 0.00043",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (kf + -0.75)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -42476,9 +42476,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 9.95e-05,
-     "message": "S4 exceeds the tolerance by 9.95e-05",
-     "status": "fail"
+     "max_excess": -6.93e-08,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -42486,8 +42486,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 9.95e-05,
-     "message": "S4 exceeds the tolerance by 9.95e-05",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43774,9 +43774,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.22,
-     "message": "X1 exceeds the tolerance by 1.22; T exceeds the tolerance by 1.22; S1 exceeds the tolerance by 0.202",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -43784,8 +43784,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 1.22,
-     "message": "X1 exceeds the tolerance by 1.22; T exceeds the tolerance by 1.22; S1 exceeds the tolerance by 0.202",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43820,9 +43820,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.104,
-     "message": "X1 exceeds the tolerance by 0.104; T exceeds the tolerance by 0.104; S1 exceeds the tolerance by 0.0338",
-     "status": "fail"
+     "max_excess": -0.001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -43830,8 +43830,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.104,
-     "message": "X1 exceeds the tolerance by 0.104; T exceeds the tolerance by 0.104; S1 exceeds the tolerance by 0.0338",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - ((k3 + 1) * S1 + -1 * T)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43866,9 +43866,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.000959,
-     "message": "S4 exceeds the tolerance by 0.000959",
-     "status": "fail"
+     "max_excess": -9.96e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -43876,8 +43876,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.000959,
-     "message": "S4 exceeds the tolerance by 0.000959",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -43912,9 +43912,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.0278,
-     "message": "S4 exceeds the tolerance by 0.0278",
-     "status": "fail"
+     "max_excess": -0.000102,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -43922,8 +43922,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 0.0278,
-     "message": "S4 exceeds the tolerance by 0.0278",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (S4 + -1 * S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -44930,9 +44930,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 22000.0,
-     "message": "X exceeds the tolerance by 2.2e+04",
-     "status": "fail"
+     "max_excess": -0.0021,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -44940,8 +44940,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 22000.0,
-     "message": "X exceeds the tolerance by 2.2e+04",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (X - p1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -49709,9 +49709,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.0,
-     "message": "p2 exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -49719,8 +49719,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 1.0,
-     "message": "p2 exceeds the tolerance by 1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (p1 - true)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -54735,9 +54735,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 5.02,
-     "message": "P1 exceeds the tolerance by 5.02",
-     "status": "fail"
+     "max_excess": -0.000702,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -54745,8 +54745,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 5.02,
-     "message": "P1 exceeds the tolerance by 5.02",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula ' 1e23 - P1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -54821,9 +54821,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.0,
-     "message": "P1 exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -54831,8 +54831,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 1.0,
-     "message": "P1 exceeds the tolerance by 1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (2 - P1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -54865,9 +54865,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 1.0,
-     "message": "P1 exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -54875,8 +54875,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 1.0,
-     "message": "P1 exceeds the tolerance by 1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula ' C) * 2 - P1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -54909,9 +54909,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 60.0,
-     "message": "P1 exceeds the tolerance by 60",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -54919,8 +54919,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 60.0,
-     "message": "P1 exceeds the tolerance by 60",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (P1 - S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -55549,9 +55549,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.0,
-     "message": "P0 exceeds the tolerance by 4",
-     "status": "fail"
+     "max_excess": -0.000168,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -55559,8 +55559,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 4.0,
-     "message": "P0 exceeds the tolerance by 4",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (P0 - S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -55594,9 +55594,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 4.0,
-     "message": "P0 exceeds the tolerance by 4",
-     "status": "fail"
+     "max_excess": -0.000168,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -55604,8 +55604,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 4.0,
-     "message": "P0 exceeds the tolerance by 4",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (P0 - S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -55639,9 +55639,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 6.48,
-     "message": "P0 exceeds the tolerance by 4; P1 exceeds the tolerance by 6.48",
-     "status": "fail"
+     "max_excess": -0.000168,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -55649,8 +55649,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 6.48,
-     "message": "P0 exceeds the tolerance by 4; P1 exceeds the tolerance by 6.48",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (P0 - S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -55681,9 +55681,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 15.0,
-     "message": "P4 exceeds the tolerance by 2.14; P5 exceeds the tolerance by 0.047; P6 exceeds the tolerance by 0.571; P7 exceeds the tolerance by 1.52; P8 exceeds the tolerance by 0.228; P9 exceeds the tolerance by 2.43; P11 exceeds the tolerance by 3; P12 exceeds the tolerance by 5; P13 exceeds the tolerance by 1.95; P14 exceeds the tolerance by 0.0239; P16 exceeds the tolerance by 1.72; P17 exceeds the tolera",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -55691,8 +55691,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 15.0,
-     "message": "P4 exceeds the tolerance by 2.14; P5 exceeds the tolerance by 0.047; P6 exceeds the tolerance by 0.571; P7 exceeds the tolerance by 1.52; P8 exceeds the tolerance by 0.228; P9 exceeds the tolerance by 2.43; P11 exceeds the tolerance by 3; P12 exceeds the tolerance by 5; P13 exceeds the tolerance by 1.95; P14 exceeds the tolerance by 0.0239; P16 exceeds the tolerance by 1.72; P17 exceeds the tolera",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (P2 - abs(-1))' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -55721,9 +55721,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 3.0,
-     "message": "P1 exceeds the tolerance by 1; P4 exceeds the tolerance by 1; P5 exceeds the tolerance by 1; P6 exceeds the tolerance by 2; P7 exceeds the tolerance by 3; P9 exceeds the tolerance by 1",
-     "status": "fail"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -55731,8 +55731,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 3.0,
-     "message": "P1 exceeds the tolerance by 1; P4 exceeds the tolerance by 1; P5 exceeds the tolerance by 1; P6 exceeds the tolerance by 2; P7 exceeds the tolerance by 3; P9 exceeds the tolerance by 1",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (P1 - 0)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -57816,13 +57816,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -57830,14 +57830,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'times' element without at least two MathML siblings.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -57859,13 +57859,13 @@
    "stages": {
     "cellml2sbml": {
      "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "message": "",
+     "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": -0.0001,
@@ -57873,14 +57873,14 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "sbml2cellml failed",
-     "status": "skip"
+     "max_excess": -0.0001,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: [ERROR] Math has a 'plus' element without at least one MathML sibling.",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     }
    },
    "test_tags": [
@@ -57997,7 +57997,7 @@
     },
     "libopencor": {
      "max_excess": 7.2,
-     "message": "k1 exceeds the tolerance by 7.2; k2 exceeds the tolerance by 3.4",
+     "message": "k1 exceeds the tolerance by 7.2; k2 exceeds the tolerance by 7.2",
      "status": "fail"
     },
     "reference": {
@@ -58006,8 +58006,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 7.2,
-     "message": "k1 exceeds the tolerance by 7.2; k2 exceeds the tolerance by 3.4",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k1 - k2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -58039,9 +58039,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 10.0,
-     "message": "k2 exceeds the tolerance by 10",
-     "status": "fail"
+     "max_excess": -0.0002,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -58049,8 +58049,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 10.0,
-     "message": "k2 exceeds the tolerance by 10",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k1 - k2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -58084,8 +58084,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 9.0,
-     "message": "k2 exceeds the tolerance by 9; P1 exceeds the tolerance by 2",
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
      "status": "fail"
     },
     "reference": {
@@ -58094,8 +58094,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 9.0,
-     "message": "k2 exceeds the tolerance by 9; P1 exceeds the tolerance by 2",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (10 - k1 - k2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -58125,8 +58125,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 10.0,
-     "message": "k1 exceeds the tolerance by 10; P1 exceeds the tolerance by 2",
+     "max_excess": 2.0,
+     "message": "P1 exceeds the tolerance by 2",
      "status": "fail"
     },
     "reference": {
@@ -58135,8 +58135,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 10.0,
-     "message": "k1 exceeds the tolerance by 10; P1 exceeds the tolerance by 2",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (10 - k1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -58168,8 +58168,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 9.0,
-     "message": "k2 exceeds the tolerance by 9; P1 exceeds the tolerance by 5.5",
+     "max_excess": 5.5,
+     "message": "P1 exceeds the tolerance by 5.5",
      "status": "fail"
     },
     "reference": {
@@ -58178,8 +58178,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 9.0,
-     "message": "k2 exceeds the tolerance by 9; P1 exceeds the tolerance by 5.5",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (k1 - k2)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -58511,8 +58511,8 @@
      "status": "fail"
     },
     "roundtrip": {
-     "max_excess": 99.0,
-     "message": "S exceeds the tolerance by 99",
+     "max_excess": null,
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 - (Q + R - S)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
