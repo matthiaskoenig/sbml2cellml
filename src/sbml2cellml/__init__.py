@@ -9,7 +9,7 @@ from sbml2cellml.sbml2cellml import convert_sbml2cellml
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 __author__ = "Matthias Koenig"
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 
 program_name: str = "sbml2cellml"
 
