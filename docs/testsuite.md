@@ -216,9 +216,7 @@ The test tags of the cases with a numerical mismatch:
 **48 cases**
 
 ```text
-00028: CellMLValidationError: CellML model 'case00028' converted from '00028-sbml-l3v2.xml' has 4 errors:
-    [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-    [ERROR] Math has a 'factorial' element that is not a supported MathML element.
+00028: CellMLValidationError: CellML model 'case00028' converted from '00028-sbml-l3v2.xml' has 2 errors:
     [ERROR] Math has a 'factorial' element that is not a supported MathML element.
     [ERROR] Math has a 'factorial' element that is not a supported MathML element.
 00173: CellMLValidationError: CellML model 'case00173' converted from '00173-sbml-l3v2.xml' has 4 errors:
@@ -226,9 +224,7 @@ The test tags of the cases with a numerical mismatch:
     [ERROR] Math has a 'factorial' element that is not a supported MathML element.
     [ERROR] Math has a 'factorial' element that is not a supported MathML element.
     [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-00269: CellMLValidationError: CellML model 'case00269' converted from '00269-sbml-l3v2.xml' has 4 errors:
-    [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-    [ERROR] Math has a 'factorial' element that is not a supported MathML element.
+00269: CellMLValidationError: CellML model 'case00269' converted from '00269-sbml-l3v2.xml' has 2 errors:
     [ERROR] Math has a 'factorial' element that is not a supported MathML element.
     [ERROR] Math has a 'factorial' element that is not a supported MathML element.
 00937: CellMLValidationError: CellML model 'case00937' converted from '00937-sbml-l3v2.xml' has 2 errors:
@@ -1657,7 +1653,7 @@ The test tags of the cases with a numerical mismatch:
 01292: SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (p1 - true)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)
 01479: SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula ' 1e23 dimensionless - P1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)
 01482: SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (2 dimensionless - P1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)
-01483: SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula ' C) * 2 dimensionless - P1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)
+01483: SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula ' C) * J0 - P1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)
 01484: SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (P1 - S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)
 01499: SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (P0 - S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)
 01500: SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula '0 = 0 dimensionless - (P0 - S1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)

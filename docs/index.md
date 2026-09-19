@@ -7,6 +7,7 @@
 
 - conversion of compartments, parameters, species, assignment and rate rules and reactions into a single CellML component
 - conversion of the units: unit definitions, the units of numbers and, for a model with a complete unit annotation, the units of every variable
+- names, notes, SBO terms, annotations and the model history as RDF next to the CellML model, restored in the conversion back to SBML
 - conversion of CellML models to SBML: parameters with rules, unit definitions and units of numbers, resets as events, imports resolved
 - validation of the result with [libcellml](https://libcellml.org/)
 - timecourse simulation of the SBML with [roadrunner](https://www.libroadrunner.org/) and of the CellML with [libopencor](https://opencor.ws/libopencor/), both optional, see [Simulation](simulation.md)
@@ -44,10 +45,10 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | species in concentration whose compartment changes in time | a second variable `<species>_amount` which the reactions change, and the equation `species = amount / compartment`: the amount is kept when the size changes, not the concentration |
 | assignment rule | equation; its target has no initial value, the equation defines it from the start |
 | rate rule | differential equation |
-| reaction | kinetic law times the stoichiometry added to the differential equation of every reactant and product which is not a boundary species, divided by the size of the compartment for a species in concentration |
+| reaction | variable of its rate with the kinetic law as equation; the rate times the stoichiometry is added to the differential equation of every reactant and product which is not a boundary species, divided by the size of the compartment for a species in concentration |
 | conversion factor of a species or the model | factor of the reaction terms of the species |
 | species reference with an id | variable of its stoichiometry, which rules may set |
-| reaction id in a formula | variable of the rate of the reaction |
+| reaction id in a formula | the variable of the rate of the reaction |
 | unit definition | units of the same name; the scale becomes the prefix, the multiplier `m` of a unit with the exponent `e` becomes `m^e` (CellML applies the exponent to the prefix only) |
 | unit kinds `item` and `avogadro` | new base units `item`, dimensionless units `avogadro` with the multiplier 6.02214179e23; every other unit kind is a standard unit of CellML |
 | units of a compartment, parameter or species | units of the variable when the unit annotation of the model is complete, else every variable is `dimensionless`, see [Units](conversion.md#units) |
@@ -60,6 +61,7 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | initial assignment | evaluated to the initial value; without math it has no effect |
 | infinite or NaN value | the equation `x = INF` (or `-INF`, `NaN`), not for a state |
 | function definition | calls replaced by the body of the function |
+| names, notes, SBO terms, annotations (CV terms) and the model history | RDF file next to the CellML file which points at the `id` of the elements, see [Metadata](conversion.md#metadata); `cellml2sbml` reads it back |
 | local parameter of a kinetic law | variable `<reaction>_<parameter>` (numeric suffix when taken) |
 | event | not yet, a warning is logged |
 | algebraic rule | implicit equation `0 = formula` for the variable the rule determines, which starts from the solution at the start time; the constants of the rule become equations `y = value` |

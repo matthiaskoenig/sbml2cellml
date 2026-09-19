@@ -1164,7 +1164,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: CellML model 'case00028' converted from '00028-sbml-l3v2.xml' has 4 errors:\n[ERROR] Math has a 'factorial' element that is not a supported MathML element.\n[ERROR] Math has a 'factorial' element that is not a supported MathML element.\n[ERROR] Math has a 'factorial' element that is not a supported MathML element.\n[ERROR] Math has a 'factorial' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: CellML model 'case00028' converted from '00028-sbml-l3v2.xml' has 2 errors:\n[ERROR] Math has a 'factorial' element that is not a supported MathML element.\n[ERROR] Math has a 'factorial' element that is not a supported MathML element.",
      "status": "fail"
     }
    },
@@ -10986,7 +10986,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: CellML model 'case00269' converted from '00269-sbml-l3v2.xml' has 4 errors:\n[ERROR] Math has a 'factorial' element that is not a supported MathML element.\n[ERROR] Math has a 'factorial' element that is not a supported MathML element.\n[ERROR] Math has a 'factorial' element that is not a supported MathML element.\n[ERROR] Math has a 'factorial' element that is not a supported MathML element.",
+     "message": "CellMLValidationError: CellML model 'case00269' converted from '00269-sbml-l3v2.xml' has 2 errors:\n[ERROR] Math has a 'factorial' element that is not a supported MathML element.\n[ERROR] Math has a 'factorial' element that is not a supported MathML element.",
      "status": "fail"
     }
    },
@@ -54876,7 +54876,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula ' C) * 2 dimensionless - P1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: Unable to support algebraic rules.  The formula ' C) * J0 - P1)' is not supported., at rrllvm::LLVMModelDataSymbols::LLVMModelDataSymbols(const libsbml::Model*, unsigned int)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -66578,5 +66578,5 @@
   "01798": "no L3V2 file"
  },
  "suite": "3.5.0",
- "version": "0.3.5"
+ "version": "0.4.0"
 }

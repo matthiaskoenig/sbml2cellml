@@ -93,8 +93,9 @@ on `develop` after the merge.
   Kinetic laws are multiplied with the stoichiometry (no factor for 1) and do
   not change boundary species, the sum is multiplied with the conversion
   factor of the species or model; a
-  species reference with an id is a variable of its stoichiometry, a reaction
-  whose id a formula uses a variable of its rate. A model without rate rules,
+  species reference with an id is a variable of its stoichiometry, every
+  reaction with a kinetic law a variable of its rate (`<reaction id> =
+  kinetic law`), which the equations of its species use. A model without rate rules,
   reactions and uses of time gets no `time` variable (CellML knows the
   variable of integration only from a differential equation); `simulate`
   runs such an algebraic model as a steady state. `_collect_formulas` gathers
@@ -134,6 +135,22 @@ on `develop` after the merge.
   `pi`, `NaN` or `true` as the symbol of that name. The formulas of
   `_Formulas` are the ASTs of the model (copies), the mathml helpers take an
   AST (or text, for callers outside the converter).
+- `metadata.py`: the names, notes, SBO terms, CV terms and history of the
+  SBML elements as RDF/XML next to the CellML file (`<stem>.rdf`, subjects
+  `<cellml file>#<id>`), since CellML 2.0 allows no metadata in the model.
+  `Record` per element, `collect_metadata`/`write_metadata` for
+  `sbml2cellml`, `read_metadata`/`apply_metadata` for `cellml2sbml`. The RDF
+  is the dialect of SBML annotations: libsbml writes it from a scratch
+  level 3 element (`_terms`, so level 2 models give the same RDF) and parses
+  it back through `setAnnotation`; name `dcterms:title`, notes
+  `dcterms:description` XML literal, SBO term the first `bq*:is` with a
+  single SBO resource. `_set_ids` of `sbml2cellml.py` gives the model, the
+  variables (`id` = name) and the units (`units_<name>`) their ids,
+  `_metadata_elements` maps them to the SBML elements, `_write_metadata`
+  removes the file of an earlier conversion when the model has no metadata.
+  `cellml2sbml._add_metadata` applies a record to the parameter of the
+  equivalence set of the variable, the unit definition or the model, with
+  the CellML id as metaid.
 - `cellml.py`: libcellml `Parser`, `Printer`, `Validator` and `Analyser`
   wrappers; issues are returned, `errors()` filters level `ERROR`,
   `CellMLValidationError`.

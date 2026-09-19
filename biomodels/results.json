@@ -5805,7 +5805,7 @@
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 16.5 and h = 2.47e-100, the corrector convergence test failed repeatedly or with |h| = hmin.",
+     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 16.5 and h = 3.59e-98, the corrector convergence test failed repeatedly or with |h| = hmin.",
      "status": "fail"
     },
     "roadrunner": {
@@ -5950,9 +5950,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": -1e-06,
-     "message": "",
-     "status": "pass"
+     "max_excess": 8670.0,
+     "message": "PA_D_Cytosol exceeds the tolerance by 241; PABCa_D_Cytosol exceeds the tolerance by 4.75e+03; h_D_ERM exceeds the tolerance by 0.089; PABMg_D_Cytosol exceeds the tolerance by 4.49e+03; CG_D_Cytosol exceeds the tolerance by 8.42e+03; D28kB_D_Cytosol exceeds the tolerance by 2.08e+03; PA_Cytosol exceeds the tolerance by 245; CG_Cytosol exceeds the tolerance by 8.61e+03; PABCa_Cytosol exceeds the tolerance by 4.82e+03; D28k_high_Cytosol exceeds the tolerance by 3.34e+03; D28k_high_D_Cytosol exceeds the tolerance by 3.28e+03; D28kB_high_D_Cytosol exceeds the tolerance by 3.32e+03; CGB_D_Cytosol exceeds the tolerance by 8.47e+03; Ca_D_Cytosol exceeds the tolerance by 24.9; CGB_Cytosol exceeds the tolerance by 8.67e+03; D28k_Cytosol exceeds the tolerance by 2.01e+03; D28kB_high_Cytosol exceeds the tolerance by 3.37e+03; PABMg_Cytosol exceeds the tolerance by 4.55e+03; D28k_D_Cytosol exceeds the tolerance by 2.03e+03; Ca_Cytosol exceeds the tolerance by 25.5; h_ERM exceeds the tolerance by 0.0999; D28kB_Cytosol exceeds the tolerance by 2.15e+03",
+     "status": "fail"
     },
     "roadrunner": {
      "max_excess": null,
@@ -9128,9 +9128,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": -7.2e-07,
-     "message": "",
-     "status": "pass"
+     "max_excess": 4.57e-07,
+     "message": "CK_flux_mM exceeds the tolerance by 4.57e-07",
+     "status": "fail"
     },
     "roadrunner": {
      "max_excess": null,
@@ -16089,9 +16089,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 0.027,
-     "message": "species_1 exceeds the tolerance by 0.00422; species_2 exceeds the tolerance by 0.0213; species_3 exceeds the tolerance by 0.027; species_4 exceeds the tolerance by 0.00707",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -16182,7 +16182,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: CellML model 'MODEL1212150000' converted from 'BIOMD0000000437_url.xml' has 2 errors:\n[ERROR] Component 'sbml' contains multiple variables with the name 'time'. Valid variable names must be unique to their component.\n[ERROR] Component 'sbml' contains multiple variables with the name 'time'. Valid variable names must be unique to their component.",
+     "message": "CellMLValidationError: CellML model 'MODEL1212150000' converted from 'BIOMD0000000437_url.xml' has 4 errors:\n[ERROR] Component 'sbml' contains multiple variables with the name 'time'. Valid variable names must be unique to their component.\n[ERROR] Duplicated identifier attribute 'time' has been found in:\n - variable 'time' in component 'sbml'; and\n - variable 'time' in component 'sbml'.\n\n[ERROR] Component 'sbml' contains multiple variables with the name 'time'. Valid variable names must be unique to their component.\n[ERROR] Duplicated identifier attribute 'time' has been found in:\n - variable 'time' in component 'sbml'; and\n - variable 'time' in component 'sbml'.",
      "status": "fail"
     }
    },
@@ -16911,9 +16911,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": 7.95e-07,
-     "message": "species_35 exceeds the tolerance by 7.16e-07; species_40 exceeds the tolerance by 7.95e-07",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "roadrunner": {
      "max_excess": null,
@@ -20940,7 +20940,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: CellML model 'MODEL1501160000' converted from 'BIOMD0000000566_url.xml' has 2 errors:\n[ERROR] The type of variable 'time' in component 'sbml' is unknown.\n[ERROR] The type of variable 'B' in component 'sbml' is unknown.",
+     "message": "CellMLValidationError: CellML model 'MODEL1501160000' converted from 'BIOMD0000000566_url.xml' has 3 errors:\n[ERROR] The type of variable 'time' in component 'sbml' is unknown.\n[ERROR] The type of variable 'B' in component 'sbml' is unknown.\n[ERROR] The type of variable 'Growth' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -20978,7 +20978,7 @@
     },
     "sbml2cellml": {
      "max_excess": null,
-     "message": "CellMLValidationError: CellML model 'MODEL1501160001' converted from 'BIOMD0000000567_url.xml' has 2 errors:\n[ERROR] The type of variable 'time' in component 'sbml' is unknown.\n[ERROR] The type of variable 'B' in component 'sbml' is unknown.",
+     "message": "CellMLValidationError: CellML model 'MODEL1501160001' converted from 'BIOMD0000000567_url.xml' has 3 errors:\n[ERROR] The type of variable 'time' in component 'sbml' is unknown.\n[ERROR] The type of variable 'B' in component 'sbml' is unknown.\n[ERROR] The type of variable 'Growth' in component 'sbml' is unknown.",
      "status": "fail"
     }
    },
@@ -22436,7 +22436,7 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": -1e-06,
+     "max_excess": -4.8e-07,
      "message": "",
      "status": "pass"
     },
@@ -22446,7 +22446,7 @@
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": -4.92e-07,
+     "max_excess": -9.97e-07,
      "message": "",
      "status": "pass"
     },
@@ -29994,7 +29994,7 @@
     },
     "libopencor": {
      "max_excess": 6670.0,
-     "message": "Type_II_T_helper_cells_T_H2 exceeds the tolerance by 23.6; Cytotoxic_T_Cells_T_C exceeds the tolerance by 6.67e+03; Interferon_gamma exceeds the tolerance by 3.28e-05; Cytokine_IL2 exceeds the tolerance by 3.08e-07",
+     "message": "Type_II_T_helper_cells_T_H2 exceeds the tolerance by 23.6; Cytotoxic_T_Cells_T_C exceeds the tolerance by 6.67e+03; Interferon_gamma exceeds the tolerance by 3.28e-05; Cytokine_IL2 exceeds the tolerance by 3.09e-07",
      "status": "fail"
     },
     "roadrunner": {
@@ -39745,5 +39745,5 @@
   "BIOMD0000001097": "package fbc"
  },
  "suite": "biomodels",
- "version": "0.3.5"
+ "version": "0.4.0"
 }

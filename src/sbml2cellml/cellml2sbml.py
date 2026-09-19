@@ -6,6 +6,10 @@ model as SBML: every variable is a parameter, states get rate rules,
 algebraic variables assignment rules, computed constants initial assignments,
 and the resets of the components become events. CellML units become unit
 definitions. There are no compartments, species or reactions.
+
+The metadata of an SBML model which `sbml2cellml` wrote next to the CellML
+file (`sbml2cellml.metadata`) comes back on the parameters, the unit
+definitions and the model.
 """
 
 import logging
@@ -17,6 +21,7 @@ import libcellml
 import libsbml
 
 from sbml2cellml import cellml, sbml
+from sbml2cellml.metadata import Record, apply_metadata, read_metadata
 from sbml2cellml.sbml import SBMLValidationError
 from sbml2cellml.sbmlmath import (
     MathConversionError,
@@ -49,8 +54,15 @@ class CellML2SBMLConversionError(ValueError):
     """The CellML model cannot be converted."""
 
 
+#: suffix of the file with the metadata, next to the CellML file
+METADATA_SUFFIX = ".rdf"
+
+
 def convert_cellml2sbml(
-    cellml_path: Path, sbml_path: Path | None = None, validate: bool = True
+    cellml_path: Path,
+    sbml_path: Path | None = None,
+    validate: bool = True,
+    metadata: bool = True,
 ) -> libsbml.SBMLDocument:
     """Convert a CellML file to an SBML document.
 
@@ -59,6 +71,8 @@ def convert_cellml2sbml(
         sbml_path: path the SBML is written to, not written if `None`.
         validate: check the consistency of the document with libsbml and raise
             if it has errors.
+        metadata: read the metadata from the RDF file next to the CellML file
+            (`<stem>.rdf`, see `sbml2cellml.metadata`) when it exists.
 
     Returns:
         The SBML document.
@@ -79,8 +93,16 @@ def convert_cellml2sbml(
     logger.info("Converting CellML model '%s' from '%s'", model.name(), cellml_path)
     model = _flatten(model, cellml_path.parent)
     analyser_model = _analyse(model)
+    metadata_path = cellml_path.with_suffix(METADATA_SUFFIX)
+    records: dict[str, Record] = {}
+    if metadata and metadata_path.is_file():
+        try:
+            records = read_metadata(metadata_path, cellml_path.name)
+        except ValueError as err:
+            raise CellML2SBMLConversionError(str(err)) from err
+        logger.info("Metadata of %d elements in '%s'", len(records), metadata_path)
     try:
-        doc = build_document(model, analyser_model)
+        doc = build_document(model, analyser_model, records)
     except (MathConversionError, UnitsConversionError) as err:
         raise CellML2SBMLConversionError(
             f"CellML model '{model.name()}' cannot be converted: {err}"
@@ -149,12 +171,18 @@ def _analyse(model: libcellml.Model) -> Any:
     return analyser_model
 
 
-def build_document(model: libcellml.Model, analyser_model: Any) -> libsbml.SBMLDocument:
+def build_document(
+    model: libcellml.Model,
+    analyser_model: Any,
+    records: dict[str, Record] | None = None,
+) -> libsbml.SBMLDocument:
     """Build the SBML document of an analysed CellML model.
 
     Args:
         model: the (flattened) CellML model.
         analyser_model: its analyser model without errors.
+        records: metadata by the id of a CellML element
+            (`sbml2cellml.metadata.read_metadata`), none when `None`.
 
     Returns:
         The SBML document, not validated.
@@ -215,7 +243,56 @@ def build_document(model: libcellml.Model, analyser_model: Any) -> libsbml.SBMLD
         _add_equation(model_sbml, analyser_model.analyserEquation(k), ids, number_units)
 
     _add_events(model_sbml, model, ids, sbml_unit_id)
+    _add_metadata(model_sbml, model, ids, unit_ids, records or {})
     return doc
+
+
+def _add_metadata(
+    model_sbml: libsbml.Model,
+    model: libcellml.Model,
+    ids: VariableIds,
+    unit_ids: dict[str, str],
+    records: dict[str, Record],
+) -> None:
+    """Set the metadata on the elements of the SBML model.
+
+    A record belongs to the CellML element with its id: to the parameter of
+    a variable (of the equivalence set of the variable, the first record
+    wins), to the unit definition of units, or to the model. The id is the
+    metaid of the SBML element, it is unique in the CellML model.
+    """
+    elements: dict[str, libsbml.SBase] = {}
+    if model.id():
+        elements[model.id()] = model_sbml
+    for k in range(model.unitsCount()):
+        units = model.units(k)
+        definition = model_sbml.getUnitDefinition(unit_ids.get(units.name(), ""))
+        if units.id() and definition is not None:
+            elements[units.id()] = definition
+    for component in _components(model):
+        for k in range(component.variableCount()):
+            variable = component.variable(k)
+            if not variable.id():
+                continue
+            try:
+                parameter = model_sbml.getParameter(ids.id_for(variable))
+            except KeyError:
+                continue  # not part of the analysed model
+            if parameter is not None:
+                elements[variable.id()] = parameter
+
+    applied: set[str] = set()
+    for cid, record in records.items():
+        element = elements.get(cid)
+        if element is None:
+            logger.info("Metadata of '%s' has no element in the SBML model", cid)
+            continue
+        key = f"{element.getTypeCode()}:{element.getId()}"
+        if key in applied:
+            logger.info("Metadata of '%s' ignored, its parameter has some", cid)
+            continue
+        applied.add(key)
+        apply_metadata(element, record, cid)
 
 
 def _add_parameter(

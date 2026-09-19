@@ -1,7 +1,7 @@
 """Command line interfaces of sbml2cellml.
 
-    sbml2cellml INPUT.xml [-o OUTPUT.cellml] [--no-validate] [-v]
-    cellml2sbml INPUT.cellml [-o OUTPUT.xml] [--no-validate] [-v]
+    sbml2cellml INPUT.xml [-o OUTPUT.cellml] [--no-validate] [--no-metadata] [-v]
+    cellml2sbml INPUT.cellml [-o OUTPUT.xml] [--no-validate] [--no-metadata] [-v]
 
 convert between SBML and CellML. Without `-o` the output is written next to
 the input with the suffix of the other format.
@@ -31,7 +31,7 @@ CONVERSION_ERRORS = (
 
 
 def _build_parser(
-    prog: str, description: str, input_help: str, output_help: str
+    prog: str, description: str, input_help: str, output_help: str, metadata_help: str
 ) -> argparse.ArgumentParser:
     """Parser shared by both commands."""
     parser = argparse.ArgumentParser(prog=prog, description=description)
@@ -42,6 +42,7 @@ def _build_parser(
         action="store_true",
         help="write the output even if the validation reports errors",
     )
+    parser.add_argument("--no-metadata", action="store_true", help=metadata_help)
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="log the conversion steps"
     )
@@ -60,6 +61,9 @@ def build_parser() -> argparse.ArgumentParser:
         description="Convert an SBML model to CellML.",
         input_help="SBML file",
         output_help="CellML file, by default the input with the suffix .cellml",
+        metadata_help="do not write the names, notes and annotations of the "
+        "SBML model as RDF next to the CellML file (the output with the "
+        "suffix .rdf)",
     )
 
 
@@ -74,6 +78,8 @@ def build_parser_cellml2sbml() -> argparse.ArgumentParser:
         description="Convert a CellML model to SBML.",
         input_help="CellML file",
         output_help="SBML file, by default the input with the suffix .xml",
+        metadata_help="do not read the metadata from the RDF file next to the "
+        "CellML file (the input with the suffix .rdf)",
     )
 
 
@@ -87,7 +93,8 @@ def _run(
 
     Args:
         parser: parser of the command.
-        convert: converter taking the input path, the output path and `validate`.
+        convert: converter taking the input path, the output path, `validate`
+            and `metadata`.
         suffix: suffix of the default output file.
         argv: arguments without the program name, `sys.argv[1:]` by default.
 
@@ -106,7 +113,7 @@ def _run(
     output_path = Path(args.output) if args.output else input_path.with_suffix(suffix)
 
     try:
-        convert(input_path, output_path, not args.no_validate)
+        convert(input_path, output_path, not args.no_validate, not args.no_metadata)
     except CONVERSION_ERRORS as err:
         print(str(err), file=sys.stderr)
         return 1
@@ -127,8 +134,8 @@ def main(argv: list[str] | None = None) -> int:
     """
     return _run(
         build_parser(),
-        lambda sbml_path, cellml_path, validate: convert_sbml2cellml(
-            sbml_path, cellml_path=cellml_path, validate=validate
+        lambda sbml_path, cellml_path, validate, metadata: convert_sbml2cellml(
+            sbml_path, cellml_path=cellml_path, validate=validate, metadata=metadata
         ),
         ".cellml",
         argv,
@@ -147,8 +154,8 @@ def main_cellml2sbml(argv: list[str] | None = None) -> int:
     """
     return _run(
         build_parser_cellml2sbml(),
-        lambda cellml_path, sbml_path, validate: convert_cellml2sbml(
-            cellml_path, sbml_path=sbml_path, validate=validate
+        lambda cellml_path, sbml_path, validate, metadata: convert_cellml2sbml(
+            cellml_path, sbml_path=sbml_path, validate=validate, metadata=metadata
         ),
         ".xml",
         argv,

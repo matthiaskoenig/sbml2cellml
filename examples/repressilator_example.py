@@ -1,7 +1,9 @@
 """Roundtrip of the repressilator: SBML to CellML and back to SBML.
 
 The model is the repressilator of Elowitz and Leibler (2000), BIOMD0000000012
-of BioModels without its notes and annotations. It is simulated three times:
+of BioModels. Its names, notes and annotations go into an RDF file next to the
+CellML model and come back in the SBML model of the roundtrip. The model is
+simulated three times:
 the SBML model with roadrunner, the converted CellML model with libopencor and
 the SBML model converted back from the CellML with roadrunner again. The three
 timecourses of the proteins are plotted side by side.
@@ -56,6 +58,9 @@ THEMES: dict[str, dict[str, str | list[str]]] = {
 
 def convert(sbml_path: Path, results_dir: Path) -> tuple[Path, Path]:
     """Convert the SBML model to CellML and the CellML model back to SBML.
+
+    The first conversion writes the metadata of the SBML model to
+    `repressilator.rdf` next to the CellML model, the second one reads it.
 
     Returns:
         The paths of the CellML model and of the SBML model of the roundtrip.
@@ -209,7 +214,8 @@ def main(update_docs: bool = False) -> None:
 
     if update_docs:
         (DOCS_DIR / "roundtrip").mkdir(exist_ok=True)
-        for path in (cellml_path, roundtrip_path, differences_path):
+        rdf_path = cellml_path.with_suffix(".rdf")
+        for path in (cellml_path, rdf_path, roundtrip_path, differences_path):
             shutil.copy(path, DOCS_DIR / "roundtrip" / path.name)
         for name, path in figures.items():
             shutil.copy(path, DOCS_DIR / "images" / name)

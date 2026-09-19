@@ -2,8 +2,10 @@
 
 The conversion puts every SBML compartment, parameter and species as a variable
 into a single CellML component `sbml`, together with the variable of
-integration `time`. Assignment rules become equations, rate rules and the
-kinetic laws of the reactions become differential equations. The target of an
+integration `time`. Assignment rules become equations, rate rules
+differential equations. Every reaction with a kinetic law is a variable of its
+rate, the rates of its reactions are the differential equation of a species.
+The target of an
 assignment rule has no initial value, the rule defines it at all times. A
 species in concentration whose compartment changes gets a second variable
 `<species>_amount`: the reactions change the amount, the concentration is the
@@ -35,6 +37,7 @@ import libcellml
 import libsbml
 
 from sbml2cellml import astnodes, cellml, mathml
+from sbml2cellml import metadata as sbml_metadata
 from sbml2cellml.cellml import CellMLValidationError
 from sbml2cellml.cellmlunits import CellMLUnits
 from sbml2cellml.mathml import TIME_ID
@@ -46,6 +49,8 @@ logger = logging.getLogger(__name__)
 COMPONENT_ID = "sbml"
 #: units of a variable without units
 UNITS_ID = "dimensionless"
+#: suffix of the file with the metadata, next to the CellML file
+METADATA_SUFFIX = ".rdf"
 #: variables without units named in the warning of an incomplete annotation
 MISSING_UNITS_LOGGED = 10
 
@@ -55,7 +60,10 @@ class SBML2CellMLConversionError(ValueError):
 
 
 def convert_sbml2cellml(
-    sbml_path: Path, cellml_path: Path | None = None, validate: bool = True
+    sbml_path: Path,
+    cellml_path: Path | None = None,
+    validate: bool = True,
+    metadata: bool = True,
 ) -> libcellml.Model:
     """Convert an SBML file to a CellML model.
 
@@ -64,6 +72,10 @@ def convert_sbml2cellml(
         cellml_path: path the CellML is written to, not written if `None`.
         validate: validate and analyse the CellML model with libcellml and
             raise if it has errors.
+        metadata: write the names, notes, SBO terms, annotations and the
+            history of the SBML elements as RDF next to the CellML file
+            (`<stem>.rdf`, see `sbml2cellml.metadata`); no file is written
+            for a model without metadata.
 
     Returns:
         The CellML model.
@@ -105,7 +117,8 @@ def convert_sbml2cellml(
     reaction_terms = formulas.reaction_terms
     rates = formulas.rates
     assigned = set(assignment_rules)
-    reaction_ids = _referenced_reactions(model_sbml, rates)
+    # every reaction with a kinetic law is a variable of its rate
+    reaction_ids = list(rates)
     # CellML knows the variable of integration only from a differential
     # equation, an unused one has an unknown type: the model is algebraic
     has_time = bool(rate_rules or reaction_terms or _uses_time(model_sbml))
@@ -155,6 +168,7 @@ def convert_sbml2cellml(
     )
     component.setMath(mathml.cellml_math(parts))
     model.linkUnits()
+    _set_ids(model)
 
     event: libsbml.Event
     for event in model_sbml.getListOfEvents():
@@ -179,8 +193,31 @@ def convert_sbml2cellml(
     if cellml_path is not None:
         cellml.write_model(model, cellml_path)
         logger.info("CellML written to '%s'", cellml_path)
+        if metadata:
+            elements = _metadata_elements(model_sbml, model, cellml_units, formulas)
+            _write_metadata(elements, Path(cellml_path))
 
     return model
+
+
+def _set_ids(model: libcellml.Model) -> None:
+    """Give the model, its variables and its units an id.
+
+    CellML has no metadata, an `id` is what external metadata points at
+    (`sbml2cellml.metadata`). A variable has its name as id, which is unique
+    in the single component; units are `units_<name>` and the model has its
+    name, both with a numeric suffix when the id is taken.
+    """
+    component: libcellml.Component = model.component(COMPONENT_ID)
+    used: set[str] = set()
+    for k in range(component.variableCount()):
+        variable: libcellml.Variable = component.variable(k)
+        variable.setId(variable.name())
+        used.add(variable.name())
+    for k in range(model.unitsCount()):
+        units: libcellml.Units = model.units(k)
+        units.setId(unique_sid(f"units_{units.name()}", used))
+    model.setId(unique_sid(model.name(), used))
 
 
 #: an expansion of libsbml: the option of the conversion, what it expands, what
@@ -1142,25 +1179,6 @@ def _kinetic_laws(
     return rates
 
 
-def _referenced_reactions(
-    model_sbml: libsbml.Model, rates: dict[str, libsbml.ASTNode]
-) -> list[str]:
-    """Ids of the reactions a rule or a kinetic law uses as a name.
-
-    The id of a reaction stands for its rate in formulas; such a reaction
-    gets a variable of its rate.
-    """
-    names: set[str] = set()
-    rule: libsbml.Rule
-    for rule in model_sbml.getListOfRules():
-        _collect_names(rule.getMath(), libsbml.AST_NAME, names)
-    reaction: libsbml.Reaction
-    for reaction in model_sbml.getListOfReactions():
-        if reaction.getKineticLaw() is not None:
-            _collect_names(reaction.getKineticLaw().getMath(), libsbml.AST_NAME, names)
-    return [rid for rid in rates if rid in names]
-
-
 def _uses_time(model_sbml: libsbml.Model) -> bool:
     """Whether a rule or a kinetic law uses the time symbol."""
     names: set[str] = set()
@@ -1438,10 +1456,14 @@ def _replace_rate_of(
 def _stoichiometry_factor(
     reaction_id: str, reference: libsbml.SpeciesReference
 ) -> libsbml.ASTNode | None:
-    """Factor of the kinetic law for a species reference, `None` for 1."""
+    """Factor of the kinetic law for a species reference, `None` for 1.
+
+    A stoichiometry which is not set is 1 in SBML level 1 and 2 and unknown
+    in level 3, where 1.0 is used with a warning.
+    """
     if reference.isSetId():
         return astnodes.name(reference.getId())
-    if not reference.isSetStoichiometry():
+    if not reference.isSetStoichiometry() and reference.getLevel() >= 3:
         logger.warning(
             "Stoichiometry of '%s' in reaction '%s' is not set, using 1.0.",
             reference.getSpecies(),
@@ -1457,9 +1479,10 @@ def _collect_reaction_terms(
     rates: dict[str, libsbml.ASTNode],
     amounts: dict[str, _Amount],
 ) -> dict[str, libsbml.ASTNode]:
-    """Collect the rate of change of every species from the kinetic laws.
+    """Collect the rate of change of every species from the rates of its reactions.
 
-    The rate of a reaction (`rates`) is in amount per time. Multiplied with
+    The rate of a reaction (the variable of a reaction with a kinetic law,
+    `rates`) is in amount per time. Multiplied with
     the stoichiometry (the variable of a species reference with an id), it
     is subtracted for every reactant and added for every product which is not
     a boundary species (reactions do not change those). The sum is multiplied
@@ -1488,10 +1511,11 @@ def _collect_reaction_terms(
                 if model_sbml.getSpecies(sid).getBoundaryCondition():
                     continue
                 factor = _stoichiometry_factor(rid, reference)
+                rate = astnodes.name(rid)
                 term = (
-                    rates[rid]
+                    rate
                     if factor is None
-                    else astnodes.apply(libsbml.AST_TIMES, factor, rates[rid])
+                    else astnodes.apply(libsbml.AST_TIMES, factor, rate)
                 )
                 terms.setdefault(sid, []).append((sign, term))
 
@@ -1522,3 +1546,68 @@ def _collect_reaction_terms(
             formula = astnodes.apply(libsbml.AST_TIMES, per_size, formula)
         result[sid] = formula
     return result
+
+
+def _metadata_elements(
+    model_sbml: libsbml.Model,
+    model: libcellml.Model,
+    cellml_units: CellMLUnits,
+    formulas: _Formulas,
+) -> dict[str, libsbml.SBase]:
+    """The SBML element of every CellML element which stands for one.
+
+    Returns:
+        The model, the compartments, species, parameters, local parameters,
+        species references with an id, reactions with a rate variable and
+        unit definitions, by the id of their CellML element (`_set_ids`).
+    """
+    elements: dict[str, libsbml.SBase] = {model.id(): model_sbml}
+    element: libsbml.SBase
+    for element in [
+        *model_sbml.getListOfCompartments(),
+        *model_sbml.getListOfSpecies(),
+        *model_sbml.getListOfParameters(),
+    ]:
+        elements[element.getId()] = element
+    reaction: libsbml.Reaction
+    for reaction in model_sbml.getListOfReactions():
+        rid: str = reaction.getId()
+        if rid in formulas.rates:
+            elements[rid] = reaction
+        for pid, vid in formulas.local_ids.get(rid, {}).items():
+            elements[vid] = reaction.getKineticLaw().getParameter(pid)
+        for reference in [
+            *reaction.getListOfReactants(),
+            *reaction.getListOfProducts(),
+        ]:
+            if reference.isSetId():
+                elements[reference.getId()] = reference
+    definition: libsbml.UnitDefinition
+    for definition in model_sbml.getListOfUnitDefinitions():
+        units: libcellml.Units | None = model.units(
+            cellml_units.name(definition.getId()) or ""
+        )
+        if units is not None and units.id():
+            elements[units.id()] = definition
+    return elements
+
+
+def _write_metadata(elements: dict[str, libsbml.SBase], cellml_path: Path) -> None:
+    """Write the metadata of the elements next to the CellML file.
+
+    A model without metadata has no file; the file of an earlier conversion
+    is removed then, `cellml2sbml` would take it for the metadata of this
+    model. A file which has no metadata of the CellML file is left alone.
+    """
+    path = cellml_path.with_suffix(METADATA_SUFFIX)
+    records = sbml_metadata.collect_metadata(elements)
+    if records:
+        sbml_metadata.write_metadata(records, cellml_path.name, path)
+        return
+    try:
+        stale = path.is_file() and sbml_metadata.read_metadata(path, cellml_path.name)
+    except ValueError:
+        stale = False
+    if stale:
+        path.unlink()
+        logger.info("Metadata of an earlier conversion removed: '%s'", path)

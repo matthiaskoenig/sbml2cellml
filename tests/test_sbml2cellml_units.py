@@ -39,6 +39,8 @@ def test_complete_annotation_gives_every_variable_its_units(tmp_path: Path) -> N
         "S1": "mmole_per_litre",
         # unless it has only substance units
         "S2": "mmole",
+        # the rate of the reaction, extent per time
+        "r1": "mmole_per_min",
     }
     assert unit_attributes(model, "mmole") == [("mole", "milli", 1.0, 1.0)]
     assert unit_attributes(model, "min") == [("second", "", 1.0, 60.0)]
@@ -59,6 +61,31 @@ def test_amount_of_a_species_in_a_changing_compartment_has_substance_units(
     units = variable_units(convert(model_sbml, tmp_path))
     assert units["S1"] == "mmole_per_litre"
     assert units["S1_amount"] == "mmole"
+
+
+def test_every_element_has_a_unique_id(tmp_path: Path) -> None:
+    """External metadata points at the ids of the model, variables and units."""
+    model_sbml = annotated_model()
+    p: libsbml.Parameter = model_sbml.createParameter()
+    p.setId("units_mmole")  # the id the units `mmole` would get
+    p.setValue(1.0)
+    p.setConstant(True)
+    p.setUnits("dimensionless")
+    model = convert(model_sbml, tmp_path)
+    component = model.component(0)
+    variable_ids = {
+        component.variable(k).name(): component.variable(k).id()
+        for k in range(component.variableCount())
+    }
+    assert all(name == vid for name, vid in variable_ids.items())
+    units_ids = {
+        model.units(k).name(): model.units(k).id() for k in range(model.unitsCount())
+    }
+    assert units_ids["min"] == "units_min"
+    assert units_ids["mmole"] == "units_mmole_2"
+    assert model.id() == "annotated"
+    ids = [*variable_ids.values(), *units_ids.values(), model.id()]
+    assert len(set(ids)) == len(ids)
 
 
 def test_multiplier_is_outside_of_the_exponent(tmp_path: Path) -> None:

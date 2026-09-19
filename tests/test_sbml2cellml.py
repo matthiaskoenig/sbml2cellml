@@ -113,7 +113,7 @@ def test_simple_model_initial_values(tmp_path: Path) -> None:
     model = convert_sbml2cellml(sbml_path)
     v = variables(model)
     assert model.name() == "simple"
-    assert set(v) == {TIME_ID, "cell", "k1", "S1", "S2"}
+    assert set(v) == {TIME_ID, "cell", "k1", "S1", "S2", "r1"}
     assert float(v["cell"].initialValue()) == 2.0
     assert float(v["k1"].initialValue()) == 0.5
     # concentration stays concentration, amount stays amount
@@ -142,7 +142,7 @@ def test_species_in_a_changing_compartment_is_a_state_in_amount(
     sbml_path = write_sbml(tmp_path / "growing.xml", growing_compartment_model())
     model = convert_sbml2cellml(sbml_path)
     v = variables(model)
-    assert set(v) == {TIME_ID, "cell", "k1", "S1", "S1_amount", "S2"}
+    assert set(v) == {TIME_ID, "cell", "k1", "S1", "S1_amount", "S2", "r1"}
     # the concentration 10 in the compartment of size 2
     assert float(v["S1_amount"].initialValue()) == 20.0
     assert v["S1"].initialValue() == ""
@@ -213,7 +213,7 @@ def test_initial_amount_with_the_size_an_assignment_rule_gives(
     s2.setInitialConcentration(3.0)  # amount species, concentration given
     sbml_path = write_sbml(tmp_path / "assigned_size_amount.xml", model_sbml)
     v = variables(convert_sbml2cellml(sbml_path))
-    assert set(v) == {TIME_ID, "cell", "k1", "S1", "S2"}
+    assert set(v) == {TIME_ID, "cell", "k1", "S1", "S2", "r1"}
     assert float(v["S1"].initialValue()) == 1.5
     assert float(v["S2"].initialValue()) == 12.0
 
@@ -414,8 +414,9 @@ def test_avogadro_symbol_next_to_a_parameter_avogadro(tmp_path: Path) -> None:
     sbml_path = write_sbml(tmp_path / "avogadro_twice.xml", model_sbml)
     model = convert_sbml2cellml(sbml_path)
     math_text = model.component(0).math().replace(" ", "").replace("\n", "")
-    assert math_text.count("6.02214179") == 2  # in the terms of NaN and S2
-    assert math_text.count("<ci>avogadro</ci>") == 2
+    # both once, in the rate of the reaction
+    assert math_text.count("6.02214179") == 1
+    assert math_text.count("<ci>avogadro</ci>") == 1
 
 
 def _with_local_parameters(model_sbml: libsbml.Model) -> libsbml.Model:
@@ -531,6 +532,43 @@ def test_reaction_id_in_a_formula_is_the_rate(tmp_path: Path) -> None:
     model = convert_sbml2cellml(sbml_path)
     assert errors(validate_model(model)) == []
     assert "r1" in variables(model)
+
+
+def test_default_stoichiometry_of_level_2_logs_no_warning(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    """A stoichiometry which is not set is 1 in level 2 and unknown in level 3."""
+    sbml_path = MODELS_DIR / "repressilator.xml"  # level 2, no stoichiometries
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        convert_sbml2cellml(sbml_path)
+    assert "Stoichiometry" not in caplog.text
+
+    model_sbml = simple_model("unset_stoichiometry")
+    model_sbml.getReaction("r1").getReactant(0).unsetStoichiometry()
+    sbml_path = write_sbml(tmp_path / "unset_stoichiometry.xml", model_sbml)
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        convert_sbml2cellml(sbml_path)
+    assert "Stoichiometry of 'S1' in reaction 'r1' is not set" in caplog.text
+
+
+def test_every_reaction_is_a_variable_of_its_rate(tmp_path: Path) -> None:
+    """The species equations are sums of the rates of the reactions."""
+    sbml_path = write_sbml(tmp_path / "simple.xml", simple_model())
+    model = convert_sbml2cellml(sbml_path)
+    v = variables(model)
+    assert v["r1"].initialValue() == ""
+    math_text = model.component(0).math().replace(" ", "").replace("\n", "")
+    # r1 = k1 * S1, and the rate instead of the kinetic law in the equations
+    assert "<eq/><ci>r1</ci><apply><times/><ci>k1</ci><ci>S1</ci></apply>" in math_text
+    assert math_text.count("<ci>k1</ci>") == 1
+    assert "<bvar><ci>time</ci></bvar><ci>S2</ci></apply><ci>r1</ci>" in math_text
+
+
+def test_reaction_without_kinetic_law_is_no_variable(tmp_path: Path) -> None:
+    model_sbml = simple_model("no_law")
+    model_sbml.getReaction("r1").unsetKineticLaw()
+    sbml_path = write_sbml(tmp_path / "no_law.xml", model_sbml)
+    assert "r1" not in variables(convert_sbml2cellml(sbml_path))
 
 
 def test_model_without_differential_equations_has_no_time(tmp_path: Path) -> None:
