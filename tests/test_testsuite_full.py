@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 
 from sbml2cellml.testsuite.cases import ensure_suite, load_cases
-from sbml2cellml.testsuite.report import render_report
+from sbml2cellml.testsuite.report import TESTSUITE_FIGURE, render_report
 from sbml2cellml.testsuite.results import SuiteResult, improvements, regressions
 from sbml2cellml.testsuite.runner import run_suite
 
@@ -39,6 +39,6 @@ def test_full_suite_no_regression(tmp_path: Path) -> None:
         )
     worse = regressions(committed, result)
     assert worse == [], "regressions:\n" + "\n".join(worse)
-    assert render_report(result) == REPORT.read_text(encoding="utf-8"), (
-        "docs/testsuite.md is stale, rerun `sbml2cellml-testsuite run`"
-    )
+    assert render_report(result, figure=TESTSUITE_FIGURE) == REPORT.read_text(
+        encoding="utf-8"
+    ), "docs/testsuite.md is stale, rerun `sbml2cellml-testsuite run`"

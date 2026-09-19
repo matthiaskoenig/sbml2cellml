@@ -5,7 +5,9 @@
     sbml2cellml-testsuite report --results FILE --output FILE
 
 `run` downloads the suite when no `--suite-dir` is given, runs the pipeline,
-writes the results and the report. `report` renders a results file.
+writes the results and the report. `report` renders a results file. Both write
+the bar diagram of the report next to it (`images/testsuite.svg` and
+`images/testsuite_dark.svg`, see `sbml2cellml.testsuite.figure`).
 """
 
 import argparse
@@ -15,7 +17,7 @@ from pathlib import Path
 
 from sbml2cellml import __version__, log
 from sbml2cellml.testsuite.cases import TestSuiteError, ensure_suite, load_cases
-from sbml2cellml.testsuite.report import write_report
+from sbml2cellml.testsuite.report import TESTSUITE_FIGURE, write_report
 from sbml2cellml.testsuite.results import STAGES, SuiteResult
 from sbml2cellml.testsuite.runner import run_suite
 
@@ -93,7 +95,7 @@ def _run(args: argparse.Namespace) -> int:
     result.to_json(results_path)
     report_path = Path(args.report)
     report_path.parent.mkdir(parents=True, exist_ok=True)
-    write_report(result, report_path)
+    write_report(result, report_path, figure=TESTSUITE_FIGURE)
     print(f"{results_path}\n{report_path}")
     return 0
 
@@ -106,7 +108,7 @@ def _report(args: argparse.Namespace) -> int:
         return 1
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
-    write_report(SuiteResult.from_json(results_path), output)
+    write_report(SuiteResult.from_json(results_path), output, figure=TESTSUITE_FIGURE)
     print(output)
     return 0
 

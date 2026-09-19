@@ -9,19 +9,24 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 
 1535 cases run, 288 skipped.
 
-| stage | pass | fail | skip | pass rate |
-| --- | --- | --- | --- | --- |
-| reference | 1384 | 151 | 0 | 90.2% |
-| sbml2cellml | 1462 | 73 | 0 | 95.2% |
-| libopencor | 1010 | 452 | 73 | 65.8% |
-| cellml2sbml | 1462 | 0 | 73 | 95.2% |
-| roundtrip | 928 | 534 | 73 | 60.5% |
+![Cases which pass, fail and skip the stages](images/testsuite.svg#only-light)
+![Cases which pass, fail and skip the stages](images/testsuite_dark.svg#only-dark)
+
+| stage | total | pass | fail | skip | pass rate |
+| --- | --- | --- | --- | --- | --- |
+| reference | 1535 | 1384 | 151 | 0 | 90.2% |
+| sbml2cellml | 1535 | 1462 | 73 | 0 | 95.2% |
+| libopencor | 1535 | 1010 | 452 | 73 | 65.8% |
+| cellml2sbml | 1535 | 1462 | 0 | 73 | 95.2% |
+| roundtrip | 1535 | 928 | 534 | 73 | 60.5% |
 
 909 of the 1010 cases with a passing libopencor stage are informative: the reference moves more than the tolerance band for at least one variable.
 
 ## Failure reasons
 
 ### reference
+
+151 of 1535 cases fail.
 
 | reason | cases | examples |
 | --- | --- | --- |
@@ -36,6 +41,8 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 
 ### sbml2cellml
 
+73 of 1535 cases fail.
+
 | reason | cases | examples |
 | --- | --- | --- |
 | CellMLValidationError: Math has a '...' element that is not a supported MathML element. | 48 | 00028, 00173, 00269, 00937, 00938, 00939, 00940, 00941, 00942, 00943, ... (48 in total) |
@@ -44,6 +51,8 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | CellMLValidationError: MathML ci element has the child text '...' which does not correspond with any variable names present in component '...'. | 2 | 01490, 01491 |
 
 ### libopencor
+
+452 of 1535 cases fail.
 
 | reason | cases | examples |
 | --- | --- | --- |
@@ -176,6 +185,8 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | EventUsesTriggerTimeValues, NoMathML, NonConstantParameter | 1 | 01601 |
 
 ### roundtrip
+
+534 of 1535 cases fail.
 
 | reason | cases | examples |
 | --- | --- | --- |

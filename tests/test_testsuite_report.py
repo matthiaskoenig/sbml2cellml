@@ -6,7 +6,12 @@ import pytest
 
 from sbml2cellml.cellml import CellMLValidationError
 from sbml2cellml.testsuite.cli import main
-from sbml2cellml.testsuite.report import _reason, render_report, write_report
+from sbml2cellml.testsuite.report import (
+    TESTSUITE_FIGURE,
+    _reason,
+    render_report,
+    write_report,
+)
 from sbml2cellml.testsuite.results import STAGES, CaseResult, StageResult, SuiteResult
 from sbml2cellml.testsuite.runner import _message
 
@@ -42,7 +47,11 @@ def test_render_report() -> None:
     assert "# SBML test suite" in text
     assert "3.5.0" in text
     assert "0.1.0" not in text
-    assert "| libopencor | 1 | 2 | 0 |" in text
+    # the total number of cases is the first number of a stage
+    assert "| stage | total | pass | fail | skip | pass rate |" in text
+    assert "| libopencor | 3 | 1 | 2 | 0 | 33.3% |" in text
+    assert "### libopencor\n\n2 of 3 cases fail." in text
+    assert "![" not in text
     assert "numerical mismatch" in text
     assert "SimulationFailure: roadrunner: RuntimeError: x" in text
     assert "| package comp | 2 |" in text
@@ -210,10 +219,26 @@ def test_render_report_groups_failure_reasons() -> None:
     assert text.count("CellMLValidationError: Math cn element with the attribute") == 1
 
 
+def test_render_report_figure() -> None:
+    text = render_report(sample(), figure="images/testsuite.svg")
+    alt = "Cases which pass, fail and skip the stages"
+    assert f"![{alt}](images/testsuite.svg#only-light)" in text
+    assert f"![{alt}](images/testsuite_dark.svg#only-dark)" in text
+
+
 def test_write_report(tmp_path: Path) -> None:
     path = tmp_path / "testsuite.md"
     write_report(sample(), path)
     assert path.read_text() == render_report(sample())
+    assert list(tmp_path.iterdir()) == [path]
+
+
+def test_write_report_figure(tmp_path: Path) -> None:
+    path = tmp_path / "testsuite.md"
+    write_report(sample(), path, figure=TESTSUITE_FIGURE)
+    assert path.read_text() == render_report(sample(), figure=TESTSUITE_FIGURE)
+    assert (tmp_path / "images" / "testsuite.svg").is_file()
+    assert (tmp_path / "images" / "testsuite_dark.svg").is_file()
 
 
 def test_cli_run_and_report(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -236,11 +261,14 @@ def test_cli_run_and_report(tmp_path: Path, capsys: pytest.CaptureFixture[str]) 
     )
     assert code == 0
     assert results.is_file() and report.is_file()
+    figure = tmp_path / TESTSUITE_FIGURE
+    assert figure.is_file()
     out = capsys.readouterr().out
     assert "00001" in out and "reference" in out
     report.unlink()
+    figure.unlink()
     assert main(["report", "--results", str(results), "--output", str(report)]) == 0
-    assert report.is_file()
+    assert report.is_file() and figure.is_file()
 
 
 def test_cli_missing_results(tmp_path: Path) -> None:
