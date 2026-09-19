@@ -2,8 +2,10 @@
 
 The conversion puts every SBML compartment, parameter and species as a variable
 into a single CellML component `sbml`, together with the variable of
-integration `time`. Assignment rules become equations, rate rules and the
-kinetic laws of the reactions become differential equations. The target of an
+integration `time`. Assignment rules become equations, rate rules
+differential equations. Every reaction with a kinetic law is a variable of its
+rate, the rates of its reactions are the differential equation of a species.
+The target of an
 assignment rule has no initial value, the rule defines it at all times. A
 species in concentration whose compartment changes gets a second variable
 `<species>_amount`: the reactions change the amount, the concentration is the
@@ -105,7 +107,8 @@ def convert_sbml2cellml(
     reaction_terms = formulas.reaction_terms
     rates = formulas.rates
     assigned = set(assignment_rules)
-    reaction_ids = _referenced_reactions(model_sbml, rates)
+    # every reaction with a kinetic law is a variable of its rate
+    reaction_ids = list(rates)
     # CellML knows the variable of integration only from a differential
     # equation, an unused one has an unknown type: the model is algebraic
     has_time = bool(rate_rules or reaction_terms or _uses_time(model_sbml))
@@ -1142,25 +1145,6 @@ def _kinetic_laws(
     return rates
 
 
-def _referenced_reactions(
-    model_sbml: libsbml.Model, rates: dict[str, libsbml.ASTNode]
-) -> list[str]:
-    """Ids of the reactions a rule or a kinetic law uses as a name.
-
-    The id of a reaction stands for its rate in formulas; such a reaction
-    gets a variable of its rate.
-    """
-    names: set[str] = set()
-    rule: libsbml.Rule
-    for rule in model_sbml.getListOfRules():
-        _collect_names(rule.getMath(), libsbml.AST_NAME, names)
-    reaction: libsbml.Reaction
-    for reaction in model_sbml.getListOfReactions():
-        if reaction.getKineticLaw() is not None:
-            _collect_names(reaction.getKineticLaw().getMath(), libsbml.AST_NAME, names)
-    return [rid for rid in rates if rid in names]
-
-
 def _uses_time(model_sbml: libsbml.Model) -> bool:
     """Whether a rule or a kinetic law uses the time symbol."""
     names: set[str] = set()
@@ -1457,9 +1441,10 @@ def _collect_reaction_terms(
     rates: dict[str, libsbml.ASTNode],
     amounts: dict[str, _Amount],
 ) -> dict[str, libsbml.ASTNode]:
-    """Collect the rate of change of every species from the kinetic laws.
+    """Collect the rate of change of every species from the rates of its reactions.
 
-    The rate of a reaction (`rates`) is in amount per time. Multiplied with
+    The rate of a reaction (the variable of a reaction with a kinetic law,
+    `rates`) is in amount per time. Multiplied with
     the stoichiometry (the variable of a species reference with an id), it
     is subtracted for every reactant and added for every product which is not
     a boundary species (reactions do not change those). The sum is multiplied
@@ -1488,10 +1473,11 @@ def _collect_reaction_terms(
                 if model_sbml.getSpecies(sid).getBoundaryCondition():
                     continue
                 factor = _stoichiometry_factor(rid, reference)
+                rate = astnodes.name(rid)
                 term = (
-                    rates[rid]
+                    rate
                     if factor is None
-                    else astnodes.apply(libsbml.AST_TIMES, factor, rates[rid])
+                    else astnodes.apply(libsbml.AST_TIMES, factor, rate)
                 )
                 terms.setdefault(sid, []).append((sign, term))
 

@@ -39,6 +39,8 @@ def test_complete_annotation_gives_every_variable_its_units(tmp_path: Path) -> N
         "S1": "mmole_per_litre",
         # unless it has only substance units
         "S2": "mmole",
+        # the rate of the reaction, extent per time
+        "r1": "mmole_per_min",
     }
     assert unit_attributes(model, "mmole") == [("mole", "milli", 1.0, 1.0)]
     assert unit_attributes(model, "min") == [("second", "", 1.0, 60.0)]

@@ -10,6 +10,10 @@
   <units name="time">
     <unit multiplier="60" units="second"/>
   </units>
+  <units name="substance_per_time">
+    <unit units="substance"/>
+    <unit exponent="-1" units="time"/>
+  </units>
   <component name="sbml">
     <variable name="time" units="dimensionless"/>
     <variable name="cell" units="dimensionless" initial_value="1"/>
@@ -35,6 +39,18 @@
     <variable name="X" units="dimensionless" initial_value="0"/>
     <variable name="Y" units="dimensionless" initial_value="20"/>
     <variable name="Z" units="dimensionless" initial_value="0"/>
+    <variable name="Reaction1" units="dimensionless"/>
+    <variable name="Reaction2" units="dimensionless"/>
+    <variable name="Reaction3" units="dimensionless"/>
+    <variable name="Reaction4" units="dimensionless"/>
+    <variable name="Reaction5" units="dimensionless"/>
+    <variable name="Reaction6" units="dimensionless"/>
+    <variable name="Reaction7" units="dimensionless"/>
+    <variable name="Reaction8" units="dimensionless"/>
+    <variable name="Reaction9" units="dimensionless"/>
+    <variable name="Reaction10" units="dimensionless"/>
+    <variable name="Reaction11" units="dimensionless"/>
+    <variable name="Reaction12" units="dimensionless"/>
     <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/2.0#">
       <apply>
         <eq/>
@@ -167,12 +183,178 @@
           <plus/>
           <apply>
             <minus/>
-            <apply>
-              <times/>
-              <ci>kd_mRNA</ci>
-              <ci>X</ci>
-            </apply>
+            <ci>Reaction1</ci>
           </apply>
+          <ci>Reaction10</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>Y</ci>
+        </apply>
+        <apply>
+          <plus/>
+          <apply>
+            <minus/>
+            <ci>Reaction2</ci>
+          </apply>
+          <ci>Reaction11</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>Z</ci>
+        </apply>
+        <apply>
+          <plus/>
+          <apply>
+            <minus/>
+            <ci>Reaction3</ci>
+          </apply>
+          <ci>Reaction12</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>PX</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <ci>Reaction4</ci>
+          <ci>Reaction7</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>PY</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <ci>Reaction5</ci>
+          <ci>Reaction8</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>PZ</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <ci>Reaction6</ci>
+          <ci>Reaction9</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>Reaction1</ci>
+        <apply>
+          <times/>
+          <ci>kd_mRNA</ci>
+          <ci>X</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>Reaction2</ci>
+        <apply>
+          <times/>
+          <ci>kd_mRNA</ci>
+          <ci>Y</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>Reaction3</ci>
+        <apply>
+          <times/>
+          <ci>kd_mRNA</ci>
+          <ci>Z</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>Reaction4</ci>
+        <apply>
+          <times/>
+          <ci>k_tl</ci>
+          <ci>X</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>Reaction5</ci>
+        <apply>
+          <times/>
+          <ci>k_tl</ci>
+          <ci>Y</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>Reaction6</ci>
+        <apply>
+          <times/>
+          <ci>k_tl</ci>
+          <ci>Z</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>Reaction7</ci>
+        <apply>
+          <times/>
+          <ci>kd_prot</ci>
+          <ci>PX</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>Reaction8</ci>
+        <apply>
+          <times/>
+          <ci>kd_prot</ci>
+          <ci>PY</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>Reaction9</ci>
+        <apply>
+          <times/>
+          <ci>kd_prot</ci>
+          <ci>PZ</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>Reaction10</ci>
+        <apply>
+          <plus/>
           <ci>a0_tr</ci>
           <apply>
             <divide/>
@@ -203,23 +385,9 @@
       </apply>
       <apply>
         <eq/>
-        <apply>
-          <diff/>
-          <bvar>
-            <ci>time</ci>
-          </bvar>
-          <ci>Y</ci>
-        </apply>
+        <ci>Reaction11</ci>
         <apply>
           <plus/>
-          <apply>
-            <minus/>
-            <apply>
-              <times/>
-              <ci>kd_mRNA</ci>
-              <ci>Y</ci>
-            </apply>
-          </apply>
           <ci>a0_tr</ci>
           <apply>
             <divide/>
@@ -250,23 +418,9 @@
       </apply>
       <apply>
         <eq/>
-        <apply>
-          <diff/>
-          <bvar>
-            <ci>time</ci>
-          </bvar>
-          <ci>Z</ci>
-        </apply>
+        <ci>Reaction12</ci>
         <apply>
           <plus/>
-          <apply>
-            <minus/>
-            <apply>
-              <times/>
-              <ci>kd_mRNA</ci>
-              <ci>Z</ci>
-            </apply>
-          </apply>
           <ci>a0_tr</ci>
           <apply>
             <divide/>
@@ -292,75 +446,6 @@
                 <ci>n</ci>
               </apply>
             </apply>
-          </apply>
-        </apply>
-      </apply>
-      <apply>
-        <eq/>
-        <apply>
-          <diff/>
-          <bvar>
-            <ci>time</ci>
-          </bvar>
-          <ci>PX</ci>
-        </apply>
-        <apply>
-          <minus/>
-          <apply>
-            <times/>
-            <ci>k_tl</ci>
-            <ci>X</ci>
-          </apply>
-          <apply>
-            <times/>
-            <ci>kd_prot</ci>
-            <ci>PX</ci>
-          </apply>
-        </apply>
-      </apply>
-      <apply>
-        <eq/>
-        <apply>
-          <diff/>
-          <bvar>
-            <ci>time</ci>
-          </bvar>
-          <ci>PY</ci>
-        </apply>
-        <apply>
-          <minus/>
-          <apply>
-            <times/>
-            <ci>k_tl</ci>
-            <ci>Y</ci>
-          </apply>
-          <apply>
-            <times/>
-            <ci>kd_prot</ci>
-            <ci>PY</ci>
-          </apply>
-        </apply>
-      </apply>
-      <apply>
-        <eq/>
-        <apply>
-          <diff/>
-          <bvar>
-            <ci>time</ci>
-          </bvar>
-          <ci>PZ</ci>
-        </apply>
-        <apply>
-          <minus/>
-          <apply>
-            <times/>
-            <ci>k_tl</ci>
-            <ci>Z</ci>
-          </apply>
-          <apply>
-            <times/>
-            <ci>kd_prot</ci>
-            <ci>PZ</ci>
           </apply>
         </apply>
       </apply>

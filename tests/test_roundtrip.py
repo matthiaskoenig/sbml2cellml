@@ -50,6 +50,8 @@ def test_roundtrip_glimepiride_liver(tmp_path: Path) -> None:
         {c.getId() for c in original.getListOfCompartments()}
         | {s.getId() for s in original.getListOfSpecies()}
         | {p.getId() for p in original.getListOfParameters()}
+        # every reaction is a variable of its rate
+        | {r.getId() for r in original.getListOfReactions()}
     )
     assert {p.getId() for p in roundtrip.getListOfParameters()} == original_ids
 

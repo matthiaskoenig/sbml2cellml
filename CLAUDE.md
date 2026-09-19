@@ -93,8 +93,9 @@ on `develop` after the merge.
   Kinetic laws are multiplied with the stoichiometry (no factor for 1) and do
   not change boundary species, the sum is multiplied with the conversion
   factor of the species or model; a
-  species reference with an id is a variable of its stoichiometry, a reaction
-  whose id a formula uses a variable of its rate. A model without rate rules,
+  species reference with an id is a variable of its stoichiometry, every
+  reaction with a kinetic law a variable of its rate (`<reaction id> =
+  kinetic law`), which the equations of its species use. A model without rate rules,
   reactions and uses of time gets no `time` variable (CellML knows the
   variable of integration only from a differential equation); `simulate`
   runs such an algebraic model as a steady state. `_collect_formulas` gathers

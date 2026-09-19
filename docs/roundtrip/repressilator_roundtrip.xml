@@ -17,14 +17,20 @@
           <unit kind="second" exponent="1" scale="0" multiplier="60"/>
         </listOfUnits>
       </unitDefinition>
+      <unitDefinition id="substance_per_time">
+        <listOfUnits>
+          <unit kind="item" exponent="1" scale="0" multiplier="1"/>
+          <unit kind="second" exponent="-1" scale="0" multiplier="60"/>
+        </listOfUnits>
+      </unitDefinition>
     </listOfUnitDefinitions>
     <listOfParameters>
-      <parameter id="PZ" value="0" units="dimensionless" constant="false"/>
       <parameter id="X" value="0" units="dimensionless" constant="false"/>
-      <parameter id="PX" value="0" units="dimensionless" constant="false"/>
       <parameter id="Y" value="20" units="dimensionless" constant="false"/>
-      <parameter id="PY" value="0" units="dimensionless" constant="false"/>
       <parameter id="Z" value="0" units="dimensionless" constant="false"/>
+      <parameter id="PX" value="0" units="dimensionless" constant="false"/>
+      <parameter id="PY" value="0" units="dimensionless" constant="false"/>
+      <parameter id="PZ" value="0" units="dimensionless" constant="false"/>
       <parameter id="tau_mRNA" value="2" units="dimensionless" constant="true"/>
       <parameter id="tau_prot" value="10" units="dimensionless" constant="true"/>
       <parameter id="eff" value="20" units="dimensionless" constant="true"/>
@@ -42,6 +48,18 @@
       <parameter id="kd_mRNA" units="dimensionless" constant="true"/>
       <parameter id="alpha" units="dimensionless" constant="true"/>
       <parameter id="alpha0" units="dimensionless" constant="true"/>
+      <parameter id="Reaction10" units="dimensionless" constant="false"/>
+      <parameter id="Reaction1" units="dimensionless" constant="false"/>
+      <parameter id="Reaction11" units="dimensionless" constant="false"/>
+      <parameter id="Reaction2" units="dimensionless" constant="false"/>
+      <parameter id="Reaction12" units="dimensionless" constant="false"/>
+      <parameter id="Reaction3" units="dimensionless" constant="false"/>
+      <parameter id="Reaction7" units="dimensionless" constant="false"/>
+      <parameter id="Reaction4" units="dimensionless" constant="false"/>
+      <parameter id="Reaction8" units="dimensionless" constant="false"/>
+      <parameter id="Reaction5" units="dimensionless" constant="false"/>
+      <parameter id="Reaction9" units="dimensionless" constant="false"/>
+      <parameter id="Reaction6" units="dimensionless" constant="false"/>
     </listOfParameters>
     <listOfInitialAssignments>
       <initialAssignment symbol="t_ave">
@@ -170,12 +188,148 @@
             <plus/>
             <apply>
               <minus/>
-              <apply>
-                <times/>
-                <ci> kd_mRNA </ci>
-                <ci> X </ci>
-              </apply>
+              <ci> Reaction1 </ci>
             </apply>
+            <ci> Reaction10 </ci>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="Y">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <apply>
+              <minus/>
+              <ci> Reaction2 </ci>
+            </apply>
+            <ci> Reaction11 </ci>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="Z">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <apply>
+              <minus/>
+              <ci> Reaction3 </ci>
+            </apply>
+            <ci> Reaction12 </ci>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="PX">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <ci> Reaction4 </ci>
+            <ci> Reaction7 </ci>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="PY">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <ci> Reaction5 </ci>
+            <ci> Reaction8 </ci>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="PZ">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <ci> Reaction6 </ci>
+            <ci> Reaction9 </ci>
+          </apply>
+        </math>
+      </rateRule>
+      <assignmentRule variable="Reaction1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> kd_mRNA </ci>
+            <ci> X </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="Reaction2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> kd_mRNA </ci>
+            <ci> Y </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="Reaction3">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> kd_mRNA </ci>
+            <ci> Z </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="Reaction4">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> k_tl </ci>
+            <ci> X </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="Reaction5">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> k_tl </ci>
+            <ci> Y </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="Reaction6">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> k_tl </ci>
+            <ci> Z </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="Reaction7">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> kd_prot </ci>
+            <ci> PX </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="Reaction8">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> kd_prot </ci>
+            <ci> PY </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="Reaction9">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> kd_prot </ci>
+            <ci> PZ </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="Reaction10">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
             <ci> a0_tr </ci>
             <apply>
               <divide/>
@@ -204,19 +358,11 @@
             </apply>
           </apply>
         </math>
-      </rateRule>
-      <rateRule variable="Y">
+      </assignmentRule>
+      <assignmentRule variable="Reaction11">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
             <plus/>
-            <apply>
-              <minus/>
-              <apply>
-                <times/>
-                <ci> kd_mRNA </ci>
-                <ci> Y </ci>
-              </apply>
-            </apply>
             <ci> a0_tr </ci>
             <apply>
               <divide/>
@@ -245,19 +391,11 @@
             </apply>
           </apply>
         </math>
-      </rateRule>
-      <rateRule variable="Z">
+      </assignmentRule>
+      <assignmentRule variable="Reaction12">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
             <plus/>
-            <apply>
-              <minus/>
-              <apply>
-                <times/>
-                <ci> kd_mRNA </ci>
-                <ci> Z </ci>
-              </apply>
-            </apply>
             <ci> a0_tr </ci>
             <apply>
               <divide/>
@@ -286,58 +424,7 @@
             </apply>
           </apply>
         </math>
-      </rateRule>
-      <rateRule variable="PX">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <apply>
-            <minus/>
-            <apply>
-              <times/>
-              <ci> k_tl </ci>
-              <ci> X </ci>
-            </apply>
-            <apply>
-              <times/>
-              <ci> kd_prot </ci>
-              <ci> PX </ci>
-            </apply>
-          </apply>
-        </math>
-      </rateRule>
-      <rateRule variable="PY">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <apply>
-            <minus/>
-            <apply>
-              <times/>
-              <ci> k_tl </ci>
-              <ci> Y </ci>
-            </apply>
-            <apply>
-              <times/>
-              <ci> kd_prot </ci>
-              <ci> PY </ci>
-            </apply>
-          </apply>
-        </math>
-      </rateRule>
-      <rateRule variable="PZ">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <apply>
-            <minus/>
-            <apply>
-              <times/>
-              <ci> k_tl </ci>
-              <ci> Z </ci>
-            </apply>
-            <apply>
-              <times/>
-              <ci> kd_prot </ci>
-              <ci> PZ </ci>
-            </apply>
-          </apply>
-        </math>
-      </rateRule>
+      </assignmentRule>
     </listOfRules>
   </model>
 </sbml>
