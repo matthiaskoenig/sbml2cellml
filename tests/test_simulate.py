@@ -153,6 +153,38 @@ def test_run_timecourse_applies_conversion_factors(tmp_path: Path) -> None:
     assert np.allclose(df["S2"], 4.0 + 3.0 * (10.0 - s1) * 2.0 / 2.0, rtol=1e-6)
 
 
+def test_run_timecourse_rate_of(tmp_path: Path) -> None:
+    """rateOf of a reaction species, a rate rule target and a constant."""
+    model_sbml = simple_model("rate_of")
+    for pid in ("rate_s1", "rate_x", "rate_k1", "x"):
+        p = model_sbml.createParameter()
+        p.setId(pid)
+        p.setConstant(False)
+    model_sbml.getParameter("x").setValue(1.0)
+    rule = model_sbml.createRateRule()
+    rule.setVariable("x")
+    rule.setMath(libsbml.parseL3Formula("rateOf(S1)"))  # nested: dx/dt = d[S1]/dt
+    for variable, target in (("rate_s1", "S1"), ("rate_x", "x"), ("rate_k1", "k1")):
+        assignment = model_sbml.createAssignmentRule()
+        assignment.setVariable(variable)
+        assignment.setMath(libsbml.parseL3Formula(f"rateOf({target})"))
+    sbml_path = write_sbml(tmp_path / "rate_of.xml", model_sbml)
+    cellml_path = tmp_path / "rate_of.cellml"
+    convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
+    df, _ = run_timecourse(
+        cellml_path,
+        end=4.0,
+        steps=8,
+        relative_tolerance=1e-10,
+        absolute_tolerance=1e-12,
+    )
+    # d[S1]/dt = -k1 [S1] / cell = -0.25 [S1]
+    assert np.allclose(df["rate_s1"], -0.25 * df["S1"], rtol=1e-6)
+    assert np.allclose(df["rate_x"], df["rate_s1"], rtol=1e-6)
+    assert np.allclose(df["x"], 1.0 + df["S1"] - 10.0, rtol=1e-6)
+    assert np.allclose(df["rate_k1"], 0.0)
+
+
 def test_run_timecourse_missing_file(tmp_path: Path) -> None:
     with pytest.raises(SimulationError):
         run_timecourse(tmp_path / "missing.cellml")

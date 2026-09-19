@@ -48,7 +48,9 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | unit definition | not yet, every variable is `dimensionless` |
 | numbers in formulas | real numbers, `dimensionless` when they have no units; SBML unit definitions on numbers not yet |
 | time and avogadro symbols | the variable of integration `time`, the number 6.02214179e23 |
-| delay and rateOf symbols | not yet |
+| rateOf symbol | the right-hand side of the differential equation of its variable, 0 without one |
+| delay symbol | not yet |
+| rule or kinetic law without math | ignored, it has no effect |
 | initial assignment | evaluated to the initial value (not to NaN, a warning is logged) |
 | infinite or NaN value | the equation `x = INF` (or `-INF`, `NaN`), not for a state |
 | function definition | calls replaced by the body of the function |

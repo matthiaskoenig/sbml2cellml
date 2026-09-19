@@ -75,7 +75,10 @@ on `develop` after the merge.
   whose id a formula uses a variable of its rate. A model without rate rules,
   reactions and uses of time gets no `time` variable (CellML knows the
   variable of integration only from a differential equation); `simulate`
-  runs such an algebraic model as a steady state. An infinite or NaN value of
+  runs such an algebraic model as a steady state. `_collect_formulas` gathers
+  all formulas before the initial assignments are evaluated (they do not
+  depend on initial values) and replaces `rateOf(x)` by the right-hand side
+  of the equation of `x`, also in the initial assignments. An infinite or NaN value of
   a variable which is not a state becomes an equation. Events, algebraic
   rules, unevaluated initial assignments and unset initial values (set to 1.0)
   are logged as warnings. The generated CellML is a fixed contract: tests compare the

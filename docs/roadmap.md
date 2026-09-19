@@ -15,7 +15,8 @@
 - **N-ary relations** such as `a > b > c` are not split into binary ones; CellML only has binary relations.
 - **Time without differential equations.** CellML knows the variable of integration only from a differential equation: a model without one has no `time` variable, and a formula using time in such a model cannot be converted.
 - **An SBML id `time`** collides with the variable of integration `time` of the CellML model and with the time column of the simulation results.
-- **The delay and rateOf symbols** are not converted: CellML has no delays, and `rateOf(x)` would have to become the right-hand side of the equation of `x`.
+- **The delay symbol** is not converted, CellML has no delays.
+- **rateOf** of a variable whose rate depends on itself, or which an assignment rule sets, is not converted; in an initial assignment neither when the rate has a local parameter.
 - **Unset initial values** of variables which no assignment rule or initial assignment sets are `1.0`, with a warning.
 
 ### CellML to SBML
