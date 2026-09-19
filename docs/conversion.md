@@ -45,10 +45,27 @@ An application configures the `sbml2cellml` logger like any other logger.
 sbml2cellml model.xml                      # writes model.cellml next to the input
 sbml2cellml model.xml -o out/model.cellml  # explicit output
 sbml2cellml model.xml --no-validate        # write even if libcellml reports errors
+sbml2cellml model.xml --no-metadata        # do not write model.rdf
 sbml2cellml model.xml -v                   # log the conversion steps
 ```
 
 The command exits with 1 and the message on stderr when the input does not exist, has no model, or the validation fails.
+
+### Metadata
+
+CellML 2.0 has no place for metadata: the elements of a model must be in the CellML or MathML namespace, and the only thing a model offers to the outside is the `id` of an element. The names, notes, SBO terms, annotations and the history of the SBML model therefore go into an RDF/XML file next to the CellML file, `model.rdf` for `model.cellml`, in which `model.cellml#<id>` is the subject of an element. The model, every variable and all units have an `id` for this: a variable its name, units `units_<name>`, the model its name. A model without metadata has no file, and `metadata=False` or `--no-metadata` writes none.
+
+The RDF is the one of SBML annotations, written and parsed by libsbml, so an annotation looks as in the SBML file (a level 2 model gives the RDF of level 3):
+
+| SBML | RDF |
+| --- | --- |
+| `name` | `dcterms:title` (not when the name is the id) |
+| `notes` | `dcterms:description` with `rdf:parseType="Literal"`, the XHTML as it is |
+| `sboTerm` | the first `bqbiol:is` (`bqmodel:is` for the model) with the single resource `https://identifiers.org/SBO:0000252` |
+| CV terms | `bqbiol:*` and `bqmodel:*` with an `rdf:Bag` of resources, nested terms included |
+| history | `dcterms:creator` (vCard 4), `dcterms:created`, `dcterms:modified` |
+
+The elements with metadata are the ones with a CellML element: the model, compartments, species, parameters, local parameters, species references with an id, reactions (the variable of the rate) and unit definitions. [`convert_cellml2sbml`](#cellml-to-sbml) reads the file back, so the metadata survives the roundtrip; the [roundtrip example](roundtrip.md) shows the files.
 
 ### Units
 
@@ -70,7 +87,7 @@ The variables get units when the unit annotation of the SBML model is complete, 
 SBML level 1 and 2 have the units `substance`, `time`, `volume`, `area` and `length` built in, which count as set. Units which are not set are unknown in SBML, not dimensionless: when the units of one variable are missing, all variables stay `dimensionless` and a warning names the variables without units. The values are the same either way, CellML does not convert units within a component.
 
 
-`examples/models/` in the repository holds the glimepiride models of [matthiaskoenig/glconversion-issues.mdmodel](https://github.com/matthiaskoenig/glimepiride-model), which `examples/glimepiride_example.py` converts. All of them convert to valid CellML; their unit annotation is complete, so the CellML variables have the units of the SBML models.
+`examples/models/` in the repository holds the glimepiride models of [matthiaskoenig/glimepiride-model](https://github.com/matthiaskoenig/glimepiride-model), which `examples/glimepiride_example.py` converts. All of them convert to valid CellML; their unit annotation is complete, so the CellML variables have the units of the SBML models.
 
 ## CellML to SBML
 
@@ -89,6 +106,7 @@ or on the command line:
 cellml2sbml model.cellml                 # writes model.xml next to the input
 cellml2sbml model.cellml -o out/model.xml
 cellml2sbml model.cellml --no-validate   # write even if libsbml reports errors
+cellml2sbml model.cellml --no-metadata   # do not read model.rdf
 cellml2sbml model.cellml -v
 ```
 
@@ -114,6 +132,7 @@ CellML has no species, compartments or reactions: every variable becomes a param
 | reset | event with the trigger `test_variable == test_value`, priority `-order`, one event assignment |
 | components and connections | one flat namespace; a variable name used by several unconnected variables is prefixed with its component (`cell_x`), the CellML name is kept as `name`; the model id and event ids also get a numeric suffix when they collide with a variable id |
 | imports | resolved and flattened before the conversion |
+| metadata in `model.rdf` next to `model.cellml`, see [Metadata](#metadata) | name, notes, SBO term, CV terms and history of the parameter of the variable, the unit definition of the units and the model with that `id`; the `id` is the `metaid` |
 | implicit equation (`a + s = 5`, a model of type DAE or NLA) | algebraic rule `0 = a + s - 5`, the unknown a `parameter constant="false"` with its initial value (the guess of the solver) |
 | model which cannot be analysed (e.g. underconstrained) | CellML2SBMLConversionError |
 

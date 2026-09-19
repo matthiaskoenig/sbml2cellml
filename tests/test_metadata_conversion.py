@@ -8,6 +8,7 @@ from sbml2cellml import convert_cellml2sbml, convert_sbml2cellml
 from sbml2cellml.cli import main, main_cellml2sbml
 from sbml2cellml.metadata import read_metadata
 from sbml2cellml.sbml import validate_document
+from tests.conftest import MODELS_DIR
 from tests.sbml_models import (
     annotated_model,
     annotated_species,
@@ -141,3 +142,30 @@ def test_cli_no_metadata(tmp_path: Path) -> None:
     assert main_cellml2sbml([str(cellml_path), "-o", str(out)]) == 0
     doc = libsbml.readSBMLFromFile(str(out))
     assert doc.getModel().getParameter("S1").getSBOTermID() == "SBO:0000247"
+
+
+def test_roundtrip_of_the_annotated_repressilator(tmp_path: Path) -> None:
+    """BIOMD0000000012, SBML level 2 with the annotations of BioModels."""
+    cellml_path = tmp_path / "repressilator.cellml"
+    convert_sbml2cellml(MODELS_DIR / "repressilator.xml", cellml_path=cellml_path)
+    doc = convert_cellml2sbml(cellml_path)
+    assert validate_document(doc) == []
+    model: libsbml.Model = doc.getModel()
+
+    assert model.getName() == "Elowitz2000 - Repressilator"
+    assert "deterministic version of the repressilator" in model.getNotesString()
+    assert model.getModelHistory().getNumCreators() == 5
+    assert model.getNumCVTerms() == 5
+    protein: libsbml.Parameter = model.getParameter("PX")
+    assert protein.getName() == "LacI protein"
+    assert protein.getSBOTermID() == "SBO:0000252"
+    assert "lacI inhibitor" in protein.getNotesString()
+    assert (
+        protein.getCVTerm(0).getResourceURI(0)
+        == "http://identifiers.org/uniprot/P03023"
+    )
+    reaction: libsbml.Parameter = model.getParameter("Reaction1")
+    assert reaction.getName() == "degradation of LacI transcripts"
+    assert reaction.getSBOTermID() == "SBO:0000179"
+    assert reaction.getNumCVTerms() == 1
+    assert model.getUnitDefinition("volume").getName() == "cubic microns"

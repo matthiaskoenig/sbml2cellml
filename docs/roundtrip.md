@@ -5,10 +5,10 @@ The example converts the repressilator from SBML to CellML and back to SBML and 
 | | model | simulator |
 | --- | --- | --- |
 | 1 | SBML `examples/models/repressilator.xml` | roadrunner |
-| 2 | CellML, converted from 1 with `sbml2cellml` | libopencor |
+| 2 | CellML, converted from 1 with `sbml2cellml`, with the metadata of 1 as RDF next to it | libopencor |
 | 3 | SBML, converted from 2 with `cellml2sbml` | roadrunner |
 
-The repressilator of [Elowitz and Leibler (2000)](https://doi.org/10.1038/35002125) is a ring of three genes whose proteins LacI, TetR and cI each repress the transcription of the next gene, which makes the protein numbers oscillate. The model is [BIOMD0000000012](https://www.ebi.ac.uk/biomodels/BIOMD0000000012) of BioModels (SBML level 2 version 3, CC0) without its notes and annotations, which the converter does not convert.
+The repressilator of [Elowitz and Leibler (2000)](https://doi.org/10.1038/35002125) is a ring of three genes whose proteins LacI, TetR and cI each repress the transcription of the next gene, which makes the protein numbers oscillate. The model is [BIOMD0000000012](https://www.ebi.ac.uk/biomodels/BIOMD0000000012) of BioModels (SBML level 2 version 3, CC0) with its names, notes and annotations, which CellML has no place for: they go into an RDF file next to the CellML model and come back in the SBML model of the roundtrip, see [Metadata](conversion.md#metadata).
 
 ## Run the example
 
@@ -19,11 +19,11 @@ uv sync --extra dev
 uv run python examples/repressilator_example.py
 ```
 
-The models, the timecourses and the figure go to `examples/results/`.
+The models, the metadata, the timecourses and the figure go to `examples/results/`.
 
 ## Convert
 
-Two calls convert the model in both directions, each validates its result (libcellml for the CellML model, libsbml for the SBML model):
+Two calls convert the model in both directions, each validates its result (libcellml for the CellML model, libsbml for the SBML model). The first one writes `repressilator.rdf` next to `repressilator.cellml`, the second one reads it:
 
 ```python
 from pathlib import Path
@@ -49,7 +49,7 @@ cellml2sbml repressilator.cellml -o repressilator_roundtrip.xml
 
 === "1 SBML"
 
-    The six species (three mRNAs, three proteins) are amounts in the compartment `cell`, twelve reactions transcribe, translate and degrade them. Assignment rules compute the rate constants from the half lifes and the promoter strengths.
+    The six species (three mRNAs, three proteins) are amounts in the compartment `cell`, twelve reactions transcribe, translate and degrade them. Assignment rules compute the rate constants from the half lifes and the promoter strengths. The model, the species and the reactions have names, notes, SBO terms and annotations.
 
     ```{ .xml .listing title="examples/models/repressilator.xml" }
     --8<-- "examples/models/repressilator.xml"
@@ -57,7 +57,7 @@ cellml2sbml repressilator.cellml -o repressilator_roundtrip.xml
 
 === "2 CellML"
 
-    One component `sbml` with a variable for the compartment, every parameter and every species and the variable of integration `time`. The assignment rules are equations, the kinetic laws of the reactions the terms of one differential equation per species. CellML has no reactions: which reaction a term comes from is not part of the model.
+    One component `sbml` with a variable for the compartment, every parameter, every species and the rate of every reaction, and the variable of integration `time`. The assignment rules and the kinetic laws are equations, the rates of its reactions the differential equation of a species. Every element has an `id`, which the metadata points at.
 
     The variables are `dimensionless`: the parameters of the SBML model have no units, and the units are only converted when the annotation is complete, see [Units](conversion.md#units).
 
@@ -65,9 +65,17 @@ cellml2sbml repressilator.cellml -o repressilator_roundtrip.xml
     --8<-- "docs/roundtrip/repressilator.cellml"
     ```
 
+=== "2 RDF"
+
+    The names (`dcterms:title`), notes (`dcterms:description`), SBO terms (the first `bqbiol:is`), annotations and the history of the SBML elements, with `repressilator.cellml#<id>` as subject. The RDF is the one of the SBML annotations, in the form of SBML level 3.
+
+    ```{ .xml .listing title="repressilator.rdf" }
+    --8<-- "docs/roundtrip/repressilator.rdf"
+    ```
+
 === "3 SBML of the roundtrip"
 
-    CellML has neither compartments nor species: every variable comes back as a parameter, the differential equations as rate rules, the equations as assignment rules, or as initial assignments when they compute a constant, see [CellML to SBML](conversion.md#mapping). The mathematics is the one of the first model, its biological structure is not.
+    CellML has neither compartments nor species: every variable comes back as a parameter, the differential equations as rate rules, the equations as assignment rules, or as initial assignments when they compute a constant, see [CellML to SBML](conversion.md#mapping). The mathematics is the one of the first model, its biological structure is not. The metadata is back: a species is a parameter, but with its name, its notes, its SBO term and its annotations, and the model has its history.
 
     ```{ .xml .listing title="repressilator_roundtrip.xml" }
     --8<-- "docs/roundtrip/repressilator_roundtrip.xml"

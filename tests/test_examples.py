@@ -58,5 +58,9 @@ def test_roundtrip_example_matches_the_documentation(
     for name in ("repressilator.svg", "repressilator_dark.svg"):
         assert (results / name).is_file()
     documented = EXAMPLES_DIR.parent / "docs" / "roundtrip"
-    for name in ("repressilator.cellml", "repressilator_roundtrip.xml"):
+    for name in (
+        "repressilator.cellml",
+        "repressilator.rdf",
+        "repressilator_roundtrip.xml",
+    ):
         assert (results / name).read_text() == (documented / name).read_text()

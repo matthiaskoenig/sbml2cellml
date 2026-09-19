@@ -10,6 +10,7 @@ The API reference is generated from the docstrings of the package.
 | [sbml](sbml.md) | Reading, writing and validating SBML documents with libsbml |
 | [mathml](mathml.md) | MathML fragments of the equations |
 | [astnodes](astnodes.md) | Construction of formulas as libsbml ASTs |
+| [metadata](metadata.md) | Names, notes and annotations of the SBML elements as RDF next to the CellML model |
 | [sbmlmath](sbmlmath.md) | CellML maths (analyser AST, MathML) to libsbml ASTs |
 | [units](units.md) | CellML units to SBML unit definitions |
 | [cellmlunits](cellmlunits.md) | SBML units to CellML units, the units of the variables |

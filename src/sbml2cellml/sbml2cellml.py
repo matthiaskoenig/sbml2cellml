@@ -1456,10 +1456,14 @@ def _replace_rate_of(
 def _stoichiometry_factor(
     reaction_id: str, reference: libsbml.SpeciesReference
 ) -> libsbml.ASTNode | None:
-    """Factor of the kinetic law for a species reference, `None` for 1."""
+    """Factor of the kinetic law for a species reference, `None` for 1.
+
+    A stoichiometry which is not set is 1 in SBML level 1 and 2 and unknown
+    in level 3, where 1.0 is used with a warning.
+    """
     if reference.isSetId():
         return astnodes.name(reference.getId())
-    if not reference.isSetStoichiometry():
+    if not reference.isSetStoichiometry() and reference.getLevel() >= 3:
         logger.warning(
             "Stoichiometry of '%s' in reaction '%s' is not set, using 1.0.",
             reference.getSpecies(),

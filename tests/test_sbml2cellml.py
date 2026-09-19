@@ -534,6 +534,23 @@ def test_reaction_id_in_a_formula_is_the_rate(tmp_path: Path) -> None:
     assert "r1" in variables(model)
 
 
+def test_default_stoichiometry_of_level_2_logs_no_warning(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    """A stoichiometry which is not set is 1 in level 2 and unknown in level 3."""
+    sbml_path = MODELS_DIR / "repressilator.xml"  # level 2, no stoichiometries
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        convert_sbml2cellml(sbml_path)
+    assert "Stoichiometry" not in caplog.text
+
+    model_sbml = simple_model("unset_stoichiometry")
+    model_sbml.getReaction("r1").getReactant(0).unsetStoichiometry()
+    sbml_path = write_sbml(tmp_path / "unset_stoichiometry.xml", model_sbml)
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        convert_sbml2cellml(sbml_path)
+    assert "Stoichiometry of 'S1' in reaction 'r1' is not set" in caplog.text
+
+
 def test_every_reaction_is_a_variable_of_its_rate(tmp_path: Path) -> None:
     """The species equations are sums of the rates of the reactions."""
     sbml_path = write_sbml(tmp_path / "simple.xml", simple_model())

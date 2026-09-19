@@ -7,6 +7,7 @@ Features include
 
 - conversion of compartments, parameters, species, assignment and rate rules and reactions into a single CellML component
 - conversion of the units: unit definitions, the units of numbers and, for a model with a complete unit annotation, the units of every variable
+- names, notes, SBO terms, annotations and the model history as RDF next to the CellML model, restored in the conversion back to SBML
 - conversion of CellML models to SBML: parameters with rules, unit definitions and units of numbers, resets as events, imports resolved
 - validation of the result with libcellml
 - timecourse simulation of the SBML with roadrunner and of the CellML with libopencor, both optional
