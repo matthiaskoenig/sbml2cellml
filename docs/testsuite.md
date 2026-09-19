@@ -13,11 +13,11 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | --- | --- | --- | --- | --- |
 | reference | 1384 | 151 | 0 | 90.2% |
 | sbml2cellml | 1420 | 115 | 0 | 92.5% |
-| libopencor | 857 | 563 | 115 | 55.8% |
+| libopencor | 896 | 524 | 115 | 58.4% |
 | cellml2sbml | 1420 | 0 | 115 | 92.5% |
-| roundtrip | 857 | 563 | 115 | 55.8% |
+| roundtrip | 896 | 524 | 115 | 58.4% |
 
-767 of the 857 cases with a passing libopencor stage are informative: the reference moves more than the tolerance band for at least one variable.
+806 of the 896 cases with a passing libopencor stage are informative: the reference moves more than the tolerance band for at least one variable.
 
 ## Failure reasons
 
@@ -50,7 +50,7 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 
 | reason | cases | examples |
 | --- | --- | --- |
-| numerical mismatch | 561 | 00026, 00039, 00040, 00041, 00051, 00052, 00053, 00071, 00072, 00073, ... (561 in total) |
+| numerical mismatch | 522 | 00026, 00039, 00040, 00041, 00051, 00052, 00053, 00071, 00072, 00073, ... (522 in total) |
 | SimulationFailure: libopencor: SimulationError: result: the name '...' occurs twice | 2 | 01820, 01821 |
 
 | tags | cases | examples |
@@ -75,8 +75,6 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 0D-Compartment, Amount | 7 | 00362, 00365, 00368, 00419, 00425, 00543, 00546 |
 | Amount, ConstantSpecies | 7 | 00384, 00385, 00386, 00441, 00443, 00555, 00556 |
 | EventUsesAssignmentTimeValues, NonConstantParameter | 7 | 00980, 01325, 01329, 01331, 01529, 01604, 01702 |
-| Amount, ConversionFactors, InitialValueReassigned | 6 | 01642, 01643, 01644, 01775, 01776, 01777 |
-| Amount, ConversionFactors, LocalParameters | 6 | 01648, 01649, 01650, 01739, 01740, 01741 |
 | NonConstantParameter, UncommonMathML | 6 | 01212, 01213, 01530, 01531, 01532, 01533 |
 | Amount, AssignedVariableStoichiometry, InitialValueReassigned, NonUnityStoichiometry | 5 | 01444, 01445, 01446, 01447, 01448 |
 | Amount, BoundaryCondition, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment, VolumeConcentrationRates | 5 | 01504, 01505, 01506, 01507, 01512 |
@@ -87,19 +85,10 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | Amount, ConversionFactors, InitialValueReassigned, NonConstantParameter | 4 | 01484, 01499, 01500, 01501 |
 | Amount, HasOnlySubstanceUnits, LocalParameters, NonConstantParameter, NonUnityCompartment, NonUnityStoichiometry, SpeciesReferenceInMath | 4 | 01769, 01770, 01771, 01772 |
 | EventIsPersistent, NonConstantParameter | 4 | 00454, 01525, 01660, 01759 |
-| Amount, AssignedConstantStoichiometry, BoundaryCondition, ConversionFactors, InitialValueReassigned, NonUnityStoichiometry | 3 | 01733, 01734, 01735 |
-| Amount, AssignedConstantStoichiometry, ConversionFactors, InitialValueReassigned, NonUnityStoichiometry | 3 | 01724, 01725, 01726 |
-| Amount, AssignedVariableStoichiometry, BoundaryCondition, ConversionFactors, NonUnityStoichiometry | 3 | 01736, 01737, 01738 |
-| Amount, AssignedVariableStoichiometry, ConversionFactors, NonUnityStoichiometry | 3 | 01727, 01728, 01729 |
-| Amount, BoundaryCondition, ConversionFactors | 3 | 01730, 01731, 01732 |
-| Amount, ConversionFactors, EventIsNotPersistent | 3 | 01678, 01679, 01680 |
 | Amount, ConversionFactors, EventIsPersistent | 3 | 01675, 01676, 01677 |
 | Amount, ConversionFactors, EventT0Firing | 3 | 01684, 01685, 01686 |
 | Amount, ConversionFactors, EventUsesAssignmentTimeValues | 3 | 01690, 01691, 01692 |
 | Amount, ConversionFactors, EventUsesTriggerTimeValues | 3 | 01687, 01688, 01689 |
-| Amount, ConversionFactors, HasOnlySubstanceUnits, NonUnityCompartment | 3 | 01645, 01646, 01647 |
-| Amount, ConversionFactors, InitialValueReassigned, NonUnityStoichiometry, SpeciesReferenceInMath | 3 | 01651, 01652, 01653 |
-| Amount, ConversionFactors, NonUnityStoichiometry | 3 | 00975, 00976, 00977 |
 | Amount, EventUsesTriggerTimeValues | 3 | 00456, 00457, 00458 |
 | Amount, InitialValueReassigned, LocalParameters | 3 | 00565, 00705, 00708 |
 | BoolNumericSwap, NonConstantParameter | 3 | 01285, 01286, 01287 |
@@ -197,7 +186,7 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 
 | reason | cases | examples |
 | --- | --- | --- |
-| numerical mismatch | 561 | 00026, 00039, 00040, 00041, 00051, 00052, 00053, 00071, 00072, 00073, ... (561 in total) |
+| numerical mismatch | 522 | 00026, 00039, 00040, 00041, 00051, 00052, 00053, 00071, 00072, 00073, ... (522 in total) |
 | CompareError: duplicate column names in the simulation result | 2 | 01820, 01821 |
 
 | tags | cases | examples |
@@ -222,8 +211,6 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 0D-Compartment, Amount | 7 | 00362, 00365, 00368, 00419, 00425, 00543, 00546 |
 | Amount, ConstantSpecies | 7 | 00384, 00385, 00386, 00441, 00443, 00555, 00556 |
 | EventUsesAssignmentTimeValues, NonConstantParameter | 7 | 00980, 01325, 01329, 01331, 01529, 01604, 01702 |
-| Amount, ConversionFactors, InitialValueReassigned | 6 | 01642, 01643, 01644, 01775, 01776, 01777 |
-| Amount, ConversionFactors, LocalParameters | 6 | 01648, 01649, 01650, 01739, 01740, 01741 |
 | NonConstantParameter, UncommonMathML | 6 | 01212, 01213, 01530, 01531, 01532, 01533 |
 | Amount, AssignedVariableStoichiometry, InitialValueReassigned, NonUnityStoichiometry | 5 | 01444, 01445, 01446, 01447, 01448 |
 | Amount, BoundaryCondition, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment, VolumeConcentrationRates | 5 | 01504, 01505, 01506, 01507, 01512 |
@@ -234,19 +221,10 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | Amount, ConversionFactors, InitialValueReassigned, NonConstantParameter | 4 | 01484, 01499, 01500, 01501 |
 | Amount, HasOnlySubstanceUnits, LocalParameters, NonConstantParameter, NonUnityCompartment, NonUnityStoichiometry, SpeciesReferenceInMath | 4 | 01769, 01770, 01771, 01772 |
 | EventIsPersistent, NonConstantParameter | 4 | 00454, 01525, 01660, 01759 |
-| Amount, AssignedConstantStoichiometry, BoundaryCondition, ConversionFactors, InitialValueReassigned, NonUnityStoichiometry | 3 | 01733, 01734, 01735 |
-| Amount, AssignedConstantStoichiometry, ConversionFactors, InitialValueReassigned, NonUnityStoichiometry | 3 | 01724, 01725, 01726 |
-| Amount, AssignedVariableStoichiometry, BoundaryCondition, ConversionFactors, NonUnityStoichiometry | 3 | 01736, 01737, 01738 |
-| Amount, AssignedVariableStoichiometry, ConversionFactors, NonUnityStoichiometry | 3 | 01727, 01728, 01729 |
-| Amount, BoundaryCondition, ConversionFactors | 3 | 01730, 01731, 01732 |
-| Amount, ConversionFactors, EventIsNotPersistent | 3 | 01678, 01679, 01680 |
 | Amount, ConversionFactors, EventIsPersistent | 3 | 01675, 01676, 01677 |
 | Amount, ConversionFactors, EventT0Firing | 3 | 01684, 01685, 01686 |
 | Amount, ConversionFactors, EventUsesAssignmentTimeValues | 3 | 01690, 01691, 01692 |
 | Amount, ConversionFactors, EventUsesTriggerTimeValues | 3 | 01687, 01688, 01689 |
-| Amount, ConversionFactors, HasOnlySubstanceUnits, NonUnityCompartment | 3 | 01645, 01646, 01647 |
-| Amount, ConversionFactors, InitialValueReassigned, NonUnityStoichiometry, SpeciesReferenceInMath | 3 | 01651, 01652, 01653 |
-| Amount, ConversionFactors, NonUnityStoichiometry | 3 | 00975, 00976, 00977 |
 | Amount, EventUsesTriggerTimeValues | 3 | 00456, 00457, 00458 |
 | Amount, InitialValueReassigned, LocalParameters | 3 | 00565, 00705, 00708 |
 | BoolNumericSwap, NonConstantParameter | 3 | 01285, 01286, 01287 |
@@ -1278,9 +1256,9 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 00971 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 00972 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 00974 | AssignmentRule, Compartment, InitialAssignment, Parameter, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
-| 00975 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 00976 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 00977 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 00975 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 00976 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 00977 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 00978 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | fail | yes |
 | 00979 | CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | fail | yes |
 | 00980 | CSymbolTime, EventWithDelay, Parameter | pass | pass | fail | pass | fail | yes |
@@ -1732,18 +1710,18 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 01633 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01635 | Compartment, RateRule, Reaction, Species | pass | pass | pass | pass | pass | no |
 | 01641 | CSymbolAvogadro, CSymbolTime, InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
-| 01642 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01643 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01644 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01645 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01646 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01647 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01648 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01649 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01650 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01651 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01652 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01653 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01642 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01643 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01644 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01645 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01646 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01647 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01648 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01649 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01650 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01651 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01652 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01653 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01654 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01655 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01657 | AssignmentRule, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
@@ -1767,9 +1745,9 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 01675 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01676 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01677 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01678 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01679 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01680 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01678 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01679 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01680 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01681 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01682 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01683 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
@@ -1813,24 +1791,24 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 01721 | CSymbolTime, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01722 | CSymbolAvogadro, Compartment, InitialAssignment, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01723 | CSymbolAvogadro, Compartment, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
-| 01724 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01725 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01726 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01727 | Compartment, Parameter, RateRule, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01728 | Compartment, Parameter, RateRule, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01729 | Compartment, Parameter, RateRule, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01730 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01731 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01732 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01733 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01734 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01735 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01736 | Compartment, Parameter, RateRule, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01737 | Compartment, Parameter, RateRule, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01738 | Compartment, Parameter, RateRule, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01739 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01740 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01741 | Compartment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01724 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01725 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01726 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01727 | Compartment, Parameter, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01728 | Compartment, Parameter, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01729 | Compartment, Parameter, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01730 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01731 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01732 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01733 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01734 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01735 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01736 | Compartment, Parameter, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01737 | Compartment, Parameter, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01738 | Compartment, Parameter, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01739 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01740 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01741 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01742 | Compartment, FunctionDefinition, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01744 | AssignmentRule, CSymbolTime, Compartment, FunctionDefinition, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01746 | Compartment, InitialAssignment, Reaction, Species | pass | pass | pass | pass | pass | yes |
@@ -1854,9 +1832,9 @@ A `reference` failure means roadrunner itself cannot simulate the case (algebrai
 | 01772 | Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01773 | Compartment, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01774 | Compartment, Reaction, Species | pass | pass | pass | pass | pass | yes |
-| 01775 | CSymbolAvogadro, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01776 | CSymbolAvogadro, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01777 | CSymbolAvogadro, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01775 | CSymbolAvogadro, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01776 | CSymbolAvogadro, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01777 | CSymbolAvogadro, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01779 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, Species | pass | pass | fail | pass | fail | yes |
 | 01780 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, Species | pass | pass | fail | pass | fail | yes |
 | 01781 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |

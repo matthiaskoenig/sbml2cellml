@@ -123,6 +123,36 @@ def test_run_timecourse_boundary_species_is_not_changed_by_reactions(
     assert np.allclose(df["S2"], 4.0 + 5.0 * df["time"])
 
 
+def test_run_timecourse_applies_conversion_factors(tmp_path: Path) -> None:
+    """The species factor (S1: 2) wins over the model factor (S2: 3).
+
+    d[S1]/dt = -2 k1 [S1] / cell, so [S1] = 10 exp(-0.5 t); the amount S2
+    grows three times as fast as the reaction runs.
+    """
+    model_sbml = simple_model("factors")
+    for pid, value in (("cf_model", 3.0), ("cf_s1", 2.0)):
+        p = model_sbml.createParameter()
+        p.setId(pid)
+        p.setValue(value)
+        p.setConstant(True)
+    model_sbml.setConversionFactor("cf_model")
+    model_sbml.getSpecies("S1").setConversionFactor("cf_s1")
+    sbml_path = write_sbml(tmp_path / "factors.xml", model_sbml)
+    cellml_path = tmp_path / "factors.cellml"
+    convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
+    df, _ = run_timecourse(
+        cellml_path,
+        end=4.0,
+        steps=8,
+        relative_tolerance=1e-10,
+        absolute_tolerance=1e-12,
+    )
+    s1 = 10.0 * np.exp(-0.5 * df["time"])
+    assert np.allclose(df["S1"], s1, rtol=1e-6)
+    # S1 lost (10 - s1) * cell / 2 of reaction extent in amount, S2 gains 3 times that
+    assert np.allclose(df["S2"], 4.0 + 3.0 * (10.0 - s1) * 2.0 / 2.0, rtol=1e-6)
+
+
 def test_run_timecourse_missing_file(tmp_path: Path) -> None:
     with pytest.raises(SimulationError):
         run_timecourse(tmp_path / "missing.cellml")

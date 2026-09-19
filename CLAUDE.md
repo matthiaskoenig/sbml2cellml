@@ -69,7 +69,8 @@ on `develop` after the merge.
   gets its reaction terms divided by the compartment. The local parameters of
   a kinetic law become variables `<reaction>_<parameter>` (`unique_sid`).
   Kinetic laws are multiplied with the stoichiometry (no factor for 1) and do
-  not change boundary species; a
+  not change boundary species, the sum is multiplied with the conversion
+  factor of the species or model; a
   species reference with an id is a variable of its stoichiometry, a reaction
   whose id a formula uses a variable of its rate. A model without rate rules,
   reactions and uses of time gets no `time` variable (CellML knows the
