@@ -25,13 +25,14 @@ import sys
 from pathlib import Path
 
 from sbml2cellml import __version__, log
+from sbml2cellml.biomodels.cases import ABSOLUTE, DURATION, RELATIVE, STEPS
 from sbml2cellml.biomodels.models import (
     load_selection,
     query_curated_ids,
     write_selection,
 )
 from sbml2cellml.biomodels.runner import run_biomodels
-from sbml2cellml.testsuite.report import write_report
+from sbml2cellml.testsuite.report import tolerance_text, write_report
 from sbml2cellml.testsuite.results import STAGES, SuiteResult, improvements, regressions
 
 DEFAULT_MODELS = Path("biomodels") / "models.json"
@@ -48,15 +49,20 @@ DOWNLOAD_FAILURE_FRACTION = 0.05
 BIOMODELS_INTRO = (
     "Manually curated SBML models of [BioModels](https://www.biomodels.org) "
     "(the ids in `biomodels/models.json`). Every model is simulated with "
-    "roadrunner over 0 to 100 time units in 100 steps (`reference`), converted "
-    "to CellML (`sbml2cellml`), simulated with libopencor (`libopencor`), "
-    "converted back to SBML (`cellml2sbml`) and simulated with roadrunner again "
-    "(`roundtrip`); the two later simulations are compared with the reference "
-    "for every species and every other variable set by a rate rule or an "
-    "assignment rule, with a relative tolerance of 1e-3 and an absolute "
-    "tolerance of 1e-6. A `reference` failure means roadrunner cannot simulate "
-    "the model, it says nothing about the converters. See "
-    "[Development](development.md#biomodels) for how to run it."
+    f"roadrunner over 0 to {DURATION:g} time units in {STEPS} steps (`roadrunner`), "
+    "converted to CellML (`sbml2cellml`), simulated with libopencor "
+    "(`libopencor`), converted back to SBML (`cellml2sbml`) and simulated with "
+    "roadrunner again (`roundtrip`). See "
+    "[Development](development.md#biomodels) for how to run it.\n\n"
+    "The models have no expected results: the `libopencor` and the `roundtrip` "
+    "simulation are compared with the `roadrunner` simulation of the original "
+    "model for every species and every other variable set by a rate rule or an "
+    "assignment rule. A value passes when "
+    "`|value - expected| <= absolute + relative * |expected|` with a relative "
+    f"tolerance of `{tolerance_text(RELATIVE)}` and an absolute tolerance of "
+    f"`{tolerance_text(ABSOLUTE)}`. {{solver}}\n\n"
+    "A `roadrunner` failure means roadrunner cannot simulate the model, it says "
+    "nothing about the converters."
 )
 
 

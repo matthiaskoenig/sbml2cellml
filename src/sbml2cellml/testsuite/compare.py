@@ -124,7 +124,7 @@ def is_informative(expected: pd.DataFrame, settings: Settings) -> bool:
 
     Args:
         expected: the expected frame, i.e. the case's expected results or,
-            when there are none, the reference simulation.
+            when there are none, the roadrunner simulation of the original model.
         settings: settings of the case (variables and tolerances).
 
     Returns:

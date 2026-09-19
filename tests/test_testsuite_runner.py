@@ -15,7 +15,7 @@ from sbml2cellml.testsuite.runner import (
     SOLVER_SETTINGS,
     _message,
     _simulate,
-    reference_selections,
+    roadrunner_selections,
     run_suite,
 )
 from sbml2cellml.testsuite.worker import SimulationFailure, SimulatorWorker
@@ -24,23 +24,26 @@ from tests.sbml_models import simple_model, write_sbml
 FIXTURES = Path(__file__).parent / "data" / "testsuite" / "semantic"
 
 
-def test_message_drops_wrapper_line_when_first_ends_with_colon() -> None:
-    # the wrapper line ("CellML model ... has N errors:") is dropped
-    # entirely, not just appended to, so the digit count of N never shifts
-    # a later truncation and splits one issue across several report rows
+def test_message_keeps_every_line() -> None:
+    # the report shows the complete error, e.g. every issue of a validation
     class CellMLValidationError(Exception):
         pass
 
     err = CellMLValidationError(
-        "CellML model 'x' converted from '/some/path' has 4 errors:\n"
-        "  - the first issue\n"
-        "  - the second issue"
+        "CellML model 'x' converted from '/some/path' has 2 errors:\n"
+        "[ERROR] the first issue  \n"
+        "[ERROR] the second issue\n"
     )
-    message = _message(err)
-    assert message.startswith("CellMLValidationError: ")
-    assert "has 4 errors:" not in message
-    assert "the first issue" in message
-    assert "the second issue" not in message
+    assert _message(err) == (
+        "CellMLValidationError: CellML model 'x' converted from 'path' has 2 errors:\n"
+        "[ERROR] the first issue\n"
+        "[ERROR] the second issue"
+    )
+
+
+def test_message_is_not_shortened() -> None:
+    text = "the variable " + ", ".join(f"S{k}" for k in range(500)) + " is missing"
+    assert _message(ValueError(text)) == f"ValueError: {text}"
 
 
 def test_message_single_line_unchanged() -> None:
@@ -67,16 +70,23 @@ def test_message_rounds_long_decimals() -> None:
     assert "0.0828" in message
 
 
-def test_reference_selections() -> None:
+def test_message_keeps_long_decimals_outside_integrator_failures() -> None:
+    # a constant of the model in the code a compiler error points at is no
+    # artifact of the machine, and rounding it would shift the marker below
+    text = "Compiler: expression is not assignable:\n  1 | x = --0.00166112956810631;"
+    assert _message(RuntimeError(text)) == f"RuntimeError: {text}"
+
+
+def test_roadrunner_selections() -> None:
     case = load_cases(FIXTURES, ids=["00001"])[0]
     model = libsbml.readSBMLFromFile(str(case.sbml_path)).getModel()
     # 00001 expects amounts
-    assert reference_selections(case, model) == ["S1", "S2"]
+    assert roadrunner_selections(case, model) == ["S1", "S2"]
     concentration = dataclasses.replace(
         case.settings, amount=frozenset(), concentration=frozenset({"S1", "S2"})
     )
     case_c = dataclasses.replace(case, settings=concentration)
-    assert reference_selections(case_c, model) == ["[S1]", "[S2]"]
+    assert roadrunner_selections(case_c, model) == ["[S1]", "[S2]"]
 
 
 def test_run_suite_on_fixtures(tmp_path: Path) -> None:
@@ -93,7 +103,7 @@ def test_run_suite_on_fixtures(tmp_path: Path) -> None:
         for stage in case.stages.values():
             assert stage.status in STATUSES
     first = result.cases["00001"].stages
-    assert first["reference"].status == "pass", first["reference"].message
+    assert first["roadrunner"].status == "pass", first["roadrunner"].message
     assert first["sbml2cellml"].status == "pass", first["sbml2cellml"].message
     assert (tmp_path / "00001.cellml").is_file()
     # a stage after a failed conversion is skipped, never run
@@ -146,8 +156,8 @@ def test_run_suite_setup_failure(tmp_path: Path) -> None:
         assert stage.message.startswith("setup:"), stage.message
 
 
-def test_run_suite_without_expected_uses_reference(tmp_path: Path) -> None:
-    """A case without expected results is compared against the reference."""
+def test_run_suite_without_expected_uses_roadrunner(tmp_path: Path) -> None:
+    """A case without expected results is compared against roadrunner."""
     import dataclasses
 
     case = load_cases(FIXTURES, ids=["00001"])[0]
@@ -155,14 +165,15 @@ def test_run_suite_without_expected_uses_reference(tmp_path: Path) -> None:
     result = run_suite([case], tmp_path)
     stages = result.cases["00001"].stages
     assert (
-        stages["reference"].status == "pass" and stages["reference"].max_excess is None
+        stages["roadrunner"].status == "pass"
+        and stages["roadrunner"].max_excess is None
     )
     for stage in ("sbml2cellml", "libopencor", "cellml2sbml", "roundtrip"):
         assert stages[stage].status == "pass", (stage, stages[stage].message)
     assert result.cases["00001"].name == "first case"
 
 
-def test_run_suite_reference_failure_skips_simulations(tmp_path: Path) -> None:
+def test_run_suite_roadrunner_failure_skips_simulations(tmp_path: Path) -> None:
     import dataclasses
     import shutil
 
@@ -181,10 +192,10 @@ def test_run_suite_reference_failure_skips_simulations(tmp_path: Path) -> None:
     case = dataclasses.replace(load_cases(root)[0], expected=None)
     result = run_suite([case], tmp_path / "work")
     stages = result.cases["00001"].stages
-    assert stages["reference"].status == "fail"
+    assert stages["roadrunner"].status == "fail"
     assert (
         stages["libopencor"].status == "skip"
-        and "reference failed" in stages["libopencor"].message
+        and "roadrunner failed" in stages["libopencor"].message
     )
     assert stages["roundtrip"].status == "skip"
     assert stages["sbml2cellml"].status in ("pass", "fail")
@@ -230,7 +241,7 @@ def test_run_suite_converts_quantities(tmp_path: Path) -> None:
     )
     result = run_suite(load_cases(case_dir.parent), tmp_path / "work")
     stages = result.cases["90001"].stages
-    for name in ("reference", "sbml2cellml", "libopencor", "cellml2sbml", "roundtrip"):
+    for name in ("roadrunner", "sbml2cellml", "libopencor", "cellml2sbml", "roundtrip"):
         assert stages[name].status == "pass", f"{name}: {stages[name].message}"
 
 

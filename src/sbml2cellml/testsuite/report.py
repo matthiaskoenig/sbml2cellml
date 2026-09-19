@@ -6,32 +6,70 @@ from pathlib import Path, PurePosixPath
 
 from sbml2cellml.testsuite.figure import dark_path, write_figures
 from sbml2cellml.testsuite.results import STAGES, SuiteResult
+from sbml2cellml.testsuite.runner import SOLVER_SETTINGS
 
 #: intro paragraphs of the SBML test suite report
 TESTSUITE_INTRO = (
     "Semantic test cases of the [SBML test suite](https://github.com/sbmlteam/sbml-test-suite) "
-    "{suite}. Every case is simulated with roadrunner (`reference`), converted to "
+    "{suite}. Every case is simulated with roadrunner (`roadrunner`), converted to "
     "CellML (`sbml2cellml`), simulated with libopencor (`libopencor`), converted back to SBML "
-    "(`cellml2sbml`) and simulated with roadrunner again (`roundtrip`); every simulation is "
-    "compared with the expected results using the tolerances of the case. See "
+    "(`cellml2sbml`) and simulated with roadrunner again (`roundtrip`). See "
     "[Development](development.md#sbml-test-suite) for how to run it.\n\n"
-    "A `reference` failure means roadrunner itself cannot simulate the case (algebraic rules, "
+    "Every simulation is compared with the expected results of the case: a value passes when "
+    "`|value - expected| <= absolute + relative * |expected|` with the absolute and the "
+    "relative tolerance of the settings of the case. {solver}\n\n"
+    "A `roadrunner` failure means roadrunner itself cannot simulate the case (algebraic rules, "
     "delays), it says nothing about the converters."
 )
 #: bar diagram of the SBML test suite report, relative to the report; written
 #: by `sbml2cellml.testsuite.figure.write_figures`
 TESTSUITE_FIGURE = "images/testsuite.svg"
-#: case ids listed per failure reason
-CASES_PER_REASON = 10
-#: length of a grouped failure reason
-REASON_LENGTH = 160
-#: quoted text, e.g. the model id and path of a CellMLValidationError
+#: reason of the cases whose values exceed the tolerance of the comparison
+MISMATCH = "numerical mismatch"
+#: quoted text, e.g. the formula of an algebraic rule roadrunner does not support
 _QUOTED = re.compile(r"'[^']*'")
 #: a number preceded by a space, `(`, `,` or `=`, so identifiers such as
 #: `S1` are left untouched; `nan` and `inf` count as numbers too
 _NUMBER = re.compile(r"(?<=[ (,=])(?:nan|inf|[\d][\d.e+-]*)")
 #: a tolerance failure, whose variable names are not the cause
 _TOLERANCE = re.compile(r"exceeds the tolerance")
+
+
+def tolerance_text(value: float) -> str:
+    """A tolerance as it is written in the documentation, e.g. `1e-9`.
+
+    Args:
+        value: a tolerance.
+
+    Returns:
+        The scientific notation without the zeros of the mantissa and the
+        exponent, e.g. `1e-3` and `2.5e-4`.
+    """
+    mantissa, exponent = f"{value:e}".split("e")
+    return f"{mantissa.rstrip('0').rstrip('.')}e{int(exponent)}"
+
+
+def solver_text() -> str:
+    """Sentences on the solver settings of the simulations of a report.
+
+    Returns:
+        The tolerances and the number of internal steps of
+        `sbml2cellml.testsuite.runner.SOLVER_SETTINGS`, so that the reports
+        document the settings the simulations ran with.
+    """
+    tight, *relaxed = (
+        f"`{tolerance_text(settings['relative_tolerance'])}`/"
+        f"`{tolerance_text(settings['absolute_tolerance'])}`"
+        for settings in SOLVER_SETTINGS
+    )
+    steps = SOLVER_SETTINGS[0]["maximum_number_of_steps"]
+    return (
+        "Both simulators integrate with CVODE with tight tolerances "
+        f"(relative/absolute {tight}) and up to {steps} internal steps between "
+        "two time points, so the comparison measures the conversion and not "
+        "the integrator; only when CVODE gives up with these tolerances the "
+        f"simulation is repeated with {' and '.join(relaxed)}."
+    )
 
 
 def _cell(text: str) -> str:
@@ -51,37 +89,54 @@ def _reason(message: str) -> str:
     """Group key of a failure message.
 
     Args:
-        message: a stage failure message.
+        message: a stage failure message, possibly of several lines.
 
     Returns:
-        For a message containing `[ERROR]` (a `CellMLValidationError` whose
-        text continues with the first libcellml issue), the exception type
-        plus the text after the first `[ERROR] `, so messages differing only
-        in the model name, path and error count group into one row. For a
-        tolerance failure (`... exceeds the tolerance ...`), the single
-        reason `numerical mismatch`, since the variable name is not the
-        cause. Otherwise the message with quoted text replaced by `'...'`,
-        numbers (including `nan` and `inf`) replaced by `N` and cut before
-        ` by N` when present. Whitespace is collapsed and the result
-        truncated to `REASON_LENGTH` characters.
+        For a message containing `[ERROR]` (a `CellMLValidationError`, a
+        line on the model followed by the libcellml issues), the exception
+        type plus the first issue, so messages differing only in the model
+        name, path and the number and the rest of the issues are one group.
+        For a tolerance failure (`... exceeds the tolerance ...`), the single
+        reason `MISMATCH`, since the variable name is not the cause.
+        Otherwise the first line of the message. Quoted text and numbers
+        (including `nan` and `inf`) are dropped from the key and whitespace
+        is collapsed. The key only groups the cases, the report shows the
+        complete messages.
     """
+    if _TOLERANCE.search(message):
+        return MISMATCH
     if "[ERROR]" in message:
         exception_type = message.split(":", 1)[0]
-        # split on "[ERROR]" without the trailing space and strip instead,
-        # so a message that ends exactly with "[ERROR]" (no text after)
-        # does not raise IndexError
-        after = message.split("[ERROR]", 1)[1].strip()
-        after = _QUOTED.sub("'...'", after)
-        after = _NUMBER.sub("N", after)
-        reason = f"{exception_type}: {after}"
-    elif _TOLERANCE.search(message):
-        reason = "numerical mismatch"
+        # nothing may follow the marker, so no index into the lines
+        issue = message.split("[ERROR]", 1)[1].strip().split("\n", 1)[0]
+        reason = f"{exception_type}: {issue}"
     else:
-        reason = _QUOTED.sub("'...'", message)
-        reason = _NUMBER.sub("N", reason)
-        reason = reason.split(" by N")[0]
-    reason = " ".join(reason.split())
-    return reason[:REASON_LENGTH]
+        reason = message.strip().split("\n", 1)[0]
+    reason = _QUOTED.sub("''", reason)
+    reason = _NUMBER.sub("N", reason)
+    return " ".join(reason.split())
+
+
+def _errors(result: SuiteResult, ids: list[str], stage: str) -> list[str]:
+    """Fenced block with the complete failure messages of cases.
+
+    Args:
+        result: a suite run.
+        ids: ids of cases which fail the stage.
+        stage: a stage.
+
+    Returns:
+        The lines of the block, `id: message` per case; the further lines of
+        a message are indented. A fenced block shows the message verbatim,
+        whatever markdown syntax it contains.
+    """
+    lines = ["```text"]
+    for cid in ids:
+        first, *rest = result.cases[cid].stages[stage].message.split("\n")
+        lines.append(f"{cid}: {first}")
+        lines += [f"    {line}" if line else "" for line in rest]
+    lines.append("```")
+    return lines
 
 
 def render_report(
@@ -98,7 +153,7 @@ def render_report(
         result: a suite run.
         title: page title, the level-1 heading.
         intro: intro text right after the title; `{suite}` is replaced with
-            `result.suite`.
+            `result.suite` and `{solver}` with `solver_text`.
         command: command named in the generated-by header.
         names: whether the cases table gets a `name` column.
         figure: path of the bar diagram relative to the report, shown in the
@@ -112,7 +167,7 @@ def render_report(
         f"<!-- generated by {command}, do not edit -->",
         f"# {title}",
         "",
-        intro.format(suite=result.suite),
+        intro.format(suite=result.suite, solver=solver_text()),
         "",
         "## Summary",
         "",
@@ -150,38 +205,38 @@ def render_report(
         lines += [
             "",
             f"{informative} of the {len(passing_libopencor)} cases with a passing "
-            "libopencor stage are informative: the reference moves more than the "
-            "tolerance band for at least one variable.",
+            "libopencor stage are informative: the expected results move more "
+            "than the tolerance band for at least one variable.",
         ]
 
-    lines += ["", "## Failure reasons", ""]
+    lines += [
+        "",
+        "## Failure reasons",
+        "",
+        "The cases which fail a stage, grouped by their error: errors which "
+        "differ only in quoted text, numbers and, for the validation of a "
+        "CellML model, the issues after the first one are one group. Every "
+        "case is listed with its complete error.",
+        "",
+    ]
     for stage in STAGES:
         groups: dict[str, list[str]] = defaultdict(list)
-        mismatch_ids: list[str] = []
         for cid, case in sorted(result.cases.items()):
             stage_result = case.stages[stage]
             if stage_result.status == "fail":
-                reason = _reason(stage_result.message)
-                groups[reason].append(cid)
-                if reason == "numerical mismatch":
-                    mismatch_ids.append(cid)
+                groups[_reason(stage_result.message)].append(cid)
         if not groups:
             continue
         failed = sum(len(ids) for ids in groups.values())
-        lines += [
-            f"### {stage}",
-            "",
-            f"{failed} of {total} cases fail.",
-            "",
-            "| reason | cases | examples |",
-            "| --- | --- | --- |",
-        ]
+        lines += [f"### {stage}", "", f"{failed} of {total} cases fail.", ""]
         for reason, ids in sorted(
             groups.items(), key=lambda item: (-len(item[1]), item[0])
         ):
-            examples = ", ".join(ids[:CASES_PER_REASON])
-            more = f", ... ({len(ids)} in total)" if len(ids) > CASES_PER_REASON else ""
-            lines.append(f"| {_cell(reason)} | {len(ids)} | {examples}{more} |")
+            cases = "1 case" if len(ids) == 1 else f"{len(ids)} cases"
+            if reason == MISMATCH:
+                cases += f", {MISMATCH}"
+            lines += [f"**{cases}**", "", *_errors(result, ids, stage), ""]
+        mismatch_ids = groups.get(MISMATCH, [])
         if mismatch_ids:
             tag_groups: dict[str, list[str]] = defaultdict(list)
             for cid in mismatch_ids:
@@ -190,18 +245,17 @@ def render_report(
             # omitted when every group is empty (e.g. BioModels cases, which
             # carry no test tags), since the table would say nothing then
             if any(tag_groups):
-                lines += ["", "| tags | cases | examples |", "| --- | --- | --- |"]
+                lines += [
+                    f"The test tags of the cases with a {MISMATCH}:",
+                    "",
+                    "| tags | cases | ids |",
+                    "| --- | --- | --- |",
+                ]
                 for tags, ids in sorted(
                     tag_groups.items(), key=lambda item: (-len(item[1]), item[0])
                 ):
-                    examples = ", ".join(ids[:CASES_PER_REASON])
-                    more = (
-                        f", ... ({len(ids)} in total)"
-                        if len(ids) > CASES_PER_REASON
-                        else ""
-                    )
-                    lines.append(f"| {tags} | {len(ids)} | {examples}{more} |")
-        lines.append("")
+                    lines.append(f"| {tags} | {len(ids)} | {', '.join(ids)} |")
+                lines.append("")
 
     lines += ["## Skipped cases", "", "| reason | cases |", "| --- | --- |"]
     for reason, count in sorted(Counter(result.skipped.values()).items()):
@@ -251,7 +305,7 @@ def write_report(
         path: markdown file, overwritten.
         title: page title, the level-1 heading.
         intro: intro text right after the title; `{suite}` is replaced with
-            `result.suite`.
+            `result.suite` and `{solver}` with `solver_text`.
         command: command named in the generated-by header.
         names: whether the cases table gets a `name` column.
         figure: path of the bar diagram relative to the report, written for

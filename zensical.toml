@@ -9,6 +9,7 @@ copyright = 'Copyright &copy; 2025-2026 <a href="https://livermetabolism.com">Ma
 repo_url = "https://github.com/matthiaskoenig/sbml2cellml"
 repo_name = "matthiaskoenig/sbml2cellml"
 edit_uri = "edit/develop/docs/"
+extra_css = ["stylesheets/extra.css"]
 
 nav = [
   { "Home" = "index.md" },

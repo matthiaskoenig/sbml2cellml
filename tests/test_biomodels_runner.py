@@ -110,9 +110,9 @@ def test_run_biomodels(tmp_path: Path) -> None:
     case_a = result.cases["BIOMD_A"]
     assert case_a.name == INFO_A.name
     assert set(case_a.stages) == set(STAGES)
-    assert case_a.stages["reference"].status == "pass"
+    assert case_a.stages["roadrunner"].status == "pass"
     assert case_a.stages["sbml2cellml"].status == "pass"
-    # the liver model has no dose, so the reference, libopencor and roundtrip
+    # the liver model has no dose, so the roadrunner, libopencor and roundtrip
     # trajectories are all constant zero and the tolerance comparison passes
     # trivially; still asserted explicitly, not merely "not fail"
     assert case_a.stages["libopencor"].status == "pass"

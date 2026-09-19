@@ -23,7 +23,7 @@ cellml2sbml model.cellml -o model.xml
 In the SBML to CellML direction events and delays are not converted yet, see the [conversion issues](https://matthiaskoenig.github.io/sbml2cellml/conversion-issues/).
 
 # SBML test suite
-Every semantic case of the [SBML test suite](https://github.com/sbmlteam/sbml-test-suite) is simulated with roadrunner (`reference`), converted to CellML (`sbml2cellml`), simulated with libopencor (`libopencor`), converted back to SBML (`cellml2sbml`) and simulated with roadrunner again (`roundtrip`). The details are on the [SBML test suite](https://matthiaskoenig.github.io/sbml2cellml/testsuite/) page.
+Every semantic case of the [SBML test suite](https://github.com/sbmlteam/sbml-test-suite) is simulated with roadrunner (`roadrunner`), converted to CellML (`sbml2cellml`), simulated with libopencor (`libopencor`), converted back to SBML (`cellml2sbml`) and simulated with roadrunner again (`roundtrip`). The details are on the [SBML test suite](https://matthiaskoenig.github.io/sbml2cellml/testsuite/) page.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/testsuite_dark.svg">
@@ -31,7 +31,7 @@ Every semantic case of the [SBML test suite](https://github.com/sbmlteam/sbml-te
 </picture>
 
 # BioModels
-The manually curated SBML models of [BioModels](https://www.biomodels.org) go through the same roundtrip. They have no expected results, so the roadrunner simulation of the original model over 100 time units (`reference`) is what the libopencor simulation of the CellML (`libopencor`) and the roadrunner simulation of the SBML converted back (`roundtrip`) are compared with. The details are on the [BioModels](https://matthiaskoenig.github.io/sbml2cellml/biomodels/) page.
+The manually curated SBML models of [BioModels](https://www.biomodels.org) go through the same roundtrip. They have no expected results, so the roadrunner simulation of the original model over 100 time units (`roadrunner`) is what the libopencor simulation of the CellML (`libopencor`) and the roadrunner simulation of the SBML converted back (`roundtrip`) are compared with. The details are on the [BioModels](https://matthiaskoenig.github.io/sbml2cellml/biomodels/) page.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/biomodels_dark.svg">
