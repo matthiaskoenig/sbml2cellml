@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/2.0#" name="BIOMD0000000012">
+  <units name="volume">
+    <unit prefix="femto" units="litre"/>
+  </units>
+  <units name="item"/>
+  <units name="substance">
+    <unit units="item"/>
+  </units>
+  <units name="time">
+    <unit multiplier="60" units="second"/>
+  </units>
+  <component name="sbml">
+    <variable name="time" units="dimensionless"/>
+    <variable name="cell" units="dimensionless" initial_value="1"/>
+    <variable name="beta" units="dimensionless"/>
+    <variable name="alpha0" units="dimensionless"/>
+    <variable name="alpha" units="dimensionless"/>
+    <variable name="eff" units="dimensionless" initial_value="20"/>
+    <variable name="n" units="dimensionless" initial_value="2"/>
+    <variable name="KM" units="dimensionless" initial_value="40"/>
+    <variable name="tau_mRNA" units="dimensionless" initial_value="2"/>
+    <variable name="tau_prot" units="dimensionless" initial_value="10"/>
+    <variable name="t_ave" units="dimensionless"/>
+    <variable name="kd_mRNA" units="dimensionless"/>
+    <variable name="kd_prot" units="dimensionless"/>
+    <variable name="k_tl" units="dimensionless"/>
+    <variable name="a_tr" units="dimensionless"/>
+    <variable name="ps_a" units="dimensionless" initial_value="0.5"/>
+    <variable name="ps_0" units="dimensionless" initial_value="0.0005"/>
+    <variable name="a0_tr" units="dimensionless"/>
+    <variable name="PX" units="dimensionless" initial_value="0"/>
+    <variable name="PY" units="dimensionless" initial_value="0"/>
+    <variable name="PZ" units="dimensionless" initial_value="0"/>
+    <variable name="X" units="dimensionless" initial_value="0"/>
+    <variable name="Y" units="dimensionless" initial_value="20"/>
+    <variable name="Z" units="dimensionless" initial_value="0"/>
+    <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/2.0#">
+      <apply>
+        <eq/>
+        <ci>t_ave</ci>
+        <apply>
+          <divide/>
+          <ci>tau_mRNA</ci>
+          <apply>
+            <ln/>
+            <cn cellml:units="dimensionless">2</cn>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>beta</ci>
+        <apply>
+          <divide/>
+          <ci>tau_mRNA</ci>
+          <ci>tau_prot</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>k_tl</ci>
+        <apply>
+          <divide/>
+          <ci>eff</ci>
+          <ci>t_ave</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>a_tr</ci>
+        <apply>
+          <times/>
+          <apply>
+            <minus/>
+            <ci>ps_a</ci>
+            <ci>ps_0</ci>
+          </apply>
+          <cn cellml:units="dimensionless">60</cn>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>a0_tr</ci>
+        <apply>
+          <times/>
+          <ci>ps_0</ci>
+          <cn cellml:units="dimensionless">60</cn>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>kd_prot</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <ln/>
+            <cn cellml:units="dimensionless">2</cn>
+          </apply>
+          <ci>tau_prot</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>kd_mRNA</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <ln/>
+            <cn cellml:units="dimensionless">2</cn>
+          </apply>
+          <ci>tau_mRNA</ci>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>alpha</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <ci>a_tr</ci>
+            <ci>eff</ci>
+            <ci>tau_prot</ci>
+          </apply>
+          <apply>
+            <times/>
+            <apply>
+              <ln/>
+              <cn cellml:units="dimensionless">2</cn>
+            </apply>
+            <ci>KM</ci>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <ci>alpha0</ci>
+        <apply>
+          <divide/>
+          <apply>
+            <times/>
+            <ci>a0_tr</ci>
+            <ci>eff</ci>
+            <ci>tau_prot</ci>
+          </apply>
+          <apply>
+            <times/>
+            <apply>
+              <ln/>
+              <cn cellml:units="dimensionless">2</cn>
+            </apply>
+            <ci>KM</ci>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>X</ci>
+        </apply>
+        <apply>
+          <plus/>
+          <apply>
+            <minus/>
+            <apply>
+              <times/>
+              <ci>kd_mRNA</ci>
+              <ci>X</ci>
+            </apply>
+          </apply>
+          <ci>a0_tr</ci>
+          <apply>
+            <divide/>
+            <apply>
+              <times/>
+              <ci>a_tr</ci>
+              <apply>
+                <power/>
+                <ci>KM</ci>
+                <ci>n</ci>
+              </apply>
+            </apply>
+            <apply>
+              <plus/>
+              <apply>
+                <power/>
+                <ci>KM</ci>
+                <ci>n</ci>
+              </apply>
+              <apply>
+                <power/>
+                <ci>PZ</ci>
+                <ci>n</ci>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>Y</ci>
+        </apply>
+        <apply>
+          <plus/>
+          <apply>
+            <minus/>
+            <apply>
+              <times/>
+              <ci>kd_mRNA</ci>
+              <ci>Y</ci>
+            </apply>
+          </apply>
+          <ci>a0_tr</ci>
+          <apply>
+            <divide/>
+            <apply>
+              <times/>
+              <ci>a_tr</ci>
+              <apply>
+                <power/>
+                <ci>KM</ci>
+                <ci>n</ci>
+              </apply>
+            </apply>
+            <apply>
+              <plus/>
+              <apply>
+                <power/>
+                <ci>KM</ci>
+                <ci>n</ci>
+              </apply>
+              <apply>
+                <power/>
+                <ci>PX</ci>
+                <ci>n</ci>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>Z</ci>
+        </apply>
+        <apply>
+          <plus/>
+          <apply>
+            <minus/>
+            <apply>
+              <times/>
+              <ci>kd_mRNA</ci>
+              <ci>Z</ci>
+            </apply>
+          </apply>
+          <ci>a0_tr</ci>
+          <apply>
+            <divide/>
+            <apply>
+              <times/>
+              <ci>a_tr</ci>
+              <apply>
+                <power/>
+                <ci>KM</ci>
+                <ci>n</ci>
+              </apply>
+            </apply>
+            <apply>
+              <plus/>
+              <apply>
+                <power/>
+                <ci>KM</ci>
+                <ci>n</ci>
+              </apply>
+              <apply>
+                <power/>
+                <ci>PY</ci>
+                <ci>n</ci>
+              </apply>
+            </apply>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>PX</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <times/>
+            <ci>k_tl</ci>
+            <ci>X</ci>
+          </apply>
+          <apply>
+            <times/>
+            <ci>kd_prot</ci>
+            <ci>PX</ci>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>PY</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <times/>
+            <ci>k_tl</ci>
+            <ci>Y</ci>
+          </apply>
+          <apply>
+            <times/>
+            <ci>kd_prot</ci>
+            <ci>PY</ci>
+          </apply>
+        </apply>
+      </apply>
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar>
+            <ci>time</ci>
+          </bvar>
+          <ci>PZ</ci>
+        </apply>
+        <apply>
+          <minus/>
+          <apply>
+            <times/>
+            <ci>k_tl</ci>
+            <ci>Z</ci>
+          </apply>
+          <apply>
+            <times/>
+            <ci>kd_prot</ci>
+            <ci>PZ</ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+  </component>
+</model>

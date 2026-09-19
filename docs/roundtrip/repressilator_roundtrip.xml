@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version2/core" level="3" version="2">
+  <model id="BIOMD0000000012" name="BIOMD0000000012" timeUnits="dimensionless">
+    <listOfUnitDefinitions>
+      <unitDefinition id="volume">
+        <listOfUnits>
+          <unit kind="litre" exponent="1" scale="-15" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="substance">
+        <listOfUnits>
+          <unit kind="item" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="time">
+        <listOfUnits>
+          <unit kind="second" exponent="1" scale="0" multiplier="60"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfParameters>
+      <parameter id="PZ" value="0" units="dimensionless" constant="false"/>
+      <parameter id="X" value="0" units="dimensionless" constant="false"/>
+      <parameter id="PX" value="0" units="dimensionless" constant="false"/>
+      <parameter id="Y" value="20" units="dimensionless" constant="false"/>
+      <parameter id="PY" value="0" units="dimensionless" constant="false"/>
+      <parameter id="Z" value="0" units="dimensionless" constant="false"/>
+      <parameter id="tau_mRNA" value="2" units="dimensionless" constant="true"/>
+      <parameter id="tau_prot" value="10" units="dimensionless" constant="true"/>
+      <parameter id="eff" value="20" units="dimensionless" constant="true"/>
+      <parameter id="ps_0" value="0.0005" units="dimensionless" constant="true"/>
+      <parameter id="ps_a" value="0.5" units="dimensionless" constant="true"/>
+      <parameter id="KM" value="40" units="dimensionless" constant="true"/>
+      <parameter id="n" value="2" units="dimensionless" constant="true"/>
+      <parameter id="cell" value="1" units="dimensionless" constant="true"/>
+      <parameter id="t_ave" units="dimensionless" constant="true"/>
+      <parameter id="beta" units="dimensionless" constant="true"/>
+      <parameter id="k_tl" units="dimensionless" constant="true"/>
+      <parameter id="a_tr" units="dimensionless" constant="true"/>
+      <parameter id="a0_tr" units="dimensionless" constant="true"/>
+      <parameter id="kd_prot" units="dimensionless" constant="true"/>
+      <parameter id="kd_mRNA" units="dimensionless" constant="true"/>
+      <parameter id="alpha" units="dimensionless" constant="true"/>
+      <parameter id="alpha0" units="dimensionless" constant="true"/>
+    </listOfParameters>
+    <listOfInitialAssignments>
+      <initialAssignment symbol="t_ave">
+        <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:sbml="http://www.sbml.org/sbml/level3/version2/core">
+          <apply>
+            <divide/>
+            <ci> tau_mRNA </ci>
+            <apply>
+              <ln/>
+              <cn sbml:units="dimensionless"> 2 </cn>
+            </apply>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="beta">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <divide/>
+            <ci> tau_mRNA </ci>
+            <ci> tau_prot </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="k_tl">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <divide/>
+            <ci> eff </ci>
+            <ci> t_ave </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="a_tr">
+        <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:sbml="http://www.sbml.org/sbml/level3/version2/core">
+          <apply>
+            <times/>
+            <apply>
+              <minus/>
+              <ci> ps_a </ci>
+              <ci> ps_0 </ci>
+            </apply>
+            <cn sbml:units="dimensionless"> 60 </cn>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="a0_tr">
+        <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:sbml="http://www.sbml.org/sbml/level3/version2/core">
+          <apply>
+            <times/>
+            <ci> ps_0 </ci>
+            <cn sbml:units="dimensionless"> 60 </cn>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="kd_prot">
+        <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:sbml="http://www.sbml.org/sbml/level3/version2/core">
+          <apply>
+            <divide/>
+            <apply>
+              <ln/>
+              <cn sbml:units="dimensionless"> 2 </cn>
+            </apply>
+            <ci> tau_prot </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="kd_mRNA">
+        <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:sbml="http://www.sbml.org/sbml/level3/version2/core">
+          <apply>
+            <divide/>
+            <apply>
+              <ln/>
+              <cn sbml:units="dimensionless"> 2 </cn>
+            </apply>
+            <ci> tau_mRNA </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="alpha">
+        <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:sbml="http://www.sbml.org/sbml/level3/version2/core">
+          <apply>
+            <divide/>
+            <apply>
+              <times/>
+              <ci> a_tr </ci>
+              <ci> eff </ci>
+              <ci> tau_prot </ci>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <ln/>
+                <cn sbml:units="dimensionless"> 2 </cn>
+              </apply>
+              <ci> KM </ci>
+            </apply>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="alpha0">
+        <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:sbml="http://www.sbml.org/sbml/level3/version2/core">
+          <apply>
+            <divide/>
+            <apply>
+              <times/>
+              <ci> a0_tr </ci>
+              <ci> eff </ci>
+              <ci> tau_prot </ci>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <ln/>
+                <cn sbml:units="dimensionless"> 2 </cn>
+              </apply>
+              <ci> KM </ci>
+            </apply>
+          </apply>
+        </math>
+      </initialAssignment>
+    </listOfInitialAssignments>
+    <listOfRules>
+      <rateRule variable="X">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <apply>
+              <minus/>
+              <apply>
+                <times/>
+                <ci> kd_mRNA </ci>
+                <ci> X </ci>
+              </apply>
+            </apply>
+            <ci> a0_tr </ci>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> a_tr </ci>
+                <apply>
+                  <power/>
+                  <ci> KM </ci>
+                  <ci> n </ci>
+                </apply>
+              </apply>
+              <apply>
+                <plus/>
+                <apply>
+                  <power/>
+                  <ci> KM </ci>
+                  <ci> n </ci>
+                </apply>
+                <apply>
+                  <power/>
+                  <ci> PZ </ci>
+                  <ci> n </ci>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="Y">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <apply>
+              <minus/>
+              <apply>
+                <times/>
+                <ci> kd_mRNA </ci>
+                <ci> Y </ci>
+              </apply>
+            </apply>
+            <ci> a0_tr </ci>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> a_tr </ci>
+                <apply>
+                  <power/>
+                  <ci> KM </ci>
+                  <ci> n </ci>
+                </apply>
+              </apply>
+              <apply>
+                <plus/>
+                <apply>
+                  <power/>
+                  <ci> KM </ci>
+                  <ci> n </ci>
+                </apply>
+                <apply>
+                  <power/>
+                  <ci> PX </ci>
+                  <ci> n </ci>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="Z">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <apply>
+              <minus/>
+              <apply>
+                <times/>
+                <ci> kd_mRNA </ci>
+                <ci> Z </ci>
+              </apply>
+            </apply>
+            <ci> a0_tr </ci>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> a_tr </ci>
+                <apply>
+                  <power/>
+                  <ci> KM </ci>
+                  <ci> n </ci>
+                </apply>
+              </apply>
+              <apply>
+                <plus/>
+                <apply>
+                  <power/>
+                  <ci> KM </ci>
+                  <ci> n </ci>
+                </apply>
+                <apply>
+                  <power/>
+                  <ci> PY </ci>
+                  <ci> n </ci>
+                </apply>
+              </apply>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="PX">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <times/>
+              <ci> k_tl </ci>
+              <ci> X </ci>
+            </apply>
+            <apply>
+              <times/>
+              <ci> kd_prot </ci>
+              <ci> PX </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="PY">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <times/>
+              <ci> k_tl </ci>
+              <ci> Y </ci>
+            </apply>
+            <apply>
+              <times/>
+              <ci> kd_prot </ci>
+              <ci> PY </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="PZ">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <times/>
+              <ci> k_tl </ci>
+              <ci> Z </ci>
+            </apply>
+            <apply>
+              <times/>
+              <ci> kd_prot </ci>
+              <ci> PZ </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+    </listOfRules>
+  </model>
+</sbml>

@@ -30,7 +30,7 @@ sbml2cellml model.xml -o model.cellml
 cellml2sbml model.cellml -o model.xml
 ```
 
-The conversion is validated with [libcellml](https://libcellml.org/); the resulting file can be simulated with [libopencor](https://opencor.ws/libopencor/) and compared with the roadrunner simulation of the SBML model, see [Simulation](simulation.md).
+The conversion is validated with [libcellml](https://libcellml.org/); the resulting file can be simulated with [libopencor](https://opencor.ws/libopencor/) and compared with the roadrunner simulation of the SBML model, see [Simulation](simulation.md). The [roundtrip example](roundtrip.md) shows the complete pipeline for the repressilator: the scripts, the three models and their simulations side by side.
 
 ## What is converted
 

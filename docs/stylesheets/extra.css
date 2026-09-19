@@ -11,3 +11,10 @@
   padding-left: 4ch;
   text-indent: -4ch;
 }
+
+/* A complete model or script in a page (`{ .xml .listing }`): a window of
+   fixed height which scrolls, so the page stays readable. */
+.md-typeset .listing pre > code {
+  max-height: 32rem;
+  overflow-y: auto;
+}

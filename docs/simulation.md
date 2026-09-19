@@ -58,4 +58,4 @@ A model without differential equations has no variable of integration (the conve
 
 libopencor reports a model it cannot simulate, e.g., an invalid or underconstrained model, as issues, which are raised as `SimulationError`, as are two result columns of the same name (the component prefix of the names is dropped). Without libopencor the import of `sbml2cellml.simulate` works, `run_timecourse` raises an `ImportError` with the installation hint.
 
-`examples/cellml_example.py` builds a small model with libcellml directly and simulates it.
+`examples/cellml_example.py` builds a small model with libcellml directly and simulates it. The [roundtrip example](roundtrip.md) simulates an SBML model, its CellML conversion and the SBML model of the roundtrip and plots the three timecourses side by side.
