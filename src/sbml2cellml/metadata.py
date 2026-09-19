@@ -73,13 +73,41 @@ class Record:
         return bool(self.name or self.notes or self.sbo or self.terms)
 
 
+def _prefixes(node: libsbml.XMLNode, prefixes: dict[str, str]) -> None:
+    """Collect the namespace of every prefix of the elements and attributes."""
+    if node.getPrefix():
+        prefixes.setdefault(node.getPrefix(), node.getURI())
+    attributes: libsbml.XMLAttributes = node.getAttributes()
+    for k in range(attributes.getLength()):
+        if attributes.getPrefix(k):
+            prefixes.setdefault(attributes.getPrefix(k), attributes.getURI(k))
+    for k in range(node.getNumChildren()):
+        _prefixes(node.getChild(k), prefixes)
+
+
 def _children(node: libsbml.XMLNode | None) -> str:
-    """The serialized children of an XML node of libsbml."""
+    """The serialized children of an XML node of libsbml.
+
+    A child declares the prefixes it uses: the declaration of a model may be
+    on an element outside of the node, e.g. `xmlns:html` on the `sbml`
+    element for the notes, and would be lost.
+    """
     if node is None:
         return ""
-    return "\n".join(
-        node.getChild(k).toXMLString() for k in range(node.getNumChildren())
-    )
+    fragments = []
+    for k in range(node.getNumChildren()):
+        child = libsbml.XMLNode(node.getChild(k))
+        prefixes: dict[str, str] = {}
+        _prefixes(child, prefixes)
+        for prefix, uri in prefixes.items():
+            # the container declares the prefixes of the RDF of SBML; by
+            # prefix, libsbml gives its own `bqbiol` nodes another namespace
+            # (`biological-qualifiers`) than it declares
+            declared = prefix in NAMESPACES or child.hasNamespacePrefix(prefix)
+            if uri and not declared:
+                child.addNamespace(uri, prefix)
+        fragments.append(child.toXMLString())
+    return "\n".join(fragments)
 
 
 def _terms(element: libsbml.SBase) -> str:

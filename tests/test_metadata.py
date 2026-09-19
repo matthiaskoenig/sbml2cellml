@@ -214,3 +214,21 @@ def test_read_of_a_file_which_is_no_rdf_raises(tmp_path: Path) -> None:
     path.write_text("<rdf", encoding="utf-8")
     with pytest.raises(ValueError, match=r"broken\.rdf"):
         read_metadata(path, "model.cellml")
+
+
+def test_notes_with_a_prefix_declared_on_the_document(tmp_path: Path) -> None:
+    """The declaration of `html` on the `sbml` element is out of the notes."""
+    doc = libsbml.readSBMLFromString(
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        '<sbml xmlns="http://www.sbml.org/sbml/level3/version2/core" level="3" '
+        f'version="2" xmlns:html="{XHTML}"><model id="prefixed">'
+        '<listOfParameters><parameter id="p" value="1" constant="true">'
+        "<notes><html:p>GENE_ASSOCIATION: (a)</html:p><html:p>SUBSYSTEM: b</html:p>"
+        "</notes></parameter></listOfParameters></model></sbml>"
+    )
+    records = collect_metadata({"p": doc.getModel().getParameter("p")})
+    read = write_and_read(records, tmp_path)
+    assert read["p"].notes.count("GENE_ASSOCIATION") == 1
+    _, parameter = target_document()
+    apply_metadata(parameter, read["p"], "p")
+    assert "SUBSYSTEM: b" in parameter.getNotesString()
