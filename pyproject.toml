@@ -36,7 +36,7 @@ keywords = [
 ]
 dependencies = [
 	# SBML reading and formula parsing
-	"python-libsbml>=5.21.1",
+	"python-libsbml>=5.21.2",
 	# CellML model building, printing and validation
 	"libcellml>=0.7.1",
 	# console output of scripts and the CLI
