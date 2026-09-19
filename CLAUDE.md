@@ -211,8 +211,15 @@ on `develop` after the merge.
 - Full type annotations and google-style docstrings on every module, class and
   function (ruff `D`; `examples/` and `tests/` exempt).
 - `examples/` at the top level holds the runnable examples and
-  `examples/models/` the glimepiride SBML models and `test_model.cellml`; the
-  tests read the models via `MODELS_DIR` in `tests/conftest.py`. Generated
+  `examples/models/` the glimepiride SBML models, `repressilator.xml`
+  (BIOMD0000000012) and `test_model.cellml`; the
+  tests read the models via `MODELS_DIR` in `tests/conftest.py`.
+  `examples/repressilator_example.py --docs` writes the models, the table and
+  the figures of the documentation page `docs/roundtrip.md`
+  (`docs/roundtrip/`, `docs/images/repressilator*.svg`, included with
+  `pymdownx.snippets`; roadrunner runs in a process of its own,
+  `examples/roadrunner_timecourse.py`); `tests/test_examples.py` fails when
+  the documented models differ from the ones the example writes. Generated
   CellML goes to the gitignored `examples/results/`. Small fixtures created
   for a test go to `tests/data/`.
 - Known conversion issues are documented in `docs/conversion-issues.md` and encoded in the

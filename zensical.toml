@@ -17,6 +17,7 @@ nav = [
     { "Installation" = "installation.md" },
     { "Conversion" = "conversion.md" },
     { "Simulation" = "simulation.md" },
+    { "Roundtrip example" = "roundtrip.md" },
   ] },
   { "Status" = [
     { "Conversion issues" = "conversion-issues.md" },
@@ -166,6 +167,8 @@ pymdownx.keys = {}
 pymdownx.magiclink = {}
 pymdownx.mark = {}
 pymdownx.smartsymbols = {}
+pymdownx.snippets.base_path = ["."]
+pymdownx.snippets.check_paths = true
 pymdownx.superfences = {}
 pymdownx.tabbed.alternate_style = true
 pymdownx.tasklist.custom_checkbox = true
