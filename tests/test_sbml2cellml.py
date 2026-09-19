@@ -16,7 +16,7 @@ from tests.sbml_models import simple_model, write_sbml
 
 #: models the current converter renders as valid CellML
 VALID_MODELS = ["glimepiride_kidney", "glimepiride_liver"]
-#: models with known conversion gaps, see docs/roadmap.md
+#: models with known conversion gaps, see docs/conversion-issues.md
 INVALID_MODELS = {
     "glimepiride_intestine": "SBML units on numbers",
     "glimepiride_body": "SBML units on numbers",

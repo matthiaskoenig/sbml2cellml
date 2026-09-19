@@ -12,13 +12,15 @@ edit_uri = "edit/develop/docs/"
 
 nav = [
   { "Home" = "index.md" },
-  { "Installation" = "installation.md" },
   { "User guide" = [
+    { "Installation" = "installation.md" },
     { "Conversion" = "conversion.md" },
     { "Simulation" = "simulation.md" },
   ] },
-  { "Roadmap" = "roadmap.md" },
-  { "SBML test suite" = "testsuite.md" },
+  { "Status" = [
+    { "Conversion issues" = "conversion-issues.md" },
+    { "SBML test suite" = "testsuite.md" },
+  ] },
   { "API reference" = [
     { "Overview" = "api/index.md" },
     { "sbml2cellml" = "api/sbml2cellml.md" },
@@ -41,10 +43,13 @@ nav = [
       { "runner" = "api/testsuite.runner.md" },
       { "results" = "api/testsuite.results.md" },
       { "report" = "api/testsuite.report.md" },
+      { "figure" = "api/testsuite.figure.md" },
       { "cli" = "api/testsuite.cli.md" },
     ] },
   ] },
-  { "Contributing" = "development.md" },
+  { "Development" = [
+    { "Contributing" = "development.md" },
+  ] },
 ]
 
 [project.theme]

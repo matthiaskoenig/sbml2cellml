@@ -24,15 +24,25 @@ uv pip install sbml2cellml
 pip install sbml2cellml
 ```
 
-## Simulation with libopencor
+## Simulators { #simulators }
 
-The `simulate` extra adds pandas and matplotlib for the timecourse results and plots of [`sbml2cellml.simulate`](simulation.md):
+The simulators are optional, see [Simulation](simulation.md): [roadrunner](https://www.libroadrunner.org/) simulates the SBML models, [libopencor](https://opencor.ws/libopencor/) the CellML models. The `simulate` extra adds pandas and matplotlib for the timecourse results and plots of [`sbml2cellml.simulate`](api/simulate.md):
 
 ```bash
 pip install "sbml2cellml[simulate]"
 ```
 
-The simulator itself, [libopencor](https://opencor.ws/libopencor/), is not on PyPI. Its wheels are published with the [GitHub releases of libopencor](https://github.com/opencor/libopencor/releases); the release page can be used as a package index, e.g. for the release `v1.20260803.0`:
+### roadrunner
+
+roadrunner is available from [pypi](https://pypi.org/project/libroadrunner/):
+
+```bash
+pip install libroadrunner
+```
+
+### libopencor { #simulation-with-libopencor }
+
+libopencor is not on PyPI. Its wheels are published with the [GitHub releases of libopencor](https://github.com/opencor/libopencor/releases); the release page can be used as a package index, e.g. for the release `v1.20260803.0`:
 
 ```bash
 pip install --find-links https://github.com/opencor/libopencor/releases/expanded_assets/v1.20260803.0 libopencor==1.20260803.0

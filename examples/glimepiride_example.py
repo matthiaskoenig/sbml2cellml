@@ -3,8 +3,8 @@
 The models are the physiologically based pharmacokinetic models of
 https://github.com/matthiaskoenig/glimepiride-model. The current converter
 renders the liver and kidney models as valid CellML; the intestine and body
-models hit known conversion gaps (units on numbers, function definitions), see
-https://matthiaskoenig.github.io/sbml2cellml/roadmap/. Only the liver model
+models hit a known conversion issue (units on numbers), see
+https://matthiaskoenig.github.io/sbml2cellml/conversion-issues/. Only the liver model
 is fully constrained for libopencor.
 """
 

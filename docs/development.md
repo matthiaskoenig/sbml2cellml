@@ -100,7 +100,7 @@ A single sync creates the virtual environment in `.venv`, installs `sbml2cellml`
 uv sync --extra dev
 ```
 
-The `dev` extra contains everything used below, i.e., pytest, ruff, ty, tox, pre-commit, zensical and bump-my-version, together with the `simulate` extra, libopencor and libroadrunner for the roundtrip tests. libopencor is not on PyPI; `[tool.uv.index]` in `pyproject.toml` points uv at the wheels of its GitHub release, so `uv sync` installs it like any other dependency (pip users see [Installation](installation.md#simulation-with-libopencor)). The python version is taken from `.python-version` (3.14, the newest supported version; 3.13 is supported as well).
+The `dev` extra contains everything used below, i.e., pytest, ruff, ty, tox, pre-commit, zensical and bump-my-version, together with the `simulate` extra, libopencor and libroadrunner for the roundtrip tests. libopencor is not on PyPI; `[tool.uv.index]` in `pyproject.toml` points uv at the wheels of its GitHub release, so `uv sync` installs it like any other dependency (pip users see [Installation](installation.md#simulators)). The python version is taken from `.python-version` (3.14, the newest supported version; 3.13 is supported as well).
 
 The tools are then run either with `uv run <command>`, which uses the environment without activating it, or from the activated environment:
 
@@ -200,7 +200,7 @@ Docstrings are therefore the place to document functions and classes, the markdo
 
 ### Files for agents { #files-for-agents }
 
-Agents and language models read markdown, not rendered html. `scripts/llms_txt.py` writes the files of the [llms.txt convention](https://llmstxt.org/) into the built site, i.e., [llms.txt](https://matthiaskoenig.github.io/sbml2cellml/llms.txt) as an annotated index of all pages, [llms-full.txt](https://matthiaskoenig.github.io/sbml2cellml/llms-full.txt) with the complete documentation in a single file, and the markdown of every page next to its html (`/roadmap.md` for `/roadmap/`). The markdown of the API reference is generated from the docstrings with `inspect`, since the pages themselves only contain the mkdocstrings directive.
+Agents and language models read markdown, not rendered html. `scripts/llms_txt.py` writes the files of the [llms.txt convention](https://llmstxt.org/) into the built site, i.e., [llms.txt](https://matthiaskoenig.github.io/sbml2cellml/llms.txt) as an annotated index of all pages, [llms-full.txt](https://matthiaskoenig.github.io/sbml2cellml/llms-full.txt) with the complete documentation in a single file, and the markdown of every page next to its html (`/conversion-issues.md` for `/conversion-issues/`). The markdown of the API reference is generated from the docstrings with `inspect`, since the pages themselves only contain the mkdocstrings directive.
 
 ```bash
 uv run zensical build --clean
@@ -227,9 +227,9 @@ The one-time setup of the GitHub repository, for the record:
 uv run sbml2cellml-testsuite run
 ```
 
-downloads the suite into `~/.cache/sbml2cellml` on first use (`SBML2CELLML_CACHE` overrides the cache root), runs the pipeline and writes `testsuite/results.json` and `docs/testsuite.md`. `--cases 00001,00002` restricts the run to a subset of case ids and `--suite-dir` points at a local copy of the `semantic/` directory instead of downloading. The comparison uses tight solver tolerances (`1e-9` relative, `1e-12` absolute, passed to every roadrunner and libopencor call) so it measures the conversion rather than the default integrator tolerances, an amendment to the original harness design.
+downloads the suite into `~/.cache/sbml2cellml` on first use (`SBML2CELLML_CACHE` overrides the cache root), runs the pipeline and writes `testsuite/results.json`, `docs/testsuite.md` and its bar diagram `docs/images/testsuite.svg` (`testsuite_dark.svg` for dark backgrounds, also shown in `README.md`). `--cases 00001,00002` restricts the run to a subset of case ids and `--suite-dir` points at a local copy of the `semantic/` directory instead of downloading. The comparison uses tight solver tolerances (`1e-9` relative, `1e-12` absolute, passed to every roadrunner and libopencor call) so it measures the conversion rather than the default integrator tolerances, an amendment to the original harness design.
 
-`testsuite/results.json` and `docs/testsuite.md` are generated and committed. `tests/test_testsuite_full.py` (enabled with `SBML2CELLML_TESTSUITE=1`, run with `tox r -e testsuite` and in the linux CI job) reruns the full suite and fails if any case regresses against the committed results or if the rendered report no longer matches `docs/testsuite.md`. To accept an improvement, rerun `uv run sbml2cellml-testsuite run` and commit the updated `testsuite/results.json` and `docs/testsuite.md` together in the same pull request.
+`testsuite/results.json`, `docs/testsuite.md` and the figures `docs/images/testsuite*.svg` are generated and committed. `tests/test_testsuite_full.py` (enabled with `SBML2CELLML_TESTSUITE=1`, run with `tox r -e testsuite` and in the linux CI job) reruns the full suite and fails if any case regresses against the committed results or if the rendered report no longer matches `docs/testsuite.md`. To accept an improvement, rerun `uv run sbml2cellml-testsuite run` and commit the updated `testsuite/results.json`, `docs/testsuite.md` and figures together in the same pull request. `uv run sbml2cellml-testsuite report` rerenders the report and the figures from the committed results, e.g., after a change of the report itself.
 
 roadrunner and libopencor bundle different LLVM versions and crash once both have JIT-compiled in one process (see [Testing](#testing)); the harness therefore runs each simulator in its own worker process (`sbml2cellml.testsuite.worker`) for the whole run, instead of starting a subprocess per call.
 

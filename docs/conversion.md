@@ -1,6 +1,10 @@
-# SBML to CellML
+# Conversion
 
-## Python
+`sbml2cellml` converts in both directions: [SBML to CellML](#sbml-to-cellml) and [CellML to SBML](#cellml-to-sbml). What cannot be converted yet is listed in the [conversion issues](conversion-issues.md).
+
+## SBML to CellML
+
+### Python
 
 [`convert_sbml2cellml`](api/sbml2cellml.md) reads an SBML file, builds the CellML model with libcellml and returns it. With `cellml_path` the CellML is written as well:
 
@@ -23,7 +27,7 @@ print(format_issues(errors(issues)))
 
 A file without a model raises `SBML2CellMLConversionError`.
 
-## Logging
+### Logging
 
 The package logs the conversion steps and the constructs it skips (events, algebraic rules which determine no variable, initial assignments libsbml cannot evaluate, unset initial values) and does not print. Scripts enable the rich output of the package with
 
@@ -35,7 +39,7 @@ log.enable_rich_logging()
 
 An application configures the `sbml2cellml` logger like any other logger.
 
-## Command line
+### Command line
 
 ```bash
 sbml2cellml model.xml                      # writes model.cellml next to the input
@@ -46,11 +50,11 @@ sbml2cellml model.xml -v                   # log the conversion steps
 
 The command exits with 1 and the message on stderr when the input does not exist, has no model, or the validation fails.
 
-## Example models
+### Example models
 
-`examples/models/` in the repository holds the glimepiride models of [matthiaskoenig/glimepiride-model](https://github.com/matthiaskoenig/glimepiride-model), which `examples/glimepiride_example.py` converts. The liver and kidney models convert to valid CellML, the intestine and body models hit the [known gaps](roadmap.md) of the converter.
+`examples/models/` in the repository holds the glimepiride models of [matthiaskoenig/glconversion-issues.mdmodel](https://github.com/matthiaskoenig/glimepiride-model), which `examples/glimepiride_example.py` converts. The liver and kidney models convert to valid CellML, the intestine and body models hit the [known issues](conversion-issues.md) of the converter.
 
-# CellML to SBML
+## CellML to SBML
 
 [`convert_cellml2sbml`](api/cellml2sbml.md) reads a CellML 2.0 file, resolves its imports relative to the file, analyses it with libcellml and builds an SBML level 3 version 2 document:
 
@@ -72,7 +76,7 @@ cellml2sbml model.cellml -v
 
 By default the document is checked with the libsbml consistency checks and a `SBMLValidationError` with the messages is raised on errors (unit problems are warnings and do not stop the conversion).
 
-## Mapping
+### Mapping
 
 CellML has no species, compartments or reactions: every variable becomes a parameter, the equations become rules. The libcellml analyser decides the kind of every variable and equation and merges the variables which are connected across components.
 
@@ -93,7 +97,7 @@ CellML has no species, compartments or reactions: every variable becomes a param
 | implicit equation (`a + s = 5`, a model of type DAE or NLA) | algebraic rule `0 = a + s - 5`, the unknown a `parameter constant="false"` with its initial value (the guess of the solver) |
 | model which cannot be analysed (e.g. underconstrained) | CellML2SBMLConversionError |
 
-## Limitations
+### Limitations
 
 - A system of coupled implicit equations (`x + y = 4`, `x - y = 2`) cannot be analysed by libcellml, and external variables are not supported; both raise `CellML2SBMLConversionError`.
 - Units on numbers in formulas are not carried into the SBML math (the analyser AST has none); libsbml reports them as unit warnings.
