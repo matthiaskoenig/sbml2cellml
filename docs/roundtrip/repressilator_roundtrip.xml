@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sbml xmlns="http://www.sbml.org/sbml/level3/version2/core" level="3" version="2">
-  <model id="BIOMD0000000012" name="BIOMD0000000012" timeUnits="dimensionless">
+  <model id="BIOMD0000000012" name="Elowitz2000 - Repressilator" timeUnits="dimensionless">
     <listOfUnitDefinitions>
-      <unitDefinition id="volume">
+      <unitDefinition id="volume" name="cubic microns">
         <listOfUnits>
           <unit kind="litre" exponent="1" scale="-15" multiplier="1"/>
         </listOfUnits>
       </unitDefinition>
-      <unitDefinition id="substance">
+      <unitDefinition id="substance" name="item">
         <listOfUnits>
           <unit kind="item" exponent="1" scale="0" multiplier="1"/>
         </listOfUnits>
       </unitDefinition>
-      <unitDefinition id="time">
+      <unitDefinition id="time" name="minute">
         <listOfUnits>
           <unit kind="second" exponent="1" scale="0" multiplier="60"/>
         </listOfUnits>
@@ -25,21 +25,21 @@
       </unitDefinition>
     </listOfUnitDefinitions>
     <listOfParameters>
-      <parameter id="X" value="0" units="dimensionless" constant="false"/>
-      <parameter id="Y" value="20" units="dimensionless" constant="false"/>
-      <parameter id="Z" value="0" units="dimensionless" constant="false"/>
-      <parameter id="PX" value="0" units="dimensionless" constant="false"/>
-      <parameter id="PY" value="0" units="dimensionless" constant="false"/>
-      <parameter id="PZ" value="0" units="dimensionless" constant="false"/>
-      <parameter id="tau_mRNA" value="2" units="dimensionless" constant="true"/>
-      <parameter id="tau_prot" value="10" units="dimensionless" constant="true"/>
-      <parameter id="eff" value="20" units="dimensionless" constant="true"/>
-      <parameter id="ps_0" value="0.0005" units="dimensionless" constant="true"/>
-      <parameter id="ps_a" value="0.5" units="dimensionless" constant="true"/>
+      <parameter id="X" name="LacI mRNA" value="0" units="dimensionless" constant="false"/>
+      <parameter id="Y" name="TetR mRNA" value="20" units="dimensionless" constant="false"/>
+      <parameter id="Z" name="cI mRNA" value="0" units="dimensionless" constant="false"/>
+      <parameter id="PX" name="LacI protein" value="0" units="dimensionless" constant="false"/>
+      <parameter id="PY" name="TetR protein" value="0" units="dimensionless" constant="false"/>
+      <parameter id="PZ" name="cI protein" value="0" units="dimensionless" constant="false"/>
+      <parameter id="tau_mRNA" name="mRNA half life" value="2" units="dimensionless" constant="true"/>
+      <parameter id="tau_prot" name="protein half life" value="10" units="dimensionless" constant="true"/>
+      <parameter id="eff" name="translation efficiency" value="20" units="dimensionless" constant="true"/>
+      <parameter id="ps_0" name="tps_repr" value="0.0005" units="dimensionless" constant="true"/>
+      <parameter id="ps_a" name="tps_active" value="0.5" units="dimensionless" constant="true"/>
       <parameter id="KM" value="40" units="dimensionless" constant="true"/>
       <parameter id="n" value="2" units="dimensionless" constant="true"/>
       <parameter id="cell" value="1" units="dimensionless" constant="true"/>
-      <parameter id="t_ave" units="dimensionless" constant="true"/>
+      <parameter id="t_ave" name="average mRNA life time" units="dimensionless" constant="true"/>
       <parameter id="beta" units="dimensionless" constant="true"/>
       <parameter id="k_tl" units="dimensionless" constant="true"/>
       <parameter id="a_tr" units="dimensionless" constant="true"/>
@@ -48,18 +48,18 @@
       <parameter id="kd_mRNA" units="dimensionless" constant="true"/>
       <parameter id="alpha" units="dimensionless" constant="true"/>
       <parameter id="alpha0" units="dimensionless" constant="true"/>
-      <parameter id="Reaction10" units="dimensionless" constant="false"/>
-      <parameter id="Reaction1" units="dimensionless" constant="false"/>
-      <parameter id="Reaction11" units="dimensionless" constant="false"/>
-      <parameter id="Reaction2" units="dimensionless" constant="false"/>
-      <parameter id="Reaction12" units="dimensionless" constant="false"/>
-      <parameter id="Reaction3" units="dimensionless" constant="false"/>
-      <parameter id="Reaction7" units="dimensionless" constant="false"/>
-      <parameter id="Reaction4" units="dimensionless" constant="false"/>
-      <parameter id="Reaction8" units="dimensionless" constant="false"/>
-      <parameter id="Reaction5" units="dimensionless" constant="false"/>
-      <parameter id="Reaction9" units="dimensionless" constant="false"/>
-      <parameter id="Reaction6" units="dimensionless" constant="false"/>
+      <parameter id="Reaction10" name="transcription of LacI" units="dimensionless" constant="false"/>
+      <parameter id="Reaction1" name="degradation of LacI transcripts" units="dimensionless" constant="false"/>
+      <parameter id="Reaction11" name="transcription of TetR" units="dimensionless" constant="false"/>
+      <parameter id="Reaction2" name="degradation of TetR transcripts" units="dimensionless" constant="false"/>
+      <parameter id="Reaction12" name="transcription of CI" units="dimensionless" constant="false"/>
+      <parameter id="Reaction3" name="degradation of CI transcripts" units="dimensionless" constant="false"/>
+      <parameter id="Reaction7" name="degradation of LacI" units="dimensionless" constant="false"/>
+      <parameter id="Reaction4" name="translation of LacI" units="dimensionless" constant="false"/>
+      <parameter id="Reaction8" name="degradation of TetR" units="dimensionless" constant="false"/>
+      <parameter id="Reaction5" name="translation of TetR" units="dimensionless" constant="false"/>
+      <parameter id="Reaction9" name="degradation of CI" units="dimensionless" constant="false"/>
+      <parameter id="Reaction6" name="translation of CI" units="dimensionless" constant="false"/>
     </listOfParameters>
     <listOfInitialAssignments>
       <initialAssignment symbol="t_ave">

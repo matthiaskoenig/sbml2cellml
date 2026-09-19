@@ -188,9 +188,9 @@ def test_cellml2sbml_no_validate_writes(
     real_build_document = cellml2sbml.build_document
 
     def inconsistent_build_document(
-        model: libcellml.Model, analyser_model: Any
+        model: libcellml.Model, analyser_model: Any, records: Any = None
     ) -> libsbml.SBMLDocument:
-        doc = real_build_document(model, analyser_model)
+        doc = real_build_document(model, analyser_model, records)
         rule = doc.getModel().createAssignmentRule()
         rule.setVariable("alpha")
         rule.setMath(libsbml.parseL3Formula("1"))

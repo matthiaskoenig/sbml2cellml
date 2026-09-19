@@ -37,6 +37,7 @@ import libcellml
 import libsbml
 
 from sbml2cellml import astnodes, cellml, mathml
+from sbml2cellml import metadata as sbml_metadata
 from sbml2cellml.cellml import CellMLValidationError
 from sbml2cellml.cellmlunits import CellMLUnits
 from sbml2cellml.mathml import TIME_ID
@@ -48,6 +49,8 @@ logger = logging.getLogger(__name__)
 COMPONENT_ID = "sbml"
 #: units of a variable without units
 UNITS_ID = "dimensionless"
+#: suffix of the file with the metadata, next to the CellML file
+METADATA_SUFFIX = ".rdf"
 #: variables without units named in the warning of an incomplete annotation
 MISSING_UNITS_LOGGED = 10
 
@@ -57,7 +60,10 @@ class SBML2CellMLConversionError(ValueError):
 
 
 def convert_sbml2cellml(
-    sbml_path: Path, cellml_path: Path | None = None, validate: bool = True
+    sbml_path: Path,
+    cellml_path: Path | None = None,
+    validate: bool = True,
+    metadata: bool = True,
 ) -> libcellml.Model:
     """Convert an SBML file to a CellML model.
 
@@ -66,6 +72,10 @@ def convert_sbml2cellml(
         cellml_path: path the CellML is written to, not written if `None`.
         validate: validate and analyse the CellML model with libcellml and
             raise if it has errors.
+        metadata: write the names, notes, SBO terms, annotations and the
+            history of the SBML elements as RDF next to the CellML file
+            (`<stem>.rdf`, see `sbml2cellml.metadata`); no file is written
+            for a model without metadata.
 
     Returns:
         The CellML model.
@@ -183,6 +193,9 @@ def convert_sbml2cellml(
     if cellml_path is not None:
         cellml.write_model(model, cellml_path)
         logger.info("CellML written to '%s'", cellml_path)
+        if metadata:
+            elements = _metadata_elements(model_sbml, model, cellml_units, formulas)
+            _write_metadata(elements, Path(cellml_path))
 
     return model
 
@@ -1529,3 +1542,68 @@ def _collect_reaction_terms(
             formula = astnodes.apply(libsbml.AST_TIMES, per_size, formula)
         result[sid] = formula
     return result
+
+
+def _metadata_elements(
+    model_sbml: libsbml.Model,
+    model: libcellml.Model,
+    cellml_units: CellMLUnits,
+    formulas: _Formulas,
+) -> dict[str, libsbml.SBase]:
+    """The SBML element of every CellML element which stands for one.
+
+    Returns:
+        The model, the compartments, species, parameters, local parameters,
+        species references with an id, reactions with a rate variable and
+        unit definitions, by the id of their CellML element (`_set_ids`).
+    """
+    elements: dict[str, libsbml.SBase] = {model.id(): model_sbml}
+    element: libsbml.SBase
+    for element in [
+        *model_sbml.getListOfCompartments(),
+        *model_sbml.getListOfSpecies(),
+        *model_sbml.getListOfParameters(),
+    ]:
+        elements[element.getId()] = element
+    reaction: libsbml.Reaction
+    for reaction in model_sbml.getListOfReactions():
+        rid: str = reaction.getId()
+        if rid in formulas.rates:
+            elements[rid] = reaction
+        for pid, vid in formulas.local_ids.get(rid, {}).items():
+            elements[vid] = reaction.getKineticLaw().getParameter(pid)
+        for reference in [
+            *reaction.getListOfReactants(),
+            *reaction.getListOfProducts(),
+        ]:
+            if reference.isSetId():
+                elements[reference.getId()] = reference
+    definition: libsbml.UnitDefinition
+    for definition in model_sbml.getListOfUnitDefinitions():
+        units: libcellml.Units | None = model.units(
+            cellml_units.name(definition.getId()) or ""
+        )
+        if units is not None and units.id():
+            elements[units.id()] = definition
+    return elements
+
+
+def _write_metadata(elements: dict[str, libsbml.SBase], cellml_path: Path) -> None:
+    """Write the metadata of the elements next to the CellML file.
+
+    A model without metadata has no file; the file of an earlier conversion
+    is removed then, `cellml2sbml` would take it for the metadata of this
+    model. A file which has no metadata of the CellML file is left alone.
+    """
+    path = cellml_path.with_suffix(METADATA_SUFFIX)
+    records = sbml_metadata.collect_metadata(elements)
+    if records:
+        sbml_metadata.write_metadata(records, cellml_path.name, path)
+        return
+    try:
+        stale = path.is_file() and sbml_metadata.read_metadata(path, cellml_path.name)
+    except ValueError:
+        stale = False
+    if stale:
+        path.unlink()
+        logger.info("Metadata of an earlier conversion removed: '%s'", path)

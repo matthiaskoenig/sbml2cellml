@@ -140,3 +140,56 @@ def delay_model(mid: str = "delayed") -> libsbml.Model:
     klaw: libsbml.KineticLaw = model.getReaction("r1").getKineticLaw()
     klaw.setMath(libsbml.parseL3Formula("k1 * delay(S1, 1)"))
     return model
+
+
+XHTML = "http://www.w3.org/1999/xhtml"
+
+
+def cv_term(qualifier: int, *resources: str, model: bool = False) -> libsbml.CVTerm:
+    term = libsbml.CVTerm()
+    if model:
+        term.setQualifierType(libsbml.MODEL_QUALIFIER)
+        term.setModelQualifierType(qualifier)
+    else:
+        term.setQualifierType(libsbml.BIOLOGICAL_QUALIFIER)
+        term.setBiologicalQualifierType(qualifier)
+    for resource in resources:
+        term.addResource(resource)
+    return term
+
+
+def annotated_species(model: libsbml.Model) -> libsbml.Species:
+    """S1 with a name, notes, an SBO term and two CV terms."""
+    species: libsbml.Species = model.getSpecies("S1")
+    species.setMetaId("meta_S1")
+    species.setName("glucose & co")
+    species.setNotes(f'<body xmlns="{XHTML}"><p>The <b>substrate</b>.</p></body>')
+    species.setSBOTerm("SBO:0000247")
+    species.addCVTerm(cv_term(libsbml.BQB_IS, "https://identifiers.org/CHEBI:17234"))
+    species.addCVTerm(
+        cv_term(
+            libsbml.BQB_IS_VERSION_OF,
+            "https://identifiers.org/CHEBI:4167",
+            "https://identifiers.org/kegg.compound/C00031",
+        )
+    )
+    return species
+
+
+def with_history(model: libsbml.Model) -> None:
+    model.setMetaId("meta_model")
+    history = libsbml.ModelHistory()
+    creator = libsbml.ModelCreator()
+    creator.setFamilyName("König")
+    creator.setGivenName("Matthias")
+    creator.setEmail("koenigmx@hu-berlin.de")
+    creator.setOrganization("Humboldt-University Berlin")
+    history.addCreator(creator)
+    history.setCreatedDate(libsbml.Date("2026-09-19T12:00:00Z"))
+    history.addModifiedDate(libsbml.Date("2026-09-19T13:00:00Z"))
+    assert model.setModelHistory(history) == libsbml.LIBSBML_OPERATION_SUCCESS
+    model.addCVTerm(
+        cv_term(
+            libsbml.BQM_IS_DESCRIBED_BY, "https://doi.org/10.1038/35002125", model=True
+        )
+    )
