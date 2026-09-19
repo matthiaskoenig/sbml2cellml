@@ -9,7 +9,7 @@ definitions. There are no compartments, species or reactions.
 """
 
 import logging
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from pathlib import Path
 from typing import Any
 
@@ -20,7 +20,9 @@ from sbml2cellml import cellml, sbml
 from sbml2cellml.sbml import SBMLValidationError
 from sbml2cellml.sbmlmath import (
     MathConversionError,
+    NumberUnits,
     ast_to_sbml,
+    count_numbers,
     mathml_to_sbml,
     variable_node,
 )
@@ -205,10 +207,14 @@ def build_document(model: libcellml.Model, analyser_model: Any) -> libsbml.SBMLD
         )
         _add_parameter(model_sbml, variable, ids, unit_ids, constant=constant)
 
-    for k in range(analyser_model.analyserEquationCount()):
-        _add_equation(model_sbml, analyser_model.analyserEquation(k), ids)
+    def sbml_unit_id(units_name: str) -> str:
+        return unit_id(units_name, unit_ids)
 
-    _add_events(model_sbml, model, ids)
+    number_units = NumberUnits(model, ids, sbml_unit_id)
+    for k in range(analyser_model.analyserEquationCount()):
+        _add_equation(model_sbml, analyser_model.analyserEquation(k), ids, number_units)
+
+    _add_events(model_sbml, model, ids, sbml_unit_id)
     return doc
 
 
@@ -273,7 +279,12 @@ def _equation_variables(equation: Any) -> list[Any]:
     )
 
 
-def _add_equation(model_sbml: libsbml.Model, equation: Any, ids: VariableIds) -> None:
+def _add_equation(
+    model_sbml: libsbml.Model,
+    equation: Any,
+    ids: VariableIds,
+    number_units: NumberUnits,
+) -> None:
     """Add the rule or initial assignment of an equation."""
     equation_type = equation.type()
     type_name = libcellml.AnalyserEquation.typeAsString(equation_type)
@@ -283,15 +294,16 @@ def _add_equation(model_sbml: libsbml.Model, equation: Any, ids: VariableIds) ->
             f"Equation of type '{type_name}' for {names} is not supported."
         )
     ast = equation.ast()
+    units = number_units.units_of(ast)
     if equation_type == EquationType.NLA:
         # an implicit equation is the algebraic rule `0 = residual`; the
         # analyser gives the residual `left - right` of `left = right`
         if ast.type() == AstType.EQUALITY:
             residual = libsbml.ASTNode(libsbml.AST_MINUS)
-            residual.addChild(ast_to_sbml(ast.leftChild(), ids))
-            residual.addChild(ast_to_sbml(ast.rightChild(), ids))
+            residual.addChild(ast_to_sbml(ast.leftChild(), ids, units))
+            residual.addChild(ast_to_sbml(ast.rightChild(), ids, units))
         else:
-            residual = ast_to_sbml(ast, ids)
+            residual = ast_to_sbml(ast, ids, units)
         algebraic: libsbml.AlgebraicRule = model_sbml.createAlgebraicRule()
         algebraic.setMath(residual)
         logger.info("0 = %s", libsbml.formulaToL3String(residual))
@@ -299,7 +311,11 @@ def _add_equation(model_sbml: libsbml.Model, equation: Any, ids: VariableIds) ->
     if ast.type() != AstType.EQUALITY:
         raise MathConversionError(f"Equation for {names} is not an equality.")
     left, right = ast.leftChild(), ast.rightChild()
-    rhs = ast_to_sbml(right, ids)
+    if units is not None:
+        # the units are those of the whole equation, from the left to the right
+        for _ in range(count_numbers(left)):
+            next(units, None)
+    rhs = ast_to_sbml(right, ids, units)
 
     if equation_type == EquationType.ODE:
         state = left.rightChild() if left.type() == AstType.DIFF else None
@@ -348,18 +364,28 @@ def _components(parent: Any) -> Iterator[Any]:
 
 
 def _add_events(
-    model_sbml: libsbml.Model, model: libcellml.Model, ids: VariableIds
+    model_sbml: libsbml.Model,
+    model: libcellml.Model,
+    ids: VariableIds,
+    sbml_unit_id: Callable[[str], str],
 ) -> None:
     """Add an event per reset of every component."""
     index = 0
     for component in _components(model):
         for k in range(component.resetCount()):
             index += 1
-            _add_reset(model_sbml, component, component.reset(k), index, ids)
+            _add_reset(
+                model_sbml, component, component.reset(k), index, ids, sbml_unit_id
+            )
 
 
 def _add_reset(
-    model_sbml: libsbml.Model, component: Any, reset: Any, index: int, ids: VariableIds
+    model_sbml: libsbml.Model,
+    component: Any,
+    reset: Any,
+    index: int,
+    ids: VariableIds,
+    sbml_unit_id: Callable[[str], str],
 ) -> None:
     """Add the event of a reset.
 
@@ -379,7 +405,9 @@ def _add_reset(
     condition = libsbml.ASTNode(libsbml.AST_RELATIONAL_EQ)
     condition.addChild(variable_node(test_variable, ids))
     condition.addChild(
-        _reset_expression(reset.testValue(), test_variable, component, ids)
+        _reset_expression(
+            reset.testValue(), test_variable, component, ids, sbml_unit_id
+        )
     )
     trigger.setMath(condition)
 
@@ -390,7 +418,9 @@ def _add_reset(
 
     assignment: libsbml.EventAssignment = event.createEventAssignment()
     assignment.setVariable(ids.id_for(variable))
-    assignment.setMath(_reset_expression(reset.resetValue(), variable, component, ids))
+    assignment.setMath(
+        _reset_expression(reset.resetValue(), variable, component, ids, sbml_unit_id)
+    )
     logger.info(
         "reset_%d: %s == %s -> %s",
         index,
@@ -401,14 +431,18 @@ def _add_reset(
 
 
 def _reset_expression(
-    mathml: str, variable: Any, component: Any, ids: VariableIds
+    mathml: str,
+    variable: Any,
+    component: Any,
+    ids: VariableIds,
+    sbml_unit_id: Callable[[str], str],
 ) -> libsbml.ASTNode:
     """Expression of a test or reset value.
 
     The MathML is either the expression itself or the equation
     `variable = expression`, in which case the right side is used.
     """
-    node = mathml_to_sbml(mathml, component.name(), ids)
+    node = mathml_to_sbml(mathml, component.name(), ids, sbml_unit_id)
     if (
         node.getType() == libsbml.AST_RELATIONAL_EQ
         and node.getNumChildren() == 2

@@ -61,15 +61,34 @@ def test_expand_standard_reference() -> None:
 
 def test_expand_custom_reference() -> None:
     model = model_with_units()
+    # CellML: 1/60 * second^-1, SBML: (60 * second)^-1
     assert expand_units(model.units("mM_per_min"), model) == [
         BaseUnit(libsbml.UNIT_KIND_MOLE, 1.0, -3, 1.0),
         BaseUnit(libsbml.UNIT_KIND_LITRE, -1.0, 0, 1.0),
-        BaseUnit(libsbml.UNIT_KIND_SECOND, -1.0, 0, pytest.approx(1.0 / 60.0)),  # ty: ignore[invalid-argument-type]
+        BaseUnit(libsbml.UNIT_KIND_SECOND, -1.0, 0, 60.0),
     ]
-    # (3 * 10^3 * mM)^2 = (3000^(1/1) * mole 10^-3)^2 * litre^-2
+    # 3 * (10^3 * mM)^2 = (sqrt(3e6) * 10^-3 mole)^2 * litre^-2
     assert expand_units(model.units("kmM2"), model) == [
-        BaseUnit(libsbml.UNIT_KIND_MOLE, 2.0, -3, pytest.approx(3000.0)),  # ty: ignore[invalid-argument-type]
+        BaseUnit(libsbml.UNIT_KIND_MOLE, 2.0, -3, pytest.approx(3e6**0.5)),  # ty: ignore[invalid-argument-type]
         BaseUnit(libsbml.UNIT_KIND_LITRE, -2.0, 0, 1.0),
+    ]
+
+
+def test_expand_multiplier_is_outside_of_the_exponent() -> None:
+    """CellML: `multiplier * (10^prefix * u)^exponent`, SBML:
+    `(multiplier * 10^scale * u)^exponent`."""
+    model = libcellml.Model("multiplier")
+    per_hour = libcellml.Units("per_hour")
+    per_hour.addUnit("second", "", -1.0, 1.0 / 3600.0)
+    area = libcellml.Units("area")  # 4 cm^2 = (2 cm)^2
+    area.addUnit("metre", "centi", 2.0, 4.0)
+    model.addUnits(per_hour)
+    model.addUnits(area)
+    assert expand_units(per_hour, model) == [
+        BaseUnit(libsbml.UNIT_KIND_SECOND, -1.0, 0, 3600.0)
+    ]
+    assert expand_units(area, model) == [
+        BaseUnit(libsbml.UNIT_KIND_METRE, 2.0, -2, 2.0)
     ]
 
 
@@ -97,8 +116,9 @@ def test_expand_empty_custom_reference_keeps_factor() -> None:
     outer.addUnit("nothing", "kilo", 2.0, 5.0)
     model.addUnits(empty)
     model.addUnits(outer)
+    # 5 * (10^3)^2, a factor without units
     assert expand_units(outer, model) == [
-        BaseUnit(libsbml.UNIT_KIND_DIMENSIONLESS, 2.0, 3, 5.0)
+        BaseUnit(libsbml.UNIT_KIND_DIMENSIONLESS, 1.0, 0, 5e6)
     ]
 
 
@@ -110,7 +130,7 @@ def test_gram_is_a_unit_kind() -> None:
     assert expand_units(mg, model) == [BaseUnit(libsbml.UNIT_KIND_GRAM, 1.0, -3, 1.0)]
 
 
-def test_expand_zero_exponent_first_unit_raises() -> None:
+def test_expand_zero_exponent_keeps_factor() -> None:
     model = libcellml.Model("zero_exponent")
     zero = libcellml.Units("zero")
     zero.addUnit("second", 0.0)
@@ -118,8 +138,35 @@ def test_expand_zero_exponent_first_unit_raises() -> None:
     outer.addUnit("zero", "kilo", 1.0, 5.0)
     model.addUnits(zero)
     model.addUnits(outer)
-    with pytest.raises(UnitsConversionError):
-        expand_units(outer, model)
+    assert expand_units(zero, model) == []
+    assert expand_units(outer, model) == [
+        BaseUnit(libsbml.UNIT_KIND_DIMENSIONLESS, 1.0, 0, 5000.0)
+    ]
+
+
+def test_expand_item() -> None:
+    """Units `item` without unit children are the SBML unit kind `item`
+    (`sbml2cellml` writes them for it), other new base units have no SBML
+    counterpart."""
+    model = libcellml.Model("items")
+    item = libcellml.Units("item")
+    apple = libcellml.Units("apple")
+    per_item = libcellml.Units("per_item")
+    per_item.addUnit("item", -1.0)
+    per_apple = libcellml.Units("per_apple")
+    per_apple.addUnit("apple", -1.0)
+    for units in (item, apple, per_item, per_apple):
+        model.addUnits(units)
+    assert expand_units(per_item, model) == [
+        BaseUnit(libsbml.UNIT_KIND_ITEM, -1.0, 0, 1.0)
+    ]
+    assert expand_units(per_apple, model) == []
+    doc = libsbml.SBMLDocument(3, 2)
+    model_sbml = doc.createModel()
+    ids = add_units(model, model_sbml)
+    assert ids["item"] == "item"
+    assert model_sbml.getUnitDefinition("item") is None
+    assert validate_document(doc) == []
 
 
 def test_add_units() -> None:

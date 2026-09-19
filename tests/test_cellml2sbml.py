@@ -98,14 +98,14 @@ def test_convert_multi_component_model(tmp_path: Path) -> None:
     assert not p["y"].getConstant() and not p["y"].isSetValue()
     assert not p["child_x"].getConstant()
     ia = initial_assignments(model)
-    assert ia == {"cell_x": "x0", "c": "2 * k"}
+    assert ia == {"cell_x": "x0", "c": "2 dimensionless * k"}
     r = rules(model)
     assert set(r) == {"cell_x", "z", "y", "child_x"}
     assert r["cell_x"].isRate()
     assert libsbml.formulaToL3String(r["cell_x"].getMath()) == "-k * cell_x"
     assert r["z"].isRate()
     assert r["y"].isAssignment()
-    assert libsbml.formulaToL3String(r["y"].getMath()) == "2 * cell_x"
+    assert libsbml.formulaToL3String(r["y"].getMath()) == "2 dimensionless * cell_x"
     assert libsbml.formulaToL3String(r["child_x"].getMath()) == "z"
     assert validate_document(doc) == []
 
@@ -286,3 +286,92 @@ def test_validate_raises_on_inconsistent_document(
     out = tmp_path / "out.xml"
     convert_cellml2sbml(path, sbml_path=out, validate=False)
     assert out.is_file()
+
+
+def units_model(rhs_by_variable: dict[str, str]) -> libcellml.Model:
+    """`math_model` with the custom units `mM` and `avogadro`, which is the
+    name of an SBML unit kind and cannot be the id of a unit definition."""
+    model = math_model(rhs_by_variable)
+    mM = libcellml.Units("mM")
+    mM.addUnit("mole", "milli")
+    mM.addUnit("litre", "", -1.0)
+    rate = libcellml.Units("avogadro")
+    rate.addUnit("mM")
+    rate.addUnit("second", "", -1.0)
+    model.addUnits(mM)
+    model.addUnits(rate)
+    return model
+
+
+def test_number_units() -> None:
+    """The units of the numbers are part of the SBML math, by SBML unit id."""
+    model = units_model(
+        {
+            "a": f"<apply><plus/><apply><times/>{cn('2', 'mM')}<ci>x</ci></apply>"
+            f"{cn('3', 'avogadro')}{cn('1', 'second')}</apply>",
+            "b": f"<apply><times/>{cn('2')}<ci>x</ci></apply>",
+        }
+    )
+    doc = build_document(model, analyse(model))
+    r = rules(doc.getModel())
+    assert (
+        libsbml.formulaToL3String(r["a"].getMath())
+        == "2 mM * x + (3 avogadro_2 + 1 second)"
+    )
+    assert libsbml.formulaToL3String(r["b"].getMath()) == "2 dimensionless * x"
+    assert libsbml.formulaToL3String(r["x"].getMath()) == "k * x"
+    assert validate_document(doc) == []
+
+
+def test_number_units_e_notation_and_same_equation_twice() -> None:
+    """Equations which only differ in the units of their numbers keep them."""
+    model = units_model(
+        {
+            "a": '<cn cellml:units="mM" type="e-notation">1<sep/>3</cn>',
+            "b": '<cn cellml:units="second" type="e-notation">1<sep/>3</cn>',
+        }
+    )
+    doc = build_document(model, analyse(model))
+    assert initial_assignments(doc.getModel()) == {"a": "1000 mM", "b": "1000 second"}
+
+
+def test_number_units_of_a_swapped_equation() -> None:
+    """The analyser may reorder an equation: the units are found by value."""
+    model = units_model({})
+    component = model.component(0)
+    variable(component, "a", "mM")
+    component.setMath(
+        component.math()
+        + math(
+            f"<apply><eq/><apply><plus/>{cn('2', 'mM')}{cn('3', 'mM')}</apply>"
+            "<ci>a</ci></apply>"
+        )
+    )
+    model.linkUnits()
+    doc = build_document(model, analyse(model))
+    formulas = {
+        **initial_assignments(doc.getModel()),
+        **{
+            key: libsbml.formulaToL3String(rule.getMath())
+            for key, rule in rules(doc.getModel()).items()
+        },
+    }
+    assert formulas["a"] in ("2 mM + 3 mM", "a - (2 mM + 3 mM)", "2 mM + 3 mM - a")
+
+
+def test_reset_number_units_use_the_unit_ids() -> None:
+    model = reset_model()
+    rate = libcellml.Units("item")
+    rate.addUnit("kilogram", "", 1.0, 0.5)
+    model.addUnits(rate)
+    reset = model.component(0).reset(0)
+    reset.setResetValue(
+        math(assignment("m", f"<apply><minus/><ci>m</ci>{cn('2', 'item')}</apply>"))
+    )
+    doc = build_document(model, analyse(model))
+    event = doc.getModel().getEvent(0)
+    assert (
+        libsbml.formulaToL3String(event.getEventAssignment(0).getMath())
+        == "m - 2 item_2"
+    )
+    assert validate_document(doc) == []
