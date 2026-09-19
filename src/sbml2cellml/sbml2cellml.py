@@ -158,6 +158,7 @@ def convert_sbml2cellml(
     )
     component.setMath(mathml.cellml_math(parts))
     model.linkUnits()
+    _set_ids(model)
 
     event: libsbml.Event
     for event in model_sbml.getListOfEvents():
@@ -184,6 +185,26 @@ def convert_sbml2cellml(
         logger.info("CellML written to '%s'", cellml_path)
 
     return model
+
+
+def _set_ids(model: libcellml.Model) -> None:
+    """Give the model, its variables and its units an id.
+
+    CellML has no metadata, an `id` is what external metadata points at
+    (`sbml2cellml.metadata`). A variable has its name as id, which is unique
+    in the single component; units are `units_<name>` and the model has its
+    name, both with a numeric suffix when the id is taken.
+    """
+    component: libcellml.Component = model.component(COMPONENT_ID)
+    used: set[str] = set()
+    for k in range(component.variableCount()):
+        variable: libcellml.Variable = component.variable(k)
+        variable.setId(variable.name())
+        used.add(variable.name())
+    for k in range(model.unitsCount()):
+        units: libcellml.Units = model.units(k)
+        units.setId(unique_sid(f"units_{units.name()}", used))
+    model.setId(unique_sid(model.name(), used))
 
 
 #: an expansion of libsbml: the option of the conversion, what it expands, what

@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model xmlns="http://www.cellml.org/cellml/2.0#" name="BIOMD0000000012">
-  <units name="volume">
+<model xmlns="http://www.cellml.org/cellml/2.0#" name="BIOMD0000000012" id="BIOMD0000000012">
+  <units name="volume" id="units_volume">
     <unit prefix="femto" units="litre"/>
   </units>
-  <units name="item"/>
-  <units name="substance">
+  <units name="item" id="units_item"/>
+  <units name="substance" id="units_substance">
     <unit units="item"/>
   </units>
-  <units name="time">
+  <units name="time" id="units_time">
     <unit multiplier="60" units="second"/>
   </units>
-  <units name="substance_per_time">
+  <units name="substance_per_time" id="units_substance_per_time">
     <unit units="substance"/>
     <unit exponent="-1" units="time"/>
   </units>
   <component name="sbml">
-    <variable name="time" units="dimensionless"/>
-    <variable name="cell" units="dimensionless" initial_value="1"/>
-    <variable name="beta" units="dimensionless"/>
-    <variable name="alpha0" units="dimensionless"/>
-    <variable name="alpha" units="dimensionless"/>
-    <variable name="eff" units="dimensionless" initial_value="20"/>
-    <variable name="n" units="dimensionless" initial_value="2"/>
-    <variable name="KM" units="dimensionless" initial_value="40"/>
-    <variable name="tau_mRNA" units="dimensionless" initial_value="2"/>
-    <variable name="tau_prot" units="dimensionless" initial_value="10"/>
-    <variable name="t_ave" units="dimensionless"/>
-    <variable name="kd_mRNA" units="dimensionless"/>
-    <variable name="kd_prot" units="dimensionless"/>
-    <variable name="k_tl" units="dimensionless"/>
-    <variable name="a_tr" units="dimensionless"/>
-    <variable name="ps_a" units="dimensionless" initial_value="0.5"/>
-    <variable name="ps_0" units="dimensionless" initial_value="0.0005"/>
-    <variable name="a0_tr" units="dimensionless"/>
-    <variable name="PX" units="dimensionless" initial_value="0"/>
-    <variable name="PY" units="dimensionless" initial_value="0"/>
-    <variable name="PZ" units="dimensionless" initial_value="0"/>
-    <variable name="X" units="dimensionless" initial_value="0"/>
-    <variable name="Y" units="dimensionless" initial_value="20"/>
-    <variable name="Z" units="dimensionless" initial_value="0"/>
-    <variable name="Reaction1" units="dimensionless"/>
-    <variable name="Reaction2" units="dimensionless"/>
-    <variable name="Reaction3" units="dimensionless"/>
-    <variable name="Reaction4" units="dimensionless"/>
-    <variable name="Reaction5" units="dimensionless"/>
-    <variable name="Reaction6" units="dimensionless"/>
-    <variable name="Reaction7" units="dimensionless"/>
-    <variable name="Reaction8" units="dimensionless"/>
-    <variable name="Reaction9" units="dimensionless"/>
-    <variable name="Reaction10" units="dimensionless"/>
-    <variable name="Reaction11" units="dimensionless"/>
-    <variable name="Reaction12" units="dimensionless"/>
+    <variable name="time" units="dimensionless" id="time"/>
+    <variable name="cell" units="dimensionless" initial_value="1" id="cell"/>
+    <variable name="beta" units="dimensionless" id="beta"/>
+    <variable name="alpha0" units="dimensionless" id="alpha0"/>
+    <variable name="alpha" units="dimensionless" id="alpha"/>
+    <variable name="eff" units="dimensionless" initial_value="20" id="eff"/>
+    <variable name="n" units="dimensionless" initial_value="2" id="n"/>
+    <variable name="KM" units="dimensionless" initial_value="40" id="KM"/>
+    <variable name="tau_mRNA" units="dimensionless" initial_value="2" id="tau_mRNA"/>
+    <variable name="tau_prot" units="dimensionless" initial_value="10" id="tau_prot"/>
+    <variable name="t_ave" units="dimensionless" id="t_ave"/>
+    <variable name="kd_mRNA" units="dimensionless" id="kd_mRNA"/>
+    <variable name="kd_prot" units="dimensionless" id="kd_prot"/>
+    <variable name="k_tl" units="dimensionless" id="k_tl"/>
+    <variable name="a_tr" units="dimensionless" id="a_tr"/>
+    <variable name="ps_a" units="dimensionless" initial_value="0.5" id="ps_a"/>
+    <variable name="ps_0" units="dimensionless" initial_value="0.0005" id="ps_0"/>
+    <variable name="a0_tr" units="dimensionless" id="a0_tr"/>
+    <variable name="PX" units="dimensionless" initial_value="0" id="PX"/>
+    <variable name="PY" units="dimensionless" initial_value="0" id="PY"/>
+    <variable name="PZ" units="dimensionless" initial_value="0" id="PZ"/>
+    <variable name="X" units="dimensionless" initial_value="0" id="X"/>
+    <variable name="Y" units="dimensionless" initial_value="20" id="Y"/>
+    <variable name="Z" units="dimensionless" initial_value="0" id="Z"/>
+    <variable name="Reaction1" units="dimensionless" id="Reaction1"/>
+    <variable name="Reaction2" units="dimensionless" id="Reaction2"/>
+    <variable name="Reaction3" units="dimensionless" id="Reaction3"/>
+    <variable name="Reaction4" units="dimensionless" id="Reaction4"/>
+    <variable name="Reaction5" units="dimensionless" id="Reaction5"/>
+    <variable name="Reaction6" units="dimensionless" id="Reaction6"/>
+    <variable name="Reaction7" units="dimensionless" id="Reaction7"/>
+    <variable name="Reaction8" units="dimensionless" id="Reaction8"/>
+    <variable name="Reaction9" units="dimensionless" id="Reaction9"/>
+    <variable name="Reaction10" units="dimensionless" id="Reaction10"/>
+    <variable name="Reaction11" units="dimensionless" id="Reaction11"/>
+    <variable name="Reaction12" units="dimensionless" id="Reaction12"/>
     <math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:cellml="http://www.cellml.org/cellml/2.0#">
       <apply>
         <eq/>
