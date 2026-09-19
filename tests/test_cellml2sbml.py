@@ -193,13 +193,21 @@ def test_convert_nla_model_raises(tmp_path: Path) -> None:
     assert "x" in str(excinfo.value) and "y" in str(excinfo.value)
 
 
-def test_convert_dae_model_raises(tmp_path: Path) -> None:
+def test_convert_dae_model_has_an_algebraic_rule(tmp_path: Path) -> None:
+    """An implicit equation becomes the algebraic rule `0 = left - right`."""
     cellml_path = tmp_path / "dae.cellml"
     model = math_model({"a": "<ci>x</ci>"})
+    # with an initial value (the guess of the solver) `a = x` is implicit
     model.component("main").variable("a").setInitialValue(1.0)
     write_model(model, cellml_path)
-    with pytest.raises(CellML2SBMLConversionError, match="dae"):
-        convert_cellml2sbml(cellml_path)
+    doc = convert_cellml2sbml(cellml_path)
+    model_sbml: libsbml.Model = doc.getModel()
+    rules = [r for r in model_sbml.getListOfRules() if r.isAlgebraic()]
+    assert [libsbml.formulaToL3String(r.getMath()) for r in rules] == ["a - x"]
+    a: libsbml.Parameter = model_sbml.getParameter("a")
+    assert a.getConstant() is False and a.getValue() == 1.0
+    assert model_sbml.getRuleByVariable("x").isRate()
+    assert validate_document(doc) == []
 
 
 def test_convert_with_imports() -> None:

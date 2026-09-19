@@ -12,6 +12,7 @@ numbers: a number without units gets `dimensionless` (the units of every
 variable until units are converted), integers and rationals become reals.
 CellML has no symbols either: the SBML time symbol becomes the variable of
 integration `TIME_ID`, avogadro its value.
+An n-ary operator with less than two arguments is replaced by its value.
 """
 
 import math
@@ -41,6 +42,45 @@ CELLML_MATH_OPEN = (
 
 class MathMLError(ValueError):
     """A formula cannot be rendered as MathML."""
+
+
+#: value of an operator without arguments (MathML: its identity element)
+_EMPTY_OPERATORS = {
+    libsbml.AST_PLUS: 0.0,
+    libsbml.AST_TIMES: 1.0,
+    libsbml.AST_LOGICAL_AND: libsbml.AST_CONSTANT_TRUE,
+    libsbml.AST_LOGICAL_OR: libsbml.AST_CONSTANT_FALSE,
+    libsbml.AST_LOGICAL_XOR: libsbml.AST_CONSTANT_FALSE,
+}
+
+
+def simplify_operators(node: libsbml.ASTNode) -> libsbml.ASTNode:
+    """Replace n-ary operators with less than two arguments.
+
+    MathML allows `plus`, `times`, `and`, `or` and `xor` with one argument
+    (the argument) and without any (the identity element), CellML requires
+    two.
+
+    Args:
+        node: root of the libsbml AST of the formula, changed in place.
+
+    Returns:
+        The root, which is another node when the root itself was replaced.
+    """
+    while node.getType() in _EMPTY_OPERATORS and node.getNumChildren() < 2:
+        if node.getNumChildren() == 1:
+            node = node.getChild(0).deepCopy()
+            continue
+        value = _EMPTY_OPERATORS[node.getType()]
+        node = libsbml.ASTNode(libsbml.AST_REAL if isinstance(value, float) else value)
+        if isinstance(value, float):
+            node.setValue(value)
+    for k in range(node.getNumChildren()):
+        child: libsbml.ASTNode = node.getChild(k)
+        simplified = simplify_operators(child)
+        if simplified is not child:
+            node.replaceChild(k, simplified.deepCopy(), True)
+    return node
 
 
 def normalize_math(node: libsbml.ASTNode) -> None:
@@ -91,6 +131,7 @@ def process_mathml_for_cellml(formula: str) -> str:
         raise MathMLError(
             f"Formula does not parse: '{formula}': {libsbml.getLastParseL3Error()}"
         )
+    ast = simplify_operators(ast)
     normalize_math(ast)
     mathml: str = libsbml.writeMathMLToString(ast)
     mathml = XML_DECLARATION.sub("", mathml)
@@ -114,6 +155,24 @@ def mathml_for_assignment(vid: str, formula: str) -> str:
     return f"""<apply>
   <eq/>
   <ci>{vid}</ci>
+  {rhs}
+</apply>
+"""
+
+
+def mathml_for_algebraic(formula: str) -> str:
+    """MathML of the implicit equation `0 = formula`.
+
+    Args:
+        formula: the expression which is zero, in SBML L3 infix syntax.
+
+    Returns:
+        The `apply` element of the equation.
+    """
+    rhs = process_mathml_for_cellml(formula)
+    return f"""<apply>
+  <eq/>
+  <cn {CELLML_UNITS_ATTRIBUTE}="{NUMBER_UNITS}">0</cn>
   {rhs}
 </apply>
 """

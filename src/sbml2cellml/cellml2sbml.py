@@ -33,6 +33,14 @@ AstType = libcellml.AnalyserEquationAst.Type  # ty: ignore[unresolved-attribute]
 EquationType = libcellml.AnalyserEquation.Type  # ty: ignore[unresolved-attribute]
 VariableType = libcellml.AnalyserVariable.Type  # ty: ignore[unresolved-attribute]
 ModelType = libcellml.AnalyserModel.Type  # ty: ignore[unresolved-attribute]
+#: model types which can be converted; an implicit (NLA) equation becomes an
+#: algebraic rule
+SUPPORTED_MODEL_TYPES = (
+    ModelType.ODE,
+    ModelType.ALGEBRAIC,
+    ModelType.DAE,
+    ModelType.NLA,
+)
 
 
 class CellML2SBMLConversionError(ValueError):
@@ -130,11 +138,11 @@ def _analyse(model: libcellml.Model) -> Any:
             f"{cellml.format_issues(errors)}"
         )
     model_type = analyser_model.type()
-    if model_type not in (ModelType.ODE, ModelType.ALGEBRAIC):
+    if model_type not in SUPPORTED_MODEL_TYPES:
         type_name = libcellml.AnalyserModel.typeAsString(model_type)
         raise CellML2SBMLConversionError(
-            f"CellML model '{model.name()}' is of type '{type_name}', only ODE "
-            f"and algebraic models are supported."
+            f"CellML model '{model.name()}' is of type '{type_name}', only ODE, "
+            f"DAE, NLA and algebraic models are supported."
         )
     return analyser_model
 
@@ -270,11 +278,24 @@ def _add_equation(model_sbml: libsbml.Model, equation: Any, ids: VariableIds) ->
     equation_type = equation.type()
     type_name = libcellml.AnalyserEquation.typeAsString(equation_type)
     names = [variable.variable().name() for variable in _equation_variables(equation)]
-    if equation_type in (EquationType.NLA, EquationType.EXTERNAL):
+    if equation_type == EquationType.EXTERNAL:
         raise MathConversionError(
             f"Equation of type '{type_name}' for {names} is not supported."
         )
     ast = equation.ast()
+    if equation_type == EquationType.NLA:
+        # an implicit equation is the algebraic rule `0 = residual`; the
+        # analyser gives the residual `left - right` of `left = right`
+        if ast.type() == AstType.EQUALITY:
+            residual = libsbml.ASTNode(libsbml.AST_MINUS)
+            residual.addChild(ast_to_sbml(ast.leftChild(), ids))
+            residual.addChild(ast_to_sbml(ast.rightChild(), ids))
+        else:
+            residual = ast_to_sbml(ast, ids)
+        algebraic: libsbml.AlgebraicRule = model_sbml.createAlgebraicRule()
+        algebraic.setMath(residual)
+        logger.info("0 = %s", libsbml.formulaToL3String(residual))
+        return
     if ast.type() != AstType.EQUALITY:
         raise MathConversionError(f"Equation for {names} is not an equality.")
     left, right = ast.leftChild(), ast.rightChild()
