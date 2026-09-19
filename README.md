@@ -6,7 +6,8 @@
 Features include
 
 - conversion of compartments, parameters, species, assignment and rate rules and reactions into a single CellML component
-- conversion of CellML models to SBML: parameters with rules, unit definitions, resets as events, imports resolved
+- conversion of the units: unit definitions, the units of numbers and, for a model with a complete unit annotation, the units of every variable
+- conversion of CellML models to SBML: parameters with rules, unit definitions and units of numbers, resets as events, imports resolved
 - validation of the result with libcellml
 - timecourse simulation of the SBML with roadrunner and of the CellML with libopencor, both optional
 - the `sbml2cellml` and `cellml2sbml` command lines
@@ -18,7 +19,7 @@ sbml2cellml model.xml -o model.cellml
 cellml2sbml model.cellml -o model.xml
 ```
 
-In the SBML to CellML direction units, events and delays are not converted yet, see the [conversion issues](https://matthiaskoenig.github.io/sbml2cellml/conversion-issues/).
+In the SBML to CellML direction events and delays are not converted yet, see the [conversion issues](https://matthiaskoenig.github.io/sbml2cellml/conversion-issues/).
 
 # SBML test suite
 Every semantic case of the [SBML test suite](https://github.com/sbmlteam/sbml-test-suite) is simulated with roadrunner (`reference`), converted to CellML (`sbml2cellml`), simulated with libopencor (`libopencor`), converted back to SBML (`cellml2sbml`) and simulated with roadrunner again (`roundtrip`). The details are on the [SBML test suite](https://matthiaskoenig.github.io/sbml2cellml/testsuite/) page.

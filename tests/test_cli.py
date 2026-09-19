@@ -13,6 +13,7 @@ import sbml2cellml
 from sbml2cellml import cellml2sbml
 from sbml2cellml.cli import main, main_cellml2sbml
 from tests.conftest import MODELS_DIR, TEST_MODEL_PATH
+from tests.sbml_models import delay_model, write_sbml
 
 
 def test_convert_with_output(
@@ -41,18 +42,18 @@ def test_missing_input(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> No
 def test_invalid_model_fails_with_validation(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    out = tmp_path / "body.cellml"
-    code = main([str(MODELS_DIR / "glimepiride_body.xml"), "-o", str(out)])
+    out = tmp_path / "delay.cellml"
+    path = write_sbml(tmp_path / "delay.xml", delay_model())
+    code = main([str(path), "-o", str(out)])
     assert code == 1
     assert "errors" in capsys.readouterr().err
     assert not out.exists()
 
 
 def test_invalid_model_written_without_validation(tmp_path: Path) -> None:
-    out = tmp_path / "body.cellml"
-    code = main(
-        [str(MODELS_DIR / "glimepiride_body.xml"), "-o", str(out), "--no-validate"]
-    )
+    out = tmp_path / "delay.cellml"
+    path = write_sbml(tmp_path / "delay.xml", delay_model())
+    code = main([str(path), "-o", str(out), "--no-validate"])
     assert code == 0
     assert out.is_file()
 

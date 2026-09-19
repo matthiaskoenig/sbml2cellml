@@ -7,6 +7,7 @@ whose units reference base kinds only: a reference to another custom `Units`
 is expanded recursively.
 """
 
+import logging
 from dataclasses import dataclass
 from typing import Any
 
@@ -14,6 +15,11 @@ import libcellml
 import libsbml
 
 from sbml2cellml.variables import sanitize_id, unique_sid
+
+logger = logging.getLogger(__name__)
+
+#: SBML unit kind without CellML counterpart: new base units of this name
+ITEM = "item"
 
 #: SI prefixes of CellML, by name
 PREFIXES: dict[str, int] = {
@@ -76,15 +82,34 @@ def prefix_scale(prefix: str) -> int:
         raise UnitsConversionError(f"Unknown unit prefix '{prefix}'.") from err
 
 
+def _round(value: float) -> float:
+    """A float without the noise of a root, `60.00000000000001` is `60.0`."""
+    return float(f"{value:.15g}")
+
+
+def _is_item(units: Any) -> bool:
+    """Whether custom units are the SBML unit kind `item`.
+
+    CellML has no `item`; `sbml2cellml` writes it as new base units of that
+    name, i.e., units without unit children.
+    """
+    return units.name() == ITEM and units.unitCount() == 0
+
+
 def expand_units(units: Any, model: libcellml.Model) -> list[BaseUnit]:
     """Expand CellML units into SBML base units.
 
-    A `unit` referencing a standard unit gives one base unit. A `unit`
-    referencing a custom `Units` is expanded recursively, every resulting
-    exponent multiplied by the outer exponent and the outer factor
-    `multiplier * 10^prefix` folded into the multiplier of the first resulting
-    unit (as `factor^(1/e)` with `e` the exponent of that unit before the
-    multiplication, so that the product stays the same).
+    A CellML `unit` stands for `multiplier * (10^prefix * reference)^exponent`,
+    an SBML unit for `(multiplier * 10^scale * kind)^exponent`: the prefix
+    becomes the scale and the multiplier its root `multiplier^(1/exponent)`.
+    A `unit` referencing custom units is expanded recursively, every
+    resulting exponent multiplied by the outer exponent and the outer factor
+    `multiplier * 10^(prefix * exponent)` folded into the first resulting
+    unit. A factor which is left, e.g. of a unit with the exponent 0, becomes
+    a `dimensionless` unit with that multiplier.
+
+    New base units (custom units without any `unit`) have no SBML
+    counterpart and are dropped with a warning, except for `item`.
 
     Args:
         units: libcellml units.
@@ -99,41 +124,44 @@ def expand_units(units: Any, model: libcellml.Model) -> list[BaseUnit]:
     result: list[BaseUnit] = []
     for k in range(units.unitCount()):
         reference, prefix, exponent, multiplier, _ = units.unitAttributes(k)
-        kind = libsbml.UnitKind_forName(reference)
-        if kind != libsbml.UNIT_KIND_INVALID:
-            result.append(BaseUnit(kind, exponent, prefix_scale(prefix), multiplier))
-            continue
-        child = model.units(reference)
-        if child is None:
-            raise UnitsConversionError(
-                f"Units '{reference}' referenced by '{units.name()}' are not defined."
-            )
-        expanded = expand_units(child, model)
-        if not expanded:
-            result.append(
-                BaseUnit(
-                    libsbml.UNIT_KIND_DIMENSIONLESS,
-                    exponent,
-                    prefix_scale(prefix),
-                    multiplier,
+        scale = prefix_scale(prefix)
+        bases: list[BaseUnit]
+        if model.hasUnits(reference):
+            child = model.units(reference)
+            if _is_item(child):
+                bases = [BaseUnit(libsbml.UNIT_KIND_ITEM, 1.0, scale, 1.0)]
+                factor = multiplier
+            else:
+                if child.unitCount() == 0:
+                    logger.warning(
+                        "Units '%s' are new base units, which SBML does not have: "
+                        "dimensionless in '%s'.",
+                        reference,
+                        units.name(),
+                    )
+                bases = expand_units(child, model)
+                factor = multiplier * 10.0 ** (scale * exponent)
+        else:
+            kind = libsbml.UnitKind_forName(reference)
+            if kind == libsbml.UNIT_KIND_INVALID:
+                raise UnitsConversionError(
+                    f"Units '{reference}' referenced by '{units.name()}' are not "
+                    f"defined."
                 )
-            )
-            continue
-        factor = multiplier * 10.0 ** prefix_scale(prefix)
-        first_exponent = expanded[0].exponent
-        if first_exponent == 0:
-            raise UnitsConversionError(
-                f"Units '{reference}' start with a unit of exponent 0, "
-                f"the factor of '{units.name()}' cannot be folded."
-            )
-        for index, base in enumerate(expanded):
+            bases = [BaseUnit(kind, 1.0, scale, 1.0)]
+            factor = multiplier
+        for base in bases:
+            final = base.exponent * exponent
+            if final == 0:
+                continue
             base_multiplier = base.multiplier
-            if index == 0:
-                base_multiplier *= factor ** (1.0 / first_exponent)
+            if factor != 1.0:
+                base_multiplier = _round(base_multiplier * factor ** (1.0 / final))
+                factor = 1.0
+            result.append(BaseUnit(base.kind, final, base.scale, base_multiplier))
+        if factor != 1.0:
             result.append(
-                BaseUnit(
-                    base.kind, base.exponent * exponent, base.scale, base_multiplier
-                )
+                BaseUnit(libsbml.UNIT_KIND_DIMENSIONLESS, 1.0, 0, _round(factor))
             )
     return result
 
@@ -161,6 +189,9 @@ def add_units(
     }
     for k in range(model_cellml.unitsCount()):
         units = model_cellml.units(k)
+        if _is_item(units):
+            ids[ITEM] = ITEM
+            continue
         uid = unique_sid(sanitize_id(units.name()), used)
         definition = model_sbml.createUnitDefinition()
         definition.setId(uid)

@@ -30,6 +30,7 @@ nav = [
     { "mathml" = "api/mathml.md" },
     { "sbmlmath" = "api/sbmlmath.md" },
     { "units" = "api/units.md" },
+    { "cellmlunits" = "api/cellmlunits.md" },
     { "variables" = "api/variables.md" },
     { "simulate" = "api/simulate.md" },
     { "cli" = "api/cli.md" },

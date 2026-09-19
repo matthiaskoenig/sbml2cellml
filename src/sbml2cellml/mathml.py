@@ -8,8 +8,9 @@ and the element, combined, and wrapped in a `math` element which declares the
 libsbml becomes `cellml:units`.
 
 CellML requires units on every number and only knows real and e-notation
-numbers: a number without units gets `dimensionless` (the units of every
-variable until units are converted), integers and rationals become reals.
+numbers: a number without units gets `dimensionless`, the units of a number
+with units become their CellML name (`sbml2cellml.cellmlunits`), integers and
+rationals become reals.
 CellML has no symbols either: the SBML time symbol becomes the variable of
 integration `TIME_ID`, avogadro its value.
 An n-ary operator with less than two arguments is replaced by its value.
@@ -17,6 +18,7 @@ An n-ary operator with less than two arguments is replaced by its value.
 
 import math
 import re
+from collections.abc import Callable
 
 import libsbml
 
@@ -83,18 +85,30 @@ def simplify_operators(node: libsbml.ASTNode) -> libsbml.ASTNode:
     return node
 
 
-def normalize_math(node: libsbml.ASTNode) -> None:
+#: CellML units of the SBML units of a number
+type UnitsNames = Callable[[str], str]
+
+
+def normalize_math(
+    node: libsbml.ASTNode,
+    units: UnitsNames | None = None,
+    number_units: str = NUMBER_UNITS,
+) -> None:
     """Make the numbers and symbols of a formula valid CellML, in place.
 
     The time symbol becomes a reference to the variable of integration
     `TIME_ID`, avogadro a number with libsbml's value. Integers and
     rationals become reals, a finite number without units gets
-    `NUMBER_UNITS`. Infinity and NaN stay as they are, they are written as
+    `number_units`, the units of a number with units their CellML name.
+    Infinity and NaN stay as they are, they are written as
     the `infinity` and `notanumber` constants, which have no units. The
     delay and rateOf symbols stay, CellML has no counterpart for them.
 
     Args:
         node: root of the libsbml AST of the formula.
+        units: CellML units of the SBML units of a number
+            (`CellMLUnits.number_units`), the same name when `None`.
+        number_units: CellML units of a number without units.
     """
     if node.getType() == libsbml.AST_NAME_TIME:
         node.setType(libsbml.AST_NAME)
@@ -107,16 +121,23 @@ def normalize_math(node: libsbml.ASTNode) -> None:
         if node.getType() in (libsbml.AST_INTEGER, libsbml.AST_RATIONAL):
             node.setValue(float(node.getValue()))
         if not node.isSetUnits():
-            node.setUnits(NUMBER_UNITS)
+            node.setUnits(number_units)
+        elif units is not None:
+            node.setUnits(units(node.getUnits()))
     for k in range(node.getNumChildren()):
-        normalize_math(node.getChild(k))
+        normalize_math(node.getChild(k), units, number_units)
 
 
-def process_mathml_for_cellml(formula: str) -> str:
+def process_mathml_for_cellml(
+    formula: str, units: UnitsNames | None = None, number_units: str = NUMBER_UNITS
+) -> str:
     """Render a formula in SBML L3 syntax as a MathML fragment for CellML.
 
     Args:
         formula: formula in the SBML level 3 infix syntax, e.g., `k1 * S1`.
+        units: CellML units of the SBML units of a number, see
+            `normalize_math`.
+        number_units: CellML units of a number without units.
 
     Returns:
         The MathML of the formula without xml declaration and `math` element,
@@ -132,7 +153,7 @@ def process_mathml_for_cellml(formula: str) -> str:
             f"Formula does not parse: '{formula}': {libsbml.getLastParseL3Error()}"
         )
     ast = simplify_operators(ast)
-    normalize_math(ast)
+    normalize_math(ast, units, number_units)
     mathml: str = libsbml.writeMathMLToString(ast)
     mathml = XML_DECLARATION.sub("", mathml)
     mathml = MATH_OPEN.sub("", mathml, count=1)
@@ -141,17 +162,26 @@ def process_mathml_for_cellml(formula: str) -> str:
     return mathml.strip()
 
 
-def mathml_for_assignment(vid: str, formula: str) -> str:
+def mathml_for_assignment(
+    vid: str,
+    formula: str,
+    units: UnitsNames | None = None,
+    number_units: str = NUMBER_UNITS,
+) -> str:
     """MathML of the assignment `vid = formula`.
 
     Args:
         vid: id of the assigned variable.
         formula: right hand side in SBML L3 infix syntax.
+        units: CellML units of the SBML units of a number, see
+            `normalize_math`.
+        number_units: CellML units of a number without units, e.g. the units
+            of `vid` when the formula is its value.
 
     Returns:
         The `apply` element of the equation.
     """
-    rhs = process_mathml_for_cellml(formula)
+    rhs = process_mathml_for_cellml(formula, units, number_units)
     return f"""<apply>
   <eq/>
   <ci>{vid}</ci>
@@ -160,16 +190,18 @@ def mathml_for_assignment(vid: str, formula: str) -> str:
 """
 
 
-def mathml_for_algebraic(formula: str) -> str:
+def mathml_for_algebraic(formula: str, units: UnitsNames | None = None) -> str:
     """MathML of the implicit equation `0 = formula`.
 
     Args:
         formula: the expression which is zero, in SBML L3 infix syntax.
+        units: CellML units of the SBML units of a number, see
+            `normalize_math`.
 
     Returns:
         The `apply` element of the equation.
     """
-    rhs = process_mathml_for_cellml(formula)
+    rhs = process_mathml_for_cellml(formula, units)
     return f"""<apply>
   <eq/>
   <cn {CELLML_UNITS_ATTRIBUTE}="{NUMBER_UNITS}">0</cn>
@@ -178,18 +210,22 @@ def mathml_for_algebraic(formula: str) -> str:
 """
 
 
-def mathml_for_diff(vid: str, formula: str, ivid: str = "t") -> str:
+def mathml_for_diff(
+    vid: str, formula: str, ivid: str = "t", units: UnitsNames | None = None
+) -> str:
     """MathML of the differential equation `d vid / d ivid = formula`.
 
     Args:
         vid: id of the state variable.
         formula: right hand side in SBML L3 infix syntax.
         ivid: id of the variable of integration.
+        units: CellML units of the SBML units of a number, see
+            `normalize_math`.
 
     Returns:
         The `apply` element of the equation.
     """
-    rhs = process_mathml_for_cellml(formula)
+    rhs = process_mathml_for_cellml(formula, units)
     return f"""<apply>
   <eq/>
   <apply>

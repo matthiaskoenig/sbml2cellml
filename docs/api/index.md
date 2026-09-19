@@ -11,6 +11,7 @@ The API reference is generated from the docstrings of the package.
 | [mathml](mathml.md) | MathML fragments of the equations |
 | [sbmlmath](sbmlmath.md) | CellML maths (analyser AST, MathML) to libsbml ASTs |
 | [units](units.md) | CellML units to SBML unit definitions |
+| [cellmlunits](cellmlunits.md) | SBML units to CellML units, the units of the variables |
 | [variables](variables.md) | SBML ids of the CellML variables |
 | [simulate](simulate.md) | Timecourse simulation with libopencor (optional dependency) |
 | [cli](cli.md) | The `sbml2cellml` and `cellml2sbml` commands |

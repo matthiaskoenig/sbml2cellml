@@ -58,7 +58,10 @@ on `develop` after the merge.
 
 - `sbml2cellml.py`: `convert_sbml2cellml(sbml_path, cellml_path=None, validate=True)`.
   One CellML component `sbml`, one variable per compartment, parameter and
-  species plus `time`, all `dimensionless`. The calls of function definitions
+  species plus `time`. `_variable_units` gives the variables their units when
+  the unit annotation of the SBML model is complete (all or nothing: unset
+  SBML units are unknown, not dimensionless), else all are `dimensionless`
+  with a warning. The calls of function definitions
   are expanded first with libsbml's `expandFunctionDefinitions` conversion and
   the initial assignments evaluated to initial values with
   `expandInitialAssignments` (both skipped with a warning when a function is
@@ -89,8 +92,16 @@ on `develop` after the merge.
   rules, unevaluated initial assignments and unset initial values (set to 1.0)
   are logged as warnings. The generated CellML is a fixed contract: tests compare the
   structure and the validity of the example models.
+- `cellmlunits.py`: `CellMLUnits` converts every unit definition to CellML
+  units (scale to prefix, a power of ten multiplier too, any other multiplier
+  `m` to `m^exponent`: CellML applies the exponent to the prefix only; `item`
+  as new base units, `avogadro` as dimensionless units) and finds the units of
+  compartments, parameters, species (substance per size for a concentration,
+  the identical unit definition of the model or new `a_per_b` units) and
+  reaction rates (extent per time), with the built-in units of level 1 and 2.
 - `mathml.py`: libsbml renders formulas as MathML documents; the helpers strip
-  the declaration and `math` element, map `sbml:units` to `cellml:units`,
+  the declaration and `math` element, map `sbml:units` to `cellml:units` with
+  the CellML name of the units (`units` callable),
   make every number a real with units (`dimensionless` when it has none),
   replace the time symbol by the variable `time` and avogadro by its value
   (`normalize_math`) and wrap the equations into the component math.
@@ -112,9 +123,13 @@ on `develop` after the merge.
   colliding ids (parameters, unit definitions, the model id and event ids);
   `VariableIds.reserve` reserves an id outside the variables (model, events).
 - `sbmlmath.py`: analyser AST to libsbml AST, nested piecewise flattened,
-  `mathml_to_sbml` for reset maths.
-- `units.py`: standard units by name, custom units expanded to base kinds, the
-  factor folded into the first unit.
+  `mathml_to_sbml` for reset maths. The analyser AST has no units of numbers:
+  `NumberUnits` reads them from the MathML of the components and finds the
+  equation of an AST by its variables and numbers (in order, else by value).
+- `units.py`: CellML to SBML: standard units by name, custom units expanded to
+  base kinds (prefix to scale, multiplier `m` to `m^(1/exponent)`), the factor
+  of a reference to custom units folded into the first unit, new base units
+  `item` as the unit kind.
 - `sbml.py`: libsbml helpers, `validate_document` returns error messages, unit
   problems are warnings.
 - `cli.py`: argparse, `[project.scripts]` entry point.
@@ -161,9 +176,9 @@ on `develop` after the merge.
   CellML goes to the gitignored `examples/results/`. Small fixtures created
   for a test go to `tests/data/`.
 - Known conversion issues are documented in `docs/conversion-issues.md` and encoded in the
-  tests (`INVALID_MODELS` in `tests/test_sbml2cellml.py`, the kidney model in
-  `tests/test_simulate.py`); fixing a gap means removing the model from the
-  list, not weakening the assertion.
+  tests (`delay_model` in `tests/test_sbml2cellml.py`, the kidney model in
+  `tests/test_simulate.py`); fixing a gap means removing its test, not
+  weakening the assertion.
 - No em dash in any text, use `-`.
 - Release notes go in `release-notes/` as part of a release commit.
 - `references/` holds the CellML specification and libopencor notes, it is not

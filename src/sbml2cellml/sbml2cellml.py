@@ -4,17 +4,17 @@ The conversion puts every SBML compartment, parameter and species as a variable
 into a single CellML component `sbml`, together with the variable of
 integration `time`. Assignment rules become equations, rate rules and the
 kinetic laws of the reactions become differential equations. The target of an
-assignment rule has no initial value, the rule defines it at all times. All
-variables are `dimensionless`, the units of the SBML model are not converted
-yet.
+assignment rule has no initial value, the rule defines it at all times. The
+unit definitions and the units of numbers are converted, the units of the
+variables when the unit annotation of the model is complete
+(`sbml2cellml.cellmlunits`), else all variables are `dimensionless`.
 
 CellML has no functions: the calls of SBML function definitions are replaced
 by the bodies of the functions (libsbml's `expandFunctionDefinitions`
 conversion) before the conversion, and the initial assignments are evaluated
 to initial values (`expandInitialAssignments`).
 
-Not supported yet (logged as warning, see docs/conversion-issues.md): unit
-definitions and events.
+Not supported yet (logged as warning, see docs/conversion-issues.md): events.
 """
 
 import logging
@@ -28,6 +28,7 @@ import libsbml
 
 from sbml2cellml import cellml, mathml
 from sbml2cellml.cellml import CellMLValidationError
+from sbml2cellml.cellmlunits import CellMLUnits
 from sbml2cellml.mathml import TIME_ID
 from sbml2cellml.variables import unique_sid
 
@@ -35,8 +36,10 @@ logger = logging.getLogger(__name__)
 
 #: name of the single component which holds the model
 COMPONENT_ID = "sbml"
-#: units of every variable until units are converted
+#: units of a variable without units
 UNITS_ID = "dimensionless"
+#: variables without units named in the warning of an incomplete annotation
+MISSING_UNITS_LOGGED = 10
 
 
 class SBML2CellMLConversionError(ValueError):
@@ -88,54 +91,53 @@ def convert_sbml2cellml(
     component = libcellml.Component(COMPONENT_ID)
     model.addComponent(component)
 
-    per_second = libcellml.Units("per_second")
-    per_second.addUnit("second", -1)
-    model.addUnits(per_second)
-
-    time = libcellml.Variable(TIME_ID)
-    time.setUnits(UNITS_ID)
-    component.addVariable(time)
-
     assignment_rules = formulas.assignment_rules
     rate_rules = formulas.rate_rules
     reaction_terms = formulas.reaction_terms
     rates = formulas.rates
     assigned = set(assignment_rules)
-    compartment_sizes = _add_compartments(component, model_sbml, assigned)
-    _add_parameters(component, model_sbml, assigned)
-    _add_species(component, model_sbml, compartment_sizes, assigned)
-    _add_local_parameters(component, model_sbml, formulas.local_ids)
-    _add_species_references(component, model_sbml, assigned)
     reaction_ids = _referenced_reactions(model_sbml, rates)
+    # CellML knows the variable of integration only from a differential
+    # equation, an unused one has an unknown type: the model is algebraic
+    has_time = bool(rate_rules or reaction_terms or _uses_time(model_sbml))
+    if not has_time:
+        logger.info("No differential equation, '%s' is algebraic", mid)
+
+    cellml_units = CellMLUnits(model_sbml, model)
+    units = _variable_units(
+        model_sbml, cellml_units, formulas.local_ids, reaction_ids, has_time
+    )
+    number_units = cellml_units.number_units
+
+    if has_time:
+        _add_variable(component, TIME_ID, None, units)
+    compartment_sizes = _add_compartments(component, model_sbml, assigned, units)
+    _add_parameters(component, model_sbml, assigned, units)
+    _add_species(component, model_sbml, compartment_sizes, assigned, units)
+    _add_local_parameters(component, model_sbml, formulas.local_ids, units)
+    _add_species_references(component, model_sbml, assigned, units)
     for rid in reaction_ids:
-        _add_variable(component, rid, None)
+        _add_variable(component, rid, None, units)
 
     parts: list[str] = []
     for vid, formula in assignment_rules.items():
         logger.info("%s = %s", vid, formula)
-        parts.append(mathml.mathml_for_assignment(vid=vid, formula=formula))
+        parts.append(mathml.mathml_for_assignment(vid, formula, number_units))
     for vid, formula in formulas.algebraic_rules.items():
         logger.info("0 = %s (determines %s)", formula, vid)
-        parts.append(mathml.mathml_for_algebraic(formula=formula))
+        parts.append(mathml.mathml_for_algebraic(formula, number_units))
     parts.extend(_constants_of_algebraic_rules(component, formulas))
-    for vid, formula in rate_rules.items():
+    for vid, formula in [*rate_rules.items(), *reaction_terms.items()]:
         logger.info("d%s/dt = %s", vid, formula)
-        parts.append(mathml.mathml_for_diff(vid=vid, formula=formula, ivid=TIME_ID))
-    for vid, formula in reaction_terms.items():
-        logger.info("d%s/dt = %s", vid, formula)
-        parts.append(mathml.mathml_for_diff(vid=vid, formula=formula, ivid=TIME_ID))
+        parts.append(mathml.mathml_for_diff(vid, formula, TIME_ID, number_units))
     for rid in reaction_ids:
         logger.info("%s = %s (rate of reaction)", rid, rates[rid])
-        parts.append(mathml.mathml_for_assignment(vid=rid, formula=rates[rid]))
+        parts.append(mathml.mathml_for_assignment(rid, rates[rid], number_units))
     parts.extend(
         _non_finite_initial_values(component, set(rate_rules) | set(reaction_terms))
     )
-    if not (rate_rules or reaction_terms or _uses_time(model_sbml)):
-        # CellML knows the variable of integration only from a differential
-        # equation, an unused one has an unknown type: the model is algebraic
-        component.removeVariable(TIME_ID)
-        logger.info("No differential equation, '%s' is algebraic", mid)
     component.setMath(mathml.cellml_math(parts))
+    model.linkUnits()
 
     event: libsbml.Event
     for event in model_sbml.getListOfEvents():
@@ -375,23 +377,98 @@ def _set_value(is_set: bool, value: float) -> float | None:
     return value if is_set else None
 
 
+def _variable_units(
+    model_sbml: libsbml.Model,
+    cellml_units: CellMLUnits,
+    local_ids: dict[str, dict[str, str]],
+    reaction_ids: list[str],
+    has_time: bool,
+) -> dict[str, str]:
+    """The units of the variables of a model with a complete unit annotation.
+
+    Units which are not set are unknown in SBML, not dimensionless, so the
+    units are converted for all variables or for none: a model in which
+    some variables had units and the others were dimensionless would state
+    units which the SBML model does not have.
+
+    Args:
+        model_sbml: the SBML model.
+        cellml_units: the CellML units of the model.
+        local_ids: variable id of every local parameter.
+        reaction_ids: ids of the reactions which are variables of their rate.
+        has_time: whether the model has the variable of integration.
+
+    Returns:
+        The name of the CellML units by variable id; empty when the units of
+        a variable are unknown, which is logged.
+    """
+    units: dict[str, str | None] = {}
+    if has_time:
+        units[TIME_ID] = cellml_units.time()
+    compartment: libsbml.Compartment
+    for compartment in model_sbml.getListOfCompartments():
+        units[compartment.getId()] = cellml_units.of_compartment(compartment)
+    parameter: libsbml.Parameter
+    for parameter in model_sbml.getListOfParameters():
+        units[parameter.getId()] = cellml_units.of_parameter(parameter)
+    species: libsbml.Species
+    for species in model_sbml.getListOfSpecies():
+        units[species.getId()] = cellml_units.of_species(species)
+    for rid, ids in local_ids.items():
+        klaw: libsbml.KineticLaw = model_sbml.getReaction(rid).getKineticLaw()
+        for pid, vid in ids.items():
+            units[vid] = cellml_units.of_parameter(klaw.getParameter(pid))
+    reaction: libsbml.Reaction
+    for reaction in model_sbml.getListOfReactions():
+        for reference in [
+            *reaction.getListOfReactants(),
+            *reaction.getListOfProducts(),
+        ]:
+            if reference.isSetId():
+                # a stoichiometry has no units
+                units[reference.getId()] = UNITS_ID
+    for rid in reaction_ids:
+        units[rid] = cellml_units.of_reaction()
+
+    missing = sorted(vid for vid, name in units.items() if name is None)
+    if not missing:
+        logger.info("Unit annotation of '%s' is complete", model_sbml.getId())
+        return {vid: name for vid, name in units.items() if name is not None}
+    if cellml_units.is_annotated:
+        logger.warning(
+            "Units of the variables not converted, the unit annotation is "
+            "incomplete: %s%s have no units.",
+            ", ".join(missing[:MISSING_UNITS_LOGGED]),
+            ", ..." if len(missing) > MISSING_UNITS_LOGGED else "",
+        )
+    return {}
+
+
 def _add_variable(
-    component: libcellml.Component, sid: str, value: float | None
+    component: libcellml.Component,
+    sid: str,
+    value: float | None,
+    units: dict[str, str],
 ) -> None:
-    """Add a dimensionless variable to the component.
+    """Add a variable to the component.
 
     `value` is its initial value, `None` for a variable an equation computes
-    (the target of an assignment rule), which must not have one.
+    (the target of an assignment rule), which must not have one. `units` has
+    the units of the variables (`_variable_units`), a variable without is
+    dimensionless.
     """
     variable = libcellml.Variable(sid)
-    variable.setUnits(UNITS_ID)
+    variable.setUnits(units.get(sid, UNITS_ID))
     if value is not None:
         variable.setInitialValue(value)
     component.addVariable(variable)
 
 
 def _add_compartments(
-    component: libcellml.Component, model_sbml: libsbml.Model, assigned: set[str]
+    component: libcellml.Component,
+    model_sbml: libsbml.Model,
+    assigned: set[str],
+    units: dict[str, str],
 ) -> dict[str, float]:
     """Add the compartments as variables.
 
@@ -406,18 +483,21 @@ def _add_compartments(
         cid: str = compartment.getId()
         if cid in assigned:
             sizes[cid] = compartment.getSize()
-            _add_variable(component, cid, None)
+            _add_variable(component, cid, None, units)
         else:
             sizes[cid] = _initial_value(
                 cid, _set_value(compartment.isSetSize(), compartment.getSize())
             )
-            _add_variable(component, cid, sizes[cid])
+            _add_variable(component, cid, sizes[cid], units)
         logger.info("'%s' variable for compartment", cid)
     return sizes
 
 
 def _add_parameters(
-    component: libcellml.Component, model_sbml: libsbml.Model, assigned: set[str]
+    component: libcellml.Component,
+    model_sbml: libsbml.Model,
+    assigned: set[str],
+    units: dict[str, str],
 ) -> None:
     """Add the parameters as variables."""
     parameter: libsbml.Parameter
@@ -430,7 +510,7 @@ def _add_parameters(
                 pid, _set_value(parameter.isSetValue(), parameter.getValue())
             )
         )
-        _add_variable(component, pid, value)
+        _add_variable(component, pid, value, units)
         logger.info("'%s' variable for parameter", pid)
 
 
@@ -439,6 +519,7 @@ def _add_species(
     model_sbml: libsbml.Model,
     compartment_sizes: dict[str, float],
     assigned: set[str],
+    units: dict[str, str],
 ) -> None:
     """Add the species as variables.
 
@@ -465,7 +546,7 @@ def _add_species(
             initial = value * _size(cid, sid, compartment_sizes) if amount else value
         else:
             initial = _initial_value(sid, None)
-        _add_variable(component, sid, initial)
+        _add_variable(component, sid, initial, units)
         logger.info("'%s' variable for species", sid)
 
 
@@ -641,6 +722,7 @@ def _add_local_parameters(
     component: libcellml.Component,
     model_sbml: libsbml.Model,
     local_ids: dict[str, dict[str, str]],
+    units: dict[str, str],
 ) -> None:
     """Add the local parameters of the kinetic laws as variables (`local_ids`)."""
     for rid, ids in local_ids.items():
@@ -650,12 +732,15 @@ def _add_local_parameters(
             value = _initial_value(
                 vid, _set_value(local.isSetValue(), local.getValue())
             )
-            _add_variable(component, vid, value)
+            _add_variable(component, vid, value, units)
             logger.info("'%s' variable for local parameter '%s' of '%s'", vid, pid, rid)
 
 
 def _add_species_references(
-    component: libcellml.Component, model_sbml: libsbml.Model, assigned: set[str]
+    component: libcellml.Component,
+    model_sbml: libsbml.Model,
+    assigned: set[str],
+    units: dict[str, str],
 ) -> None:
     """Add the species references with an id as variables.
 
@@ -680,7 +765,7 @@ def _add_species_references(
                     ),
                 )
             )
-            _add_variable(component, vid, value)
+            _add_variable(component, vid, value, units)
             logger.info(
                 "'%s' variable for a stoichiometry of '%s'", vid, reaction.getId()
             )
@@ -886,7 +971,11 @@ def _constants_of_algebraic_rules(
         variable.removeInitialValue()
         formula = NON_FINITE.get(value, value)
         logger.info("%s = %s (constant of an algebraic rule)", name, formula)
-        parts.append(mathml.mathml_for_assignment(vid=name, formula=formula))
+        parts.append(
+            mathml.mathml_for_assignment(
+                name, formula, number_units=variable.units().name()
+            )
+        )
     return parts
 
 

@@ -1,11 +1,9 @@
-"""Convert the glimepiride models to CellML and simulate the liver model.
+"""Convert the glimepiride models to CellML and simulate them.
 
 The models are the physiologically based pharmacokinetic models of
-https://github.com/matthiaskoenig/glimepiride-model. The current converter
-renders the liver and kidney models as valid CellML; the intestine and body
-models hit a known conversion issue (units on numbers), see
-https://matthiaskoenig.github.io/sbml2cellml/conversion-issues/. Only the liver model
-is fully constrained for libopencor.
+https://github.com/matthiaskoenig/glimepiride-model. Their unit annotation is
+complete, so the variables of the CellML models have the units of the SBML
+models, which the simulation results report.
 """
 
 from pathlib import Path
@@ -25,8 +23,8 @@ MODEL_NAMES: list[str] = [
     "glimepiride_body",
     "glimepiride_body_flat",
 ]
-#: models which libopencor can simulate
-SIMULATED_MODELS: list[str] = ["glimepiride_liver"]
+#: models which are simulated, the whole body model takes the longest
+SIMULATED_MODELS: list[str] = ["glimepiride_liver", "glimepiride_body"]
 
 
 def convert_glimepiride_models(results_dir: Path) -> dict[str, Path]:
