@@ -84,7 +84,7 @@ Homepage = "https://matthiaskoenig.github.io/sbml2cellml"
 Documentation = "https://matthiaskoenig.github.io/sbml2cellml"
 Repository = "https://github.com/matthiaskoenig/sbml2cellml"
 Issues = "https://github.com/matthiaskoenig/sbml2cellml/issues"
-Changelog = "https://github.com/matthiaskoenig/sbml2cellml/tree/develop/release-notes"
+Changelog = "https://matthiaskoenig.github.io/sbml2cellml/release-notes/"
 Download = "https://pypi.org/project/sbml2cellml"
 
 [tool.hatch.version]

@@ -66,6 +66,8 @@ The reverse direction, [CellML to SBML](conversion.md#cellml-to-sbml), maps ever
 
 The [conversion issues](conversion-issues.md) list what is not converted yet, the [SBML test suite](testsuite.md) page how many of the semantic test cases pass.
 
+The [release notes](release-notes/index.md) list the changes of every version.
+
 ## Citation
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22829187.svg)](https://doi.org/10.5281/zenodo.22829187)
