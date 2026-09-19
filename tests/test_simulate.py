@@ -185,6 +185,23 @@ def test_run_timecourse_rate_of(tmp_path: Path) -> None:
     assert np.allclose(df["rate_k1"], 0.0)
 
 
+def test_run_timecourse_algebraic_rule(tmp_path: Path) -> None:
+    """0 = x + S1 - 20 holds at every time point."""
+    model_sbml = simple_model("algebraic_rule")
+    x = model_sbml.createParameter()
+    x.setId("x")
+    x.setValue(1.0)
+    x.setConstant(False)
+    rule = model_sbml.createAlgebraicRule()
+    rule.setMath(libsbml.parseL3Formula("x + S1 - 20"))
+    sbml_path = write_sbml(tmp_path / "algebraic_rule.xml", model_sbml)
+    cellml_path = tmp_path / "algebraic_rule.cellml"
+    convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
+    df, _ = run_timecourse(cellml_path, end=4.0, steps=4)
+    assert np.allclose(df["x"], 20.0 - df["S1"])
+    assert not np.allclose(df["S1"], 10.0)
+
+
 def test_run_timecourse_missing_file(tmp_path: Path) -> None:
     with pytest.raises(SimulationError):
         run_timecourse(tmp_path / "missing.cellml")

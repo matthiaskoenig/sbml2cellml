@@ -566,7 +566,92 @@ def test_rate_of_an_assignment_rule_target_is_not_converted(
     sbml_path = write_sbml(tmp_path / "assigned_rate.xml", model_sbml)
     with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
         convert_sbml2cellml(sbml_path, validate=False)
-    assert "rateOf(p) not converted, 'p' is set by an assignment rule" in caplog.text
+    assert "rateOf(p) not converted, 'p' is computed by a rule" in caplog.text
+
+
+def _algebraic_rule(model_sbml: libsbml.Model, formula: str) -> None:
+    rule: libsbml.AlgebraicRule = model_sbml.createAlgebraicRule()
+    rule.setMath(libsbml.parseL3Formula(formula))
+
+
+def _parameter(
+    model_sbml: libsbml.Model, pid: str, value: float, constant: bool
+) -> None:
+    parameter: libsbml.Parameter = model_sbml.createParameter()
+    parameter.setId(pid)
+    parameter.setValue(value)
+    parameter.setConstant(constant)
+
+
+def test_algebraic_rule_determines_its_free_variable(tmp_path: Path) -> None:
+    """0 = x + y + S1 - 20: x is free, y constant, S1 changed by the reaction."""
+    model_sbml = simple_model("algebraic_rule")
+    _parameter(model_sbml, "x", 1.0, constant=False)
+    _parameter(model_sbml, "y", 2.0, constant=True)
+    _algebraic_rule(model_sbml, "x + y + S1 - 20")
+    sbml_path = write_sbml(tmp_path / "algebraic_rule.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    assert errors(validate_model(model)) == []
+    v = variables(model)
+    # x has the solution at the start (20 - 2 - 10) as guess of the solver;
+    # libcellml takes any other variable with an initial value for the unknown
+    # too, so the constant of the rule is stated as the equation y = 2
+    assert float(v["x"].initialValue()) == 8.0
+    assert v["y"].initialValue() == ""
+    assert float(v["S1"].initialValue()) == 10.0  # a state keeps its value
+    assert float(v["k1"].initialValue()) == 0.5  # not in the rule
+
+
+def test_algebraic_rules_are_matched_with_their_variables(tmp_path: Path) -> None:
+    """0 = a + b - 3 could determine a or b, 0 = a - 1 only a."""
+    model_sbml = simple_model("matching")
+    _parameter(model_sbml, "a", 0.0, constant=False)
+    _parameter(model_sbml, "b", 0.0, constant=False)
+    _algebraic_rule(model_sbml, "a + b - 3")
+    _algebraic_rule(model_sbml, "a - 1")
+    sbml_path = write_sbml(tmp_path / "matching.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    assert errors(validate_model(model)) == []
+    v = variables(model)
+    # a is the unknown of the second rule and used by the first: no guess
+    assert v["a"].initialValue() == ""
+    assert float(v["b"].initialValue()) == 2.0  # solved at the start: 3 - 1
+
+
+def test_algebraic_rule_is_solved_at_the_start(tmp_path: Path) -> None:
+    """The solution is the guess of the solver and the size of the compartment
+    which converts the initial values of its species."""
+    model_sbml = simple_model("solved")
+    cell: libsbml.Compartment = model_sbml.getCompartment("cell")
+    cell.unsetSize()
+    cell.setConstant(False)
+    _algebraic_rule(model_sbml, "cell - 2.5")
+    _parameter(model_sbml, "x", 1.0, constant=False)
+    _algebraic_rule(model_sbml, "x * x - 9")
+    s1: libsbml.Species = model_sbml.getSpecies("S1")
+    s1.unsetInitialConcentration()
+    s1.setInitialAmount(6.0)  # a concentration variable: 6 / 2.5
+    sbml_path = write_sbml(tmp_path / "solved.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    assert errors(validate_model(model)) == []
+    v = variables(model)
+    assert float(v["cell"].initialValue()) == 2.5
+    assert float(v["S1"].initialValue()) == pytest.approx(2.4)
+    assert float(v["x"].initialValue()) == pytest.approx(3.0)
+
+
+def test_algebraic_rule_without_a_free_variable_logs_warning(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    model_sbml = simple_model("overdetermined")
+    _algebraic_rule(model_sbml, "k1 - 0.5")  # k1 is constant
+    sbml_path = write_sbml(tmp_path / "overdetermined.xml", model_sbml)
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        model = convert_sbml2cellml(sbml_path)
+    assert "AlgebraicRule 'k1 - 0.5' not converted, it determines no variable" in (
+        caplog.text
+    )
+    assert float(variables(model)["k1"].initialValue()) == 0.5
 
 
 def test_nan_initial_value_logs_warning(

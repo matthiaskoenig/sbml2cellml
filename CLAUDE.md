@@ -78,7 +78,13 @@ on `develop` after the merge.
   runs such an algebraic model as a steady state. `_collect_formulas` gathers
   all formulas before the initial assignments are evaluated (they do not
   depend on initial values) and replaces `rateOf(x)` by the right-hand side
-  of the equation of `x`, also in the initial assignments. An infinite or NaN value of
+  of the equation of `x`, also in the initial assignments. An algebraic rule
+  becomes `0 = formula`: `_match_algebraic_rules` finds the variable it
+  determines, `_solve_algebraic_rules` solves it at the start (libsbml
+  evaluates, secant method) for the solver guess and compartment sizes, and
+  `_constants_of_algebraic_rules` turns the other initial values of the rule
+  into equations, since libcellml takes any variable with an initial value in
+  an implicit equation for its unknown. An infinite or NaN value of
   a variable which is not a state becomes an equation. Events, algebraic
   rules, unevaluated initial assignments and unset initial values (set to 1.0)
   are logged as warnings. The generated CellML is a fixed contract: tests compare the
@@ -98,6 +104,7 @@ on `develop` after the merge.
 - `cellml2sbml.py`: `convert_cellml2sbml(cellml_path, sbml_path=None, validate=True)`,
   analyser driven: parameters by variable type, rules by equation type, initial
   assignments for computed constants and variable-referenced initial values,
+  implicit (NLA) equations as algebraic rules,
   resets as events with `eq` trigger and `-order` priority, imports flattened
   with `Importer`.
 - `variables.py`: `VariableIds` gives one SBML id per equivalence set, a

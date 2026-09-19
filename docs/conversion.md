@@ -25,7 +25,7 @@ A file without a model raises `SBML2CellMLConversionError`.
 
 ## Logging
 
-The package logs the conversion steps and the constructs it skips (events, algebraic rules, initial assignments libsbml cannot evaluate, unset initial values) and does not print. Scripts enable the rich output of the package with
+The package logs the conversion steps and the constructs it skips (events, algebraic rules which determine no variable, initial assignments libsbml cannot evaluate, unset initial values) and does not print. Scripts enable the rich output of the package with
 
 ```python
 from sbml2cellml import log
@@ -90,10 +90,11 @@ CellML has no species, compartments or reactions: every variable becomes a param
 | reset | event with the trigger `test_variable == test_value`, priority `-order`, one event assignment |
 | components and connections | one flat namespace; a variable name used by several unconnected variables is prefixed with its component (`cell_x`), the CellML name is kept as `name`; the model id and event ids also get a numeric suffix when they collide with a variable id |
 | imports | resolved and flattened before the conversion |
-| model type other than ODE or algebraic (e.g. DAE) | CellML2SBMLConversionError |
+| implicit equation (`a + s = 5`, a model of type DAE or NLA) | algebraic rule `0 = a + s - 5`, the unknown a `parameter constant="false"` with its initial value (the guess of the solver) |
+| model which cannot be analysed (e.g. underconstrained) | CellML2SBMLConversionError |
 
 ## Limitations
 
-- Implicit equations (`x + y = 4`, a system the analyser classifies as NLA) and external variables are not supported and raise `CellML2SBMLConversionError`.
+- A system of coupled implicit equations (`x + y = 4`, `x - y = 2`) cannot be analysed by libcellml, and external variables are not supported; both raise `CellML2SBMLConversionError`.
 - Units on numbers in formulas are not carried into the SBML math (the analyser AST has none); libsbml reports them as unit warnings.
 - A reset triggers on the equality of the test variable and the test value. A continuous simulator detects the equality only when the test variable crosses the test value at an integrator step, so a reset may not fire in SBML simulators; the roundtrip harness reports this per model.

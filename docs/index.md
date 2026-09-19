@@ -56,7 +56,8 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | function definition | calls replaced by the body of the function |
 | local parameter of a kinetic law | variable `<reaction>_<parameter>` (numeric suffix when taken) |
 | event | not yet, a warning is logged |
-| algebraic rule | not yet, a warning is logged |
+| algebraic rule | implicit equation `0 = formula` for the variable the rule determines, which starts from the solution at the start time; the constants of the rule become equations `y = value` |
+| `plus`, `times`, `and`, `or`, `xor` with less than two arguments | their value (the argument or the identity element) |
 
 The reverse direction, [CellML to SBML](conversion.md#cellml-to-sbml), maps every variable to a parameter with rules and converts units and resets.
 

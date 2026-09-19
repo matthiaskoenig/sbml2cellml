@@ -82,6 +82,7 @@ def convert_sbml2cellml(
     # the conversions rewrite the document, its model is read again
     model_sbml = doc.getModel()
     assert model_sbml is not None
+    _solve_algebraic_rules(model_sbml, formulas)
 
     model = libcellml.Model(mid)
     component = libcellml.Component(COMPONENT_ID)
@@ -113,6 +114,10 @@ def convert_sbml2cellml(
     for vid, formula in assignment_rules.items():
         logger.info("%s = %s", vid, formula)
         parts.append(mathml.mathml_for_assignment(vid=vid, formula=formula))
+    for vid, formula in formulas.algebraic_rules.items():
+        logger.info("0 = %s (determines %s)", formula, vid)
+        parts.append(mathml.mathml_for_algebraic(formula=formula))
+    parts.extend(_constants_of_algebraic_rules(component, formulas))
     for vid, formula in rate_rules.items():
         logger.info("d%s/dt = %s", vid, formula)
         parts.append(mathml.mathml_for_diff(vid=vid, formula=formula, ivid=TIME_ID))
@@ -245,6 +250,13 @@ class _Formulas:
     rates: dict[str, str]
     #: variable id of every local parameter, by reaction and parameter id
     local_ids: dict[str, dict[str, str]]
+    #: formula of `0 = formula` by the id of the variable the rule determines
+    algebraic_rules: dict[str, str]
+
+    @property
+    def computed(self) -> set[str]:
+        """Ids which an assignment or algebraic rule computes."""
+        return set(self.assignment_rules) | set(self.algebraic_rules)
 
 
 def _collect_formulas(model_sbml: libsbml.Model) -> _Formulas:
@@ -254,16 +266,27 @@ def _collect_formulas(model_sbml: libsbml.Model) -> _Formulas:
     the initial assignments are evaluated. CellML has no rateOf: it is
     replaced by the right-hand side it stands for.
     """
-    assignment_rules, rate_rules = _collect_rules(model_sbml)
+    assignment_rules, rate_rules, algebraic = _collect_rules(model_sbml)
+    algebraic_rules = _match_algebraic_rules(
+        model_sbml, algebraic, set(assignment_rules) | set(rate_rules)
+    )
     local_ids = _local_parameter_ids(model_sbml)
     rates = _kinetic_laws(model_sbml, local_ids)
     reaction_terms = _collect_reaction_terms(model_sbml, rates)
+    result = _Formulas(
+        assignment_rules, rate_rules, reaction_terms, rates, local_ids, algebraic_rules
+    )
     derivatives = {**rate_rules, **reaction_terms}
-    assigned = set(assignment_rules)
-    for formulas in (assignment_rules, rate_rules, reaction_terms, rates):
+    for formulas in (
+        assignment_rules,
+        rate_rules,
+        reaction_terms,
+        rates,
+        algebraic_rules,
+    ):
         for key, formula in formulas.items():
-            formulas[key] = _expand_rate_of(formula, derivatives, assigned)
-    return _Formulas(assignment_rules, rate_rules, reaction_terms, rates, local_ids)
+            formulas[key] = _expand_rate_of(formula, derivatives, result.computed)
+    return result
 
 
 def _rate_of_in_initial_assignments(
@@ -282,7 +305,7 @@ def _rate_of_in_initial_assignments(
         if not assignment.isSetMath():
             continue
         formula: str = libsbml.formulaToL3String(assignment.getMath())
-        expanded = _expand_rate_of(formula, derivatives, set(formulas.assignment_rules))
+        expanded = _expand_rate_of(formula, derivatives, formulas.computed)
         if expanded != formula:
             assignment.setMath(libsbml.parseL3Formula(expanded))
 
@@ -466,14 +489,16 @@ def _size(cid: str, sid: str, compartment_sizes: dict[str, float]) -> float:
 
 def _collect_rules(
     model_sbml: libsbml.Model,
-) -> tuple[dict[str, str], dict[str, str]]:
-    """Collect the assignment and rate rules as formulas.
+) -> tuple[dict[str, str], dict[str, str], list[str]]:
+    """Collect the rules as formulas.
 
     Returns:
-        The assignment rules and the rate rules, formula by variable id.
+        The assignment rules and the rate rules, formula by variable id, and
+        the formulas of the algebraic rules.
     """
     assignment_rules: dict[str, str] = {}
     rate_rules: dict[str, str] = {}
+    algebraic_rules: list[str] = []
     rule: libsbml.Rule
     for rule in model_sbml.getListOfRules():
         if not rule.isSetMath():
@@ -486,12 +511,100 @@ def _collect_rules(
         elif rule.getTypeCode() == libsbml.SBML_RATE_RULE:
             rate_rules[rule.getVariable()] = formula
         else:
+            algebraic_rules.append(formula)
+    return assignment_rules, rate_rules, algebraic_rules
+
+
+def _match_algebraic_rules(
+    model_sbml: libsbml.Model, rules: list[str], determined: set[str]
+) -> dict[str, str]:
+    """Match every algebraic rule with the variable it determines.
+
+    An algebraic rule `0 = formula` determines a variable of its formula
+    which nothing else determines: a compartment, parameter, species or
+    species reference which is not constant, not the target of another rule
+    and not a species changed by reactions. CellML does not name the variable
+    an implicit equation determines, the converter has to know it (see
+    `_constants_of_algebraic_rules`); a maximum matching of rules and
+    variables finds it when several rules share candidates.
+
+    Args:
+        model_sbml: the SBML model.
+        rules: formulas of the algebraic rules.
+        determined: ids which assignment and rate rules determine.
+
+    Returns:
+        The formula of the algebraic rule by the id of the variable it
+        determines. A rule without such a variable is left out, with a
+        warning.
+    """
+    reacting: set[str] = set()
+    reaction: libsbml.Reaction
+    for reaction in model_sbml.getListOfReactions():
+        for reference in [
+            *reaction.getListOfReactants(),
+            *reaction.getListOfProducts(),
+        ]:
+            if not model_sbml.getSpecies(reference.getSpecies()).getBoundaryCondition():
+                reacting.add(reference.getSpecies())
+
+    def free(sid: str) -> bool:
+        element = model_sbml.getElementBySId(sid)
+        return (
+            isinstance(
+                element,
+                libsbml.Compartment
+                | libsbml.Parameter
+                | libsbml.Species
+                | libsbml.SpeciesReference,
+            )
+            and not element.getConstant()
+            and sid not in determined
+            and sid not in reacting
+        )
+
+    candidates: list[list[str]] = []
+    for formula in rules:
+        names: set[str] = set()
+        _collect_names(libsbml.parseL3Formula(formula), libsbml.AST_NAME, names)
+        candidates.append(sorted(sid for sid in names if free(sid)))
+
+    rule_of: dict[str, int] = {}
+
+    def assign(rule: int, seen: set[str]) -> bool:
+        """Give the rule a variable, moving other rules to free one (Kuhn)."""
+        for sid in candidates[rule]:
+            if sid in seen:
+                continue
+            seen.add(sid)
+            if sid not in rule_of or assign(rule_of[sid], seen):
+                rule_of[sid] = rule
+                return True
+        return False
+
+    for k, formula in enumerate(rules):
+        if not assign(k, set()):
             logger.warning(
-                "AlgebraicRule '%s' not converted, algebraic rules are not "
-                "supported yet.",
+                "AlgebraicRule '%s' not converted, it determines no variable.",
                 formula,
             )
-    return assignment_rules, rate_rules
+    # a rule follows the rules which determine the other unknowns it uses:
+    # the libcellml analyser finds a model with guesses overconstrained
+    # otherwise
+    variable_of = {k: sid for sid, k in rule_of.items()}
+    ordered: list[int] = []
+
+    def visit(rule: int, path: tuple[int, ...]) -> None:
+        if rule in ordered or rule in path:
+            return
+        for sid in candidates[rule]:
+            if sid != variable_of[rule] and sid in rule_of:
+                visit(rule_of[sid], (*path, rule))
+        ordered.append(rule)
+
+    for k in sorted(variable_of):
+        visit(k, ())
+    return {variable_of[k]: rules[k] for k in ordered}
 
 
 def _local_parameter_ids(model_sbml: libsbml.Model) -> dict[str, dict[str, str]]:
@@ -633,6 +746,150 @@ def _uses_time(model_sbml: libsbml.Model) -> bool:
     return bool(names)
 
 
+def _quantity(element: libsbml.SBase) -> float | None:
+    """The value of a compartment, parameter, species or species reference.
+
+    A species has its concentration, its amount with `hasOnlySubstanceUnits`
+    (what its id stands for in a formula); `None` when the value is unset.
+    """
+    if isinstance(element, libsbml.Compartment):
+        return _set_value(element.isSetSize(), element.getSize())
+    if isinstance(element, libsbml.Parameter):
+        return _set_value(element.isSetValue(), element.getValue())
+    if isinstance(element, libsbml.SpeciesReference):
+        return _set_value(element.isSetStoichiometry(), element.getStoichiometry())
+    if isinstance(element, libsbml.Species):
+        if element.getHasOnlySubstanceUnits():
+            return _set_value(element.isSetInitialAmount(), element.getInitialAmount())
+        return _set_value(
+            element.isSetInitialConcentration(), element.getInitialConcentration()
+        )
+    return None
+
+
+def _set_quantity(element: libsbml.SBase, value: float) -> None:
+    """Set the value `_quantity` reads."""
+    if isinstance(element, libsbml.Compartment):
+        element.setSize(value)
+    elif isinstance(element, libsbml.Parameter):
+        element.setValue(value)
+    elif isinstance(element, libsbml.SpeciesReference):
+        element.setStoichiometry(value)
+    elif isinstance(element, libsbml.Species):
+        if element.getHasOnlySubstanceUnits():
+            element.setInitialAmount(value)
+        else:
+            element.unsetInitialAmount()
+            element.setInitialConcentration(value)
+
+
+def _solve_algebraic_rules(model_sbml: libsbml.Model, formulas: _Formulas) -> None:
+    """Solve the algebraic rules at the start and set the values in the model.
+
+    The solution is the best guess for the solver of the simulation, and the
+    initial size of a compartment which an algebraic rule determines converts
+    the initial values of its species. The rules are solved in their order
+    (a rule follows the rules it depends on) with the secant method, the
+    formulas evaluated by libsbml. A rule which cannot be solved keeps the
+    SBML value of its variable.
+
+    Args:
+        model_sbml: the SBML model, the values are set in place.
+        formulas: the formulas of the model.
+    """
+    for sid, formula in formulas.algebraic_rules.items():
+        element: libsbml.SBase = model_sbml.getElementBySId(sid)
+        node: libsbml.ASTNode = libsbml.parseL3Formula(formula)
+        original = _quantity(element)
+
+        def residual(
+            value: float,
+            element: libsbml.SBase = element,
+            node: libsbml.ASTNode = node,
+        ) -> float:
+            _set_quantity(element, value)
+            libsbml.SBMLTransforms.clearComponentValues(model_sbml)
+            libsbml.SBMLTransforms.mapComponentValues(model_sbml)
+            return libsbml.SBMLTransforms.evaluateASTNode(node, model_sbml)
+
+        x0 = 1.0 if original is None else original
+        solution = _secant(residual, x0)
+        libsbml.SBMLTransforms.clearComponentValues(model_sbml)
+        if solution is None:
+            logger.info("Algebraic rule for '%s' not solved at the start", sid)
+            if original is not None:
+                _set_quantity(element, original)
+            continue
+        _set_quantity(element, solution)
+        logger.info("%s = %s at the start (algebraic rule)", sid, solution)
+
+
+def _secant(function: Callable[[float], float], x0: float) -> float | None:
+    """A root of a function with the secant method, `None` without convergence."""
+    x1 = x0 + max(abs(x0), 1.0) * 1e-3
+    f0, f1 = function(x0), function(x1)
+    for _ in range(50):
+        if not (math.isfinite(f0) and math.isfinite(f1)):
+            return None
+        if f1 == 0.0 or abs(x1 - x0) <= 1e-14 * max(abs(x1), 1.0):
+            return x1
+        if f1 == f0:
+            return None
+        x0, x1, f0 = x1, x1 - f1 * (x1 - x0) / (f1 - f0), f1
+        f1 = function(x1)
+    return None
+
+
+def _constants_of_algebraic_rules(
+    component: libcellml.Component, formulas: _Formulas
+) -> list[str]:
+    """State the constants of the algebraic rules as equations.
+
+    libcellml takes the variable of an implicit equation which has an
+    initial value for its unknown, the value being the guess of the solver
+    (without a guess the solver of libopencor starts at 0 and may give up).
+    With a second such variable in the equation the model is
+    underconstrained, so every other variable of an algebraic rule which is
+    not a state loses its initial value to the equation `y = value`, and the
+    unknown of one algebraic rule which another one uses loses its guess.
+
+    Args:
+        component: the component with the variables.
+        formulas: the formulas of the model.
+
+    Returns:
+        The `apply` elements of the equations.
+    """
+    keep = (
+        set(formulas.algebraic_rules)
+        | set(formulas.rate_rules)
+        | set(formulas.reaction_terms)
+    )
+    names: set[str] = set()
+    for vid, formula in formulas.algebraic_rules.items():
+        rule_names: set[str] = set()
+        _collect_names(libsbml.parseL3Formula(formula), libsbml.AST_NAME, rule_names)
+        names |= rule_names
+        # the unknown of another algebraic rule cannot be stated as a
+        # constant, it loses its guess instead
+        for other in (rule_names & set(formulas.algebraic_rules)) - {vid}:
+            unknown: libcellml.Variable = component.variable(other)
+            if unknown.initialValue():
+                unknown.removeInitialValue()
+                logger.info("%s has no guess, another algebraic rule uses it", other)
+    parts: list[str] = []
+    for name in sorted(names - keep):
+        variable: libcellml.Variable | None = component.variable(name)
+        if variable is None or not variable.initialValue():
+            continue
+        value: str = variable.initialValue()
+        variable.removeInitialValue()
+        formula = NON_FINITE.get(value, value)
+        logger.info("%s = %s (constant of an algebraic rule)", name, formula)
+        parts.append(mathml.mathml_for_assignment(vid=name, formula=formula))
+    return parts
+
+
 #: L3 formula of the non-finite initial values libcellml writes
 NON_FINITE = {"inf": "INF", "-inf": "-INF", "nan": "NaN"}
 
@@ -716,7 +973,7 @@ def _replace_rate_of(
             return node
         if target in assigned:
             logger.warning(
-                "rateOf(%s) not converted, '%s' is set by an assignment rule.",
+                "rateOf(%s) not converted, '%s' is computed by a rule.",
                 target,
                 target,
             )

@@ -74,6 +74,29 @@ def test_process_writes_avogadro_as_a_number() -> None:
     assert "6.02214179" in mathml
 
 
+@pytest.mark.parametrize(
+    ("formula", "expected", "absent"),
+    [
+        ("k * plus()", '<cn cellml:units="dimensionless"> 0 </cn>', "<plus/>"),
+        ("k + times()", '<cn cellml:units="dimensionless"> 1 </cn>', "<times/>"),
+        ("k * plus(x)", "<ci> x </ci>", "<plus/>"),
+        ("k * times(plus(x))", "<ci> x </ci>", "<plus/>"),
+        ("piecewise(1, and(), 2)", "<true/>", "<and/>"),
+        ("piecewise(1, or(), 2)", "<false/>", "<or/>"),
+        ("piecewise(1, xor(), 2)", "<false/>", "<xor/>"),
+        ("piecewise(1, and(a > b), 2)", "<gt/>", "<and/>"),
+        ("plus(x)", "<ci> x </ci>", "<plus/>"),
+    ],
+)
+def test_process_simplifies_operators_with_less_than_two_arguments(
+    formula: str, expected: str, absent: str
+) -> None:
+    """CellML requires two arguments; MathML defines the value of fewer."""
+    mathml = process_mathml_for_cellml(formula)
+    assert expected in mathml
+    assert absent not in mathml
+
+
 def test_process_raises_on_invalid_formula() -> None:
     with pytest.raises(MathMLError, match="does not parse"):
         process_mathml_for_cellml("k1 * (")
