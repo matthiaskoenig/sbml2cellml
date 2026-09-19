@@ -3,6 +3,7 @@
 import dataclasses
 import shutil
 from pathlib import Path
+from typing import Any, cast
 
 import libsbml
 import pytest
@@ -10,7 +11,14 @@ import pytest
 from sbml2cellml import __version__
 from sbml2cellml.testsuite.cases import SUITE_VERSION, load_cases
 from sbml2cellml.testsuite.results import STAGES, STATUSES, SuiteResult
-from sbml2cellml.testsuite.runner import _message, reference_selections, run_suite
+from sbml2cellml.testsuite.runner import (
+    SOLVER_SETTINGS,
+    _message,
+    _simulate,
+    reference_selections,
+    run_suite,
+)
+from sbml2cellml.testsuite.worker import SimulationFailure, SimulatorWorker
 from tests.sbml_models import simple_model, write_sbml
 
 FIXTURES = Path(__file__).parent / "data" / "testsuite" / "semantic"
@@ -224,3 +232,55 @@ def test_run_suite_converts_quantities(tmp_path: Path) -> None:
     stages = result.cases["90001"].stages
     for name in ("reference", "sbml2cellml", "libopencor", "cellml2sbml", "roundtrip"):
         assert stages[name].status == "pass", f"{name}: {stages[name].message}"
+
+
+class _Worker:
+    """Stand-in for a `SimulatorWorker`: fails the first `failures` calls."""
+
+    def __init__(self, failures: int, message: str) -> None:
+        self.failures = failures
+        self.message = message
+        self.calls: list[dict[str, Any]] = []
+
+    def call(self, function: str, **kwargs: Any) -> dict[str, Any]:
+        self.calls.append(kwargs)
+        if len(self.calls) <= self.failures:
+            raise SimulationFailure(f"{self.message} ({len(self.calls)})")
+        return {"columns": ["time"], "rows": [[0.0]]}
+
+
+CVODE_FAILURE = "roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK"
+
+
+def test_simulate_uses_the_tight_settings_first() -> None:
+    worker = _Worker(failures=0, message=CVODE_FAILURE)
+    _simulate(cast(SimulatorWorker, worker), "simulate_sbml", start=0.0)
+    assert worker.calls == [{"start": 0.0, **SOLVER_SETTINGS[0]}]
+
+
+def test_simulate_relaxes_the_tolerances_when_cvode_fails() -> None:
+    worker = _Worker(failures=1, message=CVODE_FAILURE)
+    result = _simulate(cast(SimulatorWorker, worker), "simulate_sbml", start=0.0)
+    assert result["columns"] == ["time"]
+    assert worker.calls == [
+        {"start": 0.0, **SOLVER_SETTINGS[0]},
+        {"start": 0.0, **SOLVER_SETTINGS[1]},
+    ]
+    tight, relaxed = SOLVER_SETTINGS[0], SOLVER_SETTINGS[1]
+    assert relaxed["relative_tolerance"] > tight["relative_tolerance"]
+    assert relaxed["absolute_tolerance"] > tight["absolute_tolerance"]
+
+
+def test_simulate_raises_the_first_failure_when_no_settings_integrate() -> None:
+    worker = _Worker(failures=len(SOLVER_SETTINGS), message=CVODE_FAILURE)
+    with pytest.raises(SimulationFailure, match=r"CV_TOO_MUCH_WORK \(1\)"):
+        _simulate(cast(SimulatorWorker, worker), "simulate_sbml", start=0.0)
+    assert len(worker.calls) == len(SOLVER_SETTINGS)
+
+
+def test_simulate_does_not_retry_other_failures() -> None:
+    """E.g. delay differential equations: no settings of the solver help."""
+    worker = _Worker(failures=1, message="roadrunner: RuntimeError: Unable to support")
+    with pytest.raises(SimulationFailure, match="Unable to support"):
+        _simulate(cast(SimulatorWorker, worker), "simulate_sbml", start=0.0)
+    assert len(worker.calls) == 1

@@ -458,9 +458,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 3.28e-06, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1.03e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -603,9 +603,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.103, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -677,9 +677,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.164, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -1150,9 +1150,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.242, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -1186,9 +1186,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0828, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -6.89e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -1260,9 +1260,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.837, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -1368,9 +1368,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 5.32e-05, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -1440,9 +1440,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 74.9, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -1476,8 +1476,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.00353, mxstep steps taken before reaching tout.",
+     "max_excess": 74400.0,
+     "message": "ADPi exceeds the tolerance by 421; ATPi exceeds the tolerance by 478; PCri exceeds the tolerance by 2.76; PCr exceeds the tolerance by 0.126; ATP exceeds the tolerance by 0.0709; Pi exceeds the tolerance by 7.44e+04; P exceeds the tolerance by 6.16e+03",
      "status": "fail"
     },
     "reference": {
@@ -1548,9 +1548,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.595, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -1584,9 +1584,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 4.83, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -1620,9 +1620,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 13.9, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -2061,9 +2061,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.807, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -2321,9 +2321,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.00953, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -2538,9 +2538,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.000127, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -2611,9 +2611,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0507, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -3204,9 +3204,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.22, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -3314,9 +3314,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 1.11e-06, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -3569,9 +3569,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 1.76, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -0.000151,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -3860,9 +3860,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.662, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -4121,9 +4121,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.714, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -5174,7 +5174,7 @@
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 84.2, mxstep steps taken before reaching tout.",
+     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 84.2 and h = 4.83e-153, the corrector convergence test failed repeatedly or with |h| = hmin.",
      "status": "fail"
     },
     "reference": {
@@ -5184,7 +5184,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK: The solver took mxstep (20000) internal steps but could not reach tout.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_CONV_FAILURE: Convergence test failures occurred too many times (= MXNCF = 10) during one internal timestep or occurred with |h| = hmin.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -5766,9 +5766,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.86, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -5805,7 +5805,7 @@
     },
     "libopencor": {
      "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 16.5, mxstep steps taken before reaching tout.",
+     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 16.5 and h = 2.47e-100, the corrector convergence test failed repeatedly or with |h| = hmin.",
      "status": "fail"
     },
     "reference": {
@@ -6098,9 +6098,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.933, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -6319,9 +6319,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.157, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -6502,9 +6502,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.275, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -7284,9 +7284,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.104, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -7577,9 +7577,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.264, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -2.1e-05,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -7761,9 +7761,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.000346, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -8020,9 +8020,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.423, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1.01e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -8056,9 +8056,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.331, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1.01e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -8129,9 +8129,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.305, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1.1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -8165,9 +8165,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.277, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1.1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -8939,9 +8939,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.354, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -9090,9 +9090,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.00355, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -9165,9 +9165,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.125, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -9275,9 +9275,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0343, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -0.000175,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -9759,8 +9759,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 2.29, mxstep steps taken before reaching tout.",
+     "max_excess": 1090.0,
+     "message": "CDc20 exceeds the tolerance by 0.697; CDh1 exceeds the tolerance by 0.999; CYCA exceeds the tolerance by 19.3; CYCB exceeds the tolerance by 3.29; CYCD exceeds the tolerance by 0.437; CYCE exceeds the tolerance by 1.14; var2 exceeds the tolerance by 4.37; var5 exceeds the tolerance by 4.32; GM exceeds the tolerance by 181; var1 exceeds the tolerance by 5.21; CDc20T exceeds the tolerance by 3.04; M",
      "status": "fail"
     },
     "reference": {
@@ -10835,9 +10835,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.207, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -11135,9 +11135,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 16.9, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -12183,9 +12183,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 22.6, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1.44e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -12327,9 +12327,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.151, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -12472,7 +12472,7 @@
     "RateRules"
    ],
    "id": "BIOMD0000000338",
-   "informative": null,
+   "informative": true,
    "name": "Wajima2009_BloodCoagulation_aPTTtest",
    "stages": {
     "cellml2sbml": {
@@ -12481,19 +12481,19 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "reference failed",
-     "status": "skip"
+     "max_excess": 10800.0,
+     "message": "IIa exceeds the tolerance by 0.0117; VIII exceeds the tolerance by 0.697; VIIIa exceeds the tolerance by 0.00139; APC_PS exceeds the tolerance by 0.0923; IX exceeds the tolerance by 54; IXa exceeds the tolerance by 0.102; XIa exceeds the tolerance by 0.142; XI exceeds the tolerance by 28.4; XIIa exceeds the tolerance by 0.225; VII exceeds the tolerance by 5.79; VIIa exceeds the tolerance by 0.0018",
+     "status": "fail"
     },
     "reference": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK: The solver took mxstep (20000) internal steps but could not reach tout.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "reference failed",
-     "status": "skip"
+     "max_excess": 10800.0,
+     "message": "IIa exceeds the tolerance by 0.0117; VIII exceeds the tolerance by 0.697; VIIIa exceeds the tolerance by 0.00139; APC_PS exceeds the tolerance by 0.0923; IX exceeds the tolerance by 54; IXa exceeds the tolerance by 0.102; XIa exceeds the tolerance by 0.142; XI exceeds the tolerance by 28.4; XIIa exceeds the tolerance by 0.225; VII exceeds the tolerance by 5.79; VIIa exceeds the tolerance by 0.0018",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -12522,8 +12522,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.00156, mxstep steps taken before reaching tout.",
+     "max_excess": 5160.0,
+     "message": "IIa exceeds the tolerance by 0.0154; VIII exceeds the tolerance by 0.638; VIIIa exceeds the tolerance by 0.0013; APC_PS exceeds the tolerance by 0.0993; IX exceeds the tolerance by 34.6; IXa exceeds the tolerance by 0.0881; XIa exceeds the tolerance by 0.142; XI exceeds the tolerance by 28.3; XIIa exceeds the tolerance by 0.225; VII exceeds the tolerance by 6.63; VIIa exceeds the tolerance by 0.00",
      "status": "fail"
     },
     "reference": {
@@ -12675,9 +12675,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.805, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -13151,7 +13151,7 @@
     "RateRules"
    ],
    "id": "BIOMD0000000356",
-   "informative": null,
+   "informative": true,
    "name": "Nyman2011_M3Hierarachical_InsulinGlucosedynamics",
    "stages": {
     "cellml2sbml": {
@@ -13160,19 +13160,19 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "reference failed",
-     "status": "skip"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK: The solver took mxstep (20000) internal steps but could not reach tout.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "reference failed",
-     "status": "skip"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -13968,9 +13968,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 10.9, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1.12e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -14459,8 +14459,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 1.09e-07, mxstep steps taken before reaching tout.",
+     "max_excess": 2.25,
+     "message": "RuBP exceeds the tolerance by 0.0545; PGA exceeds the tolerance by 1.39; DPGA exceeds the tolerance by 0.0237; GAP exceeds the tolerance by 0.00277; DHAP exceeds the tolerance by 0.061; FBP exceeds the tolerance by 0.00306; F6P exceeds the tolerance by 0.129; E4P exceeds the tolerance by 0.000549; SBP exceeds the tolerance by 0.0204; S7P exceeds the tolerance by 0.106; X5P exceeds the tolerance by",
      "status": "fail"
     },
     "reference": {
@@ -14497,8 +14497,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.162, mxstep steps taken before reaching tout.",
+     "max_excess": 2.02,
+     "message": "RuBP exceeds the tolerance by 0.0055; E exceeds the tolerance by 1.59e-05; ER exceeds the tolerance by 0.00101; EPP exceeds the tolerance by 0.000236; EPG exceeds the tolerance by 0.000265; EP exceeds the tolerance by 0.000809; EOP exceeds the tolerance by 0.00234; PGA exceeds the tolerance by 0.00372; TP exceeds the tolerance by 0.00175; GAP exceeds the tolerance by 0.000876; DHAP exceeds the tol",
      "status": "fail"
     },
     "reference": {
@@ -14535,8 +14535,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.711, mxstep steps taken before reaching tout.",
+     "max_excess": 8.88,
+     "message": "PGA exceeds the tolerance by 5.89; DPGA exceeds the tolerance by 0.586; GAP exceeds the tolerance by 0.0543; DHAP exceeds the tolerance by 1.09; TP exceeds the tolerance by 1.14; FBP exceeds the tolerance by 0.0234; F6P exceeds the tolerance by 0.121; G6P exceeds the tolerance by 0.279; G1P exceeds the tolerance by 0.0162; HeP exceeds the tolerance by 0.417; E4P exceeds the tolerance by 0.618; SBP",
      "status": "fail"
     },
     "reference": {
@@ -14752,9 +14752,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.126, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -14976,9 +14976,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.207, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -15385,9 +15385,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0166, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -15608,9 +15608,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.624, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -15756,9 +15756,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.373, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -15792,9 +15792,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.017, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -15829,9 +15829,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.000617, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -16239,8 +16239,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.000925, mxstep steps taken before reaching tout.",
+     "max_excess": 0.0999,
+     "message": "R exceeds the tolerance by 0.044; L exceeds the tolerance by 0.0999; RL exceeds the tolerance by 0.0998; Gabg exceeds the tolerance by 0.051; RGabgL exceeds the tolerance by 0.00102; GaGTP exceeds the tolerance by 7.99e-07; Gbg exceeds the tolerance by 0.0252; RGSGaGTP exceeds the tolerance by 0.0216; GaGDPP exceeds the tolerance by 5.32e-05; GaGTPEffector exceeds the tolerance by 0.00296; inertGa",
      "status": "fail"
     },
     "reference": {
@@ -16500,9 +16500,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.272, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -16574,9 +16574,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.42, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -16611,9 +16611,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.669, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -16681,7 +16681,7 @@
     "AssignmentRules"
    ],
    "id": "BIOMD0000000451",
-   "informative": null,
+   "informative": true,
    "name": "Carbo2013 - Cytokine driven CD4+ T Cell differentiation and phenotype plasticity",
    "stages": {
     "cellml2sbml": {
@@ -16690,19 +16690,19 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "reference failed",
-     "status": "skip"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_CONV_FAILURE: Convergence test failures occurred too many times (= MXNCF = 10) during one internal timestep or occurred with |h| = hmin.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "reference failed",
-     "status": "skip"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -16911,8 +16911,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 3.43 and h = 1.7e-16, the error test failed repeatedly or with |h| = hmin.",
+     "max_excess": 7.95e-07,
+     "message": "species_35 exceeds the tolerance by 7.16e-07; species_40 exceeds the tolerance by 7.95e-07",
      "status": "fail"
     },
     "reference": {
@@ -17129,9 +17129,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.394, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -17237,9 +17237,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0172, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -17309,9 +17309,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0238, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -17532,9 +17532,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0619, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -17569,9 +17569,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 1.85e-07, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -17678,9 +17678,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.00131, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -17715,8 +17715,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.00109, mxstep steps taken before reaching tout.",
+     "max_excess": 0.174,
+     "message": "L exceeds the tolerance by 0.0999; R exceeds the tolerance by 0.0425; LR exceeds the tolerance by 0.0998; Gabg exceeds the tolerance by 0.0419; RGabg exceeds the tolerance by 0.0825; LRGabg exceeds the tolerance by 0.000886; RRGSm exceeds the tolerance by 4.02e-05; LRRGSm exceeds the tolerance by 7.13e-05; RRGSmGabg exceeds the tolerance by 0.172; LRRGSmGabg exceeds the tolerance by 0.000153; GaGT",
      "status": "fail"
     },
     "reference": {
@@ -17755,8 +17755,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.154, mxstep steps taken before reaching tout.",
+     "max_excess": 573000.0,
+     "message": "species_10 exceeds the tolerance by 1.86; s9 exceeds the tolerance by 1.27e+05; s13 exceeds the tolerance by 7.11e+04; s15 exceeds the tolerance by 6.77e+04; s16 exceeds the tolerance by 1.41e+05; s19 exceeds the tolerance by 2.46e+04; s21 exceeds the tolerance by 6.74e+04; s22 exceeds the tolerance by 1.92e+03; s25 exceeds the tolerance by 2.02e+05; s17 exceeds the tolerance by 1.66e+04; species_",
      "status": "fail"
     },
     "reference": {
@@ -17831,9 +17831,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.055, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -18270,8 +18270,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 70.8, mxstep steps taken before reaching tout.",
+     "max_excess": 106000.0,
+     "message": "AF1 exceeds the tolerance by 0.6; AF2 exceeds the tolerance by 43.3; E2 exceeds the tolerance by 174; FSH_R exceeds the tolerance by 0.563; FSH_bld exceeds the tolerance by 11.4; FSH_pit exceeds the tolerance by 1.18e+04; GnRH exceeds the tolerance by 0.0646; GnRH_R_a exceeds the tolerance by 0.000242; GnRH_R_i exceeds the tolerance by 0.000218; InhA exceeds the tolerance by 5.74; InhA_delay excee",
      "status": "fail"
     },
     "reference": {
@@ -18608,9 +18608,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.215, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -18682,9 +18682,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0242, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -18720,9 +18720,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.05, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -18796,9 +18796,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 10.9, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -18833,9 +18833,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 1.57, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -18870,9 +18870,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.00117, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -18907,9 +18907,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.00106, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -18981,9 +18981,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.000915, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -19018,9 +19018,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.00099, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -19055,9 +19055,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.00113, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -19092,9 +19092,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0012, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -19504,7 +19504,7 @@
     },
     "reference": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK: The solver took mxstep (20000) internal steps but could not reach tout.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK: The solver took mxstep (100000) internal steps but could not reach tout.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
      "status": "fail"
     },
     "roundtrip": {
@@ -20001,7 +20001,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK: The solver took mxstep (20000) internal steps but could not reach tout.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK: The solver took mxstep (100000) internal steps but could not reach tout.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -20039,7 +20039,7 @@
     },
     "roundtrip": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK: The solver took mxstep (20000) internal steps but could not reach tout.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK: The solver took mxstep (100000) internal steps but could not reach tout.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
      "status": "fail"
     },
     "sbml2cellml": {
@@ -20179,9 +20179,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.148, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -20628,9 +20628,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.485, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -20887,9 +20887,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0339, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -21000,9 +21000,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0786, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -21154,9 +21154,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.404, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -21305,9 +21305,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.00637, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -21417,9 +21417,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.00774, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -21530,9 +21530,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.643, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -21567,9 +21567,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0815, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -21604,9 +21604,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.00257, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -21800,7 +21800,7 @@
     },
     "reference": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK: The solver took mxstep (20000) internal steps but could not reach tout.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK: The solver took mxstep (100000) internal steps but could not reach tout.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
      "status": "fail"
     },
     "roundtrip": {
@@ -21831,9 +21831,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.264, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -22097,9 +22097,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.504, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -23001,9 +23001,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.258, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -23377,9 +23377,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.00665, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -9.62e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -24387,9 +24387,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 1.44, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -24575,9 +24575,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.318, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -25514,9 +25514,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.555, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -25552,8 +25552,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.705, mxstep steps taken before reaching tout.",
+     "max_excess": 214.0,
+     "message": "Pi_curve exceeds the tolerance by 214",
      "status": "fail"
     },
     "reference": {
@@ -25669,9 +25669,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.994, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -26206,9 +26206,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.73, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -26435,9 +26435,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0219, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -26587,9 +26587,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.916, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -26707,7 +26707,7 @@
     },
     "reference": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK: The solver took mxstep (20000) internal steps but could not reach tout.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
+     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_ERR_FAILURE: Error test failures occurred too many times (= MXNEF = 7) during one internal time step oroccurred with |h| = hmin.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
      "status": "fail"
     },
     "roundtrip": {
@@ -26777,8 +26777,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.177, mxstep steps taken before reaching tout.",
+     "max_excess": 185.0,
+     "message": "Pi exceeds the tolerance by 96; THFGlu exceeds the tolerance by 0.0989; myTHFGlu exceeds the tolerance by 0.000312; MTHFGlu exceeds the tolerance by 0.00409; Met exceeds the tolerance by 0.199; dTMP exceeds the tolerance by 0.0524; meTHFGlu exceeds the tolerance by 0.00802; fTHFGlu exceeds the tolerance by 0.204; fmtRNA exceeds the tolerance by 74.2; COTwo exceeds the tolerance by 119; ADP exceeds",
      "status": "fail"
     },
     "reference": {
@@ -26964,9 +26964,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.368, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -27106,7 +27106,7 @@
     "AssignmentRules"
    ],
    "id": "BIOMD0000000734",
-   "informative": null,
+   "informative": true,
    "name": "Mouse Iron Distribution - Rich and Deficient iron diets (tracer)",
    "stages": {
     "cellml2sbml": {
@@ -27115,19 +27115,19 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "reference failed",
-     "status": "skip"
+     "max_excess": 3070000000000000.0,
+     "message": "FeRBC exceeds the tolerance by 3.11e-06; NTBI exceeds the tolerance by 2.92e-06; FeBM_0 exceeds the tolerance by 4.31e-06; PSpleen exceeds the tolerance by 0.883; PRBC exceeds the tolerance by 63.6; Total_Fe___in_body exceeds the tolerance by 3.07e+15; FePlasma exceeds the tolerance by 3.07e+15; PLiver exceeds the tolerance by 11.6; PDuo exceeds the tolerance by 0.209; FePlasma_conc_ exceeds the t",
+     "status": "fail"
     },
     "reference": {
      "max_excess": null,
-     "message": "SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_ERR_FAILURE: Error test failures occurred too many times (= MXNEF = 7) during one internal time step oroccurred with |h| = hmin.; In virtual double rr::CVODEIntegrator::integrate(double, double)",
-     "status": "fail"
+     "message": "",
+     "status": "pass"
     },
     "roundtrip": {
-     "max_excess": null,
-     "message": "reference failed",
-     "status": "skip"
+     "max_excess": 3070000000000000.0,
+     "message": "FeRBC exceeds the tolerance by 3.11e-06; NTBI exceeds the tolerance by 2.92e-06; FeBM_0 exceeds the tolerance by 4.31e-06; PSpleen exceeds the tolerance by 0.883; PRBC exceeds the tolerance by 63.6; Total_Fe___in_body exceeds the tolerance by 3.07e+15; FePlasma exceeds the tolerance by 3.07e+15; PLiver exceeds the tolerance by 11.6; PDuo exceeds the tolerance by 0.209; FePlasma_conc_ exceeds the t",
+     "status": "fail"
     },
     "sbml2cellml": {
      "max_excess": null,
@@ -27722,9 +27722,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.793, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -28245,9 +28245,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.663, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -28284,9 +28284,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.443, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -28433,9 +28433,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 7.25, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -8.37e-07,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -28470,9 +28470,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 7.23, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -29153,9 +29153,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0565, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -29648,9 +29648,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.859, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1.28e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -29993,8 +29993,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 21.8, mxstep steps taken before reaching tout.",
+     "max_excess": 6670.0,
+     "message": "Type_II_T_helper_cells_T_H2 exceeds the tolerance by 23.6; Cytotoxic_T_Cells_T_C exceeds the tolerance by 6.67e+03; Interferon_gamma exceeds the tolerance by 3.28e-05; Cytokine_IL2 exceeds the tolerance by 3.08e-07",
      "status": "fail"
     },
     "reference": {
@@ -30301,8 +30301,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0054, mxstep steps taken before reaching tout.",
+     "max_excess": 2.75,
+     "message": "Myc exceeds the tolerance by 0.365; AKT exceeds the tolerance by 0.587; AKTp exceeds the tolerance by 0.588; PI3K exceeds the tolerance by 0.9; GSK3B exceeds the tolerance by 0.594; GSK3Bp exceeds the tolerance by 0.595; ERK exceeds the tolerance by 0.9; Myc_ser62 exceeds the tolerance by 2.75; Myc_thr58 exceeds the tolerance by 0.11; Myc_total exceeds the tolerance by 2.29",
      "status": "fail"
     },
     "reference": {
@@ -30607,9 +30607,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.000336, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -30644,9 +30644,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 9.54, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -30837,9 +30837,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0533, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -30876,9 +30876,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.17, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -30952,9 +30952,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0426, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -31793,9 +31793,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.155, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -31831,9 +31831,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0829, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -31869,9 +31869,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 1.76, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -32773,9 +32773,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.434, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -32848,9 +32848,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 3.91e-15, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -33146,9 +33146,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.231, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -33220,9 +33220,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.154, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -34196,9 +34196,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.00544, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -3.36e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -34347,9 +34347,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.132, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -34649,9 +34649,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 75.8, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -35026,9 +35026,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.143, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -35367,9 +35367,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.424, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -35636,9 +35636,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0639, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -35716,9 +35716,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0215, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -36645,9 +36645,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 1.12e-21, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -37037,9 +37037,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.485, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -37076,9 +37076,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.677, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -37115,9 +37115,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.469, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -37154,9 +37154,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.314, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -37193,9 +37193,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.631, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -37232,9 +37232,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.337, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -37271,9 +37271,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.364, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -37308,9 +37308,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.766, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -37958,8 +37958,8 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.954, mxstep steps taken before reaching tout.",
+     "max_excess": 2430000000.0,
+     "message": "Target_cells exceeds the tolerance by 2.69e+07; Infected_cells exceeds the tolerance by 4.38e+06; Infected_cells_antiviral exceeds the tolerance by 2.11e+07; Refractory_cells exceeds the tolerance by 1.11e+08; Virions exceeds the tolerance by 1.72e+09; IFN exceeds the tolerance by 2.43e+09; Fraction_target_cells_remaining exceeds the tolerance by 0.0672",
      "status": "fail"
     },
     "reference": {
@@ -38643,9 +38643,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.0194, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -39096,9 +39096,9 @@
      "status": "pass"
     },
     "libopencor": {
-     "max_excess": null,
-     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.332, mxstep steps taken before reaching tout.",
-     "status": "fail"
+     "max_excess": -1e-06,
+     "message": "",
+     "status": "pass"
     },
     "reference": {
      "max_excess": null,
@@ -39745,5 +39745,5 @@
   "BIOMD0000001097": "package fbc"
  },
  "suite": "biomodels",
- "version": "0.3.2"
+ "version": "0.3.3"
 }

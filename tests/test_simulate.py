@@ -220,6 +220,36 @@ def test_run_timecourse_tolerances() -> None:
     assert np.allclose(tight_df["m"].to_numpy(), default_df["m"].to_numpy(), rtol=1e-6)
 
 
+def _oscillator(tmp_path: Path) -> Path:
+    """x'' = -1e4 x: about 160 oscillations in one output interval of 10."""
+    model_sbml = simple_model("oscillator")
+    for pid, value, rate in (("x", 1.0, "y"), ("y", 0.0, "-10000 * x")):
+        parameter: libsbml.Parameter = model_sbml.createParameter()
+        parameter.setId(pid)
+        parameter.setValue(value)
+        parameter.setConstant(False)
+        rule: libsbml.RateRule = model_sbml.createRateRule()
+        rule.setVariable(pid)
+        rule.setMath(libsbml.parseL3Formula(rate))
+    sbml_path = write_sbml(tmp_path / "oscillator.xml", model_sbml)
+    cellml_path = tmp_path / "oscillator.cellml"
+    convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
+    return cellml_path
+
+
+def test_run_timecourse_takes_many_steps_between_outputs(tmp_path: Path) -> None:
+    """The 500 steps of libopencor between two outputs are not the default."""
+    df, _ = run_timecourse(_oscillator(tmp_path), end=10.0, steps=1)
+    assert df["x"].iloc[-1] == pytest.approx(np.cos(1000.0), abs=1e-3)
+
+
+def test_run_timecourse_maximum_number_of_steps(tmp_path: Path) -> None:
+    with pytest.raises(SimulationError, match="mxstep steps taken"):
+        run_timecourse(
+            _oscillator(tmp_path), end=10.0, steps=1, maximum_number_of_steps=500
+        )
+
+
 def test_plot_timecourse() -> None:
     df, units = run_timecourse(TEST_MODEL_PATH, end=10.0, steps=5)
     fig = plot_timecourse(df, units, show=False)

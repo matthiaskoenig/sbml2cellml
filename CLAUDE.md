@@ -115,7 +115,9 @@ on `develop` after the merge.
   `CellMLValidationError`.
 - `simulate.py`: libopencor timecourse; the library is imported inside
   `run_timecourse` so the package works without it. The settings are applied
-  to `document.simulations[0]`. Results drop the `component/` prefix of the
+  to `document.simulations[0]`, with `MAXIMUM_NUMBER_OF_STEPS` (100000) internal
+  solver steps between two time points instead of the 500 of libopencor.
+  Results drop the `component/` prefix of the
   variable names. Issues raise `SimulationError`.
 - `cellml2sbml.py`: `convert_cellml2sbml(cellml_path, sbml_path=None, validate=True)`,
   analyser driven: parameters by variable type, rules by equation type, initial
@@ -144,6 +146,9 @@ on `develop` after the merge.
 - `testsuite/`: `sbml2cellml-testsuite run|report` runs the SBML test suite
   through both converters and both simulators. `cases.py` downloads and reads
   the cases; `compare.py` checks a simulation against the expected results;
+  `runner.py`'s `SOLVER_SETTINGS` are the solver settings of every
+  simulation (tolerances 1e-9/1e-12, 100000 internal steps between two time
+  points; relaxed tolerances only when CVODE fails, `_simulate`);
   `simulators.py` has the plain roadrunner and libopencor functions run
   inside `worker.py`'s `SimulatorWorker` processes (one process per
   simulator for the whole run, roadrunner and libopencor bundle different

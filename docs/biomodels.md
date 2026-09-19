@@ -12,27 +12,27 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 
 | stage | total | pass | fail | skip | pass rate |
 | --- | --- | --- | --- | --- | --- |
-| reference | 1060 | 1039 | 21 | 0 | 98.0% |
+| reference | 1060 | 1043 | 17 | 0 | 98.4% |
 | sbml2cellml | 1060 | 1046 | 14 | 0 | 98.7% |
-| libopencor | 1060 | 778 | 254 | 28 | 73.4% |
+| libopencor | 1060 | 908 | 128 | 24 | 85.7% |
 | cellml2sbml | 1060 | 1046 | 0 | 14 | 98.7% |
-| roundtrip | 1060 | 920 | 112 | 28 | 86.8% |
+| roundtrip | 1060 | 922 | 114 | 24 | 87.0% |
 
-724 of the 778 cases with a passing libopencor stage are informative: the reference moves more than the tolerance band for at least one variable.
+853 of the 908 cases with a passing libopencor stage are informative: the reference moves more than the tolerance band for at least one variable.
 
 ## Failure reasons
 
 ### reference
 
-21 of 1060 cases fail.
+17 of 1060 cases fail.
 
 | reason | cases | examples |
 | --- | --- | --- |
 | SimulationFailure: roadrunner: RuntimeError: Unable to support delay differential equations. The function '...' is not supported., at llvm::Value* rrllvm::ASTNo | 7 | BIOMD0000000024, BIOMD0000000025, BIOMD0000000034, BIOMD0000000154, BIOMD0000000155, BIOMD0000000196, BIOMD0000000841 |
-| SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK: The solver took mxstep (N) internal steps but could not reach tout.; In virtual doub | 5 | BIOMD0000000338, BIOMD0000000356, BIOMD0000000527, BIOMD0000000589, BIOMD0000000723 |
 | SimulationFailure: roadrunner: RuntimeError: Unable to support '...' reactions. The reaction '...' is set '...', and is therefore not supported., at void rrllvm | 5 | BIOMD0000000137, BIOMD0000000424, BIOMD0000000490, BIOMD0000000512, BIOMD0000000588 |
-| SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_CONV_FAILURE: Convergence test failures occurred too many times (= MXNCF = N) during one internal t | 3 | BIOMD0000000451, BIOMD0000000659, BIOMD0000000711 |
-| SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_ERR_FAILURE: Error test failures occurred too many times (= MXNEF = N) during one internal time ste | 1 | BIOMD0000000734 |
+| SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_CONV_FAILURE: Convergence test failures occurred too many times (= MXNCF = N) during one internal t | 2 | BIOMD0000000659, BIOMD0000000711 |
+| SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK: The solver took mxstep (N) internal steps but could not reach tout.; In virtual doub | 2 | BIOMD0000000527, BIOMD0000000589 |
+| SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_ERR_FAILURE: Error test failures occurred too many times (= MXNEF = N) during one internal time ste | 1 | BIOMD0000000723 |
 
 ### sbml2cellml
 
@@ -46,25 +46,24 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 
 ### libopencor
 
-254 of 1060 cases fail.
+128 of 1060 cases fail.
 
 | reason | cases | examples |
 | --- | --- | --- |
-| SimulationFailure: libopencor: SimulationError: run: Task \| CVODE: at t = N, mxstep steps taken before reaching tout. | 147 | BIOMD0000000013, BIOMD0000000017, BIOMD0000000019, BIOMD0000000032, BIOMD0000000033, BIOMD0000000035, BIOMD0000000038, BIOMD0000000040, BIOMD0000000041, BIOMD0000000043, ... (147 in total) |
-| numerical mismatch | 103 | BIOMD0000000001, BIOMD0000000007, BIOMD0000000015, BIOMD0000000056, BIOMD0000000077, BIOMD0000000081, BIOMD0000000095, BIOMD0000000096, BIOMD0000000097, BIOMD0000000104, ... (103 in total) |
-| SimulationFailure: libopencor: SimulationError: run: Task \| CVODE: at t = N and h = N, the corrector convergence test failed repeatedly or with \|h\| = hmin. | 2 | BIOMD0000000201, BIOMD0000000554 |
+| numerical mismatch | 121 | BIOMD0000000001, BIOMD0000000007, BIOMD0000000015, BIOMD0000000041, BIOMD0000000056, BIOMD0000000077, BIOMD0000000081, BIOMD0000000095, BIOMD0000000096, BIOMD0000000097, ... (121 in total) |
+| SimulationFailure: libopencor: SimulationError: run: Task \| CVODE: at t = N and h = N, the corrector convergence test failed repeatedly or with \|h\| = hmin. | 4 | BIOMD0000000141, BIOMD0000000158, BIOMD0000000201, BIOMD0000000554 |
+| SimulationFailure: libopencor: SimulationError: run: Task \| CVODE: at t = N, mxstep steps taken before reaching tout. | 2 | BIOMD0000000540, BIOMD0000000541 |
 | SimulationFailure: N \| rates[3] = N/constants[22]*--(constants[156]+-(N*states[1]+constants[156])*states[3])*constants[155]*constants[22]; | 1 | BIOMD0000000162 |
-| SimulationFailure: libopencor: SimulationError: run: Task \| CVODE: at t = N and h = N, the error test failed repeatedly or with \|h\| = hmin. | 1 | BIOMD0000000457 |
 
 ### roundtrip
 
-112 of 1060 cases fail.
+114 of 1060 cases fail.
 
 | reason | cases | examples |
 | --- | --- | --- |
-| numerical mismatch | 106 | BIOMD0000000001, BIOMD0000000007, BIOMD0000000015, BIOMD0000000041, BIOMD0000000056, BIOMD0000000077, BIOMD0000000081, BIOMD0000000095, BIOMD0000000096, BIOMD0000000097, ... (106 in total) |
-| SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_CONV_FAILURE: Convergence test failures occurred too many times (= MXNCF = N) during one internal t | 3 | BIOMD0000000158, BIOMD0000000201, BIOMD0000000554 |
-| SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK: The solver took mxstep (N) internal steps but could not reach tout.; In virtual doub | 3 | BIOMD0000000141, BIOMD0000000540, BIOMD0000000541 |
+| numerical mismatch | 108 | BIOMD0000000001, BIOMD0000000007, BIOMD0000000015, BIOMD0000000041, BIOMD0000000056, BIOMD0000000077, BIOMD0000000081, BIOMD0000000095, BIOMD0000000096, BIOMD0000000097, ... (108 in total) |
+| SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_CONV_FAILURE: Convergence test failures occurred too many times (= MXNCF = N) during one internal t | 4 | BIOMD0000000141, BIOMD0000000158, BIOMD0000000201, BIOMD0000000554 |
+| SimulationFailure: roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK: The solver took mxstep (N) internal steps but could not reach tout.; In virtual doub | 2 | BIOMD0000000540, BIOMD0000000541 |
 
 ## Skipped cases
 
@@ -89,13 +88,13 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000010 | Kholodenko2000 - Ultrasensitivity and negative feedback bring oscillations in MAPK cascade | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000011 | Levchenko2000_MAPK_noScaffold | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000012 | Elowitz2000 - Repressilator | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000013 | Poolman2004_CalvinCycle | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000013 | Poolman2004_CalvinCycle | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000014 | Levchenko2000_MAPK_Scaffold | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000015 | Curto1998 - purine metabolism | Reactions | pass | pass | fail | pass | fail | no |
 | BIOMD0000000016 | Goldbeter1995_CircClock | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000017 | Hoefnagel2002_PyruvateBranches | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000017 | Hoefnagel2002_PyruvateBranches | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000018 | Morrison1989 - Folate Cycle | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000019 | Schoeberl2002 - EGF MAPK | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000019 | Schoeberl2002 - EGF MAPK | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000020 | hodgkin-huxley squid-axon 1952 | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000021 | Leloup1999_CircClock | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000022 | Ueda2001_CircClock | Reactions | pass | pass | pass | pass | pass | yes |
@@ -108,20 +107,20 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000029 | Markevich2004_MAPK_phosphoRandomMM | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000030 | Markevich2004_MAPK_AllRandomElementary | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000031 | Markevich2004_MAPK_orderedMM2kinases | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000032 | Kofahl2004_PheromonePathway | Reactions | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000033 | Brown2004 - NGF and EGF signaling | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000032 | Kofahl2004_PheromonePathway | Reactions | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000033 | Brown2004 - NGF and EGF signaling | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000034 | Smolen2004_CircClock | Reactions, RateRules, Delay | fail | fail | skip | skip | skip |  |
-| BIOMD0000000035 | Vilar2002_Oscillator | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000035 | Vilar2002_Oscillator | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000036 | Tyson1999_CircClock | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000037 | Marwan2003 - Genetics, regulatory hierarchy between genes | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000038 | Rohwer2000_Phosphotransferase_System | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000038 | Rohwer2000_Phosphotransferase_System | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000039 | Marhl2000_CaOscillations | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000040 | Field1974_Oregonator | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000040 | Field1974_Oregonator | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000041 | Kongas2007 - Creatine Kinase in energy metabolic signaling in muscle | Reactions | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000042 | Nielsen1998_Glycolysis | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000043 | Borghans1997 - Calcium Oscillation - Model 1 | Reactions | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000044 | Borghans1997 - Calcium Oscillation - Model 2 | Reactions | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000045 | Borghans1997 - Calcium Oscillation - Model 3 | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000043 | Borghans1997 - Calcium Oscillation - Model 1 | Reactions | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000044 | Borghans1997 - Calcium Oscillation - Model 2 | Reactions | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000045 | Borghans1997 - Calcium Oscillation - Model 3 | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000046 | Olsen2003_peroxidase | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000047 | Oxhamre2005_Ca_oscillation | Reactions, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000048 | Kholodenko1999 - EGFR signaling | Reactions | pass | pass | pass | pass | pass | yes |
@@ -133,22 +132,22 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000054 | Ataullahkhanov1996_Adenylate | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000055 | Locke2005 - Circadian Clock | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000056 | Chen2004 - Cell Cycle Regulation | Reactions, Events, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | fail | yes |
-| BIOMD0000000057 | Sneyd2002_IP3_Receptor | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000057 | Sneyd2002_IP3_Receptor | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000058 | Bindschadler2001_coupled_Ca_oscillators | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000059 | Fridlyand2003_Calcium_flux | Reactions, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000060 | Keizer1996_Ryanodine_receptor_adaptation | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000061 | Hynne2001_Glycolysis | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000062 | Bhartiya2003_Tryptophan_operon | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000063 | Galazzo1990_FermentationPathwayKinetics | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000064 | Teusink2000_Glycolysis | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000064 | Teusink2000_Glycolysis | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000065 | Yildirim2003_Lac_Operon | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000066 | Chassagnole2001_Threonine Synthesis | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000067 | Fung2005_Metabolic_Oscillator | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000068 | Curien2003_MetThr_synthesis | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000069 | Fuss2006_MitoticActivation | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000070 | Holzhutter2004_Erythrocyte_Metabolism | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000070 | Holzhutter2004_Erythrocyte_Metabolism | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000071 | Bakker2001_Glycolysis | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000072 | Yi2003_GproteinCycle | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000072 | Yi2003_GproteinCycle | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000073 | Leloup2003_CircClock_DD | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000074 | Leloup2003_CircClock_DD_REV-ERBalpha | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000075 | Xu2003 - Phosphoinositide turnover | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
@@ -164,17 +163,17 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000085 | Maurya2005_GTPaseCycle_reducedOrder | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000086 | Bornheimer2004_GTPaseCycle | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000087 | Proctor2006_telomere | Reactions, Events | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000088 | Maeda2006_MyosinPhosphorylation | Reactions, Events | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000088 | Maeda2006_MyosinPhosphorylation | Reactions, Events | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000089 | Locke2006_CircClock_LL | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000090 | Wolf2001_Respiratory_Oscillations | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000091 | Proctor2005 - Actions of chaperones and their role in ageing | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000091 | Proctor2005 - Actions of chaperones and their role in ageing | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000092 | Fuentes2005_ZymogenActivation | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000093 | Yamada2003_JAK_STAT_pathway | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000094 | Yamada2003_JAK_STAT_SOCS1_knockout | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000095 | Zeilinger2006_PRR7-PRR9-Y | Reactions, Events | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000096 | Zeilinger2006_PRR7-PRR9light-Y | Reactions, Events | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000097 | Zeilinger2006_PRR7-PRR9light-Yprime | Reactions, Events | pass | pass | fail | pass | fail | yes |
-| BIOMD0000000098 | Goldbeter1990_CalciumSpike_CICR | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000098 | Goldbeter1990_CalciumSpike_CICR | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000099 | Laub1998_SpontaneousOscillations | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000100 | Rozi2003_GlycogenPhosphorylase_Activation | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000101 | Vilar2006_TGFbeta | Reactions, Events | pass | pass | pass | pass | pass | yes |
@@ -182,14 +181,14 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000103 | Legewie2006_apoptosis_NC | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000104 | Klipp2002_MetabolicOptimization_linearPathway(n=2) | Reactions, Events, AssignmentRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000105 | Proctor2007 - Age related decline of proteolysis, ubiquitin-proteome system | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000106 | Yang2007_ArachidonicAcid | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000106 | Yang2007_ArachidonicAcid | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000107 | Novak1993 - Cell cycle M-phase control | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000108 | Kowald2006_SOD | Reactions, AssignmentRules | pass | pass | pass | pass | pass | no |
 | BIOMD0000000109 | Haberichter2007_cellcycle | Reactions, Events, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000110 | Qu2003_CellCycle | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000111 | Novak2001_FissionYeast_CellCycle | Reactions, Events, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000112 | Clarke2006_Smad_signalling | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000113 | Dupont1992_Ca_dpt_protein_phospho | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000113 | Dupont1992_Ca_dpt_protein_phospho | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000114 | Somogyi1990_CaOscillations | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000115 | Somogyi1990_CaOscillations_SingleCaSpike | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000116 | McClean2007_CrossTalk | Reactions | pass | pass | pass | pass | pass | no |
@@ -233,7 +232,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000154 | Zatorsky2006_p53_Model3 | Reactions, Delay | fail | fail | skip | skip | skip |  |
 | BIOMD0000000155 | Zatorsky2006_p53_Model6 | Reactions, RateRules, Delay | fail | fail | skip | skip | skip |  |
 | BIOMD0000000156 | Zatorsky2006_p53_Model5 | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000157 | Zatorsky2006_p53_Model4 | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000157 | Zatorsky2006_p53_Model4 | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000158 | Zatorsky2006_p53_Model2 | Reactions, Events, AssignmentRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000159 | Zatorsky2006_p53_Model1 | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000160 | Xie2007_CircClock | Reactions | pass | pass | pass | pass | pass | yes |
@@ -242,18 +241,18 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000163 | Zi2007_TGFbeta_signaling | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000164 | SmithAE2002_RanTransport | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000165 | Saucerman2006_PKA | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000166 | Zhu2007_TF_modulated_by_Calcium | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000166 | Zhu2007_TF_modulated_by_Calcium | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000167 | Mayya2005_STATmodule | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000168 | Obeyesekere1999_CellCycle | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000169 | Aguda1999_CellCycle | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000170 | Weimann2004_CircadianOscillator | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000171 | Leloup1998_CircClock_LD | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000172 | Pritchard2002_glycolysis | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000172 | Pritchard2002_glycolysis | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000173 | Schmierer_2008_Smad_Tgfb | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000174 | Del_Conte_Zerial2008_Rab5_Rab7_cut_out_switch | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000175 | Birtwistle2007_ErbB_Signalling | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000176 | Conant2007_WGD_glycolysis_2A3AB | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000177 | Conant2007_glycolysis_2C | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000177 | Conant2007_glycolysis_2C | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000178 | Lebeda2008 - BoTN Paralysis (4 step model) | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000179 | Kim2007_CellularMemory_AsymmetricModel | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000180 | Kim2007_CellularMemory_SymmetricModel | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
@@ -274,7 +273,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000195 | Tyson2001_Cell_Cycle_Regulation | Reactions, Events, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000196 | Srividhya2006_CellCycle | Reactions, Events, FunctionDefinitions, AssignmentRules, Delay | fail | fail | skip | skip | skip |  |
 | BIOMD0000000197 | Bartholome2007_MDCKII | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000198 | Stone1996 - activation of soluble guanylate cyclase by nitric oxide | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000198 | Stone1996 - activation of soluble guanylate cyclase by nitric oxide | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000199 | Santolini2001_nNOS_Mechanism_Regulation | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000200 | Bray1995_chemotaxis_receptorlinkedcomplex | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000201 | Goldbeter2008_Somite_Segmentation_Clock_Notch_Wnt_FGF | Reactions, AssignmentRules | pass | pass | fail | pass | fail | yes |
@@ -282,23 +281,23 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000203 | Chickarmane2006 - Stem cell switch reversible | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000204 | Chickarmane2006 - Stem cell switch irreversible | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000205 | Ung2008_EGFR_Endocytosis | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000206 | Wolf2000_Glycolytic_Oscillations | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000206 | Wolf2000_Glycolytic_Oscillations | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000207 | Romond1999_CellCycle | Reactions, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000208 | Deineko2003_CellCycle | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000209 | Chickarmane2008 - Stem cell lineage determination | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000210 | Chickarmane2008 - Stem cell lineage - NANOG GATA-6 switch | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000211 | Albert2005_Glycolysis | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000211 | Albert2005_Glycolysis | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000212 | Curien2009_Aspartate_Metabolism | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000213 | Nijhout2004_Folate_Cycle | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000214 | Akman2008_Circadian_Clock_Model2 | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000215 | Schulz2009_Th1_differentiation | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000216 | Hong2009_CircadianClock | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000217 | Bruggeman2005_AmmoniumAssimilation | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000218 | Singh2006_TCA_mtu_model2 | Reactions | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000219 | Singh2006_TCA_mtu_model1 | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000218 | Singh2006_TCA_mtu_model2 | Reactions | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000219 | Singh2006_TCA_mtu_model1 | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000220 | Albeck2008_extrinsic_apoptosis | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000221 | Singh2006_TCA_Ecoli_acetate | Reactions | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000222 | Singh2006_TCA_Ecoli_glucose | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000221 | Singh2006_TCA_Ecoli_acetate | Reactions | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000222 | Singh2006_TCA_Ecoli_glucose | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000223 | Borisov2009_EGF_Insulin_Crosstalk | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000224 | Meyer1991_CalciumSpike_ICC | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000225 | Westermark2003_Pancreatic_GlycOsc_basic | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
@@ -319,16 +318,16 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000240 | Veening2008_DegU_Regulation | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000241 | Shi1993_Caffeine_pressor_tolerance | Events, AssignmentRules, RateRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000242 | Bai2003_G1phaseRegulation | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000243 | Neumann2010_CD95Stimulation_NFkB_Apoptosis | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000243 | Neumann2010_CD95Stimulation_NFkB_Apoptosis | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000244 | Kotte2010_Ecoli_Metabolic_Adaption | Reactions, Events, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000245 | Lei2001_Yeast_Aerobic_Metabolism | Reactions, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000246 | Vasalou2010_Pacemaker_Neuron_SCN | Reactions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000247 | Ralser2007_Carbohydrate_Rerouting_ROS | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000247 | Ralser2007_Carbohydrate_Rerouting_ROS | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000248 | Lai2007_O2_Transport_Metabolism | Reactions, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000249 | Restif2006 - Whooping cough | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000249 | Restif2006 - Whooping cough | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000250 | Nakakuki2010_CellFateDecision_Mechanistic | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000251 | Nakakuki2010_CellFateDecision_Core | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000252 | Hunziker2010_p53_StressSpecificResponse | RateRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000252 | Hunziker2010_p53_StressSpecificResponse | RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000253 | Teusink1998_Glycolysis_TurboDesign | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000254 | Bier2000_GlycolyticOscillation | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000255 | Chen2009 - ErbB Signaling | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
@@ -370,7 +369,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000291 | Nikolaev2005_AlbuminBilirubinAdsorption | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000292 | Rovers1995_Photsynthetic_Oscillations | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000293 | Proctor2010 - UCHL1 Protein Aggregation | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000294 | Restif2007 - Vaccination invasion | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000294 | Restif2007 - Vaccination invasion | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000295 | Akman2008_Circadian_Clock_Model1 | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000296 | Balagaddé2008_E_coli_Predator_Prey | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000297 | Ciliberto2003_Morphogenesis_Checkpoint | Reactions, Events, AssignmentRules | pass | pass | fail | pass | fail | yes |
@@ -378,7 +377,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000299 | Leloup1999_CircadianRhythms_Neurospora | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000300 | Schmierer2010_FIH_Ankyrins | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000301 | Friedland2009_Ara_RTC3_counter | Reactions, Events, AssignmentRules | pass | pass | fail | pass | fail | yes |
-| BIOMD0000000302 | Wang1996_Synaptic_Inhibition_Two_Neuron | InitialAssignments, AssignmentRules, RateRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000302 | Wang1996_Synaptic_Inhibition_Two_Neuron | InitialAssignments, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000303 | Liu2011_Complement_System | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000304 | Plant1981_BurstingNerveCells | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000305 | Kolomeisky2003_MyosinV_Processivity | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
@@ -406,20 +405,20 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000327 | Whitcomb2004_Bicarbonate_Pancreas | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000328 | Bucher2011_Atorvastatin_Metabolism | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000329 | Kummer2000 - Oscillations in Calcium Signalling | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000330 | Larsen2004_CalciumSpiking | RateRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000330 | Larsen2004_CalciumSpiking | RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000331 | Larsen2004_CalciumSpiking_EnzymeBinding | RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000332 | Bungay2006_Plasma | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000333 | Bungay2006_FollicularFluid | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000334 | Bungay2003_Thrombin_Generation | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000334 | Bungay2003_Thrombin_Generation | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000335 | Hockin2002_BloodCoagulation | Reactions, AssignmentRules | pass | pass | pass | pass | pass | no |
 | BIOMD0000000336 | Jones1994_BloodCoagulation | Reactions, FunctionDefinitions, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000337 | Pfeiffer2001_ATP-ProducingPathways_CooperationCompetition | Reactions, Events | pass | pass | fail | pass | fail | yes |
-| BIOMD0000000338 | Wajima2009_BloodCoagulation_aPTTtest | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules, RateRules | fail | pass | skip | pass | skip |  |
+| BIOMD0000000338 | Wajima2009_BloodCoagulation_aPTTtest | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules, RateRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000339 | Wajima2009_BloodCoagulation_PTtest | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules, RateRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000340 | Wajima2009_BloodCoagulation_warfarin_heparin | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules, RateRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000341 | Topp2000_BetaCellMass_Diabetes | RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000342 | Zi2011_TGF-beta_Pathway | Reactions, Events, InitialAssignments, AssignmentRules | pass | pass | fail | pass | fail | yes |
-| BIOMD0000000343 | Brannmark2010_InsulinSignalling_Mifamodel | AssignmentRules, RateRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000343 | Brannmark2010_InsulinSignalling_Mifamodel | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000344 | Proctor2011_ProteinHomeostasis_NormalCondition | Reactions, Events, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000345 | Koschorreck2008_InsulinClearance | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000346 | FitzHugh1961_NerveMembrane | RateRules | pass | pass | pass | pass | pass | yes |
@@ -432,7 +431,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000353 | Nag2011_ChloroplasticStarchDegradation | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules, RateRules | pass | pass | pass | pass | pass | no |
 | BIOMD0000000354 | Abell2011_CalciumSignaling_WithoutAdaptation | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000355 | Abell2011_CalciumSignaling_WithAdaptation | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000356 | Nyman2011_M3Hierarachical_InsulinGlucosedynamics | Reactions, AssignmentRules, RateRules | fail | pass | skip | pass | skip |  |
+| BIOMD0000000356 | Nyman2011_M3Hierarachical_InsulinGlucosedynamics | Reactions, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000357 | Lee2010_ThrombinActivation_OneForm_reduced | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000358 | Stortelder1997 - Thrombin Generation Amidolytic Activity | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000359 | Panteleev2002_TFPImechanism_schmema3 | Reactions | pass | pass | pass | pass | pass | yes |
@@ -454,7 +453,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000375 | Mears1997_CRAC_PancreaticBetaCells | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000376 | Bertram2007_IsletCell_Oscillations | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000377 | Bertram2000_PancreaticBetaCells_Oscillations | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000378 | Chay1997_CalciumConcentration | AssignmentRules, RateRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000378 | Chay1997_CalciumConcentration | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000379 | DallaMan2007_MealModel_GlucoseInsulinSystem | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000380 | Smallbone2011_TrehaloseBiosynthesis | Reactions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000381 | Maree2006_DuCa_Type1DiabetesModel | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
@@ -475,13 +474,13 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000396 | Sivakumar2011 - Notch Signaling Pathway | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000397 | Sivakumar2011_WntSignalingPathway | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000398 | Sivakumar2011_NeuralStemCellDifferentiation_Crosstalk | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000399 | Jenkinson2011_EGF_MAPK | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000399 | Jenkinson2011_EGF_MAPK | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000400 | Cooling2007_IP3transients_CardiacMyocyte | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000401 | Ayati2010_BoneRemodelingDynamics_NormalCondition | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000402 | Ayati2010_BoneRemodelingDynamics_WithTumour | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000403 | Ayati2010_BoneRemodelingDynamics_WithTumour+DrugTreatment | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000404 | Bray1993_chemotaxis | Reactions, Events, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | fail | yes |
-| BIOMD0000000405 | Cookson2011_EnzymaticQueueingCoupling | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000405 | Cookson2011_EnzymaticQueueingCoupling | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000406 | Moriya2011_CellCycle_FissionYeast | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000407 | Schliemann2011_TNF_ProAntiApoptosis | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000408 | Hettling2011_CreatineKinase | Reactions, Events, AssignmentRules, RateRules | pass | pass | fail | pass | fail | yes |
@@ -492,19 +491,19 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000413 | Band2012_DII-Venus_FullModel | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000414 | Band2012_DII-Venus_ReducedModel | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000415 | Mellor2012_LipooxygenasePathway | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000416 | Muraro2011_Cytokinin-Auxin_CrossRegulation | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000416 | Muraro2011_Cytokinin-Auxin_CrossRegulation | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000417 | Ratushny2012_NF | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000418 | Ratushny2012_SPF | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000419 | Ratushny2012_SPF_I | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000420 | Ratushny2012_ASSURE_I | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000421 | Ratushny2012_ASSURE_II | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000422 | Middleton2012_GibberellinSignalling | Reactions, Events, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000422 | Middleton2012_GibberellinSignalling | Reactions, Events, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000423 | Nyman2012_InsulinSignalling | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000424 | Faratian2009 - Role of PTEN in Trastuzumab resistance | Reactions, AssignmentRules | fail | pass | skip | pass | skip |  |
 | BIOMD0000000425 | Tan2012 - Antibiotic Treatment, Inoculum Effect | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000426 | Mosca2012 - Central Carbon Metabolism Regulated by AKT | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000427 | Bianconi2012 - EGFR and IGF1R pathway in lung cancer | Reactions | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000428 | Achcar2012 - Glycolysis in bloodstream form T. brucei | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000426 | Mosca2012 - Central Carbon Metabolism Regulated by AKT | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000427 | Bianconi2012 - EGFR and IGF1R pathway in lung cancer | Reactions | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000428 | Achcar2012 - Glycolysis in bloodstream form T. brucei | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000429 | Schaber2012 - Hog pathway in yeast | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000430 | Sarma2012 - Interaction topologies of MAPK cascade (M4_K2_USEQ) | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000431 | Sarma2012 - Interaction topologies of MAPK cascade (M4_K2_PSEQ) | Reactions | pass | pass | pass | pass | pass | yes |
@@ -522,12 +521,12 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000443 | Sarma2012 - Oscillations in MAPK cascade (S1n) | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000444 | Sarma2012 - Oscillations in MAPK cascade (S2n) | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000445 | Pokhilko2013 - TOC1 signalling in Arabidopsis circadian clock | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000446 | Erguler2013 - Unfolded protein stress response | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000446 | Erguler2013 - Unfolded protein stress response | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000447 | Venkatraman2012 - Interplay between PLS and TSP1 in TGF-β1 activation | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000448 | Brännmark2013 - Insulin signalling in human adipocytes (normal condition) | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000449 | Brännmark2013 - Insulin signalling in human adipocytes (diabetic condition) | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000448 | Brännmark2013 - Insulin signalling in human adipocytes (normal condition) | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000449 | Brännmark2013 - Insulin signalling in human adipocytes (diabetic condition) | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000450 | Reyes-Palomares2012 -  a combined model hepatic polyamine and sulfur aminoacid metabolism - version2 | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000451 | Carbo2013 - Cytokine driven CD4+ T Cell differentiation and phenotype plasticity | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | fail | pass | skip | pass | skip |  |
+| BIOMD0000000451 | Carbo2013 - Cytokine driven CD4+ T Cell differentiation and phenotype plasticity | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000452 | Bidkhori2012 - normal EGFR signalling | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000453 | Bidkhori2012 - EGFR signalling in NSCLC | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000454 | Smallbone2013 - Metabolic Control Analysis - Example 1 | Reactions | pass | pass | pass | pass | pass | no |
@@ -539,26 +538,26 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000460 | Liebal2012 - B.subtilis sigB proteolysis model | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000461 | Liebal2012 - B.subtilis transcription inhibition model | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000462 | Proctor2012 - Role of Amyloid-beta dimers in aggregation formation | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000463 | Heldt2012 - Influenza Virus Replication | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000463 | Heldt2012 - Influenza Virus Replication | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000464 | Koo2013 - Shear stress induced calcium influx and eNOS activation - Model 1 | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000465 | Koo2013 - Shear stress induced AKT and eNOS phosphorylation - Model 2 | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000466 | Koo2013 - Shear stress induced eNOS expression - Model 3 | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000466 | Koo2013 - Shear stress induced eNOS expression - Model 3 | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000467 | Koo2013 - Shear stress induced NO production - Model 4 | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000468 | Koo2013 - Integrated shear stress induced NO production model | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000468 | Koo2013 - Integrated shear stress induced NO production model | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000469 | Smallbone2013 - E.coli metabolic model with linlog rate law | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | no |
 | BIOMD0000000470 | Smallbone2013 - E.coli metabolic model with modular rate law | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | no |
 | BIOMD0000000471 | Smallbone2013 - Yeast metabolic model with linlog rate law | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | no |
 | BIOMD0000000472 | Smallbone2013 - Yeast metabolic model with modular rate law | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | no |
 | BIOMD0000000473 | Smallbone2013 - Yeast metabolic model with modular rate law, merged with Pritchard 2002 | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | no |
-| BIOMD0000000474 | Smith2013 - Regulation of Insulin Signalling by Oxidative Stress | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000475 | Amara2013 - PCNA ubiquitylation in the activation of PRR pathway | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000474 | Smith2013 - Regulation of Insulin Signalling by Oxidative Stress | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000475 | Amara2013 - PCNA ubiquitylation in the activation of PRR pathway | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000476 | Adams2012 - Locke2006 Circadian Rhythm model refined with Input Signal Light Function | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000477 | Mol2013 - Immune Signal Transduction in Leishmaniasis | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000478 | Besozzi2012 - Oscillatory regimes in the Ras/cAMP/PKA pathway in S.cerevisiae | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000478 | Besozzi2012 - Oscillatory regimes in the Ras/cAMP/PKA pathway in S.cerevisiae | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000479 | Croft2013 - GPCR-RGS interaction that compartmentalizes RGS activity | Reactions, Events | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000480 | Carbo2013 - Mucosal Immune Response during H.pylori Infection | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000481 | Stötzel2012 - Bovine estrous cycle, synchronization with prostaglandin F2α | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000482 | Noguchi2013 - Insulin dependent glucose metabolism | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000482 | Noguchi2013 - Insulin dependent glucose metabolism | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000483 | Cao2008 - Network of a toggle switch | Reactions | pass | pass | pass | pass | pass | no |
 | BIOMD0000000484 | Cao2013 - Application of ABSIS method in birth-death process | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000485 | Cao2013 - Application of ABSIS method in the bistable Schlögl model | Reactions | pass | pass | pass | pass | pass | yes |
@@ -579,20 +578,20 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000500 | Begitt2014 - STAT1 cooperative DNA binding - single GAS polymer model | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | no |
 | BIOMD0000000501 | Begitt2014 - STAT1 cooperative DNA binding - double GAS polymer model | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | no |
 | BIOMD0000000502 | Messiha2013 - Pentose phosphate pathway model | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000503 | Messiha2013 - combined glycolysis and pentose phosphate pathway model | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000503 | Messiha2013 - combined glycolysis and pentose phosphate pathway model | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000504 | Proctor2013 - Cartilage breakdown, interventions to reduce collagen release | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000505 | vanEunen2013 - Network dynamics of fatty acid β-oxidation (steady-state model) | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000506 | vanEunen2013 - Network dynamics of fatty acid β-oxidation (time-course model) | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000505 | vanEunen2013 - Network dynamics of fatty acid β-oxidation (steady-state model) | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000506 | vanEunen2013 - Network dynamics of fatty acid β-oxidation (time-course model) | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000507 | Gardner2000 - genetic toggle switch in E.coli | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000508 | Barrack2014 - Calcium/cell cycle coupling - Cyclin D dependent ATP release | AssignmentRules, RateRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000509 | Barrack2014 - Calcium/cell cycle coupling - Rs dependent ATP release | AssignmentRules, RateRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000510 | Kerkhoven2013 - Glycolysis and Pentose Phosphate Pathway in T.brucei - MODEL C (with glucosomal ribokinase) | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000511 | Kerkhoven2013 - Glycolysis and Pentose Phosphate Pathway in T.brucei - MODEL D (with ATP:ADP antiporter) | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000508 | Barrack2014 - Calcium/cell cycle coupling - Cyclin D dependent ATP release | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000509 | Barrack2014 - Calcium/cell cycle coupling - Rs dependent ATP release | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000510 | Kerkhoven2013 - Glycolysis and Pentose Phosphate Pathway in T.brucei - MODEL C (with glucosomal ribokinase) | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000511 | Kerkhoven2013 - Glycolysis and Pentose Phosphate Pathway in T.brucei - MODEL D (with ATP:ADP antiporter) | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000512 | Benson2014 - FAAH inhibitors for the treatment of osteoarthritic pain | Reactions, AssignmentRules | fail | pass | skip | pass | skip |  |
-| BIOMD0000000513 | Kerkhoven2013 - Glycolysis in T.brucei - MODEL A | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000514 | Kerkhoven2013 - Glycolysis and Pentose Phosphate Pathway in T.brucei - MODEL B | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000515 | Kerkhoven2013 - Glycolysis and Pentose Phosphate Pathway in T.brucei - MODEL C in fructose medium (with glucosomal ribokinase) | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000516 | Kerkhoven2013 - Glycolysis and Pentose Phosphate Pathway in T.brucei - MODEL D in fructose medium (with ATP:ADP antiporter) | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000513 | Kerkhoven2013 - Glycolysis in T.brucei - MODEL A | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000514 | Kerkhoven2013 - Glycolysis and Pentose Phosphate Pathway in T.brucei - MODEL B | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000515 | Kerkhoven2013 - Glycolysis and Pentose Phosphate Pathway in T.brucei - MODEL C in fructose medium (with glucosomal ribokinase) | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000516 | Kerkhoven2013 - Glycolysis and Pentose Phosphate Pathway in T.brucei - MODEL D in fructose medium (with ATP:ADP antiporter) | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000517 | Smallbone2013 - Colon Crypt cycle - Version 3 | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000518 | Smallbone2013 - Colon Crypt cycle - Version 2 | Reactions, AssignmentRules | pass | pass | pass | pass | pass | no |
 | BIOMD0000000519 | Smallbone2013 - Colon Crypt cycle - Version 1 | Reactions, AssignmentRules | pass | pass | pass | pass | pass | no |
@@ -621,7 +620,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000542 | Yuraszeck2010 - Vulnerabilities in the Tau Network in Tau Pathophysiology | Reactions, FunctionDefinitions, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000543 | Qi2013 - IL-6 and IFN crosstalk model (non-competitive) | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000544 | Qi2013 - IL-6 and IFN crosstalk model | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000545 | Ouyang2014 - photomorphogenic UV-B signalling network | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000545 | Ouyang2014 - photomorphogenic UV-B signalling network | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000546 | Miao2010 - Innate and adaptive immune responses to primary Influenza A Virus infection_1_1 | Reactions, FunctionDefinitions, layout:package, render:package | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000547 | Talemi2014 - Arsenic toxicity and detoxification mechanisms in yeast | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
 | BIOMD0000000548 | Sneppen2009 - Modeling proteasome dynamics in Parkinson's disease | RateRules | pass | pass | pass | pass | pass | yes |
@@ -633,46 +632,46 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000554 | Cloutier2009 - Brain Energy Metabolism | AssignmentRules, RateRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000555 | Auer2010 - Correlation between lag time and aggregation rate in protein aggregation | AssignmentRules | pass | fail | skip | skip | skip | yes |
 | BIOMD0000000556 | Ortega2013 - Interplay between secretases determines biphasic amyloid-beta level | Reactions, FunctionDefinitions, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000557 | Reiterer2013 - pseudophosphatase STYX role in ERK signalling | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000557 | Reiterer2013 - pseudophosphatase STYX role in ERK signalling | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000558 | Cloutier2012 - Feedback motif for Parkinson's disease | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000559 | Ouzounoglou2014 - Modeling of alpha-synuclein effects on neuronal homeostasis | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000560 | Hui2016 - Age-related changes in articular cartilage | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000561 | Martins2013 - True and apparent inhibition of amyloid fribril formation | AssignmentRules | pass | fail | skip | skip | skip | yes |
 | BIOMD0000000563 | Pritchard2014 - plant-microbe interaction | Reactions, Events, FunctionDefinitions | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000564 | Gould2013 - Temperature Sensitive Circadian Clock | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000565 | Machado2014 - Curcumin production pathway in Escherichia coli | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000565 | Machado2014 - Curcumin production pathway in Escherichia coli | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000566 | Morris2009 - α-Synuclein aggregation variable temperature and pH | Reactions, AssignmentRules | pass | fail | skip | skip | skip | yes |
 | BIOMD0000000567 | Morris2008 - Fitting protein aggregation data via F-W 2-step mechanism | Reactions, InitialAssignments, AssignmentRules | pass | fail | skip | skip | skip | yes |
-| BIOMD0000000568 | Mueller2015 - Hepatocyte proliferation, T160 phosphorylation of CDK2 | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000568 | Mueller2015 - Hepatocyte proliferation, T160 phosphorylation of CDK2 | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000569 | Dutta-Roy2015 - Opening of the multiple AMPA receptor conductance states | Reactions, FunctionDefinitions, InitialAssignments | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000570 | Aubert2002 - Coupling between Brain electrical activity, Metabolism and Hemodynamics | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules, RateRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000571 | Nishio2008 - Design of the phosphotransferase system for enhanced glucose uptake in E. coli. | Reactions, Events, AssignmentRules | pass | pass | pass | pass | pass | no |
-| BIOMD0000000572 | Costa2014 - Computational Model of L. lactis Metabolism | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000572 | Costa2014 - Computational Model of L. lactis Metabolism | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000573 | Aguilera 2014 - HIV latency. Interaction between HIV proteins and immune response | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000574 | Lai2014 - Hemiconcerted MWC model of intact calmodulin with two targets | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
 | BIOMD0000000575 | Sass2009 - Approach to an α-synuclein-based BST model of Parkinson's disease | Reactions, FunctionDefinitions, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000576 | Kolodkin2013 - Nuclear receptor-mediated cortisol signalling network | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000576 | Kolodkin2013 - Nuclear receptor-mediated cortisol signalling network | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000577 | Zhou2015 - Circadian clock with immune regulator NPR1 | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000578 | Invergo2014 - Phototransduction cascade in mouse rod cells | Reactions, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000579 | Sengupta2015 - Knowledge base model of human energy pool network (HEPNet) | Reactions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000579 | Sengupta2015 - Knowledge base model of human energy pool network (HEPNet) | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000580 | Sonntag2012 - mTOR model - IRS dependent regulation of AMPK by insulin | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000581 | DallePezze2012 - TSC-independent mTORC2 regulation | Reactions, InitialAssignments | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000582 | DallePezze2014 -  Cellular senescene-induced mitochondrial dysfunction | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000583 | Leber2015 - Mucosal immunity and gut microbiome interaction during C. difficile infection | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000584 | Mandlik2015 - Tristable genetic circuit of Leishmania | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000582 | DallePezze2014 -  Cellular senescene-induced mitochondrial dysfunction | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000583 | Leber2015 - Mucosal immunity and gut microbiome interaction during C. difficile infection | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000584 | Mandlik2015 - Tristable genetic circuit of Leishmania | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000585 | Rateitschak2012 - Interferon-gamma (IFNγ) induced STAT1 signalling (PC_IFNg100) | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000586 | Karapetyan2016 - Genetic oscillatory network - Activator Titration Circuit (ATC) | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000587 | Karapetyan2016 - Genetic oscillatory network - Repressor Titration Circuit (RTC) | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000588 | Benson2013 - Identification of key drug targets in nerve growth factor pathway | Reactions | fail | pass | skip | pass | skip |  |
 | BIOMD0000000589 | Valero2016 - Ascorbate-Glutathione cycle in chloroplasts under light/dark conditions | FunctionDefinitions, InitialAssignments, AssignmentRules, RateRules | fail | pass | skip | pass | skip |  |
-| BIOMD0000000590 | Hermansen2015 - denovo biosynthesis of pyrimidines in yeast | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000590 | Hermansen2015 - denovo biosynthesis of pyrimidines in yeast | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000591 | Boehm2014 - isoform-specific dimerization of pSTAT5A and pSTAT5B | Reactions, InitialAssignments | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000594 | Capuani2015 - Binding of Cbl and Gbr2 to EGFR (Multisite Phosphorylation Model - MPM) | Reactions, AssignmentRules | pass | pass | pass | pass | pass | no |
 | BIOMD0000000595 | Capuani2015 - Binding of Cbl and Grb2 to EGFR (Early Activation Model - EAM) | Reactions, AssignmentRules | pass | pass | pass | pass | pass | no |
 | BIOMD0000000596 | Philipson2015 - Innate immune response modulated by NLRX1 | Reactions, FunctionDefinitions, layout:package | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000597 | Flis2015 - Plant clock gene circuit (P2011.1.2 PLM_71 ver 1) | Reactions, Events, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000598 | Flis2015 - Plant clock gene circuit (P2011.2.1 PLM_71 ver 2) | Reactions, Events, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000599 | Coggins2014 - CXCL12 dependent recruitment of beta arrestin | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000599 | Coggins2014 - CXCL12 dependent recruitment of beta arrestin | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000600 | Cellière2011 - Plasticity of TGF-β Signalling | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000601 | Rosas2015 - Caffeine-induced luminal SR calcium changes | Reactions, Events, AssignmentRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000602 | Stavrum2013 - Tryptophan Metabolism in Liver | Reactions | pass | pass | pass | pass | pass | no |
@@ -696,7 +695,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000620 | Palmer2014 - Effect of IL-1β-Blocking therapies in T2DM - Disease Condition | Reactions, Events, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000621 | Palmer2014 - Effect of IL-1β-Blocking therapies in T2DM - Healthy Condition | Reactions, Events, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000622 | NguyenLK2011 - Ubiquitination dynamics in Ring1B/Bmi1 system | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000623 | Orton2009 - Modelling cancerous mutations in the EGFR/ERK pathway - EGF Model | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000623 | Orton2009 - Modelling cancerous mutations in the EGFR/ERK pathway - EGF Model | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000624 | Sluka2016 - Acetaminophen metabolism | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000625 | Leber2016 - Expanded model of Tfh-Tfr differentiation - Helicobacter pylori infection | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000626 | Ray2013 - Meiotic initiation in S. cerevisiae | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
@@ -706,7 +705,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000630 | Venkatraman2011 - PLS-UPA behaviour in the presence of substrate competition_1_1_1_1 | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000631 | DeCaluwe2016 - Circadian Clock | Reactions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000632 | Kollarovic2016 - Cell fate decision at G1-S transition | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | no |
-| BIOMD0000000633 | Bulik2016 - Regulation of hepatic glucose metabolism | Reactions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000633 | Bulik2016 - Regulation of hepatic glucose metabolism | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000634 | Proctor2013 - Effect of Aβ immunisation in Alzheimer's disease (stochastic version) | Reactions, Events | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000635 | Nair2015 - Interaction between neuromodulators via GPCRs - Effect on cAMP/PKA signaling (D1 Neuron) | Reactions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000636 | Nair2015 - Interaction between neuromodulators via GPCRs - Effect on cAMP/PKA signaling (D2 Neuron) | Reactions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
@@ -733,12 +732,12 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000658 | Lee2003 - Roles of APC and Axin in Wnt Pathway (without regulatory loop) | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000659 | Cursons2015 - Regulation of ERK-MAPK signaling in human epidermis | Events, AssignmentRules, RateRules | fail | pass | skip | pass | skip |  |
 | BIOMD0000000660 | Barr2017 - Dynamics of p21 in hTert-RPE1 cells | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000661 | Webb2002 - Fas/FasL mediated tumor T-cell interaction | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000661 | Webb2002 - Fas/FasL mediated tumor T-cell interaction | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000662 | Moore2004 - Chronic Myeloid Leukemic cells and T-lymphocyte interaction | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000663 | Wodarz2007 - HIV/CD4 T-cell interaction | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000664 | Muller2008 - Simplified MAPK activation Dynamics (Model B) | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000665 | Fallon2000 - Interleukin-2 dynamics | Reactions, FunctionDefinitions, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000666 | Pappalardo2016 - PI3K/AKT and MAPK Signaling Pathways in Melanoma Cancer | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000666 | Pappalardo2016 - PI3K/AKT and MAPK Signaling Pathways in Melanoma Cancer | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000667 | Hornberg2005 - MAPKsignalling | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000668 | Zhu2015 - Combined gemcitabine and birinapant in pancreatic cancer cells - basic PD model | Reactions, InitialAssignments, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000669 | Zhu2015 - Combined gemcitabine and birinapant in pancreatic cancer cells - mechanistic PD model | InitialAssignments, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
@@ -763,11 +762,11 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000688 | Wodarz2007 - Cytomegalovirus infection model with cytotoxic T lymphocyte and natural killer cell response | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000689 | Thiaville2016 - Folate pathway model (PanB overexpression) | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000690 | Thiaville2016 - Folate pathway model (PanB overexpression and THF regulation) | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000691 | Wolf2000 - Cellular interaction on glycolytic oscillations in yeast | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000691 | Wolf2000 - Cellular interaction on glycolytic oscillations in yeast | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000692 | Phillips2003 - The Mechanism of Ras GTPase Activation by Neurofibromin | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000693 | Wang2008 - Mimicking the inhibitory effect of riluzole on membrane conductance in skeletal fibres | AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000695 | FelixGarza2017 - Blue Light Treatment of Psoriasis (simplified) | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | fail | yes |
-| BIOMD0000000696 | Boada2016 - Incoherent type 1 feed-forward loop (I1-FFL) | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules, RateRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000696 | Boada2016 - Incoherent type 1 feed-forward loop (I1-FFL) | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000697 | Ciliberto2003 - CyclinE / Cdk2 timer in the cell cycle of Xenopus laevis embryo | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000698 | Reed2004 - Methionine Cycle | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000699 | Caydasi2012 - Regulation of Tem1 by the GAP complex in spindle position cell cycle checkpoint - Ubiquitous association model | Reactions, Events, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
@@ -781,17 +780,17 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000707 | Revilla2003 - Controlling HIV infection using recombinant viruses | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000708 | Liu2017 - Dynamics of Avian Influenza with Logistic Growth | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000709 | Liu2017 - Dynamics of Avian Influenza with Allee Growth Effect | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000710 | Hernandez-Vargas2012 - Innate immune system dynamics to Influenza virus | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000710 | Hernandez-Vargas2012 - Innate immune system dynamics to Influenza virus | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000711 | Hancioglu2007 - Human Immune Response to Influenza A virus Infection | Reactions, Events, FunctionDefinitions, AssignmentRules | fail | pass | skip | pass | skip |  |
 | BIOMD0000000712 | Manchanda2014 - Effect on Immune System by 4 different Influenza A virus strains | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000713 | Aston2018 - Dynamics of Hepatitis C Infection | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000714 | Reynolds2006 - Reduced model of the acute inflammatory response | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000715 | Huo2017 - SEIS epidemic model with the impact of media | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000716 | Lee2018 - Avian human bilinear incidence (BI) model | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000716 | Lee2018 - Avian human bilinear incidence (BI) model | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000717 | Lee2018 - Avian human half-saturated incidence (HSI) model | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000718 | Li2008 - Caulobacter Cell Cycle | Reactions, Events, FunctionDefinitions | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000719 | Tsai2014 - Cell cycle duration control by oscillatory Dynamics  in Early Xenopus laevis Embryos | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000720 | Yan2012 - Rb-E2F pathway dynamics with miR449 | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000720 | Yan2012 - Rb-E2F pathway dynamics with miR449 | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000721 | Graham2013 - Role of osteocytes in targeted bone remodeling | Reactions, FunctionDefinitions, InitialAssignments | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000722 | Bianchi2015 -Model for lymphangiogenesis in normal and diabetic wounds | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000723 | Weis2014 - Data driven Mammalian Cell Cycle Model | Reactions, FunctionDefinitions, AssignmentRules | fail | pass | skip | pass | skip |  |
@@ -801,11 +800,11 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000727 | Li2009- Assymetric Caulobacter cell cycle | Reactions, Events, FunctionDefinitions | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000728 | Norel1990 - MPF and Cyclin Oscillations | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000729 | Goldbeter1996 - Cyclin Cdc2 kinase Oscillations | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000730 | Gerard2009 - An Integrated Mammalian Cell Cycle Model | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000730 | Gerard2009 - An Integrated Mammalian Cell Cycle Model | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000731 | Robertson-Tessi M 2012 A model of tumor Immune interaction | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000732 | Kirschner1998_Immunotherapy_Tumour | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000733 | Moore_2004_Mathematical model for CML and T cell interaction | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000734 | Mouse Iron Distribution - Rich and Deficient iron diets (tracer) | Reactions, Events, FunctionDefinitions, AssignmentRules | fail | pass | skip | pass | skip |  |
+| BIOMD0000000734 | Mouse Iron Distribution - Rich and Deficient iron diets (tracer) | Reactions, Events, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000735 | Mouse Iron Distribution - Adequate iron diet (tracer) | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | no |
 | BIOMD0000000736 | Mouse Iron Distribution - Adequate iron diet (No Tracer) | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000737 | Mouse Iron Distribution - Deficient iron diet (No Tracer) | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
@@ -821,7 +820,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000747 | Nagashima2002 - Simulating blood coagulation inhibitory effects | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000748 | Phan2017 - innate immune in oncolytic virotherapy | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000749 | Reppas2015 - tumor control via alternating immunostimulating and immunosuppressive phases | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | fail | yes |
-| BIOMD0000000750 | Lolas2016 - tumour-induced neoneurogenesis and perineural tumour growth | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000750 | Lolas2016 - tumour-induced neoneurogenesis and perineural tumour growth | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000751 | Wilkie2013b - immune-induced cancer dormancy and immune evasion-basic | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000752 | Wilkie2013r - immune-induced cancer dormancy and immune evasion-resistance | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000753 | Figueredo2013/1 - immunointeraction base model | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
@@ -835,13 +834,13 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000761 | Cappuccio2006 - Cancer immunotherapy by interleukin-21 | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000762 | Kuznetsov1994 - Nonlinear dynamics of immunogenic tumors | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000763 | Dritschel2018 - A mathematical model of cytotoxic and helper T cell interactions in a tumour microenvironment | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000764 | Malinzi2019 - chemovirotherapy | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000765 | Mager2005 - Quasi-equilibrium pharmacokinetic model for drugs exhibiting target-mediated drug disposition | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000764 | Malinzi2019 - chemovirotherapy | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000765 | Mager2005 - Quasi-equilibrium pharmacokinetic model for drugs exhibiting target-mediated drug disposition | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000766 | Macnamara2015/1 - virotherapy full model | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000767 | Macnamara2015/2 - virotherapy virus-free submodel | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000768 | Eftimie2010 - immunity to melanoma | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000769 | Eftimie2017/2 - interaction of Th and macrophage in melanoma | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000770 | Eftimie2017/1 - interaction of Th and macrophage | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000769 | Eftimie2017/2 - interaction of Th and macrophage in melanoma | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000770 | Eftimie2017/1 - interaction of Th and macrophage | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000771 | Bajzer2008 - Modeling of cancer virotherapy with recombinant measles viruses | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000772 | Wang2019 - A mathematical model of oncolytic virotherapy with time delay | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000773 | Wodarz2018/2 - model with transit amplifying cells | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
@@ -859,7 +858,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000785 | Sotolongo-Costa2003 - Behavior of tumors under nonstationary therapy | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000786 | Lipniacki2004 - Mathematical model of NFKB regulatory module | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules, layout:package | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000787 | Frascoli2014 - A dynamical model of tumour immunotherapy | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000788 | Schropp2019 - Target-Mediated Drug Disposition Model for Bispecific Antibodies | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000788 | Schropp2019 - Target-Mediated Drug Disposition Model for Bispecific Antibodies | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000789 | Jenner2018 - treatment of oncolytic virus | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000790 | Alvarez2019 - A nonlinear mathematical model of cell-mediated immune response for tumor phenotypic heterogeneity | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000791 | Wilson2012 - tumor vaccine efficacy | Reactions, Events, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
@@ -872,7 +871,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000798 | Sharp2019 - AML | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000799 | Cucuianu2010 - A hypothetical-mathematical model of acute myeloid leukaemia pathogenesis | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000800 | Precup2012 - Mathematical modeling of cell dynamics after allogeneic bone marrow transplantation | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000801 | Sturrock2015 - glioma growth | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000801 | Sturrock2015 - glioma growth | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000802 | Hoffman2018- ADCC against cancer | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000803 | Park2019 - IL7 receptor signaling in T cells | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000804 | Koenders2015 - multiple myeloma | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
@@ -897,16 +896,16 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000823 | Varusai2018 - Dynamic modelling of the mTOR signalling network reveals complex emergent behaviours conferred by DEPTOR | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000824 | Lewkiewics2019 - effects of aging on naive T cell populations and diversity | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000825 | Greene2019 - Differentiate Spontaneous and Induced Evolution to Drug Resistance During Cancer Treatment | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | fail | yes |
-| BIOMD0000000826 | Shin_2018_EGFR-PYK2-c-Met interaction network_model | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000827 | Ito2019 - gefitnib resistance of lung adenocarcinoma caused by MET amplification | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | no |
+| BIOMD0000000826 | Shin_2018_EGFR-PYK2-c-Met interaction network_model | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000827 | Ito2019 - gefitnib resistance of lung adenocarcinoma caused by MET amplification | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | no |
 | BIOMD0000000828 | Jung2019 - Regulating glioblastoma signaling pathways and anti-invasion therapy - core control model | Reactions, Events, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000829 | Jung2019 - egulating glioblastoma signaling pathways and anti-invasion therapy cell cycle dynamics model | Reactions, Events, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000830 | GiantsosAdams2013 - Growth of glycocalyx under static conditions | Reactions, FunctionDefinitions, layout:package | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000831 | Smith1980 - Hypothalamic Regulation | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000832 | Shin2016 - Unveiling Hidden Dynamics of Hippo Signalling | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000833 | DiCamillo2016 - Insulin signalling pathway - Rule-based model | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000832 | Shin2016 - Unveiling Hidden Dynamics of Hippo Signalling | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000833 | DiCamillo2016 - Insulin signalling pathway - Rule-based model | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000834 | Verma2016 - Ca(2+) Signal Propagation Along Hepatocyte Cords | Reactions, Events, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000835 | Rao2014 - Fatty acid beta-oxidation (reduced model) | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000835 | Rao2014 - Fatty acid beta-oxidation (reduced model) | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000836 | Radosavljevic2009_BioterroristAttack_PanicProtection_1 | RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000837 | Hanson2016 - Toxicity Management in CAR T cell therapy for B-ALL | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000838 | Tsur2019 - Response of patients with melanoma to immune checkpoint blockade | Reactions, FunctionDefinitions, InitialAssignments | pass | pass | pass | pass | pass | yes |
@@ -928,9 +927,9 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000854 | Gray2016 - The Akt switch model | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000855 | Cooper2015 - Modeling the effects of systemic mediators on the inflammatory phase of wound healing | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000856 | Budding yeast size control by titration of nuclear sites | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000857 | Larbat2016.1 - Modeling the diversion of primary carbon flux into secondary metabolism under variable nitrate and light or dark conditions (Base Model) | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000858 | Larbat2016.2 - Modeling the diversion of primary carbon flux into secondary metabolism under variable nitrate and light or dark conditions (Light Dark Cycles) | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000859 | Larbat2016.3 - Modeling the diversion of primary carbon flux into secondary metabolism under variable nitrate and light or dark conditions (Light Dark Cycles with Minimum Starch Adaption) | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000857 | Larbat2016.1 - Modeling the diversion of primary carbon flux into secondary metabolism under variable nitrate and light or dark conditions (Base Model) | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000858 | Larbat2016.2 - Modeling the diversion of primary carbon flux into secondary metabolism under variable nitrate and light or dark conditions (Light Dark Cycles) | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000859 | Larbat2016.3 - Modeling the diversion of primary carbon flux into secondary metabolism under variable nitrate and light or dark conditions (Light Dark Cycles with Minimum Starch Adaption) | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000860 | Proctor2017- Role of microRNAs in osteoarthritis (Positive Feedforward Incoherent By MicroRNA)_1 | Reactions, Events, FunctionDefinitions | pass | pass | pass | pass | pass | no |
 | BIOMD0000000861 | Bachmann2011 - Division of labor by dual feedback regulators controls JAK2/STAT5 signaling over broad ligand range | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000862 | Proctor2017- Role of microRNAs in osteoarthritis (Positive Feedback By Micro RNA) | Reactions, Events, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
@@ -954,9 +953,9 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000880 | Trisilowati2018 - Optimal control of tumor-immune system interaction with treatment | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000881 | Kogan2013 - A mathematical model for the immunotherapeutic control of the TH1 TH2 imbalance in melanoma | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000882 | Munz2009 - Zombie SIZRC | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000883 | Giani2019 - Computational modeling to predict MAP3K8 effects as mediator of resistance to vemurafenib in thyroid cancer stem cells | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000883 | Giani2019 - Computational modeling to predict MAP3K8 effects as mediator of resistance to vemurafenib in thyroid cancer stem cells | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000884 | Cortes2019 - Optimality of the spontaneous prophage induction rate. | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000885 | Sumana2018 - Mathematical modeling of cancer-immune system, considering the role of antibodies. | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000885 | Sumana2018 - Mathematical modeling of cancer-immune system, considering the role of antibodies. | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000886 | Dubey2008 - Modeling the interaction between avascular cancerous cells and acquired immune response | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000887 | Lim2014 - HTLV-I infection A dynamic struggle between viral persistence and host immunity | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000888 | Unni2019 - Mathematical Modeling, Analysis, and Simulation of Tumor Dynamics with Drug Interventions | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
@@ -964,9 +963,9 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000890 | Bhattacharya2014 - A mathematical model of the sterol regulatory element binding protein 2 cholesterol biosynthesis pathway | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000891 | Khajanchi2019 - Stability Analysis of a Mathematical Model forGlioma-Immune Interaction under OptimalTherapy | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000892 | Sandip2013 - Modeling the dynamics of hepatitis C virus with combined antiviral drug therapy: interferon and ribavirin. | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000893 | GonzalezMiranda2013 - The effect of circadian oscillations on biochemical cell signaling by NF-κB | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000893 | GonzalezMiranda2013 - The effect of circadian oscillations on biochemical cell signaling by NF-κB | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000894 | Bose2011 - Noise-assisted interactions of tumor and immune cells | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000895 | Schokker2013 - A mathematical model representing cellular immune development and response to Salmonella of chicken intestinal tissue | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000895 | Schokker2013 - A mathematical model representing cellular immune development and response to Salmonella of chicken intestinal tissue | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000896 | Szymanska2009 - Mathematical modeling of heat shock protein synthesis in response to temperature change | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000897 | Khajanchi2015 - The combined effects of optimal control in cancer remission | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000898 | Jiao2018 - Feedback regulation in a stem cell model with acute myeloid leukaemia | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
@@ -992,11 +991,11 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000918 | Schwarz2018-Cdk Activity Threshold Determines Passage through the Restriction Point | Reactions, Events, FunctionDefinitions | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000919 | Ledzewicz2013 - On optimal chemotherapy with a strongly targeted agent for a model of tumor immune system interactions with generalized logistic growth | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000920 | Jarrett2015 - Modelling the interaction between immune response, bacterial dynamics and inflammatory damage | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000921 | Khajanchi2017 - Uniform Persistence and Global Stability for a Brain Tumor and Immune System Interaction | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000921 | Khajanchi2017 - Uniform Persistence and Global Stability for a Brain Tumor and Immune System Interaction | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000922 | Turner2015-Human/Mosquito ELP Model | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000923 | Liò2012_Modelling osteomyelitis_Control Model | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000924 | Smith2011 - Three Stage Innate Immune Response to a Pneumococcal Lung Infection | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000925 | Dunster2016 - Nondimensional Coagulation Model | Reactions, FunctionDefinitions, AssignmentRules, layout:package | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000925 | Dunster2016 - Nondimensional Coagulation Model | Reactions, FunctionDefinitions, AssignmentRules, layout:package | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000926 | Rhodes2019 - Immune-Mediated theory of Metastasis | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000927 | Grigolon2018-Responses to auxin signals | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000928 | Baker2017 - The role of cytokines, MMPs and fibronectin fragments osteoarthritis | Reactions, Events, FunctionDefinitions | pass | pass | fail | pass | fail | yes |
@@ -1004,7 +1003,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000930 | Liu2017 - chemotherapy targeted model of tumor immune system | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000931 | Voliotis2019-GnRH Pulse Generation | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000932 | Garde2020-Minimal model describing metabolic oscillations in Bacillus subtilis biofilms | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000933 | Kosiuk2015-Geometric analysis of the Goldbeter minimal model for the embryonic cell cycle | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000933 | Kosiuk2015-Geometric analysis of the Goldbeter minimal model for the embryonic cell cycle | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000934 | Linke2017 - Synchronization of Cyclins' expression by the Fkh2 transcription factor in the budding yeast cell cycle | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000935 | Ferrel2011 - Cdk1 and APC regulation in cell cycle in Xenopus laevis | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000936 | ferrel2011 - autonomous biochemical oscillator in cell cycle in Xenopus laevis v2 | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
@@ -1014,7 +1013,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000940 | Tang2019 - Pharmacology modelling of AURKB and ZAK interaction in TNBC | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000941 | Gerard2010 - Progression of mammalian cell cycle by successive activation of various cyclin cdk complexes | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000942 | Sible2007 - Mitotic cell cycle mecanism in Xenopus Laevis | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000943 | Hat2016 - Reponse of p53 System to irradiation in cell fate decision making | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000943 | Hat2016 - Reponse of p53 System to irradiation in cell fate decision making | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000944 | Goldbeter2013-Oscillatory activity of cyclin-dependent kinases in the cell cycle | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000945 | Evans2004 - Cell based mathematical model of topotecan | InitialAssignments, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000946 | Evans2005 - Compartmental model for antineoplastic drug topotecan in breast cancer cells | InitialAssignments, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
@@ -1023,16 +1022,16 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000949 | Chitnis2008 - Mathematical model of malaria transmission | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000950 | Chitnis2012 - Model Rift Valley Fever transmission between cattle and mosquitoes (Model 1) | InitialAssignments, AssignmentRules, RateRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000951 | Mitrophanov2015 - Simulating extended Hockin Blood Coagulation Model under varied pH | Reactions, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000952 | Rodenfels2019 - Heat Oscillations Driven by the Embryonic Cell Cycle Reveal the Energetic Costs of Signaling | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000952 | Rodenfels2019 - Heat Oscillations Driven by the Embryonic Cell Cycle Reveal the Energetic Costs of Signaling | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000953 | Queralt2006 - Initiation of mitotic exit by downregulation of PP2A in budding yeast | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000954 | Pandey2018-reversible transition between quiescence and proliferation | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000955 | Giordano2020 - SIDARTHE model of COVID-19 spread in Italy | Reactions, Events, FunctionDefinitions, InitialAssignments | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000956 | Bertozzi2020 - SIR model of scenarios of COVID-19 spread in CA and NY | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000957 | Roda2020 - SIR model of COVID-19 spread in Wuhan | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000958 | Ndairou2020 - early-stage transmission dynamics of COVID-19 in Wuhan | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000959 | Kok2020 - IFNalpha-induced signaling in Huh7.5 cells | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000959 | Kok2020 - IFNalpha-induced signaling in Huh7.5 cells | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000960 | Paiva2020 - SEIAHRD model of transmission dynamics of COVID-19 | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | fail | yes |
-| BIOMD0000000961 | McDougal2017 - Metabolism in ischemic cardiomyocytes | Reactions, Events, FunctionDefinitions, AssignmentRules, layout:package | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000961 | McDougal2017 - Metabolism in ischemic cardiomyocytes | Reactions, Events, FunctionDefinitions, AssignmentRules, layout:package | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000962 | Zhao2020 - SUQC model of COVID-19 transmission dynamics in Wuhan, Hubei, and China | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000963 | Weitz2020 - SIR model of COVID-19 transmission with shielding | Reactions, Events, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000964 | Mwalili2020 - SEIR model of COVID-19 transmission and environmental pathogen prevalence | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
@@ -1056,7 +1055,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000982 | Law2020 - SIR model of COVID-19 transmission in Malyasia with time-varying parameters | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000983 | Zongo2020 - model of COVID-19 transmission dynamics under containment measures in France | Reactions, Events, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000984 | Fang2020 - SEIR model of COVID-19 transmission considering government interventions in Wuhan | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
-| BIOMD0000000985 | Gex-Fabry1984 - model of receptor-mediated endocytosis of EGF in BALB/c 3T3 cells | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000985 | Gex-Fabry1984 - model of receptor-mediated endocytosis of EGF in BALB/c 3T3 cells | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000986 | Aubry1995 - Multi-compartment model of fluid-phase endocytosis kinetics in Dictyostelium discoideum | Reactions, Events, FunctionDefinitions, AssignmentRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000000987 | Aubry1995 - Nine-compartment model of fluid-phase endocytosis kinetics in Dictyostelium discoideum | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000000988 | Westerhoff2020 - systems biology model of the coronavirus pandemic 2020 | Reactions, FunctionDefinitions, AssignmentRules, layout:package | pass | pass | pass | pass | pass | yes |
@@ -1066,14 +1065,14 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000000994 | Strasen2018 - TGFb SMAD Signalling - Restimulation with 5pM TGFb at 3hr | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | no |
 | BIOMD0000000995 | Strasen2018 - TGFb SMAD Signalling - Restimulation with 5pM TGFb at 8hr | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | no |
 | BIOMD0000000996 | Strasen2018 - TGFb SMAD Signalling - Restimulation with 100pM TGFb at 6hr | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | no |
-| BIOMD0000000997 | Strasen2018 - TGFb SMAD Signalling - DRB treatment | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000998 | Strasen2018 - TGFb SMAD Signalling Class 1 | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000000999 | Strasen2018 - TGFb SMAD Signalling Class 2 | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000001000 | Strasen2018 - TGFb SMAD Signalling Class 3 | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000001001 | Strasen2018 - TGFb SMAD Signalling Class 4 | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000001002 | Strasen2018 - TGFb SMAD Signalling Class 5 | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000001003 | Strasen2018 - TGFb SMAD Signalling Class 6 | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
-| BIOMD0000001004 | Intosalmi2015 - Th17 core network model | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000000997 | Strasen2018 - TGFb SMAD Signalling - DRB treatment | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000998 | Strasen2018 - TGFb SMAD Signalling Class 1 | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000000999 | Strasen2018 - TGFb SMAD Signalling Class 2 | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000001000 | Strasen2018 - TGFb SMAD Signalling Class 3 | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000001001 | Strasen2018 - TGFb SMAD Signalling Class 4 | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000001002 | Strasen2018 - TGFb SMAD Signalling Class 5 | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000001003 | Strasen2018 - TGFb SMAD Signalling Class 6 | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
+| BIOMD0000001004 | Intosalmi2015 - Th17 core network model | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000001005 | Bae2017 - Mathematical analysis of circadian disruption and metabolic re-entrainment of hepatic gluconeogenesis | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000001006 | Ciliberto2005 - Steady states and oscillations in the p53/Mdm2 network | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | fail | yes |
 | BIOMD0000001007 | Zhang2007 - Mechanism of DNA damage response (Model1) | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
@@ -1108,7 +1107,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000001036 | Cappuccio2007 - Tumor-immune system interactions and determination of the optimal therapeutic protocol in immunotherapy | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000001037 | Alharbi2019 - Tumor-normal model (TNM) of the development of tumor cells and their impact on normal cell dynamics | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000001038 | Alharbi2019 - Tumor-normal-vitamins model (TNVM) of the effects of vitamins on delaying the growth of tumor cells | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000001039 | Zake2021 - PBPK model of metformin in mice: single dose intavenous | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | fail | pass | pass | yes |
+| BIOMD0000001039 | Zake2021 - PBPK model of metformin in mice: single dose intavenous | Reactions, Events, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000001040 | Kurlovics2021 - Metformin partitioning from plasma to RBC,  single coefficient | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000001041 | Kimmel2021 - T cell competition and stochastic extinction events in CAR T cell therapy | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000001042 | Makhlouf2020 - No treatment model of the role of CD4 T cells in tumor-immune interactions | Reactions, FunctionDefinitions, AssignmentRules | pass | pass | pass | pass | pass | yes |
@@ -1120,7 +1119,7 @@ Manually curated SBML models of [BioModels](https://www.biomodels.org) (the ids 
 | BIOMD0000001052 | Alharbi2020 - Tumor and immune system competition | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000001053 | Garde2020 - metabolic oscillations in Bacillus subtilis biofilms | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000001054 | Pearce2021 - Fibrin Polymerization | Reactions | pass | pass | pass | pass | pass | yes |
-| BIOMD0000001055 | Jeon2018 - Enzyme clustering in Glucose metabolism | Reactions, FunctionDefinitions | pass | pass | fail | pass | pass | yes |
+| BIOMD0000001055 | Jeon2018 - Enzyme clustering in Glucose metabolism | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000001056 | Chulian2021 - feedback signalling in B lymphopoeisis | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |
 | BIOMD0000001057 | Nikolov2020 - p53-miR34 model | Reactions, FunctionDefinitions | pass | pass | pass | pass | pass | yes |
 | BIOMD0000001058 | Novak2022 - Mitotic kinase oscillation | Reactions, FunctionDefinitions, InitialAssignments, AssignmentRules | pass | pass | pass | pass | pass | yes |

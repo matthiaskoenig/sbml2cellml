@@ -12,11 +12,13 @@ import logging
 import re
 from collections.abc import Callable
 from pathlib import Path
+from typing import Any
 
 import libsbml
 import pandas as pd
 
 from sbml2cellml import __version__, convert_cellml2sbml, convert_sbml2cellml
+from sbml2cellml.simulate import MAXIMUM_NUMBER_OF_STEPS
 from sbml2cellml.testsuite.cases import SUITE_VERSION, Case, skip_reason
 from sbml2cellml.testsuite.compare import (
     Comparison,
@@ -27,7 +29,7 @@ from sbml2cellml.testsuite.compare import (
     strip_brackets,
 )
 from sbml2cellml.testsuite.results import STAGES, CaseResult, StageResult, SuiteResult
-from sbml2cellml.testsuite.worker import SimulatorWorker, frame
+from sbml2cellml.testsuite.worker import SimulationFailure, SimulatorWorker, frame
 
 logger = logging.getLogger(__name__)
 
@@ -36,10 +38,27 @@ logger = logging.getLogger(__name__)
 #: numbers collapse) always comes from the complete issue text rather than a
 #: prefix cut short by the wrapper line
 MESSAGE_LENGTH = 400
-#: tight solver tolerances so the comparison measures the conversion, not the
-#: integrator; passed to every roadrunner and libopencor simulation
-RELATIVE_TOLERANCE = 1e-9
-ABSOLUTE_TOLERANCE = 1e-12
+#: solver settings of every roadrunner and libopencor simulation, tried in this
+#: order. The first ones are tight, so that the comparison measures the
+#: conversion and not the integrator; the next ones are only used when CVODE
+#: gives up, which it does for some models with tolerances this tight. Looser
+#: tolerances for every model cost accuracy: results which pass would fail
+SOLVER_SETTINGS: tuple[dict[str, float | int], ...] = tuple(
+    {
+        "relative_tolerance": relative_tolerance,
+        "absolute_tolerance": absolute_tolerance,
+        # libopencor takes 500 steps between two time points by default,
+        # which ends the integration of many models
+        "maximum_number_of_steps": MAXIMUM_NUMBER_OF_STEPS,
+    }
+    for relative_tolerance, absolute_tolerance in (
+        (1e-9, 1e-12),
+        (1e-8, 1e-10),
+        (1e-7, 1e-9),
+    )
+)
+#: part of the message of a failure of the integrator, of both simulators
+INTEGRATOR_FAILURE = "CVODE"
 #: an absolute path quoted in an exception message (e.g. the suite path of a
 #: `CellMLValidationError`), reduced to its basename so the message does not
 #: depend on the machine it ran on
@@ -98,6 +117,46 @@ def reference_selections(case: Case, model: libsbml.Model) -> list[str]:
     ]
 
 
+def _simulate(
+    worker: SimulatorWorker, function: str, **arguments: Any
+) -> dict[str, Any]:
+    """Run a simulation, with relaxed tolerances when the integrator fails.
+
+    Args:
+        worker: the worker of the simulator.
+        function: `simulate_sbml` or `simulate_cellml`.
+        **arguments: the arguments of the function without the solver settings.
+
+    Returns:
+        The result of the first `SOLVER_SETTINGS` the model integrates with.
+
+    Raises:
+        SimulationFailure: the failure with the first settings, when the
+            model integrates with none or for another reason than the
+            integrator, e.g., a model the simulator does not support.
+    """
+    first: SimulationFailure | None = None
+    for settings in SOLVER_SETTINGS:
+        try:
+            result = worker.call(function, **arguments, **settings)
+        except SimulationFailure as err:
+            first = first or err
+            if INTEGRATOR_FAILURE not in str(err):
+                break
+            continue
+        if first is not None:
+            logger.info(
+                "%s with relaxed tolerances (relative %g, absolute %g): %s",
+                function,
+                settings["relative_tolerance"],
+                settings["absolute_tolerance"],
+                _message(first),
+            )
+        return result
+    assert first is not None
+    raise first
+
+
 def run_case(
     case: Case, work_dir: Path, roadrunner: SimulatorWorker, libopencor: SimulatorWorker
 ) -> CaseResult:
@@ -153,15 +212,14 @@ def run_case(
     # reference
     expected: pd.DataFrame | None = case.expected
     try:
-        result = roadrunner.call(
+        result = _simulate(
+            roadrunner,
             "simulate_sbml",
             sbml=case.sbml_path.read_text(encoding="utf-8"),
             selections=reference_selections(case, model),
             start=settings.start,
             end=settings.end,
             steps=settings.steps,
-            relative_tolerance=RELATIVE_TOLERANCE,
-            absolute_tolerance=ABSOLUTE_TOLERANCE,
         )
         reference = strip_brackets(frame(result))
         if expected is None:
@@ -190,14 +248,13 @@ def run_case(
         stages["libopencor"] = StageResult("skip", "reference failed")
     else:
         try:
-            result = libopencor.call(
+            result = _simulate(
+                libopencor,
                 "simulate_cellml",
                 cellml_path=str(cellml_path),
                 start=settings.start,
                 end=settings.end,
                 steps=settings.steps,
-                relative_tolerance=RELATIVE_TOLERANCE,
-                absolute_tolerance=ABSOLUTE_TOLERANCE,
             )
             df = requested_frame(frame(result), quantities, settings)
             stages["libopencor"] = _stage(compare(df, expected, settings))
@@ -220,15 +277,14 @@ def run_case(
     else:
         try:
             selections = list(dict.fromkeys([*settings.variables, *compartments]))
-            result = roadrunner.call(
+            result = _simulate(
+                roadrunner,
                 "simulate_sbml",
                 sbml=roundtrip_path.read_text(encoding="utf-8"),
                 selections=selections,
                 start=settings.start,
                 end=settings.end,
                 steps=settings.steps,
-                relative_tolerance=RELATIVE_TOLERANCE,
-                absolute_tolerance=ABSOLUTE_TOLERANCE,
             )
             df = requested_frame(frame(result), quantities, settings)
             stages["roundtrip"] = _stage(compare(df, expected, settings))

@@ -33,6 +33,43 @@ def test_simulate_sbml_in_worker() -> None:
     assert df["S1"].iloc[0] == pytest.approx(1.5e-4)
 
 
+def test_simulate_sbml_maximum_number_of_steps() -> None:
+    """The step limit of the integrator is a setting of the simulation."""
+    sbml = (FIXTURES / "00001" / "00001-sbml-l3v2.xml").read_text()
+    with (
+        SimulatorWorker("roadrunner") as worker,
+        pytest.raises(SimulationFailure, match="CV_TOO_MUCH_WORK"),
+    ):
+        worker.call(
+            "simulate_sbml",
+            sbml=sbml,
+            selections=["S1", "S2"],
+            start=0.0,
+            end=5.0,
+            steps=1,
+            relative_tolerance=1e-10,
+            absolute_tolerance=1e-14,
+            maximum_number_of_steps=3,
+        )
+
+
+def test_simulate_cellml_maximum_number_of_steps() -> None:
+    with (
+        SimulatorWorker("libopencor") as worker,
+        pytest.raises(SimulationFailure, match="mxstep steps taken"),
+    ):
+        worker.call(
+            "simulate_cellml",
+            cellml_path=str(TEST_MODEL_PATH),
+            start=0.0,
+            end=10.0,
+            steps=1,
+            relative_tolerance=1e-10,
+            absolute_tolerance=1e-14,
+            maximum_number_of_steps=3,
+        )
+
+
 def test_simulate_cellml_in_worker() -> None:
     with SimulatorWorker("libopencor") as worker:
         result = worker.call(
