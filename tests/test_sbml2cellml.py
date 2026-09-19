@@ -497,6 +497,78 @@ def test_boundary_species_has_no_reaction_terms(tmp_path: Path) -> None:
     assert "<bvar><ci>time</ci></bvar><ci>S2</ci>" in math_text
 
 
+def test_elements_without_math_have_no_effect(tmp_path: Path) -> None:
+    """SBML L3V2 allows rules and kinetic laws without math."""
+    model_sbml = simple_model("no_math")
+    for pid in ("p", "q"):
+        parameter: libsbml.Parameter = model_sbml.createParameter()
+        parameter.setId(pid)
+        parameter.setValue(3.0)
+        parameter.setConstant(False)
+    model_sbml.createAssignmentRule().setVariable("p")
+    model_sbml.createRateRule().setVariable("q")
+    model_sbml.removeReaction(0)
+    reaction: libsbml.Reaction = model_sbml.createReaction()
+    reaction.setId("r2")
+    reaction.setReversible(False)
+    reactant: libsbml.SpeciesReference = reaction.createReactant()
+    reactant.setSpecies("S1")
+    reactant.setConstant(True)
+    reactant.setStoichiometry(1.0)
+    reaction.createKineticLaw()
+    sbml_path = write_sbml(tmp_path / "no_math.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path)
+    assert errors(validate_model(model)) == []
+    v = variables(model)
+    assert float(v["p"].initialValue()) == 3.0
+    assert float(v["q"].initialValue()) == 3.0
+    assert "<diff/>" not in model.component(0).math()
+
+
+def test_rate_of_in_an_initial_assignment_is_evaluated(tmp_path: Path) -> None:
+    """p = rateOf(S1) at the start: -k1 [S1] / cell = -0.5 * 10 / 2."""
+    model_sbml = simple_model("initial_rate")
+    p: libsbml.Parameter = model_sbml.createParameter()
+    p.setId("p")
+    p.setConstant(True)
+    ia: libsbml.InitialAssignment = model_sbml.createInitialAssignment()
+    ia.setSymbol("p")
+    ia.setMath(libsbml.parseL3Formula("rateOf(S1)"))
+    sbml_path = write_sbml(tmp_path / "initial_rate.xml", model_sbml)
+    v = variables(convert_sbml2cellml(sbml_path))
+    assert float(v["p"].initialValue()) == -2.5
+
+
+def test_rate_of_its_own_equation_is_not_converted(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    """dx/dt = rateOf(x) has no right-hand side to insert."""
+    model_sbml = simple_model("cycle")
+    x: libsbml.Parameter = model_sbml.createParameter()
+    x.setId("x")
+    x.setValue(1.0)
+    x.setConstant(False)
+    rule: libsbml.RateRule = model_sbml.createRateRule()
+    rule.setVariable("x")
+    rule.setMath(libsbml.parseL3Formula("rateOf(x)"))
+    sbml_path = write_sbml(tmp_path / "cycle.xml", model_sbml)
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        convert_sbml2cellml(sbml_path, validate=False)
+    assert "rateOf(x) not converted, the rate of 'x' depends on itself" in caplog.text
+
+
+def test_rate_of_an_assignment_rule_target_is_not_converted(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    model_sbml = simple_model("assigned_rate")
+    _with_rule(model_sbml, "p", "k1 * S1")
+    _with_rule(model_sbml, "q", "rateOf(p)")
+    sbml_path = write_sbml(tmp_path / "assigned_rate.xml", model_sbml)
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        convert_sbml2cellml(sbml_path, validate=False)
+    assert "rateOf(p) not converted, 'p' is set by an assignment rule" in caplog.text
+
+
 def test_nan_initial_value_logs_warning(
     tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:

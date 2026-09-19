@@ -19,6 +19,8 @@ events and algebraic rules.
 
 import logging
 import math
+from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
 
 import libcellml
@@ -68,8 +70,16 @@ def convert_sbml2cellml(
         raise SBML2CellMLConversionError(f"No model in SBML file '{sbml_path}'.")
     mid: str = model_sbml.getId() if model_sbml.isSetId() else Path(sbml_path).stem
     logger.info("Converting SBML model '%s' from '%s'", mid, sbml_path)
-    _expand(doc, mid)
-    # the conversion rewrites the document, its model is read again
+    # CellML has neither functions nor initial assignments: libsbml inlines the
+    # function calls, the formulas are collected (they do not depend on the
+    # initial values), the rateOf symbols of the initial assignments replaced,
+    # and libsbml evaluates the initial assignments to initial values
+    recursive = _recursive_functions(model_sbml)
+    _expand(doc, mid, recursive, FUNCTION_DEFINITIONS)
+    formulas = _collect_formulas(doc.getModel())
+    _rate_of_in_initial_assignments(doc.getModel(), formulas)
+    _expand(doc, mid, recursive, INITIAL_ASSIGNMENTS)
+    # the conversions rewrite the document, its model is read again
     model_sbml = doc.getModel()
     assert model_sbml is not None
 
@@ -85,19 +95,19 @@ def convert_sbml2cellml(
     time.setUnits(UNITS_ID)
     component.addVariable(time)
 
-    assignment_rules, rate_rules = _collect_rules(model_sbml)
+    assignment_rules = formulas.assignment_rules
+    rate_rules = formulas.rate_rules
+    reaction_terms = formulas.reaction_terms
+    rates = formulas.rates
     assigned = set(assignment_rules)
     compartment_sizes = _add_compartments(component, model_sbml, assigned)
     _add_parameters(component, model_sbml, assigned)
-    in_amount = _add_species(component, model_sbml, compartment_sizes, assigned)
-    local_ids = _add_local_parameters(component, model_sbml)
+    _add_species(component, model_sbml, compartment_sizes, assigned)
+    _add_local_parameters(component, model_sbml, formulas.local_ids)
     _add_species_references(component, model_sbml, assigned)
-    rates = _kinetic_laws(model_sbml, local_ids)
     reaction_ids = _referenced_reactions(model_sbml, rates)
     for rid in reaction_ids:
         _add_variable(component, rid, None)
-
-    reaction_terms = _collect_reaction_terms(model_sbml, in_amount, rates)
 
     parts: list[str] = []
     for vid, formula in assignment_rules.items():
@@ -149,69 +159,132 @@ def convert_sbml2cellml(
     return model
 
 
-def _expand(doc: libsbml.SBMLDocument, mid: str) -> None:
-    """Expand the function definitions and initial assignments with libsbml.
+#: an expansion of libsbml: the option of the conversion, what it expands, what
+#: happens to what is not expanded, and the count of what is left to expand
+FUNCTION_DEFINITIONS = (
+    "expandFunctionDefinitions",
+    "Function definitions",
+    "their calls remain",
+    libsbml.Model.getNumFunctionDefinitions,
+)
+INITIAL_ASSIGNMENTS = (
+    "expandInitialAssignments",
+    "Initial assignments",
+    "they are not converted",
+    libsbml.Model.getNumInitialAssignments,
+)
+
+
+def _expand(
+    doc: libsbml.SBMLDocument,
+    mid: str,
+    recursive: list[str],
+    expansion: tuple[str, str, str, Callable[[libsbml.Model], int]],
+) -> None:
+    """Expand the function definitions or the initial assignments with libsbml.
 
     The calls of function definitions are replaced by the function bodies
-    (`expandFunctionDefinitions`), the initial assignments evaluated to
-    initial values (`expandInitialAssignments`). libsbml refuses an invalid
-    document (e.g. a call of an undefined function) and crashes on a
-    recursive function definition read from a file, which is therefore
-    checked first. What is not expanded stays, with a warning: the calls,
-    which the validation of the CellML reports as unknown names, and the
-    initial assignments, which are not converted.
+    (`FUNCTION_DEFINITIONS`), the initial assignments evaluated to initial
+    values (`INITIAL_ASSIGNMENTS`). libsbml refuses an invalid document (e.g.
+    a call of an undefined function) and crashes on a recursive function
+    definition read from a file, which is therefore checked first. What is
+    not expanded stays, with a warning: the calls, which the validation of
+    the CellML reports as unknown names, and the initial assignments, which
+    are not converted.
 
     Args:
         doc: the SBML document, converted in place.
         mid: id of the model, for the log.
+        recursive: ids of the recursive function definitions of the model.
+        expansion: `FUNCTION_DEFINITIONS` or `INITIAL_ASSIGNMENTS`.
     """
-    recursive = _recursive_functions(doc.getModel())
-    expansions = (
-        (
-            "expandFunctionDefinitions",
-            "Function definitions",
-            "their calls remain",
-            libsbml.Model.getNumFunctionDefinitions,
-        ),
-        (
-            "expandInitialAssignments",
-            "Initial assignments",
-            "they are not converted",
-            libsbml.Model.getNumInitialAssignments,
-        ),
-    )
-    for option, what, consequence, count_of in expansions:
-        count = count_of(doc.getModel())
-        if count == 0:
+    option, what, consequence, count_of = expansion
+    count = count_of(doc.getModel())
+    if count == 0:
+        return
+    if recursive:
+        logger.warning(
+            "%s of '%s' could not be expanded, %s: recursive function definitions %s",
+            what,
+            mid,
+            consequence,
+            ", ".join(recursive),
+        )
+        return
+    properties = libsbml.ConversionProperties()
+    properties.addOption(option, True)
+    status = doc.convert(properties)
+    # libsbml may expand a part and report a failure, e.g. an initial
+    # assignment to NaN, which it cannot evaluate
+    left = count_of(doc.getModel())
+    if left:
+        logger.warning(
+            "%s of '%s' could not be expanded (%d of %d), %s: %s",
+            what,
+            mid,
+            left,
+            count,
+            consequence,
+            libsbml.OperationReturnValue_toString(status),
+        )
+    if left < count:
+        logger.info("Expanded %d %s of '%s'", count - left, what.lower(), mid)
+
+
+@dataclass
+class _Formulas:
+    """The formulas of a model in SBML L3 syntax, without rateOf symbols."""
+
+    #: right-hand side by the id of the variable an assignment rule sets
+    assignment_rules: dict[str, str]
+    #: right-hand side of `d x / d time` by the id of a rate rule target
+    rate_rules: dict[str, str]
+    #: right-hand side of `d species / d time` from the reactions
+    reaction_terms: dict[str, str]
+    #: rate by reaction id
+    rates: dict[str, str]
+    #: variable id of every local parameter, by reaction and parameter id
+    local_ids: dict[str, dict[str, str]]
+
+
+def _collect_formulas(model_sbml: libsbml.Model) -> _Formulas:
+    """Collect the formulas of the rules and reactions of a model.
+
+    They do not depend on the initial values, so they can be collected before
+    the initial assignments are evaluated. CellML has no rateOf: it is
+    replaced by the right-hand side it stands for.
+    """
+    assignment_rules, rate_rules = _collect_rules(model_sbml)
+    local_ids = _local_parameter_ids(model_sbml)
+    rates = _kinetic_laws(model_sbml, local_ids)
+    reaction_terms = _collect_reaction_terms(model_sbml, rates)
+    derivatives = {**rate_rules, **reaction_terms}
+    assigned = set(assignment_rules)
+    for formulas in (assignment_rules, rate_rules, reaction_terms, rates):
+        for key, formula in formulas.items():
+            formulas[key] = _expand_rate_of(formula, derivatives, assigned)
+    return _Formulas(assignment_rules, rate_rules, reaction_terms, rates, local_ids)
+
+
+def _rate_of_in_initial_assignments(
+    model_sbml: libsbml.Model, formulas: _Formulas
+) -> None:
+    """Replace the rateOf symbols of the initial assignments, in place.
+
+    libsbml cannot evaluate a rateOf; replaced by the right-hand side it
+    stands for, the initial assignment is evaluated like any other. A rate
+    with a local parameter stays unevaluated, the variable of the local
+    parameter is not part of the SBML model.
+    """
+    derivatives = {**formulas.rate_rules, **formulas.reaction_terms}
+    assignment: libsbml.InitialAssignment
+    for assignment in model_sbml.getListOfInitialAssignments():
+        if not assignment.isSetMath():
             continue
-        if recursive:
-            logger.warning(
-                "%s of '%s' could not be expanded, %s: recursive function "
-                "definitions %s",
-                what,
-                mid,
-                consequence,
-                ", ".join(recursive),
-            )
-            continue
-        properties = libsbml.ConversionProperties()
-        properties.addOption(option, True)
-        status = doc.convert(properties)
-        # libsbml may expand a part and report a failure, e.g. an initial
-        # assignment to NaN, which it cannot evaluate
-        left = count_of(doc.getModel())
-        if left:
-            logger.warning(
-                "%s of '%s' could not be expanded (%d of %d), %s: %s",
-                what,
-                mid,
-                left,
-                count,
-                consequence,
-                libsbml.OperationReturnValue_toString(status),
-            )
-        if left < count:
-            logger.info("Expanded %d %s of '%s'", count - left, what.lower(), mid)
+        formula: str = libsbml.formulaToL3String(assignment.getMath())
+        expanded = _expand_rate_of(formula, derivatives, set(formulas.assignment_rules))
+        if expanded != formula:
+            assignment.setMath(libsbml.parseL3Formula(expanded))
 
 
 def _collect_names(
@@ -343,7 +416,7 @@ def _add_species(
     model_sbml: libsbml.Model,
     compartment_sizes: dict[str, float],
     assigned: set[str],
-) -> dict[str, bool]:
+) -> None:
     """Add the species as variables.
 
     A species with `hasOnlySubstanceUnits` is a variable in amount, every other
@@ -351,16 +424,12 @@ def _add_species(
     the size of the compartment when it is given in the other quantity. A
     species an assignment rule sets has no initial value.
 
-    Returns:
-        Whether the variable of a species is in amount, by species id.
     """
-    in_amount: dict[str, bool] = {}
     species: libsbml.Species
     for species in model_sbml.getListOfSpecies():
         sid: str = species.getId()
         cid: str = species.getCompartment()
         amount = species.getHasOnlySubstanceUnits()
-        in_amount[sid] = amount
 
         initial: float | None
         if sid in assigned:
@@ -375,7 +444,6 @@ def _add_species(
             initial = _initial_value(sid, None)
         _add_variable(component, sid, initial)
         logger.info("'%s' variable for species", sid)
-    return in_amount
 
 
 def _size(cid: str, sid: str, compartment_sizes: dict[str, float]) -> float:
@@ -408,6 +476,10 @@ def _collect_rules(
     rate_rules: dict[str, str] = {}
     rule: libsbml.Rule
     for rule in model_sbml.getListOfRules():
+        if not rule.isSetMath():
+            # allowed since SBML L3V2, the rule has no effect
+            logger.info("Rule for '%s' has no math and is ignored", rule.getVariable())
+            continue
         formula: str = libsbml.formulaToL3String(rule.getMath())
         if rule.getTypeCode() == libsbml.SBML_ASSIGNMENT_RULE:
             assignment_rules[rule.getVariable()] = formula
@@ -422,10 +494,8 @@ def _collect_rules(
     return assignment_rules, rate_rules
 
 
-def _add_local_parameters(
-    component: libcellml.Component, model_sbml: libsbml.Model
-) -> dict[str, dict[str, str]]:
-    """Add the local parameters of the kinetic laws as variables.
+def _local_parameter_ids(model_sbml: libsbml.Model) -> dict[str, dict[str, str]]:
+    """Variable ids of the local parameters of the kinetic laws.
 
     A local parameter is only visible in its kinetic law, and several
     reactions may have one of the same id. Each becomes a variable of its
@@ -445,20 +515,30 @@ def _add_local_parameters(
         klaw: libsbml.KineticLaw | None = reaction.getKineticLaw()
         if klaw is None:
             continue
-        rid: str = reaction.getId()
         # the local parameters in level 3, the parameters of the kinetic law
         # in level 2
         for k in range(klaw.getNumParameters()):
-            local = klaw.getParameter(k)
-            pid: str = local.getId()
-            vid = unique_sid(f"{rid}_{pid}", used)
-            local_ids.setdefault(rid, {})[pid] = vid
+            pid: str = klaw.getParameter(k).getId()
+            vid = unique_sid(f"{reaction.getId()}_{pid}", used)
+            local_ids.setdefault(reaction.getId(), {})[pid] = vid
+    return local_ids
+
+
+def _add_local_parameters(
+    component: libcellml.Component,
+    model_sbml: libsbml.Model,
+    local_ids: dict[str, dict[str, str]],
+) -> None:
+    """Add the local parameters of the kinetic laws as variables (`local_ids`)."""
+    for rid, ids in local_ids.items():
+        klaw: libsbml.KineticLaw = model_sbml.getReaction(rid).getKineticLaw()
+        for pid, vid in ids.items():
+            local = klaw.getParameter(pid)
             value = _initial_value(
                 vid, _set_value(local.isSetValue(), local.getValue())
             )
             _add_variable(component, vid, value)
             logger.info("'%s' variable for local parameter '%s' of '%s'", vid, pid, rid)
-    return local_ids
 
 
 def _add_species_references(
@@ -506,9 +586,9 @@ def _kinetic_laws(
     reaction: libsbml.Reaction
     for reaction in model_sbml.getListOfReactions():
         klaw: libsbml.KineticLaw | None = reaction.getKineticLaw()
-        if klaw is None:
+        if klaw is None or not klaw.isSetMath():
             logger.warning(
-                "Reaction '%s' has no kinetic law and is not converted.",
+                "Reaction '%s' has no kinetic law with math and is not converted.",
                 reaction.getId(),
             )
             continue
@@ -587,6 +667,74 @@ def _non_finite_initial_values(
     return parts
 
 
+def _expand_rate_of(
+    formula: str, derivatives: dict[str, str], assigned: set[str]
+) -> str:
+    """Replace the rateOf symbols of a formula by the rates they stand for.
+
+    `rateOf(x)` becomes the right-hand side of the differential equation of
+    `x` (its rate rule or reaction terms, whose own rateOf symbols are
+    replaced in turn) and 0 when `x` has none. It stays, with a warning, when
+    the rate of `x` depends on itself or an assignment rule sets `x` (which
+    SBML does not allow); the validation of the CellML reports it then.
+
+    Args:
+        formula: formula in SBML L3 syntax.
+        derivatives: right-hand side of `d x / d time` by id.
+        assigned: ids which an assignment rule sets.
+
+    Returns:
+        The formula without the rateOf symbols which could be replaced.
+    """
+    if "rateOf" not in formula:
+        return formula
+    ast: libsbml.ASTNode | None = libsbml.parseL3Formula(formula)
+    if ast is None:
+        return formula  # reported when the formula is rendered
+    return libsbml.formulaToL3String(_replace_rate_of(ast, derivatives, assigned, ()))
+
+
+def _replace_rate_of(
+    node: libsbml.ASTNode,
+    derivatives: dict[str, str],
+    assigned: set[str],
+    path: tuple[str, ...],
+) -> libsbml.ASTNode:
+    """The node with its rateOf symbols replaced, see `_expand_rate_of`.
+
+    `path` holds the ids whose rates are being inserted, to detect a rate
+    which depends on itself.
+    """
+    if node.getType() == libsbml.AST_FUNCTION_RATE_OF and node.getNumChildren() == 1:
+        target: str = node.getChild(0).getName()
+        if target in path:
+            logger.warning(
+                "rateOf(%s) not converted, the rate of '%s' depends on itself.",
+                target,
+                target,
+            )
+            return node
+        if target in assigned:
+            logger.warning(
+                "rateOf(%s) not converted, '%s' is set by an assignment rule.",
+                target,
+                target,
+            )
+            return node
+        rate: libsbml.ASTNode | None = libsbml.parseL3Formula(
+            derivatives.get(target, "0")
+        )
+        if rate is None:
+            return node
+        return _replace_rate_of(rate, derivatives, assigned, (*path, target))
+    for k in range(node.getNumChildren()):
+        child: libsbml.ASTNode = node.getChild(k)
+        replaced = _replace_rate_of(child, derivatives, assigned, path)
+        if replaced is not child:
+            node.replaceChild(k, replaced.deepCopy(), True)
+    return node
+
+
 def _stoichiometry_factor(reaction_id: str, reference: libsbml.SpeciesReference) -> str:
     """Factor of the kinetic law for a species reference, empty for 1."""
     if reference.isSetId():
@@ -603,9 +751,7 @@ def _stoichiometry_factor(reaction_id: str, reference: libsbml.SpeciesReference)
 
 
 def _collect_reaction_terms(
-    model_sbml: libsbml.Model,
-    in_amount: dict[str, bool],
-    rates: dict[str, str],
+    model_sbml: libsbml.Model, rates: dict[str, str]
 ) -> dict[str, str]:
     """Collect the rate of change of every species from the kinetic laws.
 
@@ -649,7 +795,7 @@ def _collect_reaction_terms(
         )
         if factor_id:
             formula = f"{factor_id} * ({formula})"
-        if not in_amount[sid]:
+        if not species.getHasOnlySubstanceUnits():
             formula = f"1.0 dimensionless/{species.getCompartment()} * ({formula})"
         terms[sid] = formula
     return terms
