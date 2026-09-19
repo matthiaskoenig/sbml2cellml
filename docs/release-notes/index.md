@@ -4,6 +4,7 @@ The releases of `sbml2cellml`, newest first. Every release is available from [py
 
 | version | date | content |
 | --- | --- | --- |
+| [0.4.1](0.4.1.md) | 2026-09-19 | names, notes and annotations as RDF next to the CellML model and back, every reaction a variable of its rate |
 | [0.4.0](0.4.0.md) | 2026-09-19 | amounts in changing compartments, formulas as ASTs, NaN initial assignments, roundtrip example, libsbml 5.21.2 |
 | [0.3.5](0.3.5.md) | 2026-09-19 | complete errors and the tolerances in the reports of the SBML test suite and BioModels, stage `roadrunner` |
 | [0.3.4](0.3.4.md) | 2026-09-19 | robust CVODE simulations: more solver steps, relaxed tolerances when the integrator fails |
