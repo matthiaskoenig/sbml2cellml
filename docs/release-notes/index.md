@@ -4,6 +4,7 @@ The releases of `sbml2cellml`, newest first. Every release is available from [py
 
 | version | date | content |
 | --- | --- | --- |
+| [0.3.4](0.3.4.md) | 2026-09-19 | robust CVODE simulations: more solver steps, relaxed tolerances when the integrator fails |
 | [0.3.3](0.3.3.md) | 2026-09-19 | BioModels results in the documentation, initial assignments of variables with a rate rule |
 | [0.3.2](0.3.2.md) | 2026-09-19 | units in both directions, release notes in the documentation |
 | [0.3.1](0.3.1.md) | 2026-09-19 | overview figure of the SBML test suite, algebraic rules, rateOf, conversion factors, documentation |
