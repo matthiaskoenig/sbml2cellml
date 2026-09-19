@@ -4,6 +4,7 @@ The releases of `sbml2cellml`, newest first. Every release is available from [py
 
 | version | date | content |
 | --- | --- | --- |
+| [0.3.3](0.3.3.md) | 2026-09-19 | BioModels results in the documentation, initial assignments of variables with a rate rule |
 | [0.3.2](0.3.2.md) | 2026-09-19 | units in both directions, release notes in the documentation |
 | [0.3.1](0.3.1.md) | 2026-09-19 | overview figure of the SBML test suite, algebraic rules, rateOf, conversion factors, documentation |
 | [0.3.0](0.3.0.md) | 2026-09-19 | function definitions, initial assignments, local parameters, stoichiometries, time and avogadro, algebraic models |
