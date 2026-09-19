@@ -55,3 +55,11 @@ def test_mathml_of_an_ast_does_not_change_it() -> None:
     node = astnodes.apply(libsbml.AST_TIMES, astnodes.number(2.0), astnodes.name("k"))
     process_mathml_for_cellml(node)
     assert not node.getChild(0).isSetUnits()
+
+
+def test_negative_number_is_the_negative_of_a_number() -> None:
+    """libcellml generates `--1.0` for the negative of a negative number."""
+    mathml = process_mathml_for_cellml(astnodes.number(-2.5, "litre"))
+    assert "<minus/>" in mathml
+    assert '<cn cellml:units="litre"> 2.5 </cn>' in mathml
+    assert "-2.5" not in mathml

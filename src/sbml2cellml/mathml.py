@@ -14,6 +14,8 @@ rationals become reals.
 CellML has no symbols either: the SBML time symbol becomes the variable of
 integration `TIME_ID`, avogadro its value.
 An n-ary operator with less than two arguments is replaced by its value.
+The negation of a product which starts with a negation is cancelled, libcellml
+generates code for it which does not compile (`cancel_negations`).
 
 A formula is a libsbml AST, or text in the syntax of libsbml (`k1 * S1`), in
 which a name which is a symbol of the syntax (`avogadro`, `pi`, `NaN`, `time`)
@@ -105,7 +107,10 @@ def normalize_math(
     The time symbol becomes a reference to the variable of integration
     `TIME_ID`, avogadro a number with libsbml's value. Integers and
     rationals become reals, a finite number without units gets
-    `number_units`, the units of a number with units their CellML name.
+    `number_units`, the units of a number with units their CellML name. A
+    negative number becomes the negative of a number: the code libcellml
+    generates for the negative of a negative number is `--1.0`, a decrement
+    in C which does not compile.
     Infinity and NaN stay as they are, they are written as
     the `infinity` and `notanumber` constants, which have no units. The
     delay and rateOf symbols stay, CellML has no counterpart for them.
@@ -123,6 +128,8 @@ def normalize_math(
         node.setDefinitionURL("")
     elif node.getType() == libsbml.AST_NAME_AVOGADRO:
         node.setValue(node.getReal())
+    if node.isNumber() and math.isfinite(node.getValue()) and node.getValue() < 0:
+        _negate(node)
     if node.isNumber() and math.isfinite(node.getValue()):
         if node.getType() in (libsbml.AST_INTEGER, libsbml.AST_RATIONAL):
             node.setValue(float(node.getValue()))
@@ -132,6 +139,62 @@ def normalize_math(
             node.setUnits(units(node.getUnits()))
     for k in range(node.getNumChildren()):
         normalize_math(node.getChild(k), units, number_units)
+
+
+def _negate(node: libsbml.ASTNode) -> None:
+    """Turn a negative number into the negative of a number, in place."""
+    number: libsbml.ASTNode = node.deepCopy()
+    if number.getType() == libsbml.AST_REAL_E:
+        number.setValue(-number.getMantissa(), number.getExponent())
+    else:
+        number.setValue(-float(number.getValue()))
+    if node.isSetUnits():
+        # a new value removes the units
+        number.setUnits(node.getUnits())
+    node.setType(libsbml.AST_MINUS)
+    node.addChild(number)
+
+
+def _is_negation(node: libsbml.ASTNode) -> bool:
+    """Whether a node is a unary minus."""
+    return bool(node.getType() == libsbml.AST_MINUS and node.getNumChildren() == 1)
+
+
+def cancel_negations(node: libsbml.ASTNode) -> libsbml.ASTNode:
+    """Cancel the negation of a product or quotient which starts with a negation.
+
+    libcellml 0.7.1 generates the code of a negated product without
+    parentheses: `-((-2) * a)` becomes `--2.0*a`, a decrement in C, and the
+    model does not compile in libopencor. `-((-a) * b)` is `a * b` and
+    `-((-a) / b)` is `a / b`, exactly. A negative number is such a negation
+    once `normalize_math` has run. Other negations are generated with
+    parentheses and stay.
+
+    Args:
+        node: root of the libsbml AST of the formula, changed in place.
+
+    Returns:
+        The root, which is another node when the root itself was replaced.
+    """
+    for k in range(node.getNumChildren()):
+        child: libsbml.ASTNode = node.getChild(k)
+        cancelled = cancel_negations(child)
+        if cancelled is not child:
+            node.replaceChild(k, cancelled.deepCopy(), True)
+    if not _is_negation(node):
+        return node
+    product: libsbml.ASTNode = node.getChild(0)
+    parent: libsbml.ASTNode | None = None
+    first = product
+    while (
+        first.getType() in (libsbml.AST_TIMES, libsbml.AST_DIVIDE)
+        and first.getNumChildren() > 0
+    ):
+        parent, first = first, first.getChild(0)
+    if parent is None or not _is_negation(first):
+        return node
+    parent.replaceChild(0, first.getChild(0).deepCopy(), True)
+    return product.deepCopy()
 
 
 def process_mathml_for_cellml(
@@ -165,6 +228,7 @@ def process_mathml_for_cellml(
         ast = formula.deepCopy()
     ast = simplify_operators(ast)
     normalize_math(ast, units, number_units)
+    ast = cancel_negations(ast)
     mathml: str = libsbml.writeMathMLToString(ast)
     mathml = XML_DECLARATION.sub("", mathml)
     mathml = MATH_OPEN.sub("", mathml, count=1)

@@ -10,7 +10,7 @@ import matplotlib
 import numpy as np
 import pytest
 
-from sbml2cellml import convert_sbml2cellml
+from sbml2cellml import astnodes, convert_sbml2cellml
 from sbml2cellml.cellml import write_model
 from sbml2cellml.simulate import SimulationError, plot_timecourse, run_timecourse
 from tests.cellml_models import algebraic_model, underconstrained_model
@@ -178,6 +178,30 @@ def test_run_timecourse_ids_which_are_symbols(tmp_path: Path) -> None:
     convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
     df, _ = run_timecourse(cellml_path, end=4.0, steps=8)
     assert np.allclose(df["NaN"], 10.0 * np.exp(-0.5 * df["time"]), rtol=1e-5)
+
+
+def test_run_timecourse_negative_number_as_kinetic_law(tmp_path: Path) -> None:
+    """The rate -1 of S1 -> S2: d[S1]/dt = -(-1) / cell = 0.5."""
+    model_sbml = simple_model("negative_rate")
+    klaw: libsbml.KineticLaw = model_sbml.getReaction("r1").getKineticLaw()
+    klaw.setMath(astnodes.number(-1.0))
+    sbml_path = write_sbml(tmp_path / "negative_rate.xml", model_sbml)
+    cellml_path = tmp_path / "negative_rate.cellml"
+    convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
+    df, _ = run_timecourse(cellml_path, end=4.0, steps=4)
+    assert np.allclose(df["S1"], 10.0 + 0.5 * df["time"])
+    assert np.allclose(df["S2"], 4.0 - df["time"])
+
+
+def test_run_timecourse_negative_stoichiometry(tmp_path: Path) -> None:
+    """The reactant S1 with the stoichiometry -2: d[S1]/dt = 2 k1 [S1] / cell."""
+    model_sbml = simple_model("negative_stoichiometry")
+    model_sbml.getReaction("r1").getReactant(0).setStoichiometry(-2.0)
+    sbml_path = write_sbml(tmp_path / "negative_stoichiometry.xml", model_sbml)
+    cellml_path = tmp_path / "negative_stoichiometry.cellml"
+    convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
+    df, _ = run_timecourse(cellml_path, end=2.0, steps=4)
+    assert np.allclose(df["S1"], 10.0 * np.exp(0.5 * df["time"]), rtol=1e-5)
 
 
 def test_run_timecourse_applies_conversion_factors(tmp_path: Path) -> None:

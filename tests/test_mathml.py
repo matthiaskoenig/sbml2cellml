@@ -125,3 +125,24 @@ def test_cellml_math_wraps_parts() -> None:
     )
     assert math.endswith("</math>")
     assert math.count("<eq/>") == 2
+
+
+@pytest.mark.parametrize(
+    ("formula", "expected"),
+    [
+        ("-((-2) * a)", "2 * a"),
+        ("-((-a) / b)", "a / b"),
+        ("-(((-a) * b) / c)", "a * b / c"),
+        ("x + -((-2) * a * b)", "x + 2 * a * b"),
+    ],
+)
+def test_negation_of_a_negative_product_is_cancelled(
+    formula: str, expected: str
+) -> None:
+    """libcellml generates `--2.0*a` for it, a decrement in C."""
+    assert process_mathml_for_cellml(formula) == process_mathml_for_cellml(expected)
+
+
+@pytest.mark.parametrize("formula", ["-(-a)", "-((-a) + b)", "-((-a)^b)", "b - (-a)"])
+def test_other_negations_stay(formula: str) -> None:
+    assert process_mathml_for_cellml(formula).count("<minus/>") == 2

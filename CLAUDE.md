@@ -123,7 +123,11 @@ on `develop` after the merge.
   the CellML name of the units (`units` callable),
   make every number a real with units (`dimensionless` when it has none),
   replace the time symbol by the variable `time` and avogadro by its value
-  (`normalize_math`) and wrap the equations into the component math.
+  (`normalize_math`) and wrap the equations into the component math. A
+  negative number is written as the negative of a number and the negation of
+  a product or quotient which starts with a negation is cancelled
+  (`cancel_negations`): libcellml 0.7.1 generates `--2.0*a` for
+  `-((-2) * a)`, which C reads as a decrement and libopencor cannot compile.
 - `astnodes.py`: construction of formulas as libsbml ASTs (`name`, `number`,
   `apply`, `signed_sum`; `text` for logs only). The converter never turns a
   formula into text and back: the L3 parser reads an id such as `avogadro`,
