@@ -1,7 +1,7 @@
 """Simulation of CellML models with libopencor.
 
-libopencor is not on PyPI; it is imported when a simulation runs, so the rest
-of the package works without it. See `LIBOPENCOR_INSTALL`.
+libopencor is part of the `simulate` extra; it is imported when a simulation
+runs, so the rest of the package works without it. See `LIBOPENCOR_INSTALL`.
 """
 
 import logging
@@ -23,9 +23,8 @@ STEADY_STATE_TIME = "time"
 MAXIMUM_NUMBER_OF_STEPS = 100_000
 #: how to install libopencor, the message of the ImportError
 LIBOPENCOR_INSTALL = (
-    "libopencor is not installed. It is not on PyPI; install the wheel for "
-    "your platform and python version from "
-    "https://github.com/opencor/libopencor/releases, see "
+    "libopencor is not installed. Install it with the simulate extra, "
+    '`pip install "sbml2cellml[simulate]"`, see '
     "https://matthiaskoenig.github.io/sbml2cellml/installation/"
 )
 

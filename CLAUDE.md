@@ -8,10 +8,9 @@ This file provides guidance when working with code in this repository.
 L3V2 with libsbml and libcellml and simulates the result with libopencor.
 Python 3.13 and 3.14 (`.python-version` is 3.14), packaged with
 hatchling (version in `src/sbml2cellml/__init__.py`). Runtime dependencies:
-`python-libsbml`, `libcellml`, `rich`. The `simulate` extra adds `pandas`
-and `matplotlib`; libopencor itself is not on PyPI and comes from a uv flat
-index on its GitHub release (`[tool.uv.index]` in `pyproject.toml`), it is
-part of the `dev` extra, which also has `libroadrunner`.
+`python-libsbml`, `libcellml`, `rich`. The `simulate` extra adds `libopencor`,
+`pandas` and `matplotlib`; the `testsuite` extra (in `dev`) adds
+`libroadrunner`.
 
 ## Commands
 
