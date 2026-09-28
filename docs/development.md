@@ -100,7 +100,7 @@ A single sync creates the virtual environment in `.venv`, installs `sbml2cellml`
 uv sync --extra dev
 ```
 
-The `dev` extra contains everything used below, i.e., pytest, ruff, ty, tox, pre-commit, zensical and bump-my-version, together with the `simulate` extra, libopencor and libroadrunner for the roundtrip tests. libopencor is not on PyPI; `[tool.uv.index]` in `pyproject.toml` points uv at the wheels of its GitHub release, so `uv sync` installs it like any other dependency (pip users see [Installation](installation.md#simulators)). The python version is taken from `.python-version` (3.14, the newest supported version; 3.13 is supported as well).
+The `dev` extra contains everything used below, i.e., pytest, ruff, ty, tox, pre-commit, zensical and bump-my-version, together with the `simulate` extra (libopencor, pandas, matplotlib) and libroadrunner for the roundtrip tests. The python version is taken from `.python-version` (3.14, the newest supported version; 3.13 is supported as well).
 
 The tools are then run either with `uv run <command>`, which uses the environment without activating it, or from the activated environment:
 
@@ -133,7 +133,7 @@ and all environments, in parallel, with
 tox run-parallel
 ```
 
-The tox environments are created from `uv.lock` by tox-uv (`runner = uv-venv-lock-runner` in `tox.ini`), which is what makes the libopencor index available to them.
+The tox environments are created from `uv.lock` by tox-uv (`runner = uv-venv-lock-runner` in `tox.ini`).
 
 This needs the interpreters to be available, which uv installs with `uv python install 3.13 3.14`. Continuous integration runs the same environments as `uvx --with tox-uv tox -e py3.13` and `-e py3.14`.
 

@@ -9,12 +9,11 @@ Both sides of a conversion can be simulated, which is how a conversion is checke
 
 ## Setup
 
-The `simulate` extra adds pandas and matplotlib for the timecourse results and plots; roadrunner comes from PyPI, libopencor from its GitHub release, see [Installation](installation.md#simulators):
+The `simulate` extra adds libopencor together with pandas and matplotlib for the timecourse results and plots; roadrunner is installed on its own, see [Installation](installation.md#simulators):
 
 ```bash
 pip install "sbml2cellml[simulate]"
 pip install libroadrunner
-pip install --find-links https://github.com/opencor/libopencor/releases/expanded_assets/v1.20260803.0 libopencor==1.20260803.0
 ```
 
 !!! warning "One simulator per process"
