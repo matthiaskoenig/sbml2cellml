@@ -23,10 +23,13 @@ repos:
     description: Check for files that contain merge conflict strings
   - id: check-symlinks
     description: Check for symlinks which do not point to anything
+  # the example models are kept as published, e.g. the repressilator of BioModels
   - id: trailing-whitespace
     description: Trim trailing whitespaces
+    exclude: ^examples/models/
   - id: end-of-file-fixer
     description: Fix empty lines at ends of files
+    exclude: ^examples/models/
   - id: detect-private-key
     description: Detects the presence of private keys
   - id: check-case-conflict

@@ -80,6 +80,11 @@ nav = [
 
 [project.theme]
 language = "en"
+# the favicon set of `docs/images/favicon/`: the ICO here, the SVG and the
+# apple touch icon in `overrides/main.html`
+custom_dir = "overrides"
+favicon = "images/favicon/favicon.ico"
+logo = "images/favicon/favicon.svg"
 features = [
   "content.action.edit",
   "content.code.annotate",

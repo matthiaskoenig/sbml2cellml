@@ -198,6 +198,12 @@ The API reference is rendered from the docstrings by [mkdocstrings](https://mkdo
 
 Docstrings are therefore the place to document functions and classes, the markdown files provide the narrative around them. Adding a module to the reference means adding such a page and an entry to `nav` in `zensical.toml`.
 
+### Logo and favicon
+
+The logo is `docs/images/sbml2cellml-logo.png` (512 px, transparent outside of its frame). The README and the release notes are also shown on GitHub and PyPI and reference it by its absolute URL on `develop`; `tests/test_package.py` checks that the README and every release notes page start with it.
+
+The favicon is drawn after the logo in `docs/images/favicon/favicon.svg`, which is also the logo in the header of the site. `favicon.ico` (16, 32 and 48 px) and the opaque `apple-touch-icon.png` (180 px, without the frame, which iOS draws itself) are rendered from it. The ICO is the `favicon` of the theme, the SVG and the apple touch icon are linked in `overrides/main.html` (`custom_dir`).
+
 ### Files for agents { #files-for-agents }
 
 Agents and language models read markdown, not rendered html. `scripts/llms_txt.py` writes the files of the [llms.txt convention](https://llmstxt.org/) into the built site, i.e., [llms.txt](https://matthiaskoenig.github.io/sbml2cellml/llms.txt) as an annotated index of all pages, [llms-full.txt](https://matthiaskoenig.github.io/sbml2cellml/llms-full.txt) with the complete documentation in a single file, and the markdown of every page next to its html (`/conversion-issues.md` for `/conversion-issues/`). The markdown of the API reference is generated from the docstrings with `inspect`, since the pages themselves only contain the mkdocstrings directive.
@@ -253,7 +259,7 @@ A release is made from `develop`. Since `develop` only accepts pull requests,
 the release is prepared on a branch and tagged once that pull request is merged:
 
 1. branch off `develop`: `git switch -c release/x.y.z develop`
-2. write the release notes for the version in `docs/release-notes/x.y.z.md` and add the page to the `Release notes` section of `nav` in `zensical.toml` and to the overview `docs/release-notes/index.md`, newest first. The notes are part of the [documentation](release-notes/index.md) and the body of the GitHub release; `tests/test_package.py` fails when the current version has no notes or a page is missing in the navigation or the overview
+2. write the release notes for the version in `docs/release-notes/x.y.z.md`, with the logo below the heading as in the earlier notes, and add the page to the `Release notes` section of `nav` in `zensical.toml` and to the overview `docs/release-notes/index.md`, newest first. The notes are part of the [documentation](release-notes/index.md) and the body of the GitHub release; `tests/test_package.py` fails when the current version has no notes or a page is missing in the navigation or the overview
 3. make sure everything passes: `tox run-parallel`, `ruff check`, `tox r -e ty`
 4. check the version bump: `uvx bump-my-version bump [major|minor|patch] --dry-run -vv`
 5. bump the version: `uvx bump-my-version bump [major|minor|patch]`, which updates `src/sbml2cellml/__init__.py` and `CITATION.cff` and commits. It does not create the tag; a squash or rebase merge would rewrite the commit and leave the tag behind on a commit which is not part of `develop`

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{#
+  The favicon of the theme is the ICO (16, 32 and 48 px) for browsers without
+  SVG favicons. The SVG follows it, so that browsers which support it take
+  the vector icon, and iOS takes the opaque apple touch icon.
+#}
+{% block extrahead %}
+  <link rel="icon" href="{{ 'images/favicon/favicon.svg' | url }}" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{{ 'images/favicon/apple-touch-icon.png' | url }}">
+{% endblock %}

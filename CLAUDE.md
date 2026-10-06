@@ -244,9 +244,14 @@ on `develop` after the merge.
   weakening the assertion.
 - No em dash in any text, use `-`.
 - Release notes go in `docs/release-notes/x.y.z.md` as part of a release
-  commit, with an entry in the nav of `zensical.toml` and in the overview
-  `docs/release-notes/index.md` (`tests/test_package.py` checks both); the
-  release workflow uses the file as body of the GitHub release.
+  commit, the logo below the heading, with an entry in the nav of
+  `zensical.toml` and in the overview `docs/release-notes/index.md`
+  (`tests/test_package.py` checks all three); the release workflow uses the
+  file as body of the GitHub release.
+- The logo is `docs/images/sbml2cellml-logo.png`, referenced by its absolute
+  URL on `develop` in the README and the release notes; the favicon set
+  (`favicon.svg`, also the header logo, `favicon.ico`, `apple-touch-icon.png`)
+  is in `docs/images/favicon/`, linked in `overrides/main.html`.
 - `references/` holds the CellML specification and libopencor notes, it is not
   part of the documentation site.
 - Test models built with libcellml live in `tests/cellml_models.py`;

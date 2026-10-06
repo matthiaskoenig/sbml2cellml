@@ -10,6 +10,12 @@ from sbml2cellml import log
 from tests.conftest import GLIMEPIRIDE_MODELS, MODELS_DIR, TEST_MODEL_PATH
 
 ROOT = Path(__file__).parent.parent
+# the README and the release notes are also shown on GitHub and PyPI, so the
+# logo is referenced by its absolute URL
+LOGO = (
+    '<img alt="sbml2cellml logo" src="https://raw.githubusercontent.com/'
+    'matthiaskoenig/sbml2cellml/develop/docs/images/sbml2cellml-logo.png" width="150">'
+)
 
 
 def test_version_is_consistent() -> None:
@@ -38,6 +44,17 @@ def test_release_notes_are_in_the_documentation() -> None:
     for version in versions:
         assert f'{{ "{version}" = "release-notes/{version}.md" }}' in nav, version
         assert f"| [{version}]({version}.md) |" in overview, version
+
+
+def test_logo_is_in_the_readme_and_the_release_notes() -> None:
+    """The README and the notes of every release start with the logo."""
+    assert (ROOT / "docs" / "images" / "sbml2cellml-logo.png").is_file()
+    assert (ROOT / "README.md").read_text().startswith(f"{LOGO}\n")
+    for path in (ROOT / "docs" / "release-notes").glob("*.md"):
+        if path.stem != "index":
+            heading, logo = path.read_text().splitlines()[:2]
+            assert heading == f"# Release notes for sbml2cellml {path.stem}", path
+            assert logo == LOGO, path
 
 
 def test_models_exist() -> None:
