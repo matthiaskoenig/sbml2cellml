@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="frame" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="64" y2="0">
+      <stop offset="0.1" stop-color="#0078d9"/>
+      <stop offset="0.5" stop-color="#6c5db3"/>
+      <stop offset="0.9" stop-color="#e21924"/>
+    </linearGradient>
+    <linearGradient id="mark" gradientUnits="userSpaceOnUse" x1="14" y1="0" x2="50" y2="0">
+      <stop offset="0" stop-color="#0078d9"/>
+      <stop offset="0.5" stop-color="#6c5db3"/>
+      <stop offset="1" stop-color="#e21924"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#fff" stroke="url(#frame)" stroke-width="4"/>
+  <path d="M 11.09 24.39 A 22.25 22.25 0 0 1 44.68 13.72 L 46.87 10.55 L 50.32 25.33 L 39.35 21.40 L 41.55 18.24 A 16.75 16.75 0 0 0 16.26 26.27 Z" fill="url(#mark)"/>
+  <path d="M 52.91 39.61 A 22.25 22.25 0 0 1 19.32 50.28 L 17.13 53.45 L 13.68 38.67 L 24.65 42.60 L 22.45 45.76 A 16.75 16.75 0 0 0 47.74 37.73 Z" fill="url(#mark)"/>
+  <path d="M 27 28 A 5.2 5.2 0 1 1 36.4 31.2 L 27 40.5 H 37.6" fill="none" stroke="url(#mark)" stroke-width="4.6" stroke-linejoin="round"/>
+</svg>

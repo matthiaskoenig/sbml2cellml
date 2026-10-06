@@ -1,3 +1,5 @@
+<img alt="sbml2cellml logo" src="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/sbml2cellml-logo.png" width="150">
+
 # sbml2cellml: conversion between SBML and CellML
 [![GitHub Actions CI/CD Status](https://github.com/matthiaskoenig/sbml2cellml/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/matthiaskoenig/sbml2cellml/actions/workflows/ci-cd.yml) [![Documentation](https://img.shields.io/badge/docs-sbml2cellml-008080.svg)](https://matthiaskoenig.github.io/sbml2cellml) [![Version](https://img.shields.io/pypi/v/sbml2cellml)](https://pypi.org/project/sbml2cellml/) [![Python Versions](https://img.shields.io/pypi/pyversions/sbml2cellml)](https://pypi.org/project/sbml2cellml/) [![MIT License](https://img.shields.io/pypi/l/sbml2cellml)](https://opensource.org/licenses/MIT)
 
