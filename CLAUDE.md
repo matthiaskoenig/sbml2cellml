@@ -22,7 +22,7 @@ pytest                          # all tests (parallel, pytest-xdist)
 pytest tests/test_sbml2cellml.py::test_simple_model_initial_values
 tox r -e py3.14                 # tests from uv.lock via tox-uv (also py3.13)
 tox r -e ty                     # type check
-tox run-parallel
+tox run-parallel                # py3.13, py3.14 and ty, run before opening a pull request
 
 ruff check
 ruff format
@@ -47,12 +47,15 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
 
 `develop` is the default branch and takes every change through a pull request;
 the rulesets in `.github/rulesets/` (applied with `apply.sh`) require the
-`tests`, `ruff`, `ty` and `docs` checks. `main` tracks the latest release and
-is fast-forwarded by the `sync-main` job of the release workflow. Release
-steps are in `docs/development.md`: release branch,
+`tests`, `ruff`, `ty` and `docs` checks. Continuous integration is kept
+minimal: `tests` runs only `py3.14`, on linux and macos, every workflow cancels
+a superseded run (`cancel-in-progress: true`), uv caches packages and
+interpreters, dependabot runs monthly; `py3.13` runs only locally. `main`
+tracks the latest release and is fast-forwarded by the `sync-main` job of the
+release workflow. Release steps are in `docs/development.md`: release branch,
 `uvx bump-my-version bump [major|minor|patch]` (updates `__init__.py` and
-`CITATION.cff`, no tag), release notes in `docs/release-notes/`, pull request, tag
-on `develop` after the merge.
+`CITATION.cff`, no tag), release notes in `docs/release-notes/`, pull request,
+tag on `develop` after the merge.
 
 ## Architecture
 

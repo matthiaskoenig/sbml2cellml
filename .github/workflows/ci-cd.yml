@@ -15,8 +15,9 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  # superseded branch runs are cancelled, release runs are never cancelled
-  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
+  # a newer run supersedes the running one of the same branch or pull request;
+  # a release is never superseded, every tag is a group of its own
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -28,7 +29,9 @@ jobs:
         # no windows for now: the win_amd64 wheels of libcellml 0.7.1 contain
         # ARM64 binaries (https://github.com/cellml/libcellml/issues/1460)
         os: [ubuntu-latest, macos-latest]
-        python-version: ["3.13", "3.14"]
+        # continuous integration tests the newest python, 3.13 is tested
+        # locally with `tox run-parallel`, see docs/development.md
+        python-version: ["3.14"]
 
     steps:
     - uses: actions/checkout@v7
@@ -50,17 +53,19 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         enable-cache: true
+        # the interpreter is cached with the packages instead of downloaded by every run
+        cache-python: true
     - name: Cache the SBML test suite
-      # the complete SBML test suite runs on linux with python 3.14 only
-      if: runner.os == 'Linux' && matrix.python-version == '3.14'
+      # the complete SBML test suite runs on linux only
+      if: runner.os == 'Linux'
       uses: actions/cache@v6
       with:
         path: ~/.cache/sbml2cellml
         key: sbml-test-suite-3.5.0
     - name: Test with tox
       env:
-        # the complete SBML test suite runs on linux with python 3.14 only
-        SBML2CELLML_TESTSUITE: ${{ runner.os == 'Linux' && matrix.python-version == '3.14' && '1' || '' }}
+        # the complete SBML test suite runs on linux only
+        SBML2CELLML_TESTSUITE: ${{ runner.os == 'Linux' && '1' || '' }}
       run:
         uvx --with tox-uv tox -e py${{ matrix.python-version }}
 
