@@ -32,10 +32,7 @@ A pull request can only be merged once the four required checks are green:
 | `ty`    | `ty.yml`      | `tox r -e ty`                                                       |
 | `docs`  | `docs.yml`    | the zensical build including the api reference and the agent files  |
 
-`tests` aggregates the test matrix into a single job, so the name of the
-required check stays the same when the matrix changes. On linux the CI
-installs the python dev files before uv, because the roadrunner extension
-links against libpython.
+`tests` aggregates the test matrix into a single job, so the name of the required check stays the same when the matrix changes. The CI runs the standalone interpreters of uv (`UV_PYTHON_PREFERENCE=only-managed`); on linux it puts their `lib` directory on `LD_LIBRARY_PATH`, because the roadrunner extension links against libpython, which these interpreters ship but never load.
 
 Continuous integration is kept small: every workflow cancels its running build when a newer commit of the same branch or pull request arrives, uv caches the packages and the interpreters between runs, dependabot proposes its updates once a month, and the matrix tests only the newest python. Python 3.13 is tested locally, see [Testing](#testing), before a pull request is opened.
 
@@ -137,7 +134,7 @@ tox run-parallel
 
 The tox environments are created from `uv.lock` by tox-uv (`runner = uv-venv-lock-runner` in `tox.ini`).
 
-This needs the interpreters to be available, which uv installs with `uv python install 3.13 3.14`. It is the complete test and is run before a pull request is opened: continuous integration runs only `py3.14`, on linux and macos, as `uvx --with tox-uv tox -e py3.14`.
+This needs the interpreters to be available, which uv installs with `uv python install 3.13 3.14`. It is the complete test and is run before a pull request is opened: continuous integration runs only `py3.14`, on linux and macos, as `uvx --with tox-uv tox -e py3.14 -- --durations=15`, which lists the 15 slowest tests so that a test which becomes slow is seen. The tests run in parallel on every core (pytest-xdist, `addopts = "-n auto"`).
 
 To run the tests directly against the development environment use
 

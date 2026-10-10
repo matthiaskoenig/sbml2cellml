@@ -45,17 +45,7 @@ uv run sbml2cellml-biomodels update     # refresh the committed selection biomod
 uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the figures from the results file
 ```
 
-`develop` is the default branch and takes every change through a pull request;
-the rulesets in `.github/rulesets/` (applied with `apply.sh`) require the
-`tests`, `ruff`, `ty` and `docs` checks. Continuous integration is kept
-minimal: `tests` runs only `py3.14`, on linux and macos, every workflow cancels
-a superseded run (`cancel-in-progress: true`), uv caches packages and
-interpreters, dependabot runs monthly; `py3.13` runs only locally. `main`
-tracks the latest release and is fast-forwarded by the `sync-main` job of the
-release workflow. Release steps are in `docs/development.md`: release branch,
-`uvx bump-my-version bump [major|minor|patch]` (updates `__init__.py` and
-`CITATION.cff`, no tag), release notes in `docs/release-notes/`, pull request,
-tag on `develop` after the merge.
+`develop` is the default branch and takes every change through a pull request; the rulesets in `.github/rulesets/` (applied with `apply.sh`) require the `tests`, `ruff`, `ty` and `docs` checks. Continuous integration is kept minimal: `tests` runs only `py3.14`, on linux and macos, every workflow cancels a superseded run (`cancel-in-progress: true`), uv caches packages and interpreters, dependabot runs monthly; `py3.13` runs only locally. `main` tracks the latest release and is fast-forwarded by the `sync-main` job of the release workflow. Release steps are in `docs/development.md`: release branch, `uvx bump-my-version bump [major|minor|patch]` (updates `__init__.py` and `CITATION.cff`, no tag), release notes in `docs/release-notes/`, pull request, tag on `develop` after the merge.
 
 ## Architecture
 
