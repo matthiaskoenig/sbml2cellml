@@ -12,10 +12,10 @@ permissions:
   contents: read
 
 concurrency:
-  # one run per branch or pull request, so that a deployment of `develop` is
-  # never overtaken by the next one, which would leave the site half published
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: false
+  # a newer run supersedes the running one; a cancelled deployment leaves the
+  # published site as it was, the newer run deploys
+  cancel-in-progress: true
 
 jobs:
   docs:
@@ -23,24 +23,28 @@ jobs:
     name: docs
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      # the standalone interpreter uv manages, see the `test` job of ci-cd.yml
+      UV_PYTHON_PREFERENCE: only-managed
     steps:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v6
-      - name: Install the python dev files
-        # the extension of libroadrunner links against libpython, which the
-        # standalone interpreters do not put on the library search path
-        run: |
-          sudo add-apt-repository -y ppa:deadsnakes/ppa
-          sudo apt-get update
-          sudo apt-get install -y python3.14-dev
       - name: Install uv and set the python version
         uses: astral-sh/setup-uv@v10.2.0
         with:
           python-version: "3.14"
           enable-cache: true
+          cache-python: true
+      - name: Put libpython on the library search path
+        # the extension of libroadrunner links against libpython, see the `test`
+        # job of ci-cd.yml
+        run: |
+          uv python install 3.14
+          prefix="$("$(uv python find --no-project 3.14)" -c 'import sys; print(sys.base_prefix)')"
+          echo "LD_LIBRARY_PATH=${prefix}/lib" >> "$GITHUB_ENV"
       - name: Install dependencies
         run: uv sync --extra dev
       - name: Build the documentation

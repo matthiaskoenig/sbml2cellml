@@ -15,54 +15,67 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  # superseded branch runs are cancelled, release runs are never cancelled
-  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
+  # a newer run supersedes the running one of the same branch or pull request;
+  # a release is never superseded, every tag is a group of its own
+  cancel-in-progress: true
 
 jobs:
   test:
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 45
+    timeout-minutes: 30
+    env:
+      # the tests run with the standalone interpreter uv manages, whose libpython
+      # is put on the library search path below
+      UV_PYTHON_PREFERENCE: only-managed
     strategy:
       fail-fast: false
       matrix:
         # no windows for now: the win_amd64 wheels of libcellml 0.7.1 contain
         # ARM64 binaries (https://github.com/cellml/libcellml/issues/1460)
         os: [ubuntu-latest, macos-latest]
-        python-version: ["3.13", "3.14"]
+        # continuous integration tests the newest python, 3.13 is tested
+        # locally with `tox run-parallel`, see docs/development.md
+        python-version: ["3.14"]
 
     steps:
     - uses: actions/checkout@v7
       with:
         persist-credentials: false
-    - name: Install the python dev files (linux only)
-      # the extension of libroadrunner links against libpython, which the
-      # standalone interpreters do not put on the library search path
-      run: |
-        if [ "$RUNNER_OS" == "Linux" ]; then
-          sudo add-apt-repository -y ppa:deadsnakes/ppa
-          sudo apt-get update
-          sudo apt-get install -y python${{ matrix.python-version }}-dev
-        fi
-      shell: bash
     - name: Install uv and set the python version
       # astral-sh/setup-uv publishes no floating major tag beyond v7
       uses: astral-sh/setup-uv@v10.2.0
       with:
         python-version: ${{ matrix.python-version }}
         enable-cache: true
+        # the interpreter is cached with the packages instead of downloaded by every run
+        cache-python: true
+    - name: Put libpython on the library search path (linux only)
+      # the extension of libroadrunner links against libpython3.X.so.1.0. The
+      # standalone interpreters of uv ship it in their `lib` directory but are
+      # linked statically and never load it, so without this the import of
+      # roadrunner fails. tox passes LD_LIBRARY_PATH on to the tests.
+      if: runner.os == 'Linux'
+      env:
+        PYTHON_VERSION: ${{ matrix.python-version }}
+      run: |
+        uv python install "$PYTHON_VERSION"
+        prefix="$("$(uv python find --no-project "$PYTHON_VERSION")" -c 'import sys; print(sys.base_prefix)')"
+        echo "LD_LIBRARY_PATH=${prefix}/lib" >> "$GITHUB_ENV"
+      shell: bash
     - name: Cache the SBML test suite
-      # the complete SBML test suite runs on linux with python 3.14 only
-      if: runner.os == 'Linux' && matrix.python-version == '3.14'
+      # the complete SBML test suite runs on linux only
+      if: runner.os == 'Linux'
       uses: actions/cache@v6
       with:
         path: ~/.cache/sbml2cellml
         key: sbml-test-suite-3.5.0
     - name: Test with tox
       env:
-        # the complete SBML test suite runs on linux with python 3.14 only
-        SBML2CELLML_TESTSUITE: ${{ runner.os == 'Linux' && matrix.python-version == '3.14' && '1' || '' }}
+        # the complete SBML test suite runs on linux only
+        SBML2CELLML_TESTSUITE: ${{ runner.os == 'Linux' && '1' || '' }}
+      # the slowest tests are listed, so that a test which becomes slow is seen
       run:
-        uvx --with tox-uv tox -e py${{ matrix.python-version }}
+        uvx --with tox-uv tox -e py${{ matrix.python-version }} -- --durations=15
 
   tests:
     # the one check the branch protection requires; the names of the matrix
