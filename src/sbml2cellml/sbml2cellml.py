@@ -28,7 +28,7 @@ Not supported yet (logged as warning, see docs/conversion-issues.md): events.
 
 import logging
 import math
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Generator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
@@ -400,7 +400,7 @@ def _is_known(
 
 
 @contextmanager
-def _without_rate_rules(doc: libsbml.SBMLDocument) -> Iterator[None]:
+def _without_rate_rules(doc: libsbml.SBMLDocument) -> Generator[None]:
     """Take the rate rules out of the model while libsbml evaluates formulas.
 
     libsbml evaluates a variable without a value yet (it has an initial
