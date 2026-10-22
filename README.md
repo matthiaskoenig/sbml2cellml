@@ -48,18 +48,18 @@ If you have any questions or issues please [open an issue](https://github.com/ma
 
 If you use `sbml2cellml` please cite the archived software on [Zenodo](https://doi.org/10.5281/zenodo.22829187):
 
-> König, M. (2026). *sbml2cellml: conversion of SBML models to CellML* (Version 0.3.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22838601
+> König, M. (2026). *sbml2cellml: conversion of SBML models to CellML* (Version 0.4.3) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23554440
 
 ```bibtex
 @software{konig_sbml2cellml,
   author    = {König, Matthias},
   title     = {sbml2cellml: conversion of SBML models to CellML},
   year      = {2026},
-  month     = sep,
-  version   = {0.3.0},
+  month     = oct,
+  version   = {0.4.3},
   publisher = {Zenodo},
-  doi       = {10.5281/zenodo.22838601},
-  url       = {https://doi.org/10.5281/zenodo.22838601},
+  doi       = {10.5281/zenodo.23554440},
+  url       = {https://doi.org/10.5281/zenodo.23554440},
 }
 ```
 
