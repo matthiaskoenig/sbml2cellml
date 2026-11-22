@@ -28,6 +28,8 @@ An `sbmlsim` failure means sbmlsim-core itself cannot simulate the case, it says
 
 Wall time of the simulations which pass or fail, measured around the call of the simulator in its worker process: the compilation of the model is part of it, the conversions and the comparison are not. Every simulator runs in one process for the whole run, so a model is compiled by a warm simulator, and the cases run one after the other.
 
+The two simulators do not always integrate with the same absolute tolerance: the tolerance of an SBML simulation is scaled with the smallest initial amount of the model, so a model with small amounts is integrated more tightly than its CellML conversion, whose states are concentrations.
+
 ![Simulation time of libopencor against sbmlsim-core per case](images/testsuite_timings.svg#only-light)
 ![Simulation time of libopencor against sbmlsim-core per case](images/testsuite_timings_dark.svg#only-dark)
 

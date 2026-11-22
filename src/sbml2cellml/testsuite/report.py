@@ -165,6 +165,12 @@ def timing_lines(result: SuiteResult, figure: str | None = None) -> list[str]:
         "model is compiled by a warm simulator, and the cases run one after "
         "the other.",
         "",
+        "The two simulators do not always integrate with the same absolute "
+        "tolerance: the tolerance of an SBML simulation is scaled with the "
+        "smallest initial amount of the model, so a model with small amounts "
+        "is integrated more tightly than its CellML conversion, whose states "
+        "are concentrations.",
+        "",
     ]
     if figure is not None:
         alt = "Simulation time of libopencor against sbmlsim-core per case"
