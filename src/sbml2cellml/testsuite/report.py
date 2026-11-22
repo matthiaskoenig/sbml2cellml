@@ -84,11 +84,12 @@ def solver_text() -> str:
         f"(relative/absolute {tight}) and up to {steps} internal steps between "
         "two time points, so the comparison measures the conversion and not "
         "the integrator; only when CVODE gives up with these tolerances the "
-        f"simulation is repeated with {' and '.join(relaxed)}. The absolute "
-        "tolerance of the SBML simulation is scaled with the smallest initial "
-        "amount of the model when it is below one, since the states of the "
-        "SBML side are amounts and the states of the CellML side "
-        "concentrations."
+        f"simulation is repeated with {' and '.join(relaxed)}. Both "
+        "simulations scale the absolute tolerance with the smallest initial "
+        "value of a state of their own model when it is below one: the "
+        "states of the SBML side are amounts, which are small for a model "
+        "with a small compartment, and the states of the CellML side the "
+        "variables of its components."
     )
 
 
@@ -158,22 +159,25 @@ def timing_lines(result: SuiteResult, figure: str | None = None) -> list[str]:
     lines = [
         f"## {TIMINGS_HEADING}",
         "",
-        "Wall time of the simulations which pass or fail, measured around "
-        "the call of the simulator in its worker process: the compilation of "
-        "the model is part of it, the conversions and the comparison are "
-        "not. Every simulator runs in one process for the whole run, so a "
-        "model is compiled by a warm simulator, and the cases run one after "
-        "the other.",
+        "Wall time of the simulations which pass or fail, measured inside "
+        "the simulator wrapper in the worker process, so it holds no "
+        "overhead of the harness. The setup is everything a simulator does "
+        "with the model before it integrates: reading and converting the "
+        "file, compiling the model and building the instance. Both "
+        "simulators cache what they compiled, so a model simulated again in "
+        "the same process needs no setup; every case here is set up once. "
+        "Both of them run the model once before the run of the result, so "
+        "that the generation of the code of a model, which libopencor does "
+        "when it runs the model the first time, is part of the setup.",
         "",
-        "The two simulators do not always integrate with the same absolute "
-        "tolerance: the tolerance of an SBML simulation is scaled with the "
-        "smallest initial amount of the model, so a model with small amounts "
-        "is integrated more tightly than its CellML conversion, whose states "
-        "are concentrations.",
+        "The two simulators integrate with the same relative tolerance and "
+        "with an absolute tolerance scaled to the states of their own model "
+        "(amounts for the SBML model, the variables of the components for "
+        "the CellML model), so neither of them is given an easier problem.",
         "",
     ]
     if figure is not None:
-        alt = "Simulation time of libopencor against sbmlsim-core per case"
+        alt = "Integration time of libopencor against sbmlsim-core per case"
         dark = dark_path(PurePosixPath(figure))
         lines += [
             f"![{alt}]({figure}#only-light)",
@@ -181,24 +185,31 @@ def timing_lines(result: SuiteResult, figure: str | None = None) -> list[str]:
             "",
         ]
     lines += [
-        "| stage | simulator | model | simulations | total | median | p95 | slowest |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+        "| stage | simulator | model | simulations | setup median | "
+        "integration median | integration p95 | integration slowest | "
+        "integration total |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for stage, simulator, model in TIMED_STAGES:
         seconds = list(timed[stage].values())
         if not seconds:
             continue
+        setup = list(result.seconds(stage, setup=True).values())
         lines.append(
             f"| {stage} | {simulator} | {model} | {len(seconds)} | "
-            f"{duration_text(sum(seconds))} | "
+            f"{duration_text(median(setup)) if setup else '-'} | "
             f"{duration_text(median(seconds))} | "
             f"{duration_text(_quantile(seconds, 0.95))} | "
-            f"{duration_text(max(seconds))} |"
+            f"{duration_text(max(seconds))} | "
+            f"{duration_text(sum(seconds))} |"
         )
     pairs = timing_pairs(result)
     if pairs:
         ratios = [libopencor / sbmlsim for sbmlsim, libopencor in pairs.values()]
-        faster = sum(1 for ratio in ratios if ratio <= 1.0)
+        # as in the figure, which splits the points by the two times
+        faster = sum(
+            1 for sbmlsim, libopencor in pairs.values() if libopencor <= sbmlsim
+        )
         middle = median(ratios)
         comparison = (
             f"{1 / middle:.1f} times faster"
@@ -207,9 +218,10 @@ def timing_lines(result: SuiteResult, figure: str | None = None) -> list[str]:
         )
         lines += [
             "",
-            f"Both simulators ran {len(pairs)} cases. libopencor is "
-            f"{comparison} than sbmlsim-core for the median case and faster "
-            f"for {faster} of them; the medians are "
+            f"The two simulators integrate the same dynamics for {len(pairs)} "
+            "cases, those whose CellML model reproduces the expected results. "
+            f"libopencor is {comparison} than sbmlsim-core for the median of "
+            f"them and faster for {faster}; over these cases the medians are "
             f"{duration_text(median([pair[0] for pair in pairs.values()]))} "
             "for sbmlsim-core and "
             f"{duration_text(median([pair[1] for pair in pairs.values()]))} "

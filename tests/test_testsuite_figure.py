@@ -66,8 +66,17 @@ def test_write_figures_is_deterministic(tmp_path: Path) -> None:
 
 
 def test_timing_pairs() -> None:
-    pairs = timing_pairs(timed_sample())
-    assert pairs == {"00001": (0.02, 0.01), "00002": (0.04, 0.12), "00006": (0.06, 0.3)}
+    # only the cases whose libopencor stage passes, i.e. the same dynamics
+    assert timing_pairs(timed_sample()) == {
+        "00001": (0.02, 0.01),
+        "00007": (0.06, 0.18),
+    }
+    assert set(timing_pairs(timed_sample(), passing=False)) == {
+        "00001",
+        "00002",
+        "00006",
+        "00007",
+    }
     # a run without timings has no pairs
     assert timing_pairs(sample()) == {}
 
@@ -78,23 +87,21 @@ def test_render_timings() -> None:
     assert ax.get_yscale() == "log"
     assert ax.get_xlabel() == "sbmlsim-core, SBML model (s)"
     assert ax.get_ylabel() == "libopencor, CellML model (s)"
-    assert ax.get_title(loc="left") == "SBML test suite 3.5.0: simulation time"
-    # the cases and the medians, 40 ms of sbmlsim-core and 120 ms of libopencor
-    assert [text.get_text() for text in ax.texts] == [
-        "3 cases, median 40 ms and 120 ms"
-    ]
+    assert ax.get_title(loc="left") == "SBML test suite 3.5.0: integration time"
+    # the cases and the medians, 40 ms of sbmlsim-core and 95 ms of libopencor
+    assert [text.get_text() for text in ax.texts] == ["2 cases, median 40 ms and 95 ms"]
     legend = ax.get_legend()
     assert legend is not None
     assert [text.get_text() for text in legend.get_texts()] == [
         "libopencor faster (1)",
-        "sbmlsim-core faster (2)",
+        "sbmlsim-core faster (1)",
     ]
 
 
 def test_render_timings_title_and_cases() -> None:
     ax = render_timings(timed_sample(), title="BioModels", cases="models").axes[0]
-    assert ax.get_title(loc="left") == "BioModels: simulation time"
-    assert ax.texts[0].get_text().startswith("3 models, median")
+    assert ax.get_title(loc="left") == "BioModels: integration time"
+    assert ax.texts[0].get_text().startswith("2 models, median")
 
 
 def test_render_timings_without_timings() -> None:

@@ -187,21 +187,30 @@ def render_figure(
     return fig
 
 
-def timing_pairs(result: SuiteResult) -> dict[str, tuple[float, float]]:
-    """Wall time of the two simulators, for every case both of them ran.
+def timing_pairs(
+    result: SuiteResult, passing: bool = True
+) -> dict[str, tuple[float, float]]:
+    """Integration time of the two simulators, for the cases both of them ran.
 
     Args:
         result: a suite run.
+        passing: only the cases whose `libopencor` stage passes, i.e. whose
+            CellML model reproduces the expected results: the two
+            simulators integrate the same dynamics there, which a case with
+            a conversion gap (the delay of an event, for example) does
+            not, and neither does a model with resets, which libopencor
+            does not apply.
 
     Returns:
-        The seconds of the `sbmlsim` and of the `libopencor` stage by case
-        id, for the cases which both stages simulated.
+        The integration seconds of the `sbmlsim` and of the `libopencor`
+        stage by case id.
     """
     sbmlsim = result.seconds("sbmlsim")
     libopencor = result.seconds("libopencor")
     return {
         cid: (sbmlsim[cid], libopencor[cid])
         for cid in sorted(sbmlsim.keys() & libopencor.keys())
+        if not passing or result.cases[cid].stages["libopencor"].status == "pass"
     }
 
 
@@ -226,10 +235,13 @@ def render_timings(
 ) -> Figure:
     """Render the timings of the two simulators, one point per case.
 
-    The wall time of the libopencor simulation of the CellML model against
-    the wall time of the sbmlsim-core simulation of the SBML model, on
-    logarithmic axes: a point below the diagonal is a case libopencor
-    simulates faster, a point above it one sbmlsim-core simulates faster.
+    The integration time of the libopencor simulation of the CellML model
+    against the integration time of the sbmlsim-core simulation of the SBML
+    model, on logarithmic axes: a point below the diagonal is a case
+    libopencor integrates faster, a point above it one sbmlsim-core
+    integrates faster. The setup of the two simulators is not part of it,
+    and only the cases whose CellML model reproduces the expected results
+    are shown (`timing_pairs`).
 
     Args:
         result: a suite run.
@@ -305,7 +317,7 @@ def render_timings(
             fontsize=10,
         )
     ax.set_title(
-        f"{title}: simulation time",
+        f"{title}: integration time",
         loc="left",
         color=theme.text,
         fontsize=12,

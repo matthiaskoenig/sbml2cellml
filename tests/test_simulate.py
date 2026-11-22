@@ -16,8 +16,10 @@ from sbml2cellml.simulate import SimulationError, plot_timecourse, run_timecours
 from tests.cellml_models import algebraic_model, underconstrained_model
 from tests.conftest import MODELS_DIR, TEST_MODEL_PATH
 from tests.sbml_models import (
+    analytic_time_model,
     growing_compartment_model,
     simple_model,
+    small_state_model,
     symbol_ids_model,
     write_sbml,
 )
@@ -338,3 +340,54 @@ def test_plot_timecourse() -> None:
     # one line per column other than the variable of integration: m, alpha
     assert len(ax.lines) == 2
     assert ax.get_xlabel() == "t [second]"
+
+
+def test_run_timecourse_fills_the_timings() -> None:
+    timings: dict[str, float] = {}
+    run_timecourse(TEST_MODEL_PATH, end=10.0, steps=10, timings=timings)
+    assert sorted(timings) == ["setup", "simulate"]
+    assert timings["setup"] > 0.0
+    assert timings["simulate"] > 0.0
+
+
+def test_run_timecourse_scales_the_absolute_tolerance(tmp_path: Path) -> None:
+    """The state of the model is 1e-6, so the tolerance follows it.
+
+    An absolute tolerance of 1e-3 is far above the state, so CVODE accepts
+    a trajectory which is orders of magnitude off; with the tolerance
+    scaled to 1e-9 the decay is integrated.
+    """
+    model = small_state_model()
+    cellml_path = tmp_path / "small.cellml"
+    sbml_path = tmp_path / "small.xml"
+    write_sbml(sbml_path, model)
+    convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
+    scaled, _ = run_timecourse(cellml_path, end=10.0, steps=10, absolute_tolerance=1e-3)
+    unscaled, _ = run_timecourse(
+        cellml_path,
+        end=10.0,
+        steps=10,
+        absolute_tolerance=1e-3,
+        scale_tolerance=False,
+    )
+    decayed = 1e-6 * np.exp(-10.0)
+    assert abs(scaled["A"].iloc[-1] - decayed) < 1e-9
+    assert unscaled["A"].iloc[-1] > 100.0 * decayed
+
+
+def test_run_timecourse_warmup_keeps_the_result() -> None:
+    """The discarded run changes nothing but the timings."""
+    warm, _ = run_timecourse(TEST_MODEL_PATH, end=10.0, steps=10, warmup=True)
+    cold, _ = run_timecourse(TEST_MODEL_PATH, end=10.0, steps=10)
+    assert np.array_equal(warm.to_numpy(), cold.to_numpy())
+
+
+def test_run_timecourse_analytic_model_of_time(tmp_path: Path) -> None:
+    """`A = 2 * time` is integrated over time, not solved as a steady state."""
+    sbml_path = tmp_path / "analytic.xml"
+    cellml_path = tmp_path / "analytic.cellml"
+    write_sbml(sbml_path, analytic_time_model())
+    convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
+    df, _ = run_timecourse(cellml_path, start=0.0, end=10.0, steps=10)
+    assert np.allclose(df["A"].to_numpy(), 2.0 * df["time"].to_numpy())
+    assert df["time"].iloc[-1] == 10.0

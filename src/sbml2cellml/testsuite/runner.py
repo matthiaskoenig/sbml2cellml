@@ -89,14 +89,14 @@ def _message(err: BaseException) -> str:
     return f"{type(err).__name__}: " + "\n".join(lines)
 
 
-def _stage(comparison: Comparison, seconds: float | None = None) -> StageResult:
+def _stage(comparison: Comparison, result: dict[str, Any] | None = None) -> StageResult:
     """Stage result of a comparison.
 
     Args:
         comparison: the comparison of the simulation with the expected
             results.
-        seconds: wall time of the simulation, see
-            `sbml2cellml.testsuite.simulators`.
+        result: the result of the simulator, whose wall times the stage
+            keeps (`sbml2cellml.testsuite.simulators`).
 
     Returns:
         The result of the stage.
@@ -105,7 +105,8 @@ def _stage(comparison: Comparison, seconds: float | None = None) -> StageResult:
         "pass" if comparison.passed else "fail",
         comparison.message,
         None if not comparison.variables else comparison.max_excess,
-        seconds,
+        None if result is None else result["seconds"],
+        None if result is None else result["setup_seconds"],
     )
 
 
@@ -230,11 +231,13 @@ def run_case(
         original = strip_brackets(frame(result))
         if expected is None:
             expected = original
-            stages["sbmlsim"] = StageResult("pass", seconds=result["seconds"])
-        else:
-            stages["sbmlsim"] = _stage(
-                compare(original, expected, settings), result["seconds"]
+            stages["sbmlsim"] = StageResult(
+                "pass",
+                seconds=result["seconds"],
+                setup_seconds=result["setup_seconds"],
             )
+        else:
+            stages["sbmlsim"] = _stage(compare(original, expected, settings), result)
     except Exception as err:
         stages["sbmlsim"] = StageResult("fail", _message(err))
 
@@ -265,9 +268,7 @@ def run_case(
                 steps=settings.steps,
             )
             df = requested_frame(frame(result), quantities, settings)
-            stages["libopencor"] = _stage(
-                compare(df, expected, settings), result["seconds"]
-            )
+            stages["libopencor"] = _stage(compare(df, expected, settings), result)
         except Exception as err:
             stages["libopencor"] = StageResult("fail", _message(err))
 
@@ -299,9 +300,7 @@ def run_case(
                 steps=settings.steps,
             )
             df = requested_frame(frame(result), quantities, settings)
-            stages["roundtrip"] = _stage(
-                compare(df, expected, settings), result["seconds"]
-            )
+            stages["roundtrip"] = _stage(compare(df, expected, settings), result)
         except Exception as err:
             stages["roundtrip"] = StageResult("fail", _message(err))
 

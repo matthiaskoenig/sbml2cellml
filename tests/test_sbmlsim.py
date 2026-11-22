@@ -15,6 +15,7 @@ from sbml2cellml.sbmlsim import (
     RELATIVE_TOLERANCE,
     SimulationError,
     compilable_sbml,
+    load_model,
     run_timecourse,
     solver_settings,
     state_scale,
@@ -137,23 +138,29 @@ def test_solver_settings_are_given_through(tmp_path: Path) -> None:
         )
 
 
-def test_state_scale_of_a_concentration_in_a_small_compartment() -> None:
+def test_state_scale_of_a_concentration_in_a_small_compartment(
+    tmp_path: Path,
+) -> None:
     """The state is the amount, the concentration times the size."""
-    assert state_scale(small_compartment_model()) == pytest.approx(1e-13)
+    path = write_sbml(tmp_path / "small.xml", small_compartment_model())
+    model = load_model(path.read_text(encoding="utf-8"))
+    assert state_scale(model) == pytest.approx(1e-13)
 
 
-def test_state_scale_of_a_model_with_states_of_one() -> None:
+def test_state_scale_of_a_model_with_states_of_one(tmp_path: Path) -> None:
     """S1 has the amount 20 and S2 the amount 4, so nothing is scaled."""
-    assert state_scale(simple_model()) == pytest.approx(4.0)
+    path = write_sbml(tmp_path / "simple.xml", simple_model())
+    model = load_model(path.read_text(encoding="utf-8"))
+    assert state_scale(model) == pytest.approx(4.0)
 
 
-def test_state_scale_ignores_a_species_an_assignment_rule_determines() -> None:
-    """An assignment rule determines its target, it is no state."""
-    model = small_compartment_model()
-    rule: libsbml.AssignmentRule = model.createAssignmentRule()
-    rule.setVariable("A")
-    rule.setMath(libsbml.parseL3Formula("k"))
-    assert state_scale(model) == pytest.approx(1.0)
+def test_load_model_caches_the_compiled_model(tmp_path: Path) -> None:
+    """The same text gives the same loaded model, a changed one a new model."""
+    path = write_sbml(tmp_path / "simple.xml", simple_model())
+    text = path.read_text(encoding="utf-8")
+    first = load_model(text)
+    assert load_model(text) is first
+    assert load_model(text.replace('id="simple"', 'id="other"')) is not first
 
 
 def test_run_timecourse_scales_the_absolute_tolerance(tmp_path: Path) -> None:
@@ -184,3 +191,24 @@ def test_run_timecourse_scales_the_absolute_tolerance(tmp_path: Path) -> None:
         scale_tolerance=False,
     )
     assert unscaled["[A]"].iloc[-1] != pytest.approx(np.exp(-10.0), rel=1e-3)
+
+
+def test_run_timecourse_fills_the_timings(tmp_path: Path) -> None:
+    path = write_sbml(tmp_path / "simple.xml", simple_model("timed"))
+    timings: dict[str, float] = {}
+    run_timecourse(path, ["S1"], end=1.0, steps=10, timings=timings)
+    assert sorted(timings) == ["setup", "simulate"]
+    assert timings["setup"] > 0.0
+    assert timings["simulate"] > 0.0
+    cached: dict[str, float] = {}
+    run_timecourse(path, ["S1"], end=1.0, steps=10, timings=cached)
+    # the second run takes the model from the cache of `load_model`
+    assert cached["setup"] < timings["setup"]
+
+
+def test_run_timecourse_warmup_keeps_the_result(tmp_path: Path) -> None:
+    """The discarded simulation changes nothing but the timings."""
+    path = write_sbml(tmp_path / "simple.xml", simple_model("warm"))
+    warm = run_timecourse(path, ["S1"], end=1.0, steps=10, warmup=True)
+    cold = run_timecourse(path, ["S1"], end=1.0, steps=10)
+    assert np.array_equal(warm.to_numpy(), cold.to_numpy())

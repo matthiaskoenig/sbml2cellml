@@ -2,10 +2,15 @@
 
 Every function imports its simulator lazily, so a worker process loads only
 the simulator it is used for. Results are plain dictionaries (`columns`,
-`rows`, `seconds`) so they can be sent between processes. `seconds` is the
-wall time of the simulation, measured around the call of the simulator in
-the worker process, so it holds no overhead of the harness: it is the time a
-user waits for the model, the compilation of the model included.
+`rows`, `setup_seconds`, `seconds`) so they can be sent between processes.
+The wall times are measured inside the simulator wrapper in the worker
+process, so they hold no overhead of the harness: `setup_seconds` is
+everything a simulator does with the model before it integrates (reading
+and converting the file, compiling the model, building the instance) and
+`seconds` is the integration itself. Both simulators run the model once
+before the run of the result (`warmup`), so that the generation of the code
+of a model, which libopencor does when it runs the model the first time, is
+part of the setup and not of the integration.
 """
 
 import time
@@ -40,11 +45,12 @@ def simulate_sbml(
             `None`.
 
     Returns:
-        `columns` (the selections with `time` first), `rows` and `seconds`.
+        `columns` (the selections with `time` first), `rows`,
+        `setup_seconds` and `seconds`.
     """
     from sbml2cellml.sbmlsim import run_timecourse
 
-    started = time.perf_counter()
+    timings: dict[str, float] = {}
     df = run_timecourse(
         sbml,
         selections,
@@ -54,12 +60,14 @@ def simulate_sbml(
         relative_tolerance=relative_tolerance,
         absolute_tolerance=absolute_tolerance,
         maximum_number_of_steps=maximum_number_of_steps,
+        warmup=True,
+        timings=timings,
     )
-    seconds = time.perf_counter() - started
     return {
         "columns": list(df.columns),
         "rows": df.to_numpy().tolist(),
-        "seconds": seconds,
+        "setup_seconds": timings["setup"],
+        "seconds": timings["simulate"],
     }
 
 
@@ -87,11 +95,12 @@ def simulate_cellml(
             two time points, the default of `run_timecourse` when `None`.
 
     Returns:
-        `columns` (`time` first, then every variable), `rows` and `seconds`.
+        `columns` (`time` first, then every variable), `rows`,
+        `setup_seconds` and `seconds`.
     """
     from sbml2cellml.simulate import MAXIMUM_NUMBER_OF_STEPS, run_timecourse
 
-    started = time.perf_counter()
+    timings: dict[str, float] = {}
     df, _ = run_timecourse(
         Path(cellml_path),
         start=start,
@@ -104,12 +113,14 @@ def simulate_cellml(
             if maximum_number_of_steps is None
             else maximum_number_of_steps
         ),
+        warmup=True,
+        timings=timings,
     )
-    seconds = time.perf_counter() - started
     return {
         "columns": list(df.columns),
         "rows": df.to_numpy().tolist(),
-        "seconds": seconds,
+        "setup_seconds": timings["setup"],
+        "seconds": timings["simulate"],
     }
 
 

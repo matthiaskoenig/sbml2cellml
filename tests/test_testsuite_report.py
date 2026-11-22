@@ -25,22 +25,30 @@ FIXTURES = Path(__file__).parent / "data" / "testsuite" / "semantic"
 
 
 def timed_sample() -> SuiteResult:
-    """`sample` with the wall time of every simulated stage."""
+    """`sample` with a fourth case and the wall times of every simulation."""
     result = sample()
+    result.cases["00007"] = CaseResult(
+        "00007",
+        ["Amount"],
+        ["Compartment"],
+        {stage: StageResult("pass") for stage in STAGES},
+    )
     seconds = {
-        "00001": (0.02, 0.01),
-        "00002": (0.04, 0.12),
-        "00006": (0.06, 0.30),
+        # case: (sbmlsim, libopencor, roundtrip) integration seconds
+        "00001": (0.02, 0.01, 0.04),
+        "00002": (0.04, 0.12, 0.08),
+        "00006": (0.06, 0.30, 0.12),
+        "00007": (0.06, 0.18, 0.12),
     }
-    for cid, (sbmlsim, libopencor) in seconds.items():
+    setup = {"sbmlsim": 0.1, "libopencor": 0.2, "roundtrip": 0.1}
+    for cid, times in seconds.items():
         stages = result.cases[cid].stages
-        stages["sbmlsim"] = dataclasses.replace(stages["sbmlsim"], seconds=sbmlsim)
-        stages["libopencor"] = dataclasses.replace(
-            stages["libopencor"], seconds=libopencor
-        )
-        stages["roundtrip"] = dataclasses.replace(
-            stages["roundtrip"], seconds=sbmlsim * 2
-        )
+        for stage, value in zip(
+            ("sbmlsim", "libopencor", "roundtrip"), times, strict=True
+        ):
+            stages[stage] = dataclasses.replace(
+                stages[stage], seconds=value, setup_seconds=setup[stage]
+            )
     return result
 
 
@@ -392,16 +400,21 @@ def test_timing_lines() -> None:
     assert "## Timings" in text
     assert "![" in text and "images/testsuite_timings_dark.svg#only-dark" in text
     assert (
-        "| stage | simulator | model | simulations | total | median | p95 | slowest |"
-        in text
+        "| stage | simulator | model | simulations | setup median | "
+        "integration median | integration p95 | integration slowest | "
+        "integration total |" in text
     )
-    # 20 ms, 40 ms and 60 ms of sbmlsim-core, the median is 40 ms
-    assert "| sbmlsim | sbmlsim-core | SBML model | 3 | 120 ms | 40 ms |" in text
-    assert "| libopencor | libopencor | CellML model | 3 | 430 ms | 120 ms |" in text
-    assert "| roundtrip | sbmlsim-core | roundtrip SBML model | 3 |" in text
-    # the ratios are 0.5, 3 and 5, so libopencor is 3 times slower
-    assert "libopencor is 3.0 times slower than sbmlsim-core" in text
-    assert "faster for 1 of them" in text
+    # the integrations are 20, 40, 60 and 60 ms, so the median is 50 ms
+    assert (
+        "| sbmlsim | sbmlsim-core | SBML model | 4 | 100 ms | 50 ms | 60 ms | "
+        "60 ms | 180 ms |" in text
+    )
+    assert "| libopencor | libopencor | CellML model | 4 | 200 ms | 150 ms |" in text
+    assert "| roundtrip | sbmlsim-core | roundtrip SBML model | 4 |" in text
+    # only 00001 and 00007 pass the libopencor stage: the ratios are 0.5 and 3
+    assert "integrate the same dynamics for 2 cases" in text
+    assert "libopencor is 1.8 times slower than sbmlsim-core" in text
+    assert "faster for 1;" in text
 
 
 def test_render_report_with_timings() -> None:

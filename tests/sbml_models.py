@@ -100,6 +100,65 @@ def small_compartment_model(size: float = 1e-13, mid: str = "small") -> libsbml.
     return model
 
 
+def event_model(mid: str = "events") -> libsbml.Model:
+    """`simple_model` with the event `time > 10` which sets `k1` to 2."""
+    model = simple_model(mid)
+    event: libsbml.Event = model.createEvent()
+    event.setId("e1")
+    event.setUseValuesFromTriggerTime(True)
+    trigger: libsbml.Trigger = event.createTrigger()
+    trigger.setMath(libsbml.parseL3Formula("time > 10"))
+    trigger.setPersistent(True)
+    trigger.setInitialValue(True)
+    assignment: libsbml.EventAssignment = event.createEventAssignment()
+    assignment.setVariable("k1")
+    assignment.setMath(libsbml.parseL3Formula("2.0"))
+    return model
+
+
+def time_id_model(mid: str = "timeid") -> libsbml.Model:
+    """`simple_model` with a parameter called `time` in its kinetic law.
+
+    The variable of integration of the CellML model cannot be called `time`
+    then, the parameter has that name.
+    """
+    model = simple_model(mid)
+    p: libsbml.Parameter = model.createParameter()
+    p.setId("time")
+    p.setValue(2.0)
+    p.setConstant(True)
+    klaw = model.getReaction("r1").getKineticLaw()
+    klaw.setMath(libsbml.parseL3Formula("k1 * S1 * time"))
+    return model
+
+
+def analytic_time_model(mid: str = "analytic") -> libsbml.Model:
+    """`A = 2 * time`: an assignment rule of time without a rate equation."""
+    doc = libsbml.SBMLDocument(3, 2)
+    model: libsbml.Model = doc.createModel()
+    model.setId(mid)
+    p: libsbml.Parameter = model.createParameter()
+    p.setId("A")
+    p.setConstant(False)
+    rule: libsbml.AssignmentRule = model.createAssignmentRule()
+    rule.setVariable("A")
+    rule.setMath(libsbml.parseL3Formula("2 * time"))
+    _SBML_DOCUMENTS.append(doc)
+    return model
+
+
+def small_state_model(value: float = 1e-6, mid: str = "smallstate") -> libsbml.Model:
+    """`A` decays with `k * A * c` from the concentration `value`.
+
+    The compartment has the size 1, so the concentration of `A` is its
+    amount and the state of a CellML conversion of the model is `value`:
+    far below the usual absolute tolerance.
+    """
+    model = small_compartment_model(size=1.0, mid=mid)
+    model.getSpecies("A").setInitialConcentration(value)
+    return model
+
+
 def growing_compartment_model(mid: str = "growing") -> libsbml.Model:
     """`simple_model` whose compartment grows: `d cell / d time = 0.5 * cell`."""
     model = simple_model(mid)
