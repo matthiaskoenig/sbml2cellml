@@ -466,9 +466,11 @@ def _add_reset(
 ) -> None:
     """Add the event of a reset.
 
-    The trigger is the equality of the test variable and the test value, the
-    priority the negated order (CellML applies the lowest order first, SBML
-    the highest priority), the assignment sets the reset variable.
+    The trigger is the equality of the test variable and the test value, or
+    the condition of a test variable which is `piecewise(1, condition, 0)`
+    (`_condition_of_a_trigger`), the priority the negated order (CellML
+    applies the lowest order first, SBML the highest priority), the
+    assignment sets the reset variable.
     """
     test_variable = reset.testVariable()
     variable = reset.variable()
@@ -479,13 +481,15 @@ def _add_reset(
     trigger: libsbml.Trigger = event.createTrigger()
     trigger.setPersistent(True)
     trigger.setInitialValue(True)
-    condition = libsbml.ASTNode(libsbml.AST_RELATIONAL_EQ)
-    condition.addChild(variable_node(test_variable, ids))
-    condition.addChild(
-        _reset_expression(
-            reset.testValue(), test_variable, component, ids, sbml_unit_id
-        )
+    value = _reset_expression(
+        reset.testValue(), test_variable, component, ids, sbml_unit_id
     )
+    test_sid = ids.id_for(test_variable)
+    condition = _condition_of_a_trigger(model_sbml, test_sid, value)
+    if condition is None:
+        condition = libsbml.ASTNode(libsbml.AST_RELATIONAL_EQ)
+        condition.addChild(variable_node(test_variable, ids))
+        condition.addChild(value)
     trigger.setMath(condition)
 
     priority: libsbml.Priority = event.createPriority()
@@ -505,6 +509,42 @@ def _add_reset(
         libsbml.formulaToL3String(condition.getChild(1)),
         ids.id_for(variable),
     )
+
+
+def _condition_of_a_trigger(
+    model_sbml: libsbml.Model, test_sid: str, value: libsbml.ASTNode
+) -> libsbml.ASTNode | None:
+    """Condition of a test variable which stands for a trigger.
+
+    `sbml2cellml` writes the trigger of an SBML event as the variable
+    `piecewise(1, condition, 0)` and resets when it reaches 1. The
+    condition itself is the trigger of the event again, which a simulator
+    evaluates as a boolean instead of looking for the root of a step.
+
+    Args:
+        model_sbml: the SBML model with the rules of the variables.
+        test_sid: id of the test variable of the reset.
+        value: the test value of the reset.
+
+    Returns:
+        The condition, or `None` when the test variable is no such trigger.
+    """
+    if not (value.isNumber() and value.getValue() == 1.0):
+        return None
+    rule: libsbml.Rule = model_sbml.getRule(test_sid)
+    if rule is None or not rule.isAssignment() or not rule.isSetMath():
+        return None
+    math_node: libsbml.ASTNode = rule.getMath()
+    if (
+        math_node.getType() != libsbml.AST_FUNCTION_PIECEWISE
+        or math_node.getNumChildren() != 3
+        or not math_node.getChild(0).isNumber()
+        or math_node.getChild(0).getValue() != 1.0
+        or not math_node.getChild(2).isNumber()
+        or math_node.getChild(2).getValue() != 0.0
+    ):
+        return None
+    return math_node.getChild(1).deepCopy()
 
 
 def _reset_expression(

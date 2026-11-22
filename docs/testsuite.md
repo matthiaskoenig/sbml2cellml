@@ -3,7 +3,7 @@
 
 Semantic test cases of the [SBML test suite](https://github.com/sbmlteam/sbml-test-suite) at commit [`bbcbc80`](https://github.com/sbmlteam/sbml-test-suite/commit/bbcbc80). Every case is simulated with [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/) (`sbmlsim`), converted to CellML (`sbml2cellml`), simulated with libopencor (`libopencor`), converted back to SBML (`cellml2sbml`) and simulated with sbmlsim-core again (`roundtrip`). See [Development](development.md#sbml-test-suite) for how to run it.
 
-Every simulation is compared with the expected results of the case: a value passes when `|value - expected| <= absolute + relative * |expected|` with the absolute and the relative tolerance of the settings of the case. Both simulators integrate with CVODE with tight tolerances (relative/absolute `1e-9`/`1e-12`) and up to 100000 internal steps between two time points, so the comparison measures the conversion and not the integrator; only when CVODE gives up with these tolerances the simulation is repeated with `1e-8`/`1e-10` and `1e-7`/`1e-9`. The absolute tolerance of the SBML simulation is scaled with the smallest initial amount of the model when it is below one, since the states of the SBML side are amounts and the states of the CellML side concentrations.
+Every simulation is compared with the expected results of the case: a value passes when `|value - expected| <= absolute + relative * |expected|` with the absolute and the relative tolerance of the settings of the case. Both simulators integrate with CVODE with tight tolerances (relative/absolute `1e-9`/`1e-12`) and up to 100000 internal steps between two time points, so the comparison measures the conversion and not the integrator; only when CVODE gives up with these tolerances the simulation is repeated with `1e-8`/`1e-10` and `1e-7`/`1e-9`. Both simulations scale the absolute tolerance with the smallest initial value of a state of their own model when it is below one: the states of the SBML side are amounts, which are small for a model with a small compartment, and the states of the CellML side the variables of its components.
 
 An `sbmlsim` failure means sbmlsim-core itself cannot simulate the case, it says nothing about the converters.
 
@@ -17,29 +17,29 @@ An `sbmlsim` failure means sbmlsim-core itself cannot simulate the case, it says
 | stage | total | pass | fail | skip | pass rate |
 | --- | --- | --- | --- | --- | --- |
 | sbmlsim | 1535 | 1533 | 2 | 0 | 99.9% |
-| sbml2cellml | 1535 | 1464 | 71 | 0 | 95.4% |
-| libopencor | 1535 | 1044 | 420 | 71 | 68.0% |
-| cellml2sbml | 1535 | 1464 | 0 | 71 | 95.4% |
-| roundtrip | 1535 | 1044 | 420 | 71 | 68.0% |
+| sbml2cellml | 1535 | 1491 | 44 | 0 | 97.1% |
+| libopencor | 1535 | 1061 | 430 | 44 | 69.1% |
+| cellml2sbml | 1535 | 1491 | 0 | 44 | 97.1% |
+| roundtrip | 1535 | 1214 | 277 | 44 | 79.1% |
 
-939 of the 1044 cases with a passing libopencor stage are informative: the expected results move more than the tolerance band for at least one variable.
+951 of the 1061 cases with a passing libopencor stage are informative: the expected results move more than the tolerance band for at least one variable.
 
 ## Timings
 
-Wall time of the simulations which pass or fail, measured around the call of the simulator in its worker process: the compilation of the model is part of it, the conversions and the comparison are not. Every simulator runs in one process for the whole run, so a model is compiled by a warm simulator, and the cases run one after the other.
+Wall time of the simulations which pass or fail, measured inside the simulator wrapper in the worker process, so it holds no overhead of the harness. The setup is everything a simulator does with the model before it integrates: reading and converting the file, compiling the model and building the instance. Both simulators cache what they compiled, so a model simulated again in the same process needs no setup; every case here is set up once. Both of them run the model once before the run of the result, so that the generation of the code of a model, which libopencor does when it runs the model the first time, is part of the setup.
 
-The two simulators do not always integrate with the same absolute tolerance: the tolerance of an SBML simulation is scaled with the smallest initial amount of the model, so a model with small amounts is integrated more tightly than its CellML conversion, whose states are concentrations.
+The two simulators integrate with the same relative tolerance and with an absolute tolerance scaled to the states of their own model (amounts for the SBML model, the variables of the components for the CellML model), so neither of them is given an easier problem.
 
-![Simulation time of libopencor against sbmlsim-core per case](images/testsuite_timings.svg#only-light)
-![Simulation time of libopencor against sbmlsim-core per case](images/testsuite_timings_dark.svg#only-dark)
+![Integration time of libopencor against sbmlsim-core per case](images/testsuite_timings.svg#only-light)
+![Integration time of libopencor against sbmlsim-core per case](images/testsuite_timings_dark.svg#only-dark)
 
-| stage | simulator | model | simulations | total | median | p95 | slowest |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| sbmlsim | sbmlsim-core | SBML model | 1535 | 3.8 s | 1.3 ms | 2.8 ms | 763 ms |
-| libopencor | libopencor | CellML model | 1462 | 8.2 s | 5.4 ms | 8.1 ms | 38 ms |
-| roundtrip | sbmlsim-core | roundtrip SBML model | 1464 | 2.4 s | 1.6 ms | 2.5 ms | 12 ms |
+| stage | simulator | model | simulations | setup median | integration median | integration p95 | integration slowest | integration total |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| sbmlsim | sbmlsim-core | SBML model | 1535 | 0.9 ms | 0.1 ms | 0.2 ms | 740 ms | 1.6 s |
+| libopencor | libopencor | CellML model | 1487 | 4.7 ms | 0.1 ms | 0.1 ms | 0.6 ms | 82 ms |
+| roundtrip | sbmlsim-core | roundtrip SBML model | 1490 | 1.1 ms | 0.1 ms | 0.2 ms | 1.9 s | 3.0 s |
 
-Both simulators ran 1462 cases. libopencor is 4.1 times slower than sbmlsim-core for the median case and faster for 28 of them; the medians are 1.4 ms for sbmlsim-core and 5.4 ms for libopencor.
+The two simulators integrate the same dynamics for 1061 cases, those whose CellML model reproduces the expected results. libopencor is 1.1 times faster than sbmlsim-core for the median of them and faster for 756; over these cases the medians are 0.1 ms for sbmlsim-core and 0.1 ms for libopencor.
 
 ## Failure reasons
 
@@ -58,9 +58,9 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 
 ### sbml2cellml
 
-71 of 1535 cases fail.
+44 of 1535 cases fail.
 
-**48 cases**
+**44 cases**
 
 ```text
 00028: CellMLValidationError: CellML model 'case00028' converted from '00028-sbml-l3v2.xml' has 2 errors:
@@ -115,18 +115,6 @@ The cases which fail a stage, grouped by their error: errors which differ only i
     [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
     [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
     [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01277: CellMLValidationError: CellML model 'case01277' converted from '01277-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'quotient' element that is not a supported MathML element.
-    [ERROR] Math has a 'quotient' element that is not a supported MathML element.
-01279: CellMLValidationError: CellML model 'case01279' converted from '01279-sbml-l3v2.xml' has 8 errors:
-    [ERROR] Math has a 'implies' element that is not a supported MathML element.
-    [ERROR] Math has a 'implies' element that is not a supported MathML element.
-    [ERROR] Math has a 'implies' element that is not a supported MathML element.
-    [ERROR] Math has a 'implies' element that is not a supported MathML element.
-    [ERROR] Math has a 'implies' element that is not a supported MathML element.
-    [ERROR] Math has a 'implies' element that is not a supported MathML element.
-    [ERROR] Math has a 'implies' element that is not a supported MathML element.
-    [ERROR] Math has a 'implies' element that is not a supported MathML element.
 01318: CellMLValidationError: CellML model 'case01318' converted from '01318-sbml-l3v2.xml' has 2 errors:
     [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
     [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
@@ -200,18 +188,6 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 01486: CellMLValidationError: CellML model 'case01486' converted from '01486-sbml-l3v2.xml' has 2 errors:
     [ERROR] Math has a 'factorial' element that is not a supported MathML element.
     [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-01495: CellMLValidationError: CellML model 'case01495' converted from '01495-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'quotient' element that is not a supported MathML element.
-    [ERROR] Math has a 'quotient' element that is not a supported MathML element.
-01497: CellMLValidationError: CellML model 'case01497' converted from '01497-sbml-l3v2.xml' has 8 errors:
-    [ERROR] Math has a 'implies' element that is not a supported MathML element.
-    [ERROR] Math has a 'implies' element that is not a supported MathML element.
-    [ERROR] Math has a 'implies' element that is not a supported MathML element.
-    [ERROR] Math has a 'implies' element that is not a supported MathML element.
-    [ERROR] Math has a 'implies' element that is not a supported MathML element.
-    [ERROR] Math has a 'implies' element that is not a supported MathML element.
-    [ERROR] Math has a 'implies' element that is not a supported MathML element.
-    [ERROR] Math has a 'implies' element that is not a supported MathML element.
 01534: CellMLValidationError: CellML model 'case01534' converted from '01534-sbml-l3v2.xml' has 2 errors:
     [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
     [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
@@ -235,223 +211,11 @@ The cases which fail a stage, grouped by their error: errors which differ only i
     [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
 ```
 
-**18 cases**
-
-```text
-00936: CellMLValidationError: CellML model 'case00936' converted from '00936-sbml-l3v2.xml' has 2 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'S1' in component 'sbml' is unknown.
-00955: CellMLValidationError: CellML model 'case000955' converted from '00955-sbml-l3v2.xml' has 36 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P1' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P2' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P3' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P4' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P5' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P6' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P7' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P8' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P9' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P10' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P11' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P13' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P14' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P15' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P16' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P18' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P19' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P20' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P22' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P24' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P25' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P26' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P29' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P31' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P32' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P34' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P35' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P37' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P38' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P39' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P40' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P41' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P42' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P43' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P44' in component 'sbml' is unknown.
-00959: CellMLValidationError: CellML model 'case000959' converted from '00959-sbml-l3v2.xml' has 27 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P26' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P25' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P24' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P23' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P22' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P21' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P20' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P19' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P18' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P17' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P16' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P15' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P14' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P13' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P12' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P11' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P10' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P9' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P8' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P7' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P6' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P5' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P4' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P3' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P2' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P1' in component 'sbml' is unknown.
-01278: CellMLValidationError: CellML model 'case01278' converted from '01278-sbml-l3v2.xml' has 2 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'p1' in component 'sbml' is unknown.
-01280: CellMLValidationError: CellML model 'case01280' converted from '01280-sbml-l3v2.xml' has 4 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'p1' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'p2' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'p3' in component 'sbml' is unknown.
-01281: CellMLValidationError: CellML model 'case01281' converted from '01281-sbml-l3v2.xml' has 4 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'p1' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'p2' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'p3' in component 'sbml' is unknown.
-01306: CellMLValidationError: CellML model 'case01306' converted from '01306-sbml-l3v2.xml' has 3 errors:
-    [ERROR] The type of variable 'J0' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'p1' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-01317: CellMLValidationError: CellML model 'case01317' converted from '01317-sbml-l3v2.xml' has 2 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'p2' in component 'sbml' is unknown.
-01343: CellMLValidationError: CellML model 'case01343' converted from '01343-sbml-l3v2.xml' has 3 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P3' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P4' in component 'sbml' is unknown.
-01487: CellMLValidationError: CellML model 'case01487' converted from '01487-sbml-l3v2.xml' has 27 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P1' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P2' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P3' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P4' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P5' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P6' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P7' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P8' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P9' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P10' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P11' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P13' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P14' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P15' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P16' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P18' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P19' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P20' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P22' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P29' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P31' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P32' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P34' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P35' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P36' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P37' in component 'sbml' is unknown.
-01488: CellMLValidationError: CellML model 'case01488' converted from '01488-sbml-l3v2.xml' has 27 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P1' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P2' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P3' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P4' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P5' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P6' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P7' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P8' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P9' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P10' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P11' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P12' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P13' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P14' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P15' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P16' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P17' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P18' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P19' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P20' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P21' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P22' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P23' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P24' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P25' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P26' in component 'sbml' is unknown.
-01496: CellMLValidationError: CellML model 'case01496' converted from '01496-sbml-l3v2.xml' has 2 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'p1' in component 'sbml' is unknown.
-01522: CellMLValidationError: CellML model 'case01522' converted from '01522-sbml-l3v2.xml' has 2 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P1' in component 'sbml' is unknown.
-01594: CellMLValidationError: CellML model 'case01594' converted from '01594-sbml-l3v2.xml' has 2 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P1' in component 'sbml' is unknown.
-01595: CellMLValidationError: CellML model 'case01595' converted from '01595-sbml-l3v2.xml' has 2 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P1' in component 'sbml' is unknown.
-01596: CellMLValidationError: CellML model 'case01596' converted from '01596-sbml-l3v2.xml' has 2 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P1' in component 'sbml' is unknown.
-01597: CellMLValidationError: CellML model 'case01597' converted from '01597-sbml-l3v2.xml' has 2 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P1' in component 'sbml' is unknown.
-01598: CellMLValidationError: CellML model 'case01598' converted from '01598-sbml-l3v2.xml' has 2 errors:
-    [ERROR] The type of variable 'time' in component 'sbml' is unknown.
-    [ERROR] The type of variable 'P1' in component 'sbml' is unknown.
-```
-
-**5 cases**
-
-```text
-01210: CellMLValidationError: CellML model 'case01210' converted from '01210-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'gt' element without exactly two MathML siblings.
-    [ERROR] Math has a 'gt' element without exactly two MathML siblings.
-01215: CellMLValidationError: CellML model 'case01215' converted from '01215-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'gt' element without exactly two MathML siblings.
-    [ERROR] Math has a 'gt' element without exactly two MathML siblings.
-01216: CellMLValidationError: CellML model 'case01216' converted from '01216-sbml-l3v2.xml' has 20 errors:
-    [ERROR] Math has a 'gt' element without exactly two MathML siblings.
-    [ERROR] Math has a 'lt' element without exactly two MathML siblings.
-    [ERROR] Math has a 'geq' element without exactly two MathML siblings.
-    [ERROR] Math has a 'leq' element without exactly two MathML siblings.
-    [ERROR] Math has a 'eq' element without exactly two MathML siblings.
-    [ERROR] Math has a 'gt' element without exactly two MathML siblings.
-    [ERROR] Math has a 'lt' element without exactly two MathML siblings.
-    [ERROR] Math has a 'geq' element without exactly two MathML siblings.
-    [ERROR] Math has a 'leq' element without exactly two MathML siblings.
-    [ERROR] Math has a 'eq' element without exactly two MathML siblings.
-    [ERROR] Math has a 'gt' element without exactly two MathML siblings.
-    [ERROR] Math has a 'lt' element without exactly two MathML siblings.
-    [ERROR] Math has a 'geq' element without exactly two MathML siblings.
-    [ERROR] Math has a 'leq' element without exactly two MathML siblings.
-    [ERROR] Math has a 'eq' element without exactly two MathML siblings.
-    [ERROR] Math has a 'gt' element without exactly two MathML siblings.
-    [ERROR] Math has a 'lt' element without exactly two MathML siblings.
-    [ERROR] Math has a 'geq' element without exactly two MathML siblings.
-    [ERROR] Math has a 'leq' element without exactly two MathML siblings.
-    [ERROR] Math has a 'eq' element without exactly two MathML siblings.
-01782: CellMLValidationError: CellML model 'case01782' converted from '01782-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'gt' element without exactly two MathML siblings.
-    [ERROR] Math has a 'gt' element without exactly two MathML siblings.
-01783: CellMLValidationError: CellML model 'case01783' converted from '01783-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'gt' element without exactly two MathML siblings.
-    [ERROR] Math has a 'gt' element without exactly two MathML siblings.
-```
-
 ### libopencor
 
-420 of 1535 cases fail.
+430 of 1535 cases fail.
 
-**418 cases, numerical mismatch**
+**426 cases, numerical mismatch**
 
 ```text
 00026: S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 1.13
@@ -673,6 +437,7 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 00933: S1 exceeds the tolerance by 0.873; S2 exceeds the tolerance by 0.786
 00934: S1 exceeds the tolerance by 2
 00935: S1 exceeds the tolerance by 3; S2 exceeds the tolerance by 1
+00936: S2 exceeds the tolerance by 3
 00944: S1 exceeds the tolerance by 2.86; k1 exceeds the tolerance by 9
 00945: S1 exceeds the tolerance by 13.6; C exceeds the tolerance by 9
 00946: S1 exceeds the tolerance by 13.6; C exceeds the tolerance by 9
@@ -731,6 +496,7 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 01268: p2 exceeds the tolerance by 5
 01269: p2 exceeds the tolerance by 4
 01270: p2 exceeds the tolerance by 7.98
+01279: p1 exceeds the tolerance by 1; p2 exceeds the tolerance by 1; p3 exceeds the tolerance by 1; p4 exceeds the tolerance by 1
 01282: p1 exceeds the tolerance by 1
 01284: p1 exceeds the tolerance by 3
 01285: p1 exceeds the tolerance by 4
@@ -766,6 +532,7 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 01447: A exceeds the tolerance by 5; B exceeds the tolerance by 5
 01448: A exceeds the tolerance by 10; B exceeds the tolerance by 10
 01466: Allsum exceeds the tolerance by 200
+01497: p1 exceeds the tolerance by 1; p2 exceeds the tolerance by 1; p3 exceeds the tolerance by 1; p4 exceeds the tolerance by 1
 01504: S1 exceeds the tolerance by 0.0139; x exceeds the tolerance by 0.0199
 01505: C1 exceeds the tolerance by 0.39; S1 exceeds the tolerance by 0.0471; x exceeds the tolerance by 0.351
 01506: C1 exceeds the tolerance by 0.39; S1 exceeds the tolerance by 0.0288; x exceeds the tolerance by 0.41
@@ -778,6 +545,7 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 01518: P2 exceeds the tolerance by 3
 01520: P2 exceeds the tolerance by 3
 01521: P2 exceeds the tolerance by 3
+01522: P2 exceeds the tolerance by 3
 01523: P2 exceeds the tolerance by 0.5
 01524: P2 exceeds the tolerance by 2.5
 01525: P2 exceeds the tolerance by 3
@@ -802,6 +570,10 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 01590: S exceeds the tolerance by 99.8
 01591: S exceeds the tolerance by 99.8
 01592: S exceeds the tolerance by 99.8
+01594: P2 exceeds the tolerance by 2
+01596: P2 exceeds the tolerance by 2
+01597: P2 exceeds the tolerance by 44
+01598: P2 exceeds the tolerance by 121
 01599: S exceeds the tolerance by 99.8
 01601: P2 exceeds the tolerance by 2
 01603: P2 exceeds the tolerance by 4.5
@@ -881,6 +653,13 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 01821: SimulationFailure: libopencor: SimulationError: result: the name 'time' occurs twice
 ```
 
+**2 cases**
+
+```text
+01280: SimulationFailure: libopencor: worker died during simulate_cellml
+01281: SimulationFailure: libopencor: worker died during simulate_cellml
+```
+
 The test tags of the cases with a numerical mismatch:
 
 | tags | cases | ids |
@@ -926,6 +705,7 @@ The test tags of the cases with a numerical mismatch:
 | EventIsNotPersistent, EventIsPersistent, EventUsesTriggerTimeValues, NonConstantParameter, RandomEventExecution | 2 | 00965, 00966 |
 | EventIsNotPersistent, NonConstantParameter | 2 | 00963, 00967 |
 | EventIsPersistent, EventT0Firing, NonConstantParameter | 2 | 01337, 01758 |
+| InitialValueReassigned, L3v2MathML, NonConstantParameter | 2 | 01279, 01497 |
 | InitialValueReassigned, NonConstantParameter | 2 | 01261, 01577 |
 | 0D-Compartment, Amount, EventIsPersistent | 1 | 00422 |
 | Amount, AssignedConstantStoichiometry, AssignedVariableStoichiometry, BoundaryCondition, ConstantSpecies, ConversionFactors, EventIsNotPersistent, EventIsPersistent, EventT0Firing, EventUsesAssignmentTimeValues, EventUsesTriggerTimeValues, HasOnlySubstanceUnits, InitialValueReassigned, LocalParameters, MultiCompartment, NonConstantCompartment, NonConstantParameter, NonUnityCompartment, NonUnityStoichiometry, ReversibleReaction, SpeciesReferenceInMath | 1 | 01000 |
@@ -974,6 +754,7 @@ The test tags of the cases with a numerical mismatch:
 | AssignedVariableStoichiometry, EventIsNotPersistent, InitialValueReassigned, NonConstantParameter, NonUnityStoichiometry, RandomEventExecution, SpeciesReferenceInMath | 1 | 01626 |
 | BoolNumericSwap, EventT0Firing, NonConstantParameter | 1 | 01284 |
 | BoolNumericSwap, InitialValueReassigned | 1 | 01282 |
+| BoundaryCondition, Concentration, EventIsPersistent, EventUsesAssignmentTimeValues, InitialValueReassigned, UncommonMathML | 1 | 00936 |
 | Concentration, EventIsPersistent, NonUnityCompartment | 1 | 00764 |
 | Concentration, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment | 1 | 00948 |
 | Concentration, NonConstantCompartment, NonUnityCompartment | 1 | 00947 |
@@ -982,6 +763,7 @@ The test tags of the cases with a numerical mismatch:
 | DelayInEventAssignment, EventUsesTriggerTimeValues, NonConstantParameter | 1 | 01523 |
 | DelayInTrigger, EventIsNotPersistent, NonConstantParameter | 1 | 01520 |
 | DelayInTrigger, EventIsPersistent, NonConstantParameter | 1 | 01518 |
+| DelayInTrigger, EventT0Firing, InitialValueReassigned, NonConstantParameter | 1 | 01522 |
 | EventIsNotPersistent, EventIsPersistent, EventUsesAssignmentTimeValues, EventUsesTriggerTimeValues, NonConstantParameter | 1 | 00978 |
 | EventIsNotPersistent, EventT0Firing, InitialValueReassigned, NonConstantParameter | 1 | 01755 |
 | EventIsNotPersistent, EventT0Firing, InitialValueReassigned, NonConstantParameter, RandomEventExecution | 1 | 01466 |
@@ -993,82 +775,28 @@ The test tags of the cases with a numerical mismatch:
 | EventIsNotPersistent, InitialValueReassigned, NonConstantParameter, RandomEventExecution, UncommonMathML | 1 | 01599 |
 | EventIsPersistent, EventT0Firing, InitialValueReassigned, NonConstantParameter | 1 | 01754 |
 | EventIsPersistent, InitialValueReassigned, NonConstantParameter | 1 | 01575 |
+| EventIsPersistent, InitialValueReassigned, NonConstantParameter, UncommonMathML | 1 | 01594 |
 | EventT0Firing, EventUsesAssignmentTimeValues, InitialValueReassigned, NonConstantParameter | 1 | 01757 |
 | EventT0Firing, EventUsesAssignmentTimeValues, NonConstantParameter | 1 | 01334 |
 | EventT0Firing, EventUsesTriggerTimeValues, InitialValueReassigned, NonConstantParameter | 1 | 01756 |
 | EventT0Firing, EventUsesTriggerTimeValues, NonConstantParameter | 1 | 01333 |
+| EventT0Firing, InitialValueReassigned, NonConstantParameter, UncommonMathML | 1 | 01596 |
 | EventUsesAssignmentTimeValues, InitialValueReassigned, NonConstantParameter | 1 | 01579 |
+| EventUsesAssignmentTimeValues, InitialValueReassigned, NonConstantParameter, UncommonMathML | 1 | 01598 |
 | EventUsesAssignmentTimeValues, NoMathML, NonConstantParameter | 1 | 01603 |
+| EventUsesTriggerTimeValues, InitialValueReassigned, NonConstantParameter, UncommonMathML | 1 | 01597 |
 | EventUsesTriggerTimeValues, NoMathML, NonConstantParameter | 1 | 01601 |
 
 ### roundtrip
 
-420 of 1535 cases fail.
+277 of 1535 cases fail.
 
-**418 cases, numerical mismatch**
+**274 cases, numerical mismatch**
 
 ```text
-00026: S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 1.13
-00041: S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 0.937
 00071: S1 exceeds the tolerance by 0.873; S2 exceeds the tolerance by 0.786
 00072: S1 exceeds the tolerance by 0.873; S2 exceeds the tolerance by 0.968
 00073: S1 exceeds the tolerance by 0.873; S2 exceeds the tolerance by 0.873
-00074: S1 exceeds the tolerance by 0.899; S2 exceeds the tolerance by 0.899
-00172: S1 exceeds the tolerance by 0.899; S2 exceeds the tolerance by 1.13
-00348: S1 exceeds the tolerance by 0.183; S2 exceeds the tolerance by 0.745; S3 exceeds the tolerance by 0.183
-00349: S1 exceeds the tolerance by 0.578; S2 exceeds the tolerance by 0.745; S3 exceeds the tolerance by 0.179
-00350: S1 exceeds the tolerance by 0.578; S2 exceeds the tolerance by 0.29; S3 exceeds the tolerance by 0.607
-00351: S1 exceeds the tolerance by 0.00108; S2 exceeds the tolerance by 0.00029; S3 exceeds the tolerance by 0.00029; S4 exceeds the tolerance by 0.00029
-00352: S1 exceeds the tolerance by 0.0108; S2 exceeds the tolerance by 0.00347; S3 exceeds the tolerance by 0.00347; S4 exceeds the tolerance by 0.00119
-00353: S1 exceeds the tolerance by 0.115; S2 exceeds the tolerance by 0.0431; S3 exceeds the tolerance by 0.0431; S4 exceeds the tolerance by 0.065
-00354: S1 exceeds the tolerance by 0.0912; S2 exceeds the tolerance by 0.496; S3 exceeds the tolerance by 0.0911
-00355: S1 exceeds the tolerance by 0.0595; S2 exceeds the tolerance by 0.297; S3 exceeds the tolerance by 0.0593
-00356: S1 exceeds the tolerance by 0.194; S2 exceeds the tolerance by 0.61; S3 exceeds the tolerance by 0.0599
-00357: S1 exceeds the tolerance by 0.194; S2 exceeds the tolerance by 0.424; S3 exceeds the tolerance by 0.055
-00358: S1 exceeds the tolerance by 0.552; S2 exceeds the tolerance by 0.284; S3 exceeds the tolerance by 0.59
-00359: S1 exceeds the tolerance by 0.576; S2 exceeds the tolerance by 0.299; S3 exceeds the tolerance by 0.456
-00360: S1 exceeds the tolerance by 0.132; S2 exceeds the tolerance by 0.692; S3 exceeds the tolerance by 0.132
-00361: S1 exceeds the tolerance by 0.0127; S2 exceeds the tolerance by 0.0986; S3 exceeds the tolerance by 0.0126
-00362: S1 exceeds the tolerance by 0.0802; S2 exceeds the tolerance by 0.444; S3 exceeds the tolerance by 0.0801
-00363: S1 exceeds the tolerance by 0.571; S2 exceeds the tolerance by 0.737; S3 exceeds the tolerance by 0.179
-00364: S1 exceeds the tolerance by 0.194; S2 exceeds the tolerance by 0.531; S3 exceeds the tolerance by 0.0823
-00365: S1 exceeds the tolerance by 0.158; S2 exceeds the tolerance by 0.596; S3 exceeds the tolerance by 0.0466
-00366: S1 exceeds the tolerance by 0.493; S2 exceeds the tolerance by 0.467; S3 exceeds the tolerance by 0.217
-00367: S1 exceeds the tolerance by 0.145; S2 exceeds the tolerance by 0.248; S3 exceeds the tolerance by 0.0478
-00368: S1 exceeds the tolerance by 0.234; S2 exceeds the tolerance by 0.484; S3 exceeds the tolerance by 0.251
-00369: S1 exceeds the tolerance by 0.169; S2 exceeds the tolerance by 0.934; S3 exceeds the tolerance by 0.169
-00370: S1 exceeds the tolerance by 0.911; S2 exceeds the tolerance by 0.365; S3 exceeds the tolerance by 0.08
-00371: S1 exceeds the tolerance by 0.498; S2 exceeds the tolerance by 0.349; S3 exceeds the tolerance by 0.321
-00372: S1 exceeds the tolerance by 0.0008; S2 exceeds the tolerance by 0.00022; S3 exceeds the tolerance by 0.00022; S4 exceeds the tolerance by 0.00022
-00373: S1 exceeds the tolerance by 0.0415; S2 exceeds the tolerance by 0.0222; S3 exceeds the tolerance by 0.0222; S4 exceeds the tolerance by 0.186
-00374: S1 exceeds the tolerance by 0.000156; S2 exceeds the tolerance by 8.59e-05; S3 exceeds the tolerance by 8.58e-05; S4 exceeds the tolerance by 0.000464
-00375: S1 exceeds the tolerance by 0.235; S2 exceeds the tolerance by 0.999; S3 exceeds the tolerance by 0.235
-00376: S1 exceeds the tolerance by 0.205; S2 exceeds the tolerance by 0.733
-00377: S1 exceeds the tolerance by 0.205; S2 exceeds the tolerance by 0.899
-00378: S1 exceeds the tolerance by 0.611; S2 exceeds the tolerance by 0.999; S3 exceeds the tolerance by 0.218
-00379: S1 exceeds the tolerance by 0.205; S2 exceeds the tolerance by 0.733
-00380: S1 exceeds the tolerance by 0.205; S2 exceeds the tolerance by 0.899
-00381: S1 exceeds the tolerance by 0.478; S2 exceeds the tolerance by 0.499; S3 exceeds the tolerance by 0.119
-00382: S1 exceeds the tolerance by 0.455; S2 exceeds the tolerance by 0.289
-00383: S1 exceeds the tolerance by 0.618; S2 exceeds the tolerance by 0.499
-00384: S1 exceeds the tolerance by 0.000114; S2 exceeds the tolerance by 4.04e-05; S3 exceeds the tolerance by 4.04e-05
-00385: S1 exceeds the tolerance by 0.00111; S2 exceeds the tolerance by 0.000532; S3 exceeds the tolerance by 0.000989
-00386: S1 exceeds the tolerance by 0.0116; S2 exceeds the tolerance by 0.00584; S3 exceeds the tolerance by 0.0166
-00387: S1 exceeds the tolerance by 0.112; S2 exceeds the tolerance by 0.393; S3 exceeds the tolerance by 0.112
-00389: S1 exceeds the tolerance by 0.187; S2 exceeds the tolerance by 0.737; S3 exceeds the tolerance by 0.186
-00390: S1 exceeds the tolerance by 0.106; S2 exceeds the tolerance by 0.0314; S3 exceeds the tolerance by 0.0629; S4 exceeds the tolerance by 0.0126
-00392: S1 exceeds the tolerance by 0.00108; S2 exceeds the tolerance by 0.000347; S3 exceeds the tolerance by 0.000347; S4 exceeds the tolerance by 0.000119
-00393: S1 exceeds the tolerance by 0.371; S2 exceeds the tolerance by 0.743; S3 exceeds the tolerance by 0.245
-00395: S1 exceeds the tolerance by 0.448; S2 exceeds the tolerance by 0.293; S3 exceeds the tolerance by 0.137
-00396: S1 exceeds the tolerance by 0.148; S2 exceeds the tolerance by 0.745; S3 exceeds the tolerance by 0.148
-00397: S1 exceeds the tolerance by 0.571; S2 exceeds the tolerance by 0.737; S3 exceeds the tolerance by 0.179
-00398: S1 exceeds the tolerance by 0.578; S2 exceeds the tolerance by 0.29; S3 exceeds the tolerance by 0.607
-00399: S1 exceeds the tolerance by 0.971; S2 exceeds the tolerance by 0.666; S3 exceeds the tolerance by 0.416
-00400: S1 exceeds the tolerance by 0.943; S2 exceeds the tolerance by 0.327; S3 exceeds the tolerance by 0.143
-00401: S1 exceeds the tolerance by 0.94; S2 exceeds the tolerance by 0.261; S3 exceeds the tolerance by 0.796
-00402: S1 exceeds the tolerance by 0.971; S2 exceeds the tolerance by 0.666; S3 exceeds the tolerance by 0.416
-00403: S1 exceeds the tolerance by 0.943; S2 exceeds the tolerance by 0.327; S3 exceeds the tolerance by 0.143
-00404: S1 exceeds the tolerance by 0.94; S2 exceeds the tolerance by 0.261; S3 exceeds the tolerance by 0.796
 00405: S1 exceeds the tolerance by 0.0835; S2 exceeds the tolerance by 0.448; S3 exceeds the tolerance by 0.0834
 00406: S1 exceeds the tolerance by 0.442; S2 exceeds the tolerance by 0.478; S3 exceeds the tolerance by 0.215
 00407: S1 exceeds the tolerance by 0.565; S2 exceeds the tolerance by 0.26; S3 exceeds the tolerance by 0.359
@@ -1123,72 +851,32 @@ The test tags of the cases with a numerical mismatch:
 00459: S1 exceeds the tolerance by 1.28; S2 exceeds the tolerance by 0.586; S3 exceeds the tolerance by 0.685
 00460: S1 exceeds the tolerance by 1.01; S2 exceeds the tolerance by 0.554; S3 exceeds the tolerance by 0.375
 00461: S1 exceeds the tolerance by 0.996; S2 exceeds the tolerance by 0.498; S3 exceeds the tolerance by 1.29
-00619: S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186
-00620: S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186
-00621: S2 exceeds the tolerance by 0.399; S3 exceeds the tolerance by 0.299
 00622: S2 exceeds the tolerance by 0.228; S3 exceeds the tolerance by 0.171
 00623: S2 exceeds the tolerance by 0.749; S3 exceeds the tolerance by 0.561
 00624: S2 exceeds the tolerance by 0.491; S3 exceeds the tolerance by 0.368
-00634: S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186
-00635: S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186
-00636: S2 exceeds the tolerance by 0.399; S3 exceeds the tolerance by 0.299
 00637: S2 exceeds the tolerance by 0.228; S3 exceeds the tolerance by 0.171
 00638: S2 exceeds the tolerance by 0.749; S3 exceeds the tolerance by 0.561
 00639: S2 exceeds the tolerance by 0.491; S3 exceeds the tolerance by 0.368
-00646: S2 exceeds the tolerance by 0.399
-00647: S1 exceeds the tolerance by 0.129; S2 exceeds the tolerance by 0.979; S3 exceeds the tolerance by 0.129
-00648: S2 exceeds the tolerance by 0.99
 00649: S2 exceeds the tolerance by 0.466
 00650: S1 exceeds the tolerance by 0.0495; S2 exceeds the tolerance by 1.37; S3 exceeds the tolerance by 0.0492
 00651: S2 exceeds the tolerance by 1.29
-00652: S1 exceeds the tolerance by 4.37e-06; S2 exceeds the tolerance by 4.37e-06; S3 exceeds the tolerance by 4.77e-06; S4 exceeds the tolerance by 6.56e-06
-00653: S1 exceeds the tolerance by 4.78e-06; S2 exceeds the tolerance by 4.78e-06; S3 exceeds the tolerance by 4.67e-06; S4 exceeds the tolerance by 7.18e-06
-00654: S1 exceeds the tolerance by 4.67e-06; S2 exceeds the tolerance by 4.67e-06; S3 exceeds the tolerance by 4.67e-06; S4 exceeds the tolerance by 7.02e-06
 00655: S1 exceeds the tolerance by 7.34e-06; S2 exceeds the tolerance by 7.34e-06; S3 exceeds the tolerance by 7.34e-06; S4 exceeds the tolerance by 1.1e-05
 00656: S1 exceeds the tolerance by 7.77e-06; S2 exceeds the tolerance by 7.77e-06; S3 exceeds the tolerance by 8.02e-06; S4 exceeds the tolerance by 1.17e-05
 00657: S1 exceeds the tolerance by 6.66e-06; S2 exceeds the tolerance by 6.66e-06; S3 exceeds the tolerance by 6.58e-06; S4 exceeds the tolerance by 1e-05
-00661: X1 exceeds the tolerance by 0.99; S1 exceeds the tolerance by 0.99
-00662: X1 exceeds the tolerance by 0.499
-00663: S4 exceeds the tolerance by 0.000662
 00664: S4 exceeds the tolerance by 0.00062
 00665: X1 exceeds the tolerance by 1.57; S1 exceeds the tolerance by 1.57
 00666: X1 exceeds the tolerance by 0.245
-00679: S2 exceeds the tolerance by 2.12; S3 exceeds the tolerance by 1.59
-00680: S2 exceeds the tolerance by 0.511; S3 exceeds the tolerance by 0.383
-00681: S2 exceeds the tolerance by 6.75; S3 exceeds the tolerance by 5.06
 00682: S2 exceeds the tolerance by 0.925; S3 exceeds the tolerance by 0.694
 00683: S2 exceeds the tolerance by 1.03; S3 exceeds the tolerance by 0.77
 00684: S1 exceeds the tolerance by 1.34; S2 exceeds the tolerance by 6.57; S3 exceeds the tolerance by 4.93
-00689: S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186
 00690: S2 exceeds the tolerance by 0.228; S3 exceeds the tolerance by 0.171
-00700: S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186
 00702: S2 exceeds the tolerance by 0.228; S3 exceeds the tolerance by 0.171
-00707: S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186
 00708: S2 exceeds the tolerance by 0.491; S3 exceeds the tolerance by 0.368
-00723: S2 exceeds the tolerance by 1.99
 00724: S1 exceeds the tolerance by 0.0493; S2 exceeds the tolerance by 1.37; S3 exceeds the tolerance by 0.049
-00736: S2 exceeds the tolerance by 0.99
 00737: S2 exceeds the tolerance by 1.27
-00743: S1 exceeds the tolerance by 0.187; S2 exceeds the tolerance by 0.737; S3 exceeds the tolerance by 0.187
-00744: S1 exceeds the tolerance by 0.56; S2 exceeds the tolerance by 0.737; S3 exceeds the tolerance by 0.179
-00745: S1 exceeds the tolerance by 0.582; S2 exceeds the tolerance by 0.285; S3 exceeds the tolerance by 0.752
-00746: S1 exceeds the tolerance by 0.108; S2 exceeds the tolerance by 0.029; S3 exceeds the tolerance by 0.029; S4 exceeds the tolerance by 0.029
-00747: S1 exceeds the tolerance by 0.000108; S2 exceeds the tolerance by 3.47e-05; S3 exceeds the tolerance by 3.47e-05; S4 exceeds the tolerance by 1.19e-05
-00748: S1 exceeds the tolerance by 0.0115; S2 exceeds the tolerance by 0.0067; S3 exceeds the tolerance by 0.0067; S4 exceeds the tolerance by 0.00649
-00749: S2 exceeds the tolerance by 0.249; S3 exceeds the tolerance by 0.186
-00750: S2 exceeds the tolerance by 0.399; S3 exceeds the tolerance by 0.299
-00751: S4 exceeds the tolerance by 0.97
-00752: S1 exceeds the tolerance by 0.187; S2 exceeds the tolerance by 0.737; S3 exceeds the tolerance by 0.186; S4 exceeds the tolerance by 0.89
-00753: S1 exceeds the tolerance by 0.136; S2 exceeds the tolerance by 0.591; S3 exceeds the tolerance by 0.136; S4 exceeds the tolerance by 1.05
-00754: S1 exceeds the tolerance by 0.0912; S2 exceeds the tolerance by 0.496; S3 exceeds the tolerance by 0.0911
-00755: S1 exceeds the tolerance by 0.0912; S2 exceeds the tolerance by 0.496; S3 exceeds the tolerance by 0.0911
-00756: S1 exceeds the tolerance by 0.0912; S2 exceeds the tolerance by 0.496; S3 exceeds the tolerance by 0.0911
-00757: S1 exceeds the tolerance by 0.549; S2 exceeds the tolerance by 0.618; S3 exceeds the tolerance by 0.127
-00758: S1 exceeds the tolerance by 0.549; S2 exceeds the tolerance by 0.618; S3 exceeds the tolerance by 0.127
-00759: S1 exceeds the tolerance by 0.587; S2 exceeds the tolerance by 0.737; S3 exceeds the tolerance by 0.187
-00760: X1 exceeds the tolerance by 0.99; S1 exceeds the tolerance by 0.99
-00761: X1 exceeds the tolerance by 0.499
-00762: S4 exceeds the tolerance by 0.0662
+00757: S1 exceeds the tolerance by 0.42; S2 exceeds the tolerance by 0.181; S3 exceeds the tolerance by 0.181
+00758: S1 exceeds the tolerance by 0.42; S2 exceeds the tolerance by 0.181; S3 exceeds the tolerance by 0.181
+00759: S1 exceeds the tolerance by 0.399; S2 exceeds the tolerance by 0.119; S3 exceeds the tolerance by 0.119
 00763: S1 exceeds the tolerance by 0.0819; S2 exceeds the tolerance by 0.383; S3 exceeds the tolerance by 0.0818
 00764: S1 exceeds the tolerance by 0.583; S2 exceeds the tolerance by 0.616; S3 exceeds the tolerance by 0.13
 00765: S1 exceeds the tolerance by 0.6; S2 exceeds the tolerance by 0.278; S3 exceeds the tolerance by 0.646
@@ -1200,187 +888,144 @@ The test tags of the cases with a numerical mismatch:
 00771: S1 exceeds the tolerance by 0.08; S2 exceeds the tolerance by 0.389; S3 exceeds the tolerance by 0.0799
 00772: S1 exceeds the tolerance by 0.08; S2 exceeds the tolerance by 0.389; S3 exceeds the tolerance by 0.0799
 00773: S1 exceeds the tolerance by 0.0836; S2 exceeds the tolerance by 0.38; S3 exceeds the tolerance by 0.0835
-00774: S1 exceeds the tolerance by 0.586; S2 exceeds the tolerance by 0.737; S3 exceeds the tolerance by 0.183
-00775: S1 exceeds the tolerance by 0.0106; S2 exceeds the tolerance by 0.00393; S3 exceeds the tolerance by 0.00393; S4 exceeds the tolerance by 0.0027
+00774: S1 exceeds the tolerance by 0.402; S2 exceeds the tolerance by 0.131; S3 exceeds the tolerance by 0.131
+00775: S1 exceeds the tolerance by 0.00101; S2 exceeds the tolerance by 0.00101; S3 exceeds the tolerance by 0.00101; S4 exceeds the tolerance by 0.00435
 00776: S1 exceeds the tolerance by 0.61; S2 exceeds the tolerance by 0.345; S3 exceeds the tolerance by 0.135
 00777: S2 exceeds the tolerance by 0.228; S3 exceeds the tolerance by 0.171
 00778: X1 exceeds the tolerance by 1.57; S1 exceeds the tolerance by 1.57
 00779: X1 exceeds the tolerance by 1.57; S1 exceeds the tolerance by 1.57
 00780: X1 exceeds the tolerance by 1.57; S1 exceeds the tolerance by 1.57
-00789: S1 exceeds the tolerance by 0.183; S2 exceeds the tolerance by 0.745; S3 exceeds the tolerance by 0.183
-00790: S1 exceeds the tolerance by 0.183; S2 exceeds the tolerance by 0.745; S3 exceeds the tolerance by 0.183
-00791: S1 exceeds the tolerance by 0.187; S2 exceeds the tolerance by 0.737; S3 exceeds the tolerance by 0.187
-00845: S1 exceeds the tolerance by 0.056; S2 exceeds the tolerance by 0.744
-00846: S1 exceeds the tolerance by 0.0742; S2 exceeds the tolerance by 0.997; S3 exceeds the tolerance by 0.102; S4 exceeds the tolerance by 0.635
-00847: S1 exceeds the tolerance by 0.0742; S2 exceeds the tolerance by 0.997; S3 exceeds the tolerance by 0.203; S4 exceeds the tolerance by 1.23
 00848: S1 exceeds the tolerance by 0.0791; S2 exceeds the tolerance by 1.06
 00849: S1 exceeds the tolerance by 0.0803; S2 exceeds the tolerance by 1.22; S3 exceeds the tolerance by 0.0629; S4 exceeds the tolerance by 0.454
 00850: S1 exceeds the tolerance by 0.0792; S2 exceeds the tolerance by 1.23; S3 exceeds the tolerance by 0.209; S4 exceeds the tolerance by 1.53
-00883: S1 exceeds the tolerance by 0.116; S2 exceeds the tolerance by 0.554; S3 exceeds the tolerance by 0.116
-00884: S1 exceeds the tolerance by 0.142; S2 exceeds the tolerance by 0.655; S3 exceeds the tolerance by 0.287
-00885: S1 exceeds the tolerance by 0.0278; S2 exceeds the tolerance by 0.00591; S3 exceeds the tolerance by 0.00591; S4 exceeds the tolerance by 0.00511
 00886: S1 exceeds the tolerance by 0.084; S2 exceeds the tolerance by 0.406; S3 exceeds the tolerance by 0.0839
-00887: S1 exceeds the tolerance by 0.336; S2 exceeds the tolerance by 0.433; S3 exceeds the tolerance by 0.31
+00887: S1 exceeds the tolerance by 0.0775; S2 exceeds the tolerance by 0.615; S3 exceeds the tolerance by 0.0774
 00928: S1 exceeds the tolerance by 0.00015; S2 exceeds the tolerance by 0.000149
-00930: S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 2; S3 exceeds the tolerance by 3
-00931: S1 exceeds the tolerance by 4; S2 exceeds the tolerance by 5; S3 exceeds the tolerance by 6
 00933: S1 exceeds the tolerance by 0.873; S2 exceeds the tolerance by 0.786
-00934: S1 exceeds the tolerance by 2
-00935: S1 exceeds the tolerance by 3; S2 exceeds the tolerance by 1
-00944: S1 exceeds the tolerance by 2.86; k1 exceeds the tolerance by 9
-00945: S1 exceeds the tolerance by 13.6; C exceeds the tolerance by 9
+00934: S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 1
+00935: S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 1
+00936: S2 exceeds the tolerance by 3
+00945: S1 exceeds the tolerance by 18.7
 00946: S1 exceeds the tolerance by 13.6; C exceeds the tolerance by 9
-00947: S1 exceeds the tolerance by 1.87; C exceeds the tolerance by 9
+00947: S1 exceeds the tolerance by 1.87
 00948: S1 exceeds the tolerance by 1.87; C exceeds the tolerance by 9
 00952: S exceeds the tolerance by 100
 00953: S exceeds the tolerance by 99
-00962: S exceeds the tolerance by 100
-00963: Q exceeds the tolerance by 9.89; R2 exceeds the tolerance by 9.89
+00962: S exceeds the tolerance by 100; error exceeds the tolerance by 0.97
+00963: R exceeds the tolerance by 9.99; Q2 exceeds the tolerance by 9.99
 00964: S exceeds the tolerance by 100
 00965: S exceeds the tolerance by 100
 00966: S exceeds the tolerance by 990
-00967: Q exceeds the tolerance by 4.94; R exceeds the tolerance by 4.94
-00972: X exceeds the tolerance by 10
+00967: Q exceeds the tolerance by 4.99; R exceeds the tolerance by 4.94
 00978: x exceeds the tolerance by 5; y exceeds the tolerance by 1; z exceeds the tolerance by 3
-00979: x exceeds the tolerance by 2; p exceeds the tolerance by 3; q exceeds the tolerance by 1
 00980: x exceeds the tolerance by 2; p exceeds the tolerance by 3; q exceeds the tolerance by 1
 00995: p2 exceeds the tolerance by 1
 00996: p2 exceeds the tolerance by 1
 00997: p1 exceeds the tolerance by 1; p2 exceeds the tolerance by 1
-01000: S1 exceeds the tolerance by 17.7; S2 exceeds the tolerance by 258; k3 exceeds the tolerance by 1.42; k4 exceeds the tolerance by 4.39; k5 exceeds the tolerance by 2.24; comp2 exceeds the tolerance by 4.39
-01045: S1 exceeds the tolerance by 0.056; S2 exceeds the tolerance by 0.744
-01046: S1 exceeds the tolerance by 0.0742; S2 exceeds the tolerance by 0.997; S3 exceeds the tolerance by 0.102; S4 exceeds the tolerance by 0.635
-01047: S1 exceeds the tolerance by 0.0742; S2 exceeds the tolerance by 0.997; S3 exceeds the tolerance by 0.203; S4 exceeds the tolerance by 1.23
+01000: S1 exceeds the tolerance by 14.3; S2 exceeds the tolerance by 199; k3 exceeds the tolerance by 1.42; k4 exceeds the tolerance by 3.36; k5 exceeds the tolerance by 2.24; comp2 exceeds the tolerance by 3.36
 01048: S1 exceeds the tolerance by 0.0791; S2 exceeds the tolerance by 1.06
 01049: S1 exceeds the tolerance by 0.0803; S2 exceeds the tolerance by 1.22; S3 exceeds the tolerance by 0.0629; S4 exceeds the tolerance by 0.454
 01050: S1 exceeds the tolerance by 0.0792; S2 exceeds the tolerance by 1.23; S3 exceeds the tolerance by 0.209; S4 exceeds the tolerance by 1.53
-01071: S1 exceeds the tolerance by 0.112; S2 exceeds the tolerance by 0.393; S3 exceeds the tolerance by 0.112
-01072: S1 exceeds the tolerance by 0.000106; S2 exceeds the tolerance by 3.14e-05; S3 exceeds the tolerance by 6.29e-05; S4 exceeds the tolerance by 1.26e-05
-01073: S1 exceeds the tolerance by 0.371; S2 exceeds the tolerance by 0.743; S3 exceeds the tolerance by 0.245
 01074: S1 exceeds the tolerance by 0.0504; S2 exceeds the tolerance by 0.209; S3 exceeds the tolerance by 0.0503
 01075: S1 exceeds the tolerance by 0.107; S2 exceeds the tolerance by 0.0362; S3 exceeds the tolerance by 0.0724; S4 exceeds the tolerance by 0.0264
 01076: S1 exceeds the tolerance by 0.251; S2 exceeds the tolerance by 1.1; S3 exceeds the tolerance by 0.429
-01094: S2 exceeds the tolerance by 0.99
 01095: S1 exceeds the tolerance by 0.0495; S2 exceeds the tolerance by 1.37; S3 exceeds the tolerance by 0.0492
 01106: X exceeds the tolerance by 1
 01119: e1 exceeds the tolerance by 2; e2 exceeds the tolerance by 3
 01120: S3 exceeds the tolerance by 2
-01212: x exceeds the tolerance by 4
 01213: x exceeds the tolerance by 4
-01214: x exceeds the tolerance by 4
-01222: c exceeds the tolerance by 2
-01227: S1 exceeds the tolerance by 4.25; k1 exceeds the tolerance by 0.5
-01228: S1 exceeds the tolerance by 4.5; k1 exceeds the tolerance by 1
-01229: S1 exceeds the tolerance by 4.5; k1 exceeds the tolerance by 1
+01227: S1 exceeds the tolerance by 4.25
+01228: S1 exceeds the tolerance by 4.5
+01229: S1 exceeds the tolerance by 4.5
 01230: S1 exceeds the tolerance by 4.5; k1 exceeds the tolerance by 1
 01241: p exceeds the tolerance by 2
-01242: p exceeds the tolerance by 2
-01243: p exceeds the tolerance by 2
 01260: p2 exceeds the tolerance by 9
 01261: p2 exceeds the tolerance by 5
-01262: p2 exceeds the tolerance by 7
 01263: p2 exceeds the tolerance by 5
 01266: p2 exceeds the tolerance by 9.98
-01267: p2 exceeds the tolerance by 5
+01267: p2 exceeds the tolerance by 2
 01268: p2 exceeds the tolerance by 5
 01269: p2 exceeds the tolerance by 4
 01270: p2 exceeds the tolerance by 7.98
 01282: p1 exceeds the tolerance by 1
 01284: p1 exceeds the tolerance by 3
-01285: p1 exceeds the tolerance by 4
-01286: p1 exceeds the tolerance by 15
 01287: p1 exceeds the tolerance by 15
 01293: p2 exceeds the tolerance by 5
-01294: p2 exceeds the tolerance by 7
 01295: p2 exceeds the tolerance by 5
 01297: p2 exceeds the tolerance by 9.98
-01298: p2 exceeds the tolerance by 5
+01298: p2 exceeds the tolerance by 2
 01299: p2 exceeds the tolerance by 5
-01303: p1 exceeds the tolerance by 3
-01304: p1 exceeds the tolerance by 5
 01305: p1 exceeds the tolerance by 5
 01324: y exceeds the tolerance by 3.5
 01325: y exceeds the tolerance by 5.5
 01326: y exceeds the tolerance by 3.5
 01327: y exceeds the tolerance by 5.5
-01328: x exceeds the tolerance by 6; y exceeds the tolerance by 1
-01329: x exceeds the tolerance by 6; y exceeds the tolerance by 7
-01330: x exceeds the tolerance by 4; y exceeds the tolerance by 3
-01331: x exceeds the tolerance by 4; y exceeds the tolerance by 7
+01328: y exceeds the tolerance by 1
+01329: y exceeds the tolerance by 7
+01331: y exceeds the tolerance by 4
 01332: x exceeds the tolerance by 2
 01333: x exceeds the tolerance by 4; y exceeds the tolerance by 3
 01334: x exceeds the tolerance by 4; y exceeds the tolerance by 7
 01335: x exceeds the tolerance by 4
 01336: x exceeds the tolerance by 3
 01337: x exceeds the tolerance by 3; y exceeds the tolerance by 0.999
-01340: S1 exceeds the tolerance by 9; k1 exceeds the tolerance by 2
-01444: A exceeds the tolerance by 5
-01445: A exceeds the tolerance by 10
-01446: A exceeds the tolerance by 5
-01447: A exceeds the tolerance by 5; B exceeds the tolerance by 5
-01448: A exceeds the tolerance by 10; B exceeds the tolerance by 10
+01340: S1 exceeds the tolerance by 9
 01466: Allsum exceeds the tolerance by 200
-01504: S1 exceeds the tolerance by 0.0139; x exceeds the tolerance by 0.0199
-01505: C1 exceeds the tolerance by 0.39; S1 exceeds the tolerance by 0.0471; x exceeds the tolerance by 0.351
-01506: C1 exceeds the tolerance by 0.39; S1 exceeds the tolerance by 0.0288; x exceeds the tolerance by 0.41
+01505: S1 exceeds the tolerance by 0.109; x exceeds the tolerance by 0.351
+01506: S1 exceeds the tolerance by 0.121; x exceeds the tolerance by 0.39
 01507: S1 exceeds the tolerance by 0.0363; x exceeds the tolerance by 0.0519
 01508: S1 exceeds the tolerance by 0.112; x exceeds the tolerance by 0.16
 01509: S1 exceeds the tolerance by 0.14; x exceeds the tolerance by 0.2
 01510: S1 exceeds the tolerance by 0.7; x exceeds the tolerance by 1
 01511: S1 exceeds the tolerance by 0.0139; x exceeds the tolerance by 0.0199
-01512: x2 exceeds the tolerance by 5
+01512: x2 exceeds the tolerance by 2
 01518: P2 exceeds the tolerance by 3
 01520: P2 exceeds the tolerance by 3
-01521: P2 exceeds the tolerance by 3
+01522: P2 exceeds the tolerance by 3
 01523: P2 exceeds the tolerance by 0.5
 01524: P2 exceeds the tolerance by 2.5
 01525: P2 exceeds the tolerance by 3
 01527: P2 exceeds the tolerance by 3
 01528: P2 exceeds the tolerance by 1.5
 01529: P2 exceeds the tolerance by 3.5
-01530: P0 exceeds the tolerance by 2.72; P1 exceeds the tolerance by 15.2; P2 exceeds the tolerance by 1; P3 exceeds the tolerance by 1; P4 exceeds the tolerance by 3.14; P5 exceeds the tolerance by 1.05; P6 exceeds the tolerance by 1.57; P7 exceeds the tolerance by 0.523; P8 exceeds the tolerance by 1.23; P9 exceeds the tolerance by 1.43; P10 exceeds the tolerance by 1; P11 exceeds the tolerance by 4; P12 exceeds the tolerance by 4; P13 exceeds the tolerance by 0.948; P14 exceeds the tolerance by 0.976; P15 exceeds the tolerance by 1; P16 exceeds the tolerance by 2.72; P17 exceeds the tolerance by 2.16; P18 exceeds the tolerance by 5; P19 exceeds the tolerance by 9; P20 exceeds the tolerance by 1.61; P22 exceeds the tolerance by 0.699; P24 exceeds the tolerance by 1; P25 exceeds the tolerance by 4; P26 exceeds the tolerance by 5.56; P27 exceeds the tolerance by 16; P28 exceeds the tolerance by 9.61; P29 exceeds the tolerance by 2; P30 exceeds the tolerance by 2.72; P31 exceeds the tolerance by 0.863; P33 exceeds the tolerance by 0.374; P35 exceeds the tolerance by 2.01; P36 exceeds the tolerance by 0.291; P37 exceeds the tolerance by 1.14; P38 exceeds the tolerance by 1.02; P39 exceeds the tolerance by 4.93; P40 exceeds the tolerance by 0.304; P41 exceeds the tolerance by 2.83; P42 exceeds the tolerance by 1.12; P43 exceeds the tolerance by 1.14; P44 exceeds the tolerance by 1.47; P45 exceeds the tolerance by 5.29; P46 exceeds the tolerance by 0.803; P47 exceeds the tolerance by 0.867; P48 exceeds the tolerance by 1.51; P49 exceeds the tolerance by 5.3; P52 exceeds the tolerance by 1
-01531: P0 exceeds the tolerance by 2; P1 exceeds the tolerance by 2; P2 exceeds the tolerance by 2; P3 exceeds the tolerance by 2; P4 exceeds the tolerance by 2; P5 exceeds the tolerance by 2; P6 exceeds the tolerance by 2; P7 exceeds the tolerance by 2; P8 exceeds the tolerance by 2; P9 exceeds the tolerance by 2; P10 exceeds the tolerance by 2; P11 exceeds the tolerance by 2; P12 exceeds the tolerance by 2; P13 exceeds the tolerance by 2; P14 exceeds the tolerance by 2; P15 exceeds the tolerance by 2; P16 exceeds the tolerance by 2; P17 exceeds the tolerance by 2; P18 exceeds the tolerance by 2; P19 exceeds the tolerance by 2; P20 exceeds the tolerance by 2; P21 exceeds the tolerance by 2; P22 exceeds the tolerance by 2; P23 exceeds the tolerance by 2; P24 exceeds the tolerance by 2; P25 exceeds the tolerance by 2; P26 exceeds the tolerance by 2; P27 exceeds the tolerance by 2; P28 exceeds the tolerance by 2; P29 exceeds the tolerance by 2; P30 exceeds the tolerance by 2; P31 exceeds the tolerance by 2; P32 exceeds the tolerance by 2; P33 exceeds the tolerance by 2; P34 exceeds the tolerance by 2; P35 exceeds the tolerance by 2; P36 exceeds the tolerance by 2; P37 exceeds the tolerance by 2; P38 exceeds the tolerance by 2; P39 exceeds the tolerance by 2; P40 exceeds the tolerance by 2; P41 exceeds the tolerance by 2; P42 exceeds the tolerance by 2; P43 exceeds the tolerance by 2; P44 exceeds the tolerance by 2; P45 exceeds the tolerance by 2; P46 exceeds the tolerance by 2; P47 exceeds the tolerance by 2; P48 exceeds the tolerance by 2; P49 exceeds the tolerance by 2; P50 exceeds the tolerance by 2; P51 exceeds the tolerance by 2; P52 exceeds the tolerance by 2; P53 exceeds the tolerance by 2; P54 exceeds the tolerance by 2; P55 exceeds the tolerance by 2
 01532: P0 exceeds the tolerance by 2; P1 exceeds the tolerance by 2; P2 exceeds the tolerance by 2; P3 exceeds the tolerance by 2; P4 exceeds the tolerance by 2; P5 exceeds the tolerance by 2; P6 exceeds the tolerance by 2; P7 exceeds the tolerance by 2; P8 exceeds the tolerance by 2; P9 exceeds the tolerance by 2; P10 exceeds the tolerance by 2; P11 exceeds the tolerance by 2; P12 exceeds the tolerance by 2; P13 exceeds the tolerance by 2; P14 exceeds the tolerance by 2; P15 exceeds the tolerance by 2; P16 exceeds the tolerance by 2; P17 exceeds the tolerance by 2; P18 exceeds the tolerance by 2; P19 exceeds the tolerance by 2; P20 exceeds the tolerance by 2; P21 exceeds the tolerance by 2; P22 exceeds the tolerance by 2; P23 exceeds the tolerance by 2; P24 exceeds the tolerance by 2; P25 exceeds the tolerance by 2; P26 exceeds the tolerance by 2; P27 exceeds the tolerance by 2; P28 exceeds the tolerance by 2; P29 exceeds the tolerance by 2; P30 exceeds the tolerance by 2; P31 exceeds the tolerance by 2; P32 exceeds the tolerance by 2; P33 exceeds the tolerance by 2; P34 exceeds the tolerance by 2; P35 exceeds the tolerance by 2; P36 exceeds the tolerance by 2; P37 exceeds the tolerance by 2; P38 exceeds the tolerance by 2; P39 exceeds the tolerance by 2; P40 exceeds the tolerance by 2; P41 exceeds the tolerance by 2; P42 exceeds the tolerance by 2; P43 exceeds the tolerance by 2; P44 exceeds the tolerance by 2; P45 exceeds the tolerance by 2; P46 exceeds the tolerance by 2; P47 exceeds the tolerance by 2; P48 exceeds the tolerance by 2; P49 exceeds the tolerance by 2; P50 exceeds the tolerance by 2; P51 exceeds the tolerance by 2; P52 exceeds the tolerance by 2
-01533: P0 exceeds the tolerance by 3; P1 exceeds the tolerance by 3; P2 exceeds the tolerance by 3; P3 exceeds the tolerance by 3; P4 exceeds the tolerance by 3; P5 exceeds the tolerance by 3; P6 exceeds the tolerance by 3; P7 exceeds the tolerance by 2; P8 exceeds the tolerance by 3; P9 exceeds the tolerance by 2; P10 exceeds the tolerance by 3; P11 exceeds the tolerance by 3; P12 exceeds the tolerance by 2; P13 exceeds the tolerance by 2; P14 exceeds the tolerance by 3; P15 exceeds the tolerance by 3; P16 exceeds the tolerance by 3; P17 exceeds the tolerance by 3; P18 exceeds the tolerance by 2; P19 exceeds the tolerance by 3; P20 exceeds the tolerance by 2; P21 exceeds the tolerance by 2; P22 exceeds the tolerance by 2; P23 exceeds the tolerance by 2; P24 exceeds the tolerance by 3; P25 exceeds the tolerance by 3; P26 exceeds the tolerance by 3; P27 exceeds the tolerance by 3; P28 exceeds the tolerance by 3; P29 exceeds the tolerance by 3; P30 exceeds the tolerance by 3; P31 exceeds the tolerance by 3; P32 exceeds the tolerance by 2; P33 exceeds the tolerance by 2; P34 exceeds the tolerance by 2; P35 exceeds the tolerance by 3; P36 exceeds the tolerance by 2; P37 exceeds the tolerance by 3; P38 exceeds the tolerance by 2; P39 exceeds the tolerance by 3; P40 exceeds the tolerance by 2; P41 exceeds the tolerance by 3; P42 exceeds the tolerance by 3; P43 exceeds the tolerance by 3; P44 exceeds the tolerance by 2; P45 exceeds the tolerance by 3; P46 exceeds the tolerance by 3; P47 exceeds the tolerance by 2; P48 exceeds the tolerance by 3; P49 exceeds the tolerance by 3; P50 exceeds the tolerance by 2; P51 exceeds the tolerance by 3; P52 exceeds the tolerance by 2
+01533: P0 exceeds the tolerance by 1; P1 exceeds the tolerance by 1; P2 exceeds the tolerance by 1; P3 exceeds the tolerance by 1; P4 exceeds the tolerance by 1; P5 exceeds the tolerance by 1; P6 exceeds the tolerance by 1; P8 exceeds the tolerance by 1; P10 exceeds the tolerance by 1; P11 exceeds the tolerance by 1; P14 exceeds the tolerance by 1; P15 exceeds the tolerance by 1; P16 exceeds the tolerance by 1; P17 exceeds the tolerance by 1; P19 exceeds the tolerance by 1; P24 exceeds the tolerance by 1; P25 exceeds the tolerance by 1; P26 exceeds the tolerance by 1; P27 exceeds the tolerance by 1; P28 exceeds the tolerance by 1; P29 exceeds the tolerance by 1; P30 exceeds the tolerance by 1; P31 exceeds the tolerance by 1; P35 exceeds the tolerance by 1; P37 exceeds the tolerance by 1; P39 exceeds the tolerance by 1; P41 exceeds the tolerance by 1; P42 exceeds the tolerance by 1; P43 exceeds the tolerance by 1; P45 exceeds the tolerance by 1; P46 exceeds the tolerance by 1; P48 exceeds the tolerance by 1; P49 exceeds the tolerance by 1; P51 exceeds the tolerance by 1
 01536: S1 exceeds the tolerance by 7
 01575: k1 exceeds the tolerance by 7.2; k2 exceeds the tolerance by 7.2
-01577: P1 exceeds the tolerance by 2
 01578: P1 exceeds the tolerance by 2
 01579: P1 exceeds the tolerance by 5.5
 01580: P1 exceeds the tolerance by 2; S1 exceeds the tolerance by 0.7
-01583: S1 exceeds the tolerance by 1.1
 01584: P1 exceeds the tolerance by 2; S1 exceeds the tolerance by 0.9
 01586: P1 exceeds the tolerance by 4.5; S1 exceeds the tolerance by 2.02
-01588: S exceeds the tolerance by 100
-01589: S exceeds the tolerance by 99
-01590: S exceeds the tolerance by 99.8
-01591: S exceeds the tolerance by 99.8
-01592: S exceeds the tolerance by 99.8
-01599: S exceeds the tolerance by 99.8
+01588: S exceeds the tolerance by 100; errorLow exceeds the tolerance by 0.97
+01589: S exceeds the tolerance by 99; errorLow exceeds the tolerance by 0.97
+01590: S exceeds the tolerance by 99.8; errorLow exceeds the tolerance by 0.85
+01591: S exceeds the tolerance by 99.8; errorLow exceeds the tolerance by 0.85
+01592: S exceeds the tolerance by 99.8; errorLow exceeds the tolerance by 0.85
+01594: P2 exceeds the tolerance by 2
+01596: P2 exceeds the tolerance by 2
+01597: P2 exceeds the tolerance by 44
+01598: P2 exceeds the tolerance by 121
+01599: S exceeds the tolerance by 99.8; errorLow exceeds the tolerance by 0.85
 01601: P2 exceeds the tolerance by 2
 01603: P2 exceeds the tolerance by 4.5
 01604: P1 exceeds the tolerance by 4.5
-01605: S exceeds the tolerance by 99.8
-01626: S exceeds the tolerance by 99.8
-01627: S exceeds the tolerance by 99.8
-01658: p1 exceeds the tolerance by 2
+01605: S exceeds the tolerance by 99.8; errorLow exceeds the tolerance by 0.85
+01626: S exceeds the tolerance by 99.8; errorLow exceeds the tolerance by 0.85
+01627: S exceeds the tolerance by 99.8; errorLow exceeds the tolerance by 0.85
 01659: p1 exceeds the tolerance by 2
 01660: p1 exceeds the tolerance by 2
 01662: p1 exceeds the tolerance by 2
 01663: p1 exceeds the tolerance by 4
-01664: p1 exceeds the tolerance by 6.02e+23
-01669: S1 exceeds the tolerance by 0.225; S2 exceeds the tolerance by 0.135
-01670: S1 exceeds the tolerance by 0.225; S2 exceeds the tolerance by 0.0446
-01671: S1 exceeds the tolerance by 0.135; S2 exceeds the tolerance by 0.135
 01672: S1 exceeds the tolerance by 0.313; S2 exceeds the tolerance by 0.188
 01673: S1 exceeds the tolerance by 0.313; S2 exceeds the tolerance by 0.0623
 01674: S1 exceeds the tolerance by 0.191; S2 exceeds the tolerance by 0.191
 01675: S1 exceeds the tolerance by 4.17; S2 exceeds the tolerance by 0.102
 01676: S1 exceeds the tolerance by 4.17; S2 exceeds the tolerance by 0.0336
 01677: S1 exceeds the tolerance by 4.14; S2 exceeds the tolerance by 0.889
-01681: S1 exceeds the tolerance by 2.17; S2 exceeds the tolerance by 0.894
-01682: S1 exceeds the tolerance by 2.17; S2 exceeds the tolerance by 0.964
-01683: S1 exceeds the tolerance by 2.17; S2 exceeds the tolerance by 0.894
+01681: S1 exceeds the tolerance by 3; S2 exceeds the tolerance by 0.999
+01682: S1 exceeds the tolerance by 3; S2 exceeds the tolerance by 0.999
+01683: S1 exceeds the tolerance by 3; S2 exceeds the tolerance by 0.999
 01684: S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 3
 01685: S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 3
 01686: S1 exceeds the tolerance by 1; S2 exceeds the tolerance by 3
@@ -1400,14 +1045,13 @@ The test tags of the cases with a numerical mismatch:
 01701: P1 exceeds the tolerance by 10
 01702: P1 exceeds the tolerance by 9
 01703: S1 exceeds the tolerance by 7.7
-01705: S1 exceeds the tolerance by 2.5
+01705: S1 exceeds the tolerance by 5
 01706: S1 exceeds the tolerance by 3
 01707: S1 exceeds the tolerance by 1
 01708: P1 exceeds the tolerance by 8.5
 01709: P1 exceeds the tolerance by 6.5
 01710: k1 exceeds the tolerance by 8.5
 01713: k1 exceeds the tolerance by 3
-01714: k1 exceeds the tolerance by 3
 01715: k1 exceeds the tolerance by 1.1
 01716: k1 exceeds the tolerance by 6.9
 01717: P1 exceeds the tolerance by 3
@@ -1419,13 +1063,11 @@ The test tags of the cases with a numerical mismatch:
 01756: P1 exceeds the tolerance by 3.5
 01757: P1 exceeds the tolerance by 23.5
 01758: P1 exceeds the tolerance by 1.5
-01759: P1 exceeds the tolerance by 2.5
-01769: k0 exceeds the tolerance by 4
-01770: k0 exceeds the tolerance by 4
+01759: P1 exceeds the tolerance by 2
 01771: k0 exceeds the tolerance by 4
-01772: k0 exceeds the tolerance by 4
-01779: C1 exceeds the tolerance by 0.3; S1 exceeds the tolerance by 0.9; x exceeds the tolerance by 1.5
-01780: C1 exceeds the tolerance by 0.3; S1 exceeds the tolerance by 0.9; x exceeds the tolerance by 1.5
+01772: k0 exceeds the tolerance by 2
+01779: S1 exceeds the tolerance by 0.0599; x exceeds the tolerance by 1.5
+01780: S1 exceeds the tolerance by 0.0599; x exceeds the tolerance by 1.5
 ```
 
 **2 cases**
@@ -1435,52 +1077,52 @@ The test tags of the cases with a numerical mismatch:
 01821: time points differ from the expected results
 ```
 
+**1 case**
+
+```text
+01577: SimulationFailure: sbmlsim: IntegrationError: integration failed at t = 10 (flag -13): IDAICFailFlag: The linesearch algorithm failed: step too small or too many backtracks.
+```
+
 The test tags of the cases with a numerical mismatch:
 
 | tags | cases | ids |
 | --- | --- | --- |
-| Amount | 75 | 00026, 00041, 00071, 00072, 00073, 00074, 00348, 00349, 00350, 00351, 00352, 00353, 00354, 00355, 00356, 00357, 00358, 00359, 00360, 00361, 00363, 00364, 00366, 00367, 00399, 00400, 00401, 00405, 00407, 00408, 00409, 00410, 00411, 00412, 00415, 00416, 00417, 00418, 00423, 00424, 00620, 00623, 00638, 00646, 00647, 00648, 00649, 00650, 00651, 00654, 00657, 00661, 00662, 00665, 00666, 00751, 00752, 00753, 00754, 00760, 00773, 00774, 00775, 00778, 00791, 00845, 00846, 00847, 00848, 00883, 00884, 00885, 00886, 00930, 00931 |
-| NonConstantParameter | 26 | 00172, 00396, 00397, 00398, 00402, 00403, 00404, 00453, 00455, 00979, 01119, 01214, 01260, 01262, 01263, 01266, 01267, 01268, 01303, 01304, 01305, 01521, 01658, 01659, 01662, 01664 |
-| Amount, InitialValueReassigned | 25 | 00619, 00621, 00622, 00624, 00634, 00635, 00636, 00637, 00639, 00652, 00653, 00655, 00656, 00663, 00755, 00756, 00761, 00762, 00771, 00772, 00777, 00779, 00780, 00789, 00790 |
-| Amount, BoundaryCondition | 17 | 00375, 00376, 00377, 00378, 00379, 00380, 00381, 00382, 00383, 00432, 00433, 00434, 00436, 00437, 00438, 00439, 00440 |
-| Concentration, NonUnityCompartment | 14 | 00374, 00743, 00744, 00745, 00746, 00747, 00748, 00749, 00763, 00765, 00766, 00767, 00768, 00769 |
+| Amount | 30 | 00071, 00072, 00073, 00405, 00407, 00408, 00409, 00410, 00411, 00412, 00415, 00416, 00417, 00418, 00423, 00424, 00623, 00638, 00649, 00650, 00651, 00657, 00665, 00666, 00773, 00774, 00775, 00778, 00848, 00886 |
 | Amount, EventIsPersistent | 13 | 00406, 00413, 00414, 00420, 00421, 00757, 00758, 00759, 00776, 00850, 00887, 00933, 00934 |
-| Amount, NonConstantParameter | 13 | 00944, 01227, 01228, 01229, 01230, 01269, 01270, 01293, 01294, 01295, 01297, 01298, 01299 |
-| Amount, NonUnityCompartment | 12 | 00369, 00370, 00371, 00372, 00373, 00426, 00428, 00429, 00430, 00431, 00680, 00683 |
 | EventT0Firing, NonConstantParameter | 12 | 00995, 00996, 00997, 01332, 01335, 01527, 01663, 01693, 01694, 01695, 01696, 01697 |
-| Amount, ConversionFactors | 9 | 01669, 01670, 01671, 01672, 01673, 01674, 01681, 01682, 01683 |
-| Amount, LocalParameters | 9 | 00389, 00392, 00395, 00446, 00449, 00452, 00707, 00736, 00737 |
-| Amount, AssignedConstantStoichiometry, InitialValueReassigned, NonUnityStoichiometry | 8 | 01071, 01072, 01073, 01074, 01075, 01076, 01094, 01095 |
-| EventUsesTriggerTimeValues, NonConstantParameter | 8 | 00459, 00460, 00461, 01324, 01328, 01330, 01528, 01701 |
-| Amount, NonUnityStoichiometry | 7 | 00387, 00390, 00393, 00444, 00447, 00723, 00724 |
+| Amount, InitialValueReassigned | 11 | 00622, 00624, 00637, 00639, 00655, 00656, 00771, 00772, 00777, 00779, 00780 |
+| Amount, NonConstantParameter | 11 | 01227, 01228, 01229, 01230, 01269, 01270, 01293, 01295, 01297, 01298, 01299 |
+| NonConstantParameter | 11 | 00453, 00455, 01119, 01260, 01263, 01266, 01267, 01268, 01305, 01659, 01662 |
+| Amount, BoundaryCondition | 8 | 00432, 00433, 00434, 00436, 00437, 00438, 00439, 00440 |
 | EventUsesAssignmentTimeValues, NonConstantParameter | 7 | 00980, 01325, 01329, 01331, 01529, 01604, 01702 |
-| NonConstantParameter, UncommonMathML | 6 | 01212, 01213, 01530, 01531, 01532, 01533 |
-| 0D-Compartment, Amount | 5 | 00362, 00365, 00368, 00419, 00425 |
-| Amount, AssignedVariableStoichiometry, InitialValueReassigned, NonUnityStoichiometry | 5 | 01444, 01445, 01446, 01447, 01448 |
-| Amount, BoundaryCondition, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment, VolumeConcentrationRates | 5 | 01504, 01505, 01506, 01507, 01512 |
-| Amount, ConstantSpecies | 5 | 00384, 00385, 00386, 00441, 00443 |
-| Amount, HasOnlySubstanceUnits, LocalParameters, NonConstantParameter, NonUnityCompartment, NonUnityStoichiometry, SpeciesReferenceInMath | 4 | 01769, 01770, 01771, 01772 |
-| Amount, InitialValueReassigned, NonUnityCompartment | 4 | 00679, 00681, 00682, 00684 |
-| Amount, ReversibleReaction | 4 | 01045, 01046, 01047, 01048 |
-| Concentration, InitialValueReassigned, NonUnityCompartment | 4 | 00689, 00690, 00750, 00770 |
+| EventUsesTriggerTimeValues, NonConstantParameter | 7 | 00459, 00460, 00461, 01324, 01328, 01528, 01701 |
+| Amount, ConversionFactors | 6 | 01672, 01673, 01674, 01681, 01682, 01683 |
+| Amount, NonUnityCompartment | 6 | 00426, 00428, 00429, 00430, 00431, 00683 |
+| Concentration, NonUnityCompartment | 6 | 00763, 00765, 00766, 00767, 00768, 00769 |
+| Amount, AssignedConstantStoichiometry, InitialValueReassigned, NonUnityStoichiometry | 4 | 01074, 01075, 01076, 01095 |
+| Amount, BoundaryCondition, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment, VolumeConcentrationRates | 4 | 01505, 01506, 01507, 01512 |
+| Amount, LocalParameters | 4 | 00446, 00449, 00452, 00737 |
 | EventIsPersistent, NonConstantParameter | 4 | 00454, 01525, 01660, 01759 |
 | Amount, ConversionFactors, EventIsPersistent | 3 | 01675, 01676, 01677 |
 | Amount, ConversionFactors, EventT0Firing | 3 | 01684, 01685, 01686 |
 | Amount, ConversionFactors, EventUsesAssignmentTimeValues | 3 | 01690, 01691, 01692 |
 | Amount, ConversionFactors, EventUsesTriggerTimeValues | 3 | 01687, 01688, 01689 |
 | Amount, EventUsesTriggerTimeValues | 3 | 00456, 00457, 00458 |
-| BoolNumericSwap, NonConstantParameter | 3 | 01285, 01286, 01287 |
+| Amount, NonUnityStoichiometry | 3 | 00444, 00447, 00724 |
 | EventIsNotPersistent, InitialValueReassigned, NonConstantParameter, RandomEventExecution | 3 | 01588, 01589, 01591 |
 | EventIsNotPersistent, NonConstantParameter, RandomEventExecution | 3 | 00952, 00962, 00964 |
 | EventT0Firing, InitialValueReassigned, NonConstantParameter | 3 | 01578, 01698, 01699 |
-| NoMathML, NonConstantParameter | 3 | 01241, 01242, 01243 |
-| Amount, BoundaryCondition, InitialValueReassigned | 2 | 00700, 00702 |
+| NonConstantParameter, UncommonMathML | 3 | 01213, 01532, 01533 |
+| 0D-Compartment, Amount | 2 | 00419, 00425 |
 | Amount, BoundaryCondition, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment | 2 | 01779, 01780 |
+| Amount, ConstantSpecies | 2 | 00441, 00443 |
 | Amount, EventUsesTriggerTimeValues, ReversibleReaction | 2 | 00849, 01049 |
+| Amount, HasOnlySubstanceUnits, LocalParameters, NonConstantParameter, NonUnityCompartment, NonUnityStoichiometry, SpeciesReferenceInMath | 2 | 01771, 01772 |
+| Amount, InitialValueReassigned, NonUnityCompartment | 2 | 00682, 00684 |
+| Concentration, InitialValueReassigned, NonUnityCompartment | 2 | 00690, 00770 |
 | EventIsNotPersistent, EventIsPersistent, EventUsesTriggerTimeValues, NonConstantParameter, RandomEventExecution | 2 | 00965, 00966 |
 | EventIsNotPersistent, NonConstantParameter | 2 | 00963, 00967 |
 | EventIsPersistent, EventT0Firing, NonConstantParameter | 2 | 01337, 01758 |
-| InitialValueReassigned, NonConstantParameter | 2 | 01261, 01577 |
 | 0D-Compartment, Amount, EventIsPersistent | 1 | 00422 |
 | Amount, AssignedConstantStoichiometry, AssignedVariableStoichiometry, BoundaryCondition, ConstantSpecies, ConversionFactors, EventIsNotPersistent, EventIsPersistent, EventT0Firing, EventUsesAssignmentTimeValues, EventUsesTriggerTimeValues, HasOnlySubstanceUnits, InitialValueReassigned, LocalParameters, MultiCompartment, NonConstantCompartment, NonConstantParameter, NonUnityCompartment, NonUnityStoichiometry, ReversibleReaction, SpeciesReferenceInMath | 1 | 01000 |
 | Amount, AssignedVariableStoichiometry, DelayInEventAssignment, NonConstantParameter, NonUnityStoichiometry | 1 | 01536 |
@@ -1492,15 +1134,13 @@ The test tags of the cases with a numerical mismatch:
 | Amount, AssignedVariableStoichiometry, EventUsesTriggerTimeValues, InitialValueReassigned, NonConstantParameter, NonUnityStoichiometry | 1 | 01584 |
 | Amount, AssignedVariableStoichiometry, EventUsesTriggerTimeValues, NonConstantParameter, NonUnityStoichiometry, SpeciesReferenceInMath | 1 | 01720 |
 | Amount, AssignedVariableStoichiometry, InitialValueReassigned, NonConstantParameter, NonUnityStoichiometry | 1 | 01106 |
-| Amount, AssignedVariableStoichiometry, NonConstantParameter, NonUnityStoichiometry | 1 | 01583 |
-| Amount, AssignedVariableStoichiometry, NonUnityStoichiometry | 1 | 00972 |
 | Amount, BoundaryCondition, EventIsPersistent | 1 | 00435 |
 | Amount, BoundaryCondition, EventIsPersistent, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment, VolumeConcentrationRates | 1 | 01511 |
 | Amount, BoundaryCondition, EventT0Firing, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment, VolumeConcentrationRates | 1 | 01510 |
 | Amount, BoundaryCondition, EventUsesAssignmentTimeValues, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment, VolumeConcentrationRates | 1 | 01509 |
 | Amount, BoundaryCondition, EventUsesTriggerTimeValues, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment, VolumeConcentrationRates | 1 | 01508 |
-| Amount, BoundaryCondition, HasOnlySubstanceUnits, NonConstantCompartment, NonUnityCompartment | 1 | 01222 |
 | Amount, BoundaryCondition, HasOnlySubstanceUnits, NonUnityCompartment | 1 | 01705 |
+| Amount, BoundaryCondition, InitialValueReassigned | 1 | 00702 |
 | Amount, ConstantSpecies, EventIsPersistent | 1 | 00442 |
 | Amount, EventIsNotPersistent, EventIsPersistent | 1 | 00935 |
 | Amount, EventIsPersistent, HasOnlySubstanceUnits, LocalParameters, NonConstantParameter | 1 | 01710 |
@@ -1522,12 +1162,14 @@ The test tags of the cases with a numerical mismatch:
 | Amount, EventUsesTriggerTimeValues, NonConstantParameter | 1 | 01326 |
 | Amount, InitialValueReassigned, LocalParameters | 1 | 00708 |
 | Amount, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment | 1 | 00946 |
-| Amount, LocalParameters, NonConstantParameter | 1 | 01714 |
 | Amount, NonConstantCompartment, NonUnityCompartment | 1 | 00945 |
 | Amount, NonConstantParameter, ReversibleReaction | 1 | 01340 |
+| Amount, ReversibleReaction | 1 | 01048 |
 | AssignedVariableStoichiometry, EventIsNotPersistent, InitialValueReassigned, NonConstantParameter, NonUnityStoichiometry, RandomEventExecution, SpeciesReferenceInMath | 1 | 01626 |
 | BoolNumericSwap, EventT0Firing, NonConstantParameter | 1 | 01284 |
 | BoolNumericSwap, InitialValueReassigned | 1 | 01282 |
+| BoolNumericSwap, NonConstantParameter | 1 | 01287 |
+| BoundaryCondition, Concentration, EventIsPersistent, EventUsesAssignmentTimeValues, InitialValueReassigned, UncommonMathML | 1 | 00936 |
 | Concentration, EventIsPersistent, NonUnityCompartment | 1 | 00764 |
 | Concentration, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment | 1 | 00948 |
 | Concentration, NonConstantCompartment, NonUnityCompartment | 1 | 00947 |
@@ -1536,6 +1178,7 @@ The test tags of the cases with a numerical mismatch:
 | DelayInEventAssignment, EventUsesTriggerTimeValues, NonConstantParameter | 1 | 01523 |
 | DelayInTrigger, EventIsNotPersistent, NonConstantParameter | 1 | 01520 |
 | DelayInTrigger, EventIsPersistent, NonConstantParameter | 1 | 01518 |
+| DelayInTrigger, EventT0Firing, InitialValueReassigned, NonConstantParameter | 1 | 01522 |
 | EventIsNotPersistent, EventIsPersistent, EventUsesAssignmentTimeValues, EventUsesTriggerTimeValues, NonConstantParameter | 1 | 00978 |
 | EventIsNotPersistent, EventT0Firing, InitialValueReassigned, NonConstantParameter | 1 | 01755 |
 | EventIsNotPersistent, EventT0Firing, InitialValueReassigned, NonConstantParameter, RandomEventExecution | 1 | 01466 |
@@ -1547,13 +1190,19 @@ The test tags of the cases with a numerical mismatch:
 | EventIsNotPersistent, InitialValueReassigned, NonConstantParameter, RandomEventExecution, UncommonMathML | 1 | 01599 |
 | EventIsPersistent, EventT0Firing, InitialValueReassigned, NonConstantParameter | 1 | 01754 |
 | EventIsPersistent, InitialValueReassigned, NonConstantParameter | 1 | 01575 |
+| EventIsPersistent, InitialValueReassigned, NonConstantParameter, UncommonMathML | 1 | 01594 |
 | EventT0Firing, EventUsesAssignmentTimeValues, InitialValueReassigned, NonConstantParameter | 1 | 01757 |
 | EventT0Firing, EventUsesAssignmentTimeValues, NonConstantParameter | 1 | 01334 |
 | EventT0Firing, EventUsesTriggerTimeValues, InitialValueReassigned, NonConstantParameter | 1 | 01756 |
 | EventT0Firing, EventUsesTriggerTimeValues, NonConstantParameter | 1 | 01333 |
+| EventT0Firing, InitialValueReassigned, NonConstantParameter, UncommonMathML | 1 | 01596 |
 | EventUsesAssignmentTimeValues, InitialValueReassigned, NonConstantParameter | 1 | 01579 |
+| EventUsesAssignmentTimeValues, InitialValueReassigned, NonConstantParameter, UncommonMathML | 1 | 01598 |
 | EventUsesAssignmentTimeValues, NoMathML, NonConstantParameter | 1 | 01603 |
+| EventUsesTriggerTimeValues, InitialValueReassigned, NonConstantParameter, UncommonMathML | 1 | 01597 |
 | EventUsesTriggerTimeValues, NoMathML, NonConstantParameter | 1 | 01601 |
+| InitialValueReassigned, NonConstantParameter | 1 | 01261 |
+| NoMathML, NonConstantParameter | 1 | 01241 |
 
 ## Skipped cases
 
@@ -1592,7 +1241,7 @@ The test tags of the cases with a numerical mismatch:
 | 00023 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
 | 00024 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
 | 00025 | Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | pass | pass | pass | pass | yes |
-| 00026 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00026 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00027 | Compartment, Species, Reaction, InitialAssignment | pass | pass | pass | pass | pass | yes |
 | 00028 | Compartment, Species, Reaction, Parameter | pass | fail | skip | skip | skip | yes |
 | 00029 | Compartment, Species, AssignmentRule | pass | pass | pass | pass | pass | no |
@@ -1607,7 +1256,7 @@ The test tags of the cases with a numerical mismatch:
 | 00038 | Compartment, Species, Reaction, Parameter, AssignmentRule | pass | pass | pass | pass | pass | yes |
 | 00039 | Compartment, Species, Reaction, Parameter, AlgebraicRule | pass | pass | pass | pass | pass | yes |
 | 00040 | Compartment, Species, Parameter, AlgebraicRule, RateRule | pass | pass | pass | pass | pass | yes |
-| 00041 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00041 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00042 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
 | 00043 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
 | 00044 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
@@ -1636,7 +1285,7 @@ The test tags of the cases with a numerical mismatch:
 | 00071 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00072 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00073 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
-| 00074 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00074 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00075 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
 | 00076 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
 | 00077 | Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
@@ -1730,7 +1379,7 @@ The test tags of the cases with a numerical mismatch:
 | 00169 | Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 00170 | Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 00171 | Parameter, FunctionDefinition, RateRule | pass | pass | pass | pass | pass | yes |
-| 00172 | Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00172 | Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00173 | Parameter, RateRule | pass | fail | skip | skip | skip | yes |
 | 00174 | Parameter, AssignmentRule | pass | pass | pass | pass | pass | no |
 | 00175 | Parameter, RateRule | pass | pass | pass | pass | pass | yes |
@@ -1906,60 +1555,60 @@ The test tags of the cases with a numerical mismatch:
 | 00345 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 00346 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 00347 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
-| 00348 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00349 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00350 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00351 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00352 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00353 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00354 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
-| 00355 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
-| 00356 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
-| 00357 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
-| 00358 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
-| 00359 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
-| 00360 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00361 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00362 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00363 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00364 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00365 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00366 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00367 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00368 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00369 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00370 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00371 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00372 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00373 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00374 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00375 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00376 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00377 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00378 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00379 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00380 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00381 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00382 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00383 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00384 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00385 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00386 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00387 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00389 | Compartment, Species, Reaction, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00390 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00392 | Compartment, Species, Reaction, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00393 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00395 | Compartment, Species, Reaction, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00396 | Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00397 | Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00398 | Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00399 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00400 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00401 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00402 | Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00403 | Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00404 | Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00348 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00349 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00350 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00351 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00352 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00353 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00354 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | pass | yes |
+| 00355 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | pass | yes |
+| 00356 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | pass | yes |
+| 00357 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | pass | yes |
+| 00358 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | pass | yes |
+| 00359 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | pass | yes |
+| 00360 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00361 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00362 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00363 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00364 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00365 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00366 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00367 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00368 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00369 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00370 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00371 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00372 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00373 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00374 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00375 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00376 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00377 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00378 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00379 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00380 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00381 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00382 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00383 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00384 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00385 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00386 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00387 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00389 | Compartment, Species, Reaction, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00390 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00392 | Compartment, Species, Reaction, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00393 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00395 | Compartment, Species, Reaction, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00396 | Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00397 | Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00398 | Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00399 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00400 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00401 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00402 | Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00403 | Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00404 | Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00405 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00406 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00407 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
@@ -2158,9 +1807,9 @@ The test tags of the cases with a numerical mismatch:
 | 00616 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
 | 00617 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
 | 00618 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
-| 00619 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00620 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00621 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00619 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00620 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00621 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00622 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00623 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00624 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
@@ -2173,9 +1822,9 @@ The test tags of the cases with a numerical mismatch:
 | 00631 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment, FunctionDefinition | pass | pass | pass | pass | pass | yes |
 | 00632 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment, FunctionDefinition | pass | pass | pass | pass | pass | yes |
 | 00633 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment, FunctionDefinition | pass | pass | pass | pass | pass | yes |
-| 00634 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
-| 00635 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
-| 00636 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 00634 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | pass | yes |
+| 00635 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | pass | yes |
+| 00636 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | pass | yes |
 | 00637 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
 | 00638 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
 | 00639 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
@@ -2185,24 +1834,24 @@ The test tags of the cases with a numerical mismatch:
 | 00643 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
 | 00644 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
 | 00645 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
-| 00646 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00647 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00648 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00646 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00647 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00648 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00649 | Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00650 | Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00651 | Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
-| 00652 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00653 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00654 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00652 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00653 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00654 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00655 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00656 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00657 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00658 | Compartment, Species, Reaction, Parameter, AlgebraicRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
 | 00659 | Compartment, Species, Reaction, Parameter, AlgebraicRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
 | 00660 | Compartment, Species, Reaction, Parameter, AlgebraicRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
-| 00661 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00662 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00663 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00661 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00662 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00663 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00664 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00665 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00666 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
@@ -2218,9 +1867,9 @@ The test tags of the cases with a numerical mismatch:
 | 00676 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
 | 00677 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
 | 00678 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
-| 00679 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00680 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00681 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00679 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00680 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00681 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00682 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00683 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00684 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
@@ -2228,7 +1877,7 @@ The test tags of the cases with a numerical mismatch:
 | 00686 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | pass | pass | pass | pass | yes |
 | 00687 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | pass | pass | pass | pass | pass | yes |
 | 00688 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
-| 00689 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00689 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00690 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00691 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | pass | pass | pass | pass | yes |
 | 00692 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | pass | pass | pass | pass | yes |
@@ -2239,14 +1888,14 @@ The test tags of the cases with a numerical mismatch:
 | 00697 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
 | 00698 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
 | 00699 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | pass | pass | pass | yes |
-| 00700 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00700 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00701 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | pass | pass | pass | yes |
 | 00702 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00703 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | pass | pass | pass | pass | yes |
 | 00704 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | pass | pass | pass | pass | yes |
 | 00705 | Compartment, Species, Reaction, Parameter, AlgebraicRule, AssignmentRule | pass | pass | pass | pass | pass | yes |
 | 00706 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
-| 00707 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00707 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00708 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00709 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 00710 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
@@ -2262,39 +1911,39 @@ The test tags of the cases with a numerical mismatch:
 | 00720 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | pass | pass | pass | pass | yes |
 | 00721 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | pass | pass | pass | pass | yes |
 | 00722 | Compartment, Species, Reaction, Parameter, RateRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
-| 00723 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00723 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00724 | Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00732 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 00733 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | pass | pass | pass | pass | yes |
 | 00734 | Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | pass | pass | pass | pass | yes |
 | 00735 | Compartment, Species, Reaction, Parameter, RateRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
-| 00736 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00736 | Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00737 | Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00738 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | pass | pass | pass | pass | yes |
 | 00739 | Compartment, Species, Reaction, Parameter, FunctionDefinition, AssignmentRule | pass | pass | pass | pass | pass | yes |
 | 00740 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | pass | pass | pass | pass | yes |
 | 00741 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | pass | pass | pass | pass | yes |
 | 00742 | Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | pass | pass | pass | pass | yes |
-| 00743 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00744 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00745 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00746 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00747 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00748 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00749 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00750 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00751 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, RateRule | pass | pass | fail | pass | fail | yes |
-| 00752 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, RateRule | pass | pass | fail | pass | fail | yes |
-| 00753 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, RateRule | pass | pass | fail | pass | fail | yes |
-| 00754 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, InitialAssignment | pass | pass | fail | pass | fail | yes |
-| 00755 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, InitialAssignment | pass | pass | fail | pass | fail | yes |
-| 00756 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00743 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00744 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00745 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00746 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00747 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00748 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00749 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00750 | Compartment, Species, Reaction, Parameter, AssignmentRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00751 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, RateRule | pass | pass | fail | pass | pass | yes |
+| 00752 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, RateRule | pass | pass | fail | pass | pass | yes |
+| 00753 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, RateRule | pass | pass | fail | pass | pass | yes |
+| 00754 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, InitialAssignment | pass | pass | fail | pass | pass | yes |
+| 00755 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, InitialAssignment | pass | pass | fail | pass | pass | yes |
+| 00756 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, InitialAssignment | pass | pass | fail | pass | pass | yes |
 | 00757 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00758 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00759 | Compartment, Species, Reaction, Parameter, EventNoDelay, FunctionDefinition, EventWithDelay | pass | pass | fail | pass | fail | yes |
-| 00760 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
-| 00761 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
-| 00762 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | fail | yes |
+| 00760 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | pass | yes |
+| 00761 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | pass | yes |
+| 00762 | Compartment, Species, Reaction, Parameter, AlgebraicRule, EventNoDelay, FunctionDefinition | pass | pass | fail | pass | pass | yes |
 | 00763 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00764 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00765 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
@@ -2321,9 +1970,9 @@ The test tags of the cases with a numerical mismatch:
 | 00786 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
 | 00787 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
 | 00788 | Compartment, Species, Reaction, Parameter, AssignmentRule, InitialAssignment | pass | pass | pass | pass | pass | yes |
-| 00789 | Compartment, Species, Reaction, Parameter, EventNoDelay, InitialAssignment | pass | pass | fail | pass | fail | yes |
-| 00790 | Compartment, Species, Reaction, Parameter, EventNoDelay, InitialAssignment | pass | pass | fail | pass | fail | yes |
-| 00791 | Compartment, Species, Reaction, Parameter, EventNoDelay, InitialAssignment | pass | pass | fail | pass | fail | yes |
+| 00789 | Compartment, Species, Reaction, Parameter, EventNoDelay, InitialAssignment | pass | pass | fail | pass | pass | yes |
+| 00790 | Compartment, Species, Reaction, Parameter, EventNoDelay, InitialAssignment | pass | pass | fail | pass | pass | yes |
+| 00791 | Compartment, Species, Reaction, Parameter, EventNoDelay, InitialAssignment | pass | pass | fail | pass | pass | yes |
 | 00792 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
 | 00793 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
 | 00794 | Compartment, Species, Reaction, Parameter, InitialAssignment | pass | pass | pass | pass | pass | yes |
@@ -2374,9 +2023,9 @@ The test tags of the cases with a numerical mismatch:
 | 00842 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 00843 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 00844 | Compartment, Species, Reaction, Parameter, AlgebraicRule | pass | pass | pass | pass | pass | yes |
-| 00845 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00846 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00847 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00845 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00846 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00847 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00848 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00849 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00850 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
@@ -2406,9 +2055,9 @@ The test tags of the cases with a numerical mismatch:
 | 00880 | Compartment, Species, CSymbolTime, Reaction, Parameter, AssignmentRule | pass | pass | pass | pass | pass | yes |
 | 00881 | Compartment, Species, CSymbolTime, Reaction, Parameter, AssignmentRule | pass | pass | pass | pass | pass | yes |
 | 00882 | Compartment, Species, Reaction, Parameter, CSymbolTime | pass | pass | pass | pass | pass | yes |
-| 00883 | Compartment, Species, Reaction, Parameter, CSymbolTime, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00884 | Compartment, Species, Reaction, CSymbolTime, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 00885 | Compartment, Species, Reaction, CSymbolTime, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 00883 | Compartment, Species, Reaction, Parameter, CSymbolTime, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00884 | Compartment, Species, Reaction, CSymbolTime, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 00885 | Compartment, Species, Reaction, CSymbolTime, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 00886 | Compartment, Species, CSymbolTime, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00887 | Compartment, Species, Reaction, Parameter, CSymbolTime, EventWithDelay, EventNoDelay | pass | pass | fail | pass | fail | yes |
 | 00888 | Compartment, Species, CSymbolTime, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
@@ -2450,13 +2099,13 @@ The test tags of the cases with a numerical mismatch:
 | 00927 | Compartment, Species, RateRule | pass | pass | pass | pass | pass | yes |
 | 00928 | Compartment, CSymbolTime, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
 | 00929 | Compartment, CSymbolTime, Species, Reaction, Parameter, EventNoDelay | pass | pass | pass | pass | pass | yes |
-| 00930 | Compartment, CSymbolTime, Species, EventNoDelay, EventPriority | pass | pass | fail | pass | fail | yes |
-| 00931 | Compartment, CSymbolTime, Species, EventNoDelay, EventPriority | pass | pass | fail | pass | fail | yes |
+| 00930 | Compartment, CSymbolTime, Species, EventNoDelay, EventPriority | pass | pass | fail | pass | pass | yes |
+| 00931 | Compartment, CSymbolTime, Species, EventNoDelay, EventPriority | pass | pass | fail | pass | pass | yes |
 | 00932 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | pass | pass | pass | yes |
 | 00933 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 00934 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Species | pass | pass | fail | pass | fail | yes |
 | 00935 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Species | pass | pass | fail | pass | fail | yes |
-| 00936 | AssignmentRule, CSymbolTime, Compartment, EventWithDelay, Species | pass | fail | skip | skip | skip | yes |
+| 00936 | AssignmentRule, CSymbolTime, Compartment, EventWithDelay, Species | pass | pass | fail | pass | fail | yes |
 | 00937 | AssignmentRule, CSymbolDelay, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
 | 00938 | AssignmentRule, CSymbolDelay, CSymbolTime, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
 | 00939 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
@@ -2464,7 +2113,7 @@ The test tags of the cases with a numerical mismatch:
 | 00941 | AssignmentRule, CSymbolDelay, CSymbolTime, InitialAssignment, Parameter | pass | fail | skip | skip | skip | yes |
 | 00942 | AssignmentRule, CSymbolDelay, CSymbolTime, Compartment, InitialAssignment, Parameter, Species | pass | fail | skip | skip | skip | yes |
 | 00943 | AssignmentRule, CSymbolDelay, CSymbolTime, InitialAssignment, Parameter | pass | fail | skip | skip | skip | yes |
-| 00944 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 00944 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | pass | yes |
 | 00945 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 00946 | AssignmentRule, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 00947 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
@@ -2475,11 +2124,11 @@ The test tags of the cases with a numerical mismatch:
 | 00952 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | fail | yes |
 | 00953 | AssignmentRule, CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | fail | yes |
 | 00954 | AssignmentRule, Parameter | pass | pass | pass | pass | pass | no |
-| 00955 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
+| 00955 | AssignmentRule, CSymbolTime, Parameter | pass | pass | pass | pass | pass | yes |
 | 00956 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 00957 | AssignmentRule, Parameter | pass | fail | skip | skip | skip | no |
 | 00958 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
-| 00959 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
+| 00959 | AssignmentRule, CSymbolTime, Parameter | pass | pass | pass | pass | pass | yes |
 | 00960 | CSymbolAvogadro, InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 00961 | AssignmentRule, CSymbolAvogadro, Parameter | pass | pass | pass | pass | pass | no |
 | 00962 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | fail | yes |
@@ -2491,13 +2140,13 @@ The test tags of the cases with a numerical mismatch:
 | 00969 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 00970 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 00971 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
-| 00972 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 00972 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | pass | yes |
 | 00974 | AssignmentRule, Compartment, InitialAssignment, Parameter, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 00975 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 00976 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 00977 | Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 00978 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | fail | yes |
-| 00979 | CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | fail | yes |
+| 00979 | CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | pass | yes |
 | 00980 | CSymbolTime, EventWithDelay, Parameter | pass | pass | fail | pass | fail | yes |
 | 00981 | AssignmentRule, CSymbolDelay, CSymbolTime, Compartment, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
 | 00982 | AssignmentRule, CSymbolDelay, CSymbolTime, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
@@ -2551,9 +2200,9 @@ The test tags of the cases with a numerical mismatch:
 | 01042 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 01043 | Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 01044 | Compartment, Species, Reaction, Parameter, AlgebraicRule | pass | pass | pass | pass | pass | yes |
-| 01045 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 01046 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 01047 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 01045 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 01046 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 01047 | Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 01048 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 01049 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 01050 | Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
@@ -2574,9 +2223,9 @@ The test tags of the cases with a numerical mismatch:
 | 01068 | InitialAssignment, Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | pass | pass | pass | pass | yes |
 | 01069 | InitialAssignment, Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | pass | pass | pass | pass | yes |
 | 01070 | InitialAssignment, Compartment, Species, Reaction, Parameter, FunctionDefinition | pass | pass | pass | pass | pass | yes |
-| 01071 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 01072 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
-| 01073 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 01071 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 01072 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
+| 01073 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 01074 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 01075 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 01076 | InitialAssignment, Compartment, Species, Reaction, Parameter, EventWithDelay | pass | pass | fail | pass | fail | yes |
@@ -2597,7 +2246,7 @@ The test tags of the cases with a numerical mismatch:
 | 01091 | InitialAssignment, Compartment, Species, Reaction, Parameter, FunctionDefinition, RateRule | pass | pass | pass | pass | pass | yes |
 | 01092 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule, AssignmentRule | pass | pass | pass | pass | pass | yes |
 | 01093 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
-| 01094 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | fail | yes |
+| 01094 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule, EventNoDelay | pass | pass | fail | pass | pass | yes |
 | 01095 | InitialAssignment, Compartment, Species, Reaction, Parameter, RateRule, EventWithDelay | pass | pass | fail | pass | fail | yes |
 | 01096 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
 | 01097 | InitialAssignment, Compartment, Species, Reaction, Parameter | pass | pass | pass | pass | pass | yes |
@@ -2642,19 +2291,19 @@ The test tags of the cases with a numerical mismatch:
 | 01207 | AssignmentRule, Compartment, Parameter, RateRule, Species | pass | pass | pass | pass | pass | yes |
 | 01208 | AssignmentRule, Compartment, Parameter, RateRule, Species | pass | pass | pass | pass | pass | yes |
 | 01209 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
-| 01210 | AssignmentRule, Parameter | pass | fail | skip | skip | skip | no |
+| 01210 | AssignmentRule, Parameter | pass | pass | pass | pass | pass | no |
 | 01211 | CSymbolTime, EventNoDelay, Parameter | pass | pass | pass | pass | pass | no |
-| 01212 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | fail | yes |
+| 01212 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | pass | yes |
 | 01213 | CSymbolTime, EventWithDelay, Parameter | pass | pass | fail | pass | fail | yes |
-| 01214 | CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | fail | yes |
-| 01215 | Parameter, RateRule | pass | fail | skip | skip | skip | no |
-| 01216 | AssignmentRule, Parameter | pass | fail | skip | skip | skip | no |
+| 01214 | CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | pass | yes |
+| 01215 | Parameter, RateRule | pass | pass | pass | pass | pass | no |
+| 01216 | AssignmentRule, Parameter | pass | pass | pass | pass | pass | no |
 | 01217 | AssignmentRule, InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 01218 | AssignmentRule, InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 01219 | Compartment, RateRule, Species | pass | pass | pass | pass | pass | yes |
 | 01220 | Compartment, RateRule, Species | pass | pass | pass | pass | pass | yes |
 | 01221 | Compartment, RateRule, Species | pass | pass | pass | pass | pass | yes |
-| 01222 | CSymbolTime, Compartment, EventNoDelay, RateRule, Species | pass | pass | fail | pass | fail | yes |
+| 01222 | CSymbolTime, Compartment, EventNoDelay, RateRule, Species | pass | pass | fail | pass | pass | yes |
 | 01223 | AssignmentRule, CSymbolTime, Compartment, RateRule, Species | pass | pass | pass | pass | pass | yes |
 | 01224 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01225 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
@@ -2674,8 +2323,8 @@ The test tags of the cases with a numerical mismatch:
 | 01239 | EventNoDelay, Parameter | pass | pass | pass | pass | pass | no |
 | 01240 | CSymbolTime, EventNoDelay, Parameter | pass | pass | pass | pass | pass | no |
 | 01241 | CSymbolTime, EventWithDelay, Parameter | pass | pass | fail | pass | fail | yes |
-| 01242 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | fail | yes |
-| 01243 | CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | fail | yes |
+| 01242 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | pass | yes |
+| 01243 | CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | pass | yes |
 | 01244 | AlgebraicRule, Parameter | pass | pass | pass | pass | pass | no |
 | 01245 | Compartment, Reaction, Species | pass | pass | pass | pass | pass | no |
 | 01246 | Compartment, Reaction, Species | pass | pass | pass | pass | pass | yes |
@@ -2694,7 +2343,7 @@ The test tags of the cases with a numerical mismatch:
 | 01259 | CSymbolRateOf, Compartment, Parameter, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01260 | CSymbolRateOf, CSymbolTime, EventNoDelay, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
 | 01261 | AssignmentRule, CSymbolRateOf, EventNoDelay, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
-| 01262 | CSymbolRateOf, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
+| 01262 | CSymbolRateOf, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | pass | pass | fail | pass | pass | yes |
 | 01263 | CSymbolRateOf, CSymbolTime, EventWithDelay, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
 | 01264 | CSymbolRateOf, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 01265 | CSymbolRateOf, Compartment, Parameter, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
@@ -2709,16 +2358,16 @@ The test tags of the cases with a numerical mismatch:
 | 01274 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 01275 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 01276 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
-| 01277 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
-| 01278 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
-| 01279 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
-| 01280 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
-| 01281 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
+| 01277 | AssignmentRule, CSymbolTime, Parameter | pass | pass | pass | pass | pass | yes |
+| 01278 | AssignmentRule, CSymbolTime, Parameter | pass | pass | pass | pass | pass | yes |
+| 01279 | AssignmentRule, CSymbolTime, Parameter | pass | pass | fail | pass | pass | yes |
+| 01280 | AssignmentRule, CSymbolTime, Parameter | pass | pass | fail | pass | pass | yes |
+| 01281 | AssignmentRule, CSymbolTime, Parameter | pass | pass | fail | pass | pass | yes |
 | 01282 | InitialAssignment, Parameter | pass | pass | fail | pass | fail | no |
 | 01283 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 01284 | EventNoDelay, Parameter | pass | pass | fail | pass | fail | no |
-| 01285 | CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | fail | yes |
-| 01286 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | fail | yes |
+| 01285 | CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | pass | yes |
+| 01286 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | pass | yes |
 | 01287 | CSymbolTime, EventWithDelay, Parameter | pass | pass | fail | pass | fail | yes |
 | 01288 | Compartment, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01289 | FunctionDefinition, InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
@@ -2726,7 +2375,7 @@ The test tags of the cases with a numerical mismatch:
 | 01291 | AssignmentRule, Parameter | pass | pass | pass | pass | pass | no |
 | 01292 | AlgebraicRule, Parameter | pass | pass | pass | pass | pass | no |
 | 01293 | CSymbolRateOf, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01294 | CSymbolRateOf, CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01294 | CSymbolRateOf, CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | pass | fail | pass | pass | yes |
 | 01295 | CSymbolRateOf, CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01296 | CSymbolRateOf, Compartment, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01297 | CSymbolRateOf, CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
@@ -2735,10 +2384,10 @@ The test tags of the cases with a numerical mismatch:
 | 01300 | InitialAssignment, Parameter, Reaction | pass | pass | pass | pass | pass | no |
 | 01301 | AssignmentRule, Parameter, Reaction | pass | pass | pass | pass | pass | no |
 | 01302 | Parameter, RateRule, Reaction | pass | pass | pass | pass | pass | yes |
-| 01303 | CSymbolTime, EventNoDelay, Parameter, Reaction | pass | pass | fail | pass | fail | yes |
-| 01304 | CSymbolTime, EventNoDelay, Parameter, Reaction | pass | pass | fail | pass | fail | yes |
+| 01303 | CSymbolTime, EventNoDelay, Parameter, Reaction | pass | pass | fail | pass | pass | yes |
+| 01304 | CSymbolTime, EventNoDelay, Parameter, Reaction | pass | pass | fail | pass | pass | yes |
 | 01305 | CSymbolTime, EventWithDelay, Parameter, Reaction | pass | pass | fail | pass | fail | yes |
-| 01306 | AssignmentRule, CSymbolTime, Parameter, Reaction | pass | fail | skip | skip | skip | yes |
+| 01306 | AssignmentRule, CSymbolTime, Parameter, Reaction | pass | pass | pass | pass | pass | yes |
 | 01307 | Compartment, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01308 | Compartment, RateRule, Species | pass | pass | pass | pass | pass | yes |
 | 01309 | Compartment, RateRule, Species | pass | pass | pass | pass | pass | yes |
@@ -2749,7 +2398,7 @@ The test tags of the cases with a numerical mismatch:
 | 01314 | FunctionDefinition, InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 01315 | FunctionDefinition, InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 01316 | CSymbolAvogadro, InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
-| 01317 | AssignmentRule, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
+| 01317 | AssignmentRule, CSymbolTime, Parameter | pass | pass | pass | pass | pass | yes |
 | 01318 | AssignmentRule, CSymbolDelay, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
 | 01319 | AssignmentRule, CSymbolDelay, CSymbolTime, Parameter | pass | fail | skip | skip | skip | yes |
 | 01320 | AssignmentRule, CSymbolDelay, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
@@ -2762,7 +2411,7 @@ The test tags of the cases with a numerical mismatch:
 | 01327 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01328 | CSymbolTime, EventNoDelay, EventWithDelay, Parameter | pass | pass | fail | pass | fail | yes |
 | 01329 | CSymbolTime, EventNoDelay, EventWithDelay, Parameter | pass | pass | fail | pass | fail | yes |
-| 01330 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | fail | yes |
+| 01330 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | pass | yes |
 | 01331 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | fail | yes |
 | 01332 | EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | fail | no |
 | 01333 | EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | fail | no |
@@ -2775,7 +2424,7 @@ The test tags of the cases with a numerical mismatch:
 | 01340 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01341 | Compartment, Species | pass | pass | pass | pass | pass | no |
 | 01342 | Compartment, Species | pass | pass | pass | pass | pass | no |
-| 01343 | AssignmentRule, CSymbolTime, InitialAssignment, Parameter | pass | fail | skip | skip | skip | yes |
+| 01343 | AssignmentRule, CSymbolTime, InitialAssignment, Parameter | pass | pass | pass | pass | pass | yes |
 | 01395 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01400 | AssignmentRule, CSymbolDelay, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
 | 01401 | AssignmentRule, CSymbolDelay, CSymbolRateOf, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
@@ -2816,11 +2465,11 @@ The test tags of the cases with a numerical mismatch:
 | 01438 | Compartment, InitialAssignment, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01440 | Compartment, InitialAssignment, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01442 | Compartment, InitialAssignment, Reaction, Species | pass | pass | pass | pass | pass | yes |
-| 01444 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01445 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01446 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01447 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01448 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01444 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | pass | fail | pass | pass | yes |
+| 01445 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | pass | fail | pass | pass | yes |
+| 01446 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | pass | fail | pass | pass | yes |
+| 01447 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | pass | fail | pass | pass | yes |
+| 01448 | CSymbolTime, Compartment, EventNoDelay, InitialAssignment, Reaction, Species | pass | pass | fail | pass | pass | yes |
 | 01449 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01450 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01451 | Compartment, InitialAssignment, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
@@ -2847,24 +2496,24 @@ The test tags of the cases with a numerical mismatch:
 | 01484 | AlgebraicRule, Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01485 | AssignmentRule, FunctionDefinition, Parameter | pass | pass | pass | pass | pass | no |
 | 01486 | AssignmentRule, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | no |
-| 01487 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | yes |
-| 01488 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | yes |
+| 01487 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | pass | pass | pass | pass | yes |
+| 01488 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | pass | pass | pass | pass | yes |
 | 01489 | FunctionDefinition, InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 01490 | AssignmentRule, FunctionDefinition, Parameter | pass | pass | pass | pass | pass | no |
 | 01491 | AssignmentRule, FunctionDefinition, Parameter | pass | pass | pass | pass | pass | no |
 | 01492 | AssignmentRule, FunctionDefinition, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 01493 | AssignmentRule, FunctionDefinition, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 01494 | FunctionDefinition, InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
-| 01495 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | yes |
-| 01496 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | yes |
-| 01497 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | yes |
+| 01495 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | pass | pass | pass | pass | yes |
+| 01496 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | pass | pass | pass | pass | yes |
+| 01497 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | pass | fail | pass | pass | yes |
 | 01498 | AssignmentRule, Compartment, InitialAssignment, Parameter, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01499 | AlgebraicRule, Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01500 | AlgebraicRule, Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01501 | AlgebraicRule, Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01502 | AlgebraicRule, Parameter | pass | pass | pass | pass | pass | no |
 | 01503 | AlgebraicRule, Parameter | pass | pass | pass | pass | pass | no |
-| 01504 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, RateRule, Species | pass | pass | fail | pass | fail | yes |
+| 01504 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, RateRule, Species | pass | pass | fail | pass | pass | yes |
 | 01505 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, RateRule, Species | pass | pass | fail | pass | fail | yes |
 | 01506 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, RateRule, Species | pass | pass | fail | pass | fail | yes |
 | 01507 | AssignmentRule, CSymbolTime, Compartment, EventWithDelay, Parameter, RateRule, Species | pass | pass | fail | pass | fail | yes |
@@ -2880,8 +2529,8 @@ The test tags of the cases with a numerical mismatch:
 | 01518 | CSymbolDelay, EventWithDelay, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
 | 01519 | CSymbolDelay, EventWithDelay, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 01520 | CSymbolDelay, EventWithDelay, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
-| 01521 | CSymbolDelay, EventNoDelay, EventPriority, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
-| 01522 | AssignmentRule, CSymbolDelay, CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01521 | CSymbolDelay, EventNoDelay, EventPriority, Parameter, RateRule | pass | pass | fail | pass | pass | yes |
+| 01522 | AssignmentRule, CSymbolDelay, CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | fail | yes |
 | 01523 | CSymbolDelay, EventWithDelay, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
 | 01524 | CSymbolDelay, EventWithDelay, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
 | 01525 | CSymbolRateOf, CSymbolTime, EventWithDelay, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
@@ -2889,8 +2538,8 @@ The test tags of the cases with a numerical mismatch:
 | 01527 | CSymbolRateOf, EventNoDelay, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
 | 01528 | CSymbolRateOf, CSymbolTime, EventWithDelay, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
 | 01529 | CSymbolRateOf, CSymbolTime, EventWithDelay, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
-| 01530 | CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | fail | yes |
-| 01531 | EventNoDelay, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
+| 01530 | CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | pass | yes |
+| 01531 | EventNoDelay, Parameter, RateRule | pass | pass | fail | pass | pass | yes |
 | 01532 | EventWithDelay, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
 | 01533 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | fail | yes |
 | 01534 | AssignmentRule, CSymbolDelay, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
@@ -2920,7 +2569,7 @@ The test tags of the cases with a numerical mismatch:
 | 01579 | AlgebraicRule, EventWithDelay, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
 | 01580 | AssignmentRule, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01582 | AssignmentRule, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
-| 01583 | Compartment, EventNoDelay, EventPriority, Parameter, RateRule, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01583 | Compartment, EventNoDelay, EventPriority, Parameter, RateRule, Reaction, Species | pass | pass | fail | pass | pass | yes |
 | 01584 | AssignmentRule, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01586 | AssignmentRule, Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01588 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, InitialAssignment, Parameter | pass | pass | fail | pass | fail | yes |
@@ -2929,11 +2578,11 @@ The test tags of the cases with a numerical mismatch:
 | 01591 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
 | 01592 | AssignmentRule, CSymbolDelay, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
 | 01593 | AssignmentRule, CSymbolDelay, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
-| 01594 | AssignmentRule, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
-| 01595 | AssignmentRule, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
-| 01596 | AssignmentRule, CSymbolTime, EventNoDelay, Parameter | pass | fail | skip | skip | skip | yes |
-| 01597 | AssignmentRule, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
-| 01598 | AssignmentRule, CSymbolTime, EventWithDelay, Parameter | pass | fail | skip | skip | skip | yes |
+| 01594 | AssignmentRule, CSymbolTime, EventWithDelay, Parameter | pass | pass | fail | pass | fail | yes |
+| 01595 | AssignmentRule, CSymbolTime, EventWithDelay, Parameter | pass | pass | pass | pass | pass | yes |
+| 01596 | AssignmentRule, CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | fail | yes |
+| 01597 | AssignmentRule, CSymbolTime, EventWithDelay, Parameter | pass | pass | fail | pass | fail | yes |
+| 01598 | AssignmentRule, CSymbolTime, EventWithDelay, Parameter | pass | pass | fail | pass | fail | yes |
 | 01599 | AssignmentRule, CSymbolTime, EventNoDelay, EventPriority, Parameter, RateRule | pass | pass | fail | pass | fail | yes |
 | 01600 | CSymbolTime, EventWithDelay, Parameter | pass | pass | pass | pass | pass | no |
 | 01601 | CSymbolTime, EventWithDelay, Parameter | pass | pass | fail | pass | fail | yes |
@@ -2962,20 +2611,20 @@ The test tags of the cases with a numerical mismatch:
 | 01654 | Compartment, FunctionDefinition, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01655 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01657 | AssignmentRule, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
-| 01658 | CSymbolAvogadro, CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | fail | yes |
+| 01658 | CSymbolAvogadro, CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | pass | yes |
 | 01659 | CSymbolAvogadro, CSymbolTime, EventWithDelay, Parameter | pass | pass | fail | pass | fail | yes |
 | 01660 | CSymbolAvogadro, CSymbolTime, EventWithDelay, Parameter | pass | pass | fail | pass | fail | yes |
 | 01661 | CSymbolAvogadro, CSymbolTime, EventWithDelay, Parameter | pass | pass | pass | pass | pass | no |
 | 01662 | CSymbolAvogadro, CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | fail | yes |
 | 01663 | CSymbolAvogadro, EventNoDelay, Parameter | pass | pass | fail | pass | fail | no |
-| 01664 | CSymbolAvogadro, CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | fail | yes |
+| 01664 | CSymbolAvogadro, CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | pass | yes |
 | 01665 | CSymbolAvogadro, Parameter, RateRule | pass | pass | pass | pass | pass | yes |
 | 01666 | Compartment, Parameter, RateRule, Species | pass | pass | pass | pass | pass | yes |
 | 01667 | Compartment, Parameter, RateRule, Species | pass | pass | pass | pass | pass | yes |
 | 01668 | Compartment, Parameter, RateRule, Species | pass | pass | pass | pass | pass | yes |
-| 01669 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01670 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01671 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01669 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | pass | yes |
+| 01670 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | pass | yes |
+| 01671 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | pass | yes |
 | 01672 | CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01673 | CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01674 | CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
@@ -3018,7 +2667,7 @@ The test tags of the cases with a numerical mismatch:
 | 01711 | Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01712 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01713 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01714 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01714 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | pass | fail | pass | pass | yes |
 | 01715 | Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01716 | Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01717 | Compartment, EventWithDelay, Parameter, RateRule, Reaction, Species | pass | pass | fail | pass | fail | yes |
@@ -3063,8 +2712,8 @@ The test tags of the cases with a numerical mismatch:
 | 01766 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01767 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01768 | Compartment, Parameter, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
-| 01769 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
-| 01770 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
+| 01769 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | pass | yes |
+| 01770 | Compartment, EventNoDelay, Parameter, Reaction, Species | pass | pass | fail | pass | pass | yes |
 | 01771 | Compartment, EventWithDelay, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01772 | Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species | pass | pass | fail | pass | fail | yes |
 | 01773 | Compartment, Reaction, Species | pass | pass | pass | pass | pass | yes |
@@ -3075,8 +2724,8 @@ The test tags of the cases with a numerical mismatch:
 | 01779 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, Species | pass | pass | fail | pass | fail | yes |
 | 01780 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, Species | pass | pass | fail | pass | fail | yes |
 | 01781 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
-| 01782 | AssignmentRule, Parameter | pass | fail | skip | skip | skip | no |
-| 01783 | Parameter, RateRule | pass | fail | skip | skip | skip | no |
+| 01782 | AssignmentRule, Parameter | pass | pass | pass | pass | pass | no |
+| 01783 | Parameter, RateRule | pass | pass | pass | pass | pass | no |
 | 01799 | Compartment, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01800 | Compartment, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01801 | Compartment, Reaction, Species | pass | pass | pass | pass | pass | yes |

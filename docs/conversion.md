@@ -29,7 +29,7 @@ A file without a model raises `SBML2CellMLConversionError`.
 
 ### Logging
 
-The package logs the conversion steps and the constructs it skips (events, algebraic rules which determine no variable, initial assignments libsbml cannot evaluate, unset initial values) and does not print. Scripts enable the rich output of the package with
+The package logs the conversion steps and the constructs it skips (the delay of an event, algebraic rules which determine no variable, initial assignments libsbml cannot evaluate, unset initial values) and does not print. Scripts enable the rich output of the package with
 
 ```python
 from sbml2cellml import log
@@ -129,7 +129,7 @@ CellML has no species, compartments or reactions: every variable becomes a param
 | units of a number | `sbml:units` of the number, by the id of the unit definition |
 | new base units `item` | the unit kind `item` |
 | variable written only by a reset | parameter constant="false" (an event assignment needs a non-constant target) |
-| reset | event with the trigger `test_variable == test_value`, priority `-order`, one event assignment |
+| reset | event with the trigger `test_variable == test_value`, priority `-order`, one event assignment; a test variable which is `piecewise(1, condition, 0)`, as the conversion of an SBML event writes it, gives the trigger `condition` |
 | components and connections | one flat namespace; a variable name used by several unconnected variables is prefixed with its component (`cell_x`), the CellML name is kept as `name`; the model id and event ids also get a numeric suffix when they collide with a variable id |
 | imports | resolved and flattened before the conversion |
 | metadata in `model.rdf` next to `model.cellml`, see [Metadata](#metadata) | name, notes, SBO term, CV terms and history of the parameter of the variable, the unit definition of the units and the model with that `id`; the `id` is the `metaid` |

@@ -36,7 +36,17 @@ The converted CellML model has one variable per compartment, parameter and speci
 
 The compiler of sbmlsim-core reads flat SBML level 3 without a required package: a level 1 or 2 model is converted to level 3 version 2 with libsbml and a model which requires the `comp` package is flattened, both by `run_timecourse` itself (`compilable_sbml`). libsbml refuses the strict conversion of a model over issues which have no mathematics, e.g., the `outside` attribute of a compartment of level 2 or inconsistent units; the conversion is then repeated without the strict check and the issues are logged as a warning. A model it cannot compile or integrate raises an error of sbmlsim-core; without sbmlsim-core the import of `sbml2cellml.sbmlsim` works and `run_timecourse` raises an `ImportError` with the installation hint.
 
-The states of the solver are the amounts of the species, so a model with a small compartment has small states: a species with the concentration 1 in a compartment of 1e-13 litre has the amount 1e-13, far below an absolute tolerance of 1e-12, and CVODE accepts any trajectory of it. `run_timecourse` therefore multiplies the absolute tolerance with the smallest initial value of a state when it is below one (`state_scale`), as roadrunner does; `scale_tolerance=False` switches it off.
+The states of the solver are the amounts of the species, so a model with a small compartment has small states: a species with the concentration 1 in a compartment of 1e-13 litre has the amount 1e-13, far below an absolute tolerance of 1e-12, and CVODE accepts any trajectory of it. `run_timecourse` therefore multiplies the absolute tolerance with the smallest initial value of a state when it is below one (`state_scale` over the states of the compiled model), as roadrunner does; `scale_tolerance=False` switches it off.
+
+`load_model` keeps every model it compiled by the hash of its SBML text (`MODEL_CACHE_SIZE`, 16), so simulating the same model again neither converts it with libsbml nor compiles it a second time; the WebAssembly module of the model is compiled to native code by Wasmtime, which caches the result in `~/.cache/wasmtime` across processes. The simulation itself runs on an instance of its own, so a cached model never carries state from one simulation into the next. `timings` takes the wall time of the two phases when a dictionary is given:
+
+```python
+timings: dict[str, float] = {}
+df = run_timecourse(Path("model.xml"), ["[S1]"], end=100.0, timings=timings)
+print(timings)  # {'setup': 0.0185, 'simulate': 0.0004}
+```
+
+`setup` is the conversion, the compilation and the loading of the model, and nothing of it for a model from the cache; `simulate` is the integration.
 
 ## CellML with libopencor
 
@@ -51,6 +61,8 @@ plot_timecourse(df, units)
 ```
 
 `run_timecourse` returns a pandas data frame with the variable of integration in the first column, followed by the states, the algebraic variables, the constants and the computed constants, and a dictionary with the units of every column. The column names are the variable names of the CellML model, i.e., the SBML ids for a converted model. `steps` is the number of intervals, so the frame has `steps + 1` rows, like the SBML result above. `relative_tolerance` and `absolute_tolerance` set the tolerances of the solver (CVODE). `maximum_number_of_steps` is the number of internal steps the solver may take between two time points of the output, 100000 by default: the 500 steps of libopencor end the simulation of many models with `mxstep steps taken before reaching tout`, mostly with tight tolerances or few time points.
+
+The absolute tolerance follows the states of the model as on the SBML side: it is multiplied with the smallest initial value of a state when that value is below one (`scale_tolerance=False` switches it off). libopencor fills the arrays of the states only when it runs, so a model with small states is run once with the given tolerance, which gives the initial values, and again with the scaled one; a model whose states are of the order of one runs once. `timings` takes the wall time of the phases as above, with the first run as part of the `setup`.
 
 A model without differential equations has no variable of integration (the converter leaves `time` out of an SBML model without rate rules and reactions); libopencor computes it as a steady state, and `run_timecourse` returns its values at every requested time point, with the time points in a first column `time`.
 

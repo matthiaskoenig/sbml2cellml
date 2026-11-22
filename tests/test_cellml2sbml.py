@@ -7,7 +7,7 @@ import libcellml
 import libsbml
 import pytest
 
-from sbml2cellml import cellml2sbml, convert_cellml2sbml
+from sbml2cellml import cellml2sbml, convert_cellml2sbml, convert_sbml2cellml
 from sbml2cellml.cellml import write_model
 from sbml2cellml.cellml2sbml import CellML2SBMLConversionError, build_document
 from sbml2cellml.sbml import SBMLValidationError, validate_document
@@ -23,6 +23,7 @@ from tests.cellml_models import (
     variable,
 )
 from tests.conftest import TEST_MODEL_PATH
+from tests.sbml_models import event_model, write_sbml
 
 DATA_DIR = Path(__file__).parent / "data"
 
@@ -375,3 +376,21 @@ def test_reset_number_units_use_the_unit_ids() -> None:
         == "m - 2 item_2"
     )
     assert validate_document(doc) == []
+
+
+def test_roundtrip_of_an_event(tmp_path: Path) -> None:
+    """The event of the SBML model fires again after the roundtrip."""
+    sbml_path = tmp_path / "events.xml"
+    cellml_path = tmp_path / "events.cellml"
+    roundtrip_path = tmp_path / "events_roundtrip.xml"
+    write_sbml(sbml_path, event_model())
+    convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
+    convert_cellml2sbml(cellml_path, sbml_path=roundtrip_path)
+    model = libsbml.readSBMLFromFile(str(roundtrip_path)).getModel()
+    assert model.getNumEvents() == 1
+    event = model.getEvent(0)
+    assert event.getNumEventAssignments() == 1
+    assert event.getEventAssignment(0).getVariable() == "k1"
+    # the condition of the trigger variable is the trigger of the event again
+    trigger = libsbml.formulaToL3String(event.getTrigger().getMath())
+    assert trigger.startswith("time > 10")

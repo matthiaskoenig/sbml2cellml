@@ -26,11 +26,12 @@ to initial values (`expandInitialAssignments`).
 Not supported yet (logged as warning, see docs/conversion-issues.md): events.
 """
 
+import dataclasses
 import logging
 import math
 from collections.abc import Callable, Generator
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import libcellml
@@ -108,73 +109,20 @@ def convert_sbml2cellml(
     assert model_sbml is not None
     _solve_algebraic_rules(model_sbml, formulas)
 
-    model = libcellml.Model(mid)
-    component = libcellml.Component(COMPONENT_ID)
-    model.addComponent(component)
+    model, cellml_units = _build_model(mid, model_sbml, formulas)
+    if formulas.events and cellml.errors(cellml.validate_model(model)):
+        # the math of an event may use what a CellML model cannot express,
+        # e.g. a factorial: the model is built again without the events
+        without_events = dataclasses.replace(formulas, events=[])
+        other, other_units = _build_model(mid, model_sbml, without_events)
+        if not cellml.errors(cellml.validate_model(other)):
+            for event in formulas.events:
+                logger.warning(
+                    "Event '%s' is not converted, its math is not valid CellML.",
+                    event.sid,
+                )
+            model, cellml_units = other, other_units
 
-    assignment_rules = formulas.assignment_rules
-    rate_rules = formulas.rate_rules
-    reaction_terms = formulas.reaction_terms
-    rates = formulas.rates
-    assigned = set(assignment_rules)
-    # every reaction with a kinetic law is a variable of its rate
-    reaction_ids = list(rates)
-    # CellML knows the variable of integration only from a differential
-    # equation, an unused one has an unknown type: the model is algebraic
-    has_time = bool(rate_rules or reaction_terms or _uses_time(model_sbml))
-    if not has_time:
-        logger.info("No differential equation, '%s' is algebraic", mid)
-
-    cellml_units = CellMLUnits(model_sbml, model)
-    units = _variable_units(model_sbml, cellml_units, formulas, reaction_ids, has_time)
-    number_units = cellml_units.number_units
-
-    if has_time:
-        _add_variable(component, TIME_ID, None, units)
-    compartment_sizes = _add_compartments(component, model_sbml, assigned, units)
-    _add_parameters(component, model_sbml, assigned, units)
-    _add_species(
-        component, model_sbml, compartment_sizes, assigned, formulas.amounts, units
-    )
-    _add_local_parameters(component, model_sbml, formulas.local_ids, units)
-    _add_species_references(component, model_sbml, assigned, units)
-    for rid in reaction_ids:
-        _add_variable(component, rid, None, units)
-
-    parts: list[str] = []
-    for vid, formula in assignment_rules.items():
-        logger.info("%s = %s", vid, astnodes.text(formula))
-        parts.append(mathml.mathml_for_assignment(vid, formula, number_units))
-    for sid, amount in formulas.amounts.items():
-        formula = astnodes.apply(
-            libsbml.AST_DIVIDE,
-            astnodes.name(amount.variable),
-            astnodes.name(amount.compartment),
-        )
-        logger.info("%s = %s (concentration of an amount)", sid, astnodes.text(formula))
-        parts.append(mathml.mathml_for_assignment(sid, formula, number_units))
-    for vid, formula in formulas.algebraic_rules.items():
-        logger.info("0 = %s (determines %s)", astnodes.text(formula), vid)
-        parts.append(mathml.mathml_for_algebraic(formula, number_units))
-    parts.extend(_constants_of_algebraic_rules(component, formulas))
-    for vid, formula in [*rate_rules.items(), *reaction_terms.items()]:
-        logger.info("d%s/dt = %s", vid, astnodes.text(formula))
-        parts.append(mathml.mathml_for_diff(vid, formula, TIME_ID, number_units))
-    for rid in reaction_ids:
-        logger.info("%s = %s (rate of reaction)", rid, astnodes.text(rates[rid]))
-        parts.append(mathml.mathml_for_assignment(rid, rates[rid], number_units))
-    parts.extend(
-        _non_finite_initial_values(component, set(rate_rules) | set(reaction_terms))
-    )
-    component.setMath(mathml.cellml_math(parts))
-    model.linkUnits()
-    _set_ids(model)
-
-    event: libsbml.Event
-    for event in model_sbml.getListOfEvents():
-        logger.warning(
-            "Event '%s' not converted, events are not supported yet.", event.getId()
-        )
     assignment: libsbml.InitialAssignment
     for assignment in model_sbml.getListOfInitialAssignments():
         logger.warning(
@@ -446,6 +394,29 @@ class _Amount:
 
 
 @dataclass
+class _Event:
+    """An SBML event as the resets of a CellML model.
+
+    CellML applies a reset when its test variable reaches its test value:
+    the variable `trigger` is 1 while the condition of the event holds and
+    0 otherwise, and every assignment of the event is a reset which fires
+    when it becomes 1.
+    """
+
+    #: id of the event, for the log
+    sid: str
+    #: id of the variable which is 1 while the condition holds
+    trigger: str
+    #: condition of the trigger
+    condition: libsbml.ASTNode
+    #: right-hand side by the id of the variable an assignment sets
+    assignments: dict[str, libsbml.ASTNode]
+    #: priority of the event when it is a number, 0 without one; CellML
+    #: applies the lowest order first and SBML the highest priority
+    priority: float = 0.0
+
+
+@dataclass
 class _Formulas:
     """The formulas of a model as libsbml ASTs, without rateOf symbols."""
 
@@ -464,6 +435,14 @@ class _Formulas:
     #: variable of the amount by the id of a species in concentration whose
     #: compartment changes
     amounts: dict[str, _Amount]
+    #: name of the variable of integration, `TIME_ID` unless the model has
+    #: an element of that id
+    time_id: str = TIME_ID
+    #: name of the state of a model whose formulas use time without a
+    #: differential equation, `None` for every other model
+    time_state: str | None = None
+    #: the events of the model, which become resets
+    events: list["_Event"] = field(default_factory=list)
 
     @property
     def computed(self) -> set[str]:
@@ -507,7 +486,12 @@ def _collect_formulas(model_sbml: libsbml.Model) -> _Formulas:
     )
     model_sbml.populateAllElementIdList()
     ids: libsbml.IdList = model_sbml.getAllElementIdList()
-    used = {ids.at(k) for k in range(ids.size())} | {TIME_ID}
+    element_ids = {ids.at(k) for k in range(ids.size())}
+    # a compartment, species, parameter, reaction or species reference may
+    # be called `time`, the variable of integration takes another name then
+    # (the ids of the unit definitions are no variables)
+    time_id = unique_sid(TIME_ID, _variable_ids(model_sbml))
+    used = element_ids | {time_id}
     local_ids = _local_parameter_ids(model_sbml, used)
     determined = set(assignment_rules) | set(rate_rules) | set(algebraic_rules)
     changing = _changing(
@@ -516,6 +500,14 @@ def _collect_formulas(model_sbml: libsbml.Model) -> _Formulas:
     amounts = _amounts(model_sbml, determined, changing, used)
     rates = _kinetic_laws(model_sbml, local_ids)
     reaction_terms = _collect_reaction_terms(model_sbml, rates, amounts)
+    # CellML knows the variable of integration only from a differential
+    # equation: a model whose formulas use time without one gets a state
+    # which integrates it, `d time_state / d time = 1`
+    time_state = (
+        unique_sid(f"{time_id}_state", used)
+        if not rate_rules and not reaction_terms and _uses_time(model_sbml)
+        else None
+    )
     result = _Formulas(
         assignment_rules,
         rate_rules,
@@ -524,6 +516,9 @@ def _collect_formulas(model_sbml: libsbml.Model) -> _Formulas:
         local_ids,
         algebraic_rules,
         amounts,
+        time_id,
+        time_state,
+        _collect_events(model_sbml, used),
     )
     derivatives = result.derivatives
     for formulas in (
@@ -532,9 +527,12 @@ def _collect_formulas(model_sbml: libsbml.Model) -> _Formulas:
         reaction_terms,
         rates,
         algebraic_rules,
+        *(event.assignments for event in result.events),
     ):
         for key, formula in formulas.items():
             formulas[key] = _expand_rate_of(formula, derivatives, result.computed)
+    for event in result.events:
+        event.condition = _expand_rate_of(event.condition, derivatives, result.computed)
     return result
 
 
@@ -604,17 +602,19 @@ def _recursive_functions(model_sbml: libsbml.Model) -> list[str]:
     return recursive
 
 
-def _initial_value(sid: str, value: float | None) -> float:
-    """Replace an unset initial value by 1.0 with a warning.
+def _initial_value(sid: str, value: float | None, default: float = 1.0) -> float:
+    """Replace an unset initial value by `default` with a warning.
 
     `value` is `None` when the SBML attribute is unset (libsbml returns NaN
     for an unset value, like for a value set to NaN, so the caller decides
     with `isSet...`); a value which is set is returned as it is, NaN and
-    infinity included.
+    infinity included. The default is the value a simulator of the SBML
+    model takes: the size of a compartment and a stoichiometry are 1, the
+    initial amount of a species is 0.
     """
     if value is None:
-        logger.warning("Initial value of '%s' is not set, using 1.0.", sid)
-        return 1.0
+        logger.warning("Initial value of '%s' is not set, using %s.", sid, default)
+        return default
     return value
 
 
@@ -651,7 +651,9 @@ def _variable_units(
     """
     units: dict[str, str | None] = {}
     if has_time:
-        units[TIME_ID] = cellml_units.time()
+        units[formulas.time_id] = cellml_units.time()
+        if formulas.time_state is not None:
+            units[formulas.time_state] = cellml_units.time()
     compartment: libsbml.Compartment
     for compartment in model_sbml.getListOfCompartments():
         units[compartment.getId()] = cellml_units.of_compartment(compartment)
@@ -818,7 +820,9 @@ def _add_species(
             value = _initial_value(sid, species.getInitialConcentration())
             initial = value * _size(cid, sid, compartment_sizes) if amount else value
         else:
-            initial = _initial_value(sid, None)
+            # a species without an initial amount or concentration has none
+            # in SBML; a simulator of the model starts it at zero
+            initial = _initial_value(sid, None, default=0.0)
         if sid in amounts:
             _add_variable(component, sid, None, units)
             _add_variable(component, amounts[sid].variable, initial, units)
@@ -1179,8 +1183,370 @@ def _kinetic_laws(
     return rates
 
 
+def _build_model(
+    mid: str,
+    model_sbml: libsbml.Model,
+    formulas: _Formulas,
+) -> tuple[libcellml.Model, CellMLUnits]:
+    """Build the CellML model of the collected formulas.
+
+    Args:
+        mid: id of the model.
+        model_sbml: the SBML model, after the conversions.
+        formulas: the formulas of the model.
+
+    Returns:
+        The model and the CellML units of the SBML model, which the
+        metadata of the units needs.
+    """
+    model = libcellml.Model(mid)
+    component = libcellml.Component(COMPONENT_ID)
+    model.addComponent(component)
+
+    assignment_rules = formulas.assignment_rules
+    rate_rules = formulas.rate_rules
+    reaction_terms = formulas.reaction_terms
+    rates = formulas.rates
+    assigned = set(assignment_rules)
+    # every reaction with a kinetic law is a variable of its rate
+    reaction_ids = list(rates)
+    # CellML knows the variable of integration only from a differential
+    # equation, an unused one has an unknown type: the model is algebraic
+    has_time = bool(rate_rules or reaction_terms or _uses_time(model_sbml))
+    if not has_time:
+        logger.info("No differential equation, '%s' is algebraic", mid)
+
+    cellml_units = CellMLUnits(model_sbml, model)
+    units = _variable_units(model_sbml, cellml_units, formulas, reaction_ids, has_time)
+    number_units = cellml_units.number_units
+
+    if has_time:
+        _add_variable(component, formulas.time_id, None, units)
+    if formulas.time_state is not None:
+        logger.info(
+            "d%s/dt = 1: no differential equation makes '%s' the variable of "
+            "integration",
+            formulas.time_state,
+            formulas.time_id,
+        )
+        _add_variable(component, formulas.time_state, 0.0, units)
+    compartment_sizes = _add_compartments(component, model_sbml, assigned, units)
+    _add_parameters(component, model_sbml, assigned, units)
+    _add_species(
+        component, model_sbml, compartment_sizes, assigned, formulas.amounts, units
+    )
+    _add_local_parameters(component, model_sbml, formulas.local_ids, units)
+    _add_species_references(component, model_sbml, assigned, units)
+    for rid in reaction_ids:
+        _add_variable(component, rid, None, units)
+    for event in formulas.events:
+        _add_variable(component, event.trigger, None, units)
+
+    parts: list[str] = []
+    for vid, formula in assignment_rules.items():
+        logger.info("%s = %s", vid, astnodes.text(formula))
+        parts.append(
+            mathml.mathml_for_assignment(
+                vid, formula, number_units, time_id=formulas.time_id
+            )
+        )
+    for sid, amount in formulas.amounts.items():
+        formula = astnodes.apply(
+            libsbml.AST_DIVIDE,
+            astnodes.name(amount.variable),
+            astnodes.name(amount.compartment),
+        )
+        logger.info("%s = %s (concentration of an amount)", sid, astnodes.text(formula))
+        parts.append(mathml.mathml_for_assignment(sid, formula, number_units))
+    for vid, formula in formulas.algebraic_rules.items():
+        logger.info("0 = %s (determines %s)", astnodes.text(formula), vid)
+        parts.append(
+            mathml.mathml_for_algebraic(formula, number_units, time_id=formulas.time_id)
+        )
+    parts.extend(_constants_of_algebraic_rules(component, formulas))
+    if formulas.time_state is not None:
+        parts.append(
+            mathml.mathml_for_diff(
+                formulas.time_state,
+                astnodes.number(1.0),
+                formulas.time_id,
+                number_units,
+            )
+        )
+    for vid, formula in [*rate_rules.items(), *reaction_terms.items()]:
+        logger.info("d%s/dt = %s", vid, astnodes.text(formula))
+        parts.append(
+            mathml.mathml_for_diff(vid, formula, formulas.time_id, number_units)
+        )
+    for rid in reaction_ids:
+        logger.info("%s = %s (rate of reaction)", rid, astnodes.text(rates[rid]))
+        parts.append(
+            mathml.mathml_for_assignment(
+                rid, rates[rid], number_units, time_id=formulas.time_id
+            )
+        )
+    for event in formulas.events:
+        condition = astnodes.apply(
+            libsbml.AST_FUNCTION_PIECEWISE,
+            astnodes.number(1.0),
+            event.condition,
+            astnodes.number(0.0),
+        )
+        logger.info(
+            "%s = 1 while '%s' holds (event '%s')",
+            event.trigger,
+            astnodes.text(event.condition),
+            event.sid,
+        )
+        parts.append(
+            mathml.mathml_for_assignment(
+                event.trigger, condition, number_units, time_id=formulas.time_id
+            )
+        )
+    parts.extend(
+        _non_finite_initial_values(component, set(rate_rules) | set(reaction_terms))
+    )
+    component.setMath(mathml.cellml_math(parts))
+    _add_resets(component, formulas, number_units)
+    model.linkUnits()
+    _set_ids(model)
+
+    return model, cellml_units
+
+
+def _add_resets(
+    component: libcellml.Component,
+    formulas: _Formulas,
+    number_units: mathml.UnitsNames,
+) -> None:
+    """Add the resets of the events of the model.
+
+    Every assignment of an event is a reset which fires when the variable
+    of its trigger reaches 1 (`_Event`). The assignment of a species in
+    concentration whose compartment changes in time sets its amount, which
+    is the state of the CellML model.
+
+    Args:
+        component: the component of the model.
+        formulas: the formulas of the model, with its events.
+        number_units: CellML units of the SBML units of a number.
+    """
+    order = 0
+    # SBML applies the event of the highest priority first, CellML the reset
+    # of the lowest order
+    events = sorted(formulas.events, key=lambda event: -event.priority)
+    for event in events:
+        trigger = component.variable(event.trigger)
+        for sid, formula in event.assignments.items():
+            vid, value = sid, formula
+            amount = formulas.amounts.get(sid)
+            if amount is not None:
+                vid = amount.variable
+                value = astnodes.apply(
+                    libsbml.AST_TIMES, formula, astnodes.name(amount.compartment)
+                )
+            variable = component.variable(vid)
+            if variable is None:
+                logger.warning(
+                    "Event '%s' assigns '%s', which is no variable of the model: "
+                    "the assignment is not converted.",
+                    event.sid,
+                    sid,
+                )
+                continue
+            reset = libcellml.Reset()
+            reset.setOrder(order)
+            reset.setVariable(variable)
+            reset.setTestVariable(trigger)
+            reset.setTestValue(
+                mathml.cellml_math(
+                    [
+                        mathml.mathml_for_assignment(
+                            event.trigger,
+                            astnodes.number(1.0),
+                            number_units,
+                            time_id=formulas.time_id,
+                        )
+                    ]
+                )
+            )
+            reset.setResetValue(
+                mathml.cellml_math(
+                    [
+                        mathml.mathml_for_assignment(
+                            vid, value, number_units, time_id=formulas.time_id
+                        )
+                    ]
+                )
+            )
+            component.addReset(reset)
+            logger.info(
+                "reset %d: %s = %s when %s is 1 (event '%s')",
+                order,
+                vid,
+                astnodes.text(value),
+                event.trigger,
+                event.sid,
+            )
+            order += 1
+
+
+def _collect_events(model_sbml: libsbml.Model, used: set[str]) -> list[_Event]:
+    """The events of the model which become resets.
+
+    An event with a delay is skipped: CellML applies a reset when the test
+    variable reaches the test value, it has no counterpart for the delay.
+
+    Args:
+        model_sbml: the SBML model.
+        used: ids taken so far, the variable of a trigger is added to it.
+
+    Returns:
+        One `_Event` per event which becomes resets.
+    """
+    events = []
+    event: libsbml.Event
+    for index, event in enumerate(model_sbml.getListOfEvents(), start=1):
+        sid = event.getId() or f"event_{index}"
+        trigger: libsbml.Trigger = event.getTrigger()
+        if trigger is None or not trigger.isSetMath():
+            logger.warning("Event '%s' has no trigger, it is not converted.", sid)
+            continue
+        if event.isSetDelay():
+            logger.warning(
+                "Event '%s' has a delay, CellML has no counterpart for it: the "
+                "event is not converted.",
+                sid,
+            )
+            continue
+        assignments = {}
+        assignment: libsbml.EventAssignment
+        for assignment in event.getListOfEventAssignments():
+            if assignment.isSetMath():
+                assignments[assignment.getVariable()] = assignment.getMath().deepCopy()
+        if _unsupported_math(trigger.getMath()) or any(
+            _unsupported_math(formula) for formula in assignments.values()
+        ):
+            logger.warning(
+                "Event '%s' uses math CellML has no counterpart for, e.g. a "
+                "delay or a factorial: it is not converted.",
+                sid,
+            )
+            continue
+        if not assignments:
+            logger.warning(
+                "Event '%s' assigns nothing, it is not converted.",
+                sid,
+            )
+            continue
+        if not event.getUseValuesFromTriggerTime():
+            logger.info(
+                "Event '%s' uses the values of the time of the assignment, which "
+                "a reset does as well.",
+                sid,
+            )
+        if not trigger.getInitialValue():
+            logger.warning(
+                "Trigger of event '%s' has initialValue 'false', which a reset "
+                "cannot express: it does not fire at the start time.",
+                sid,
+            )
+        if not trigger.getPersistent():
+            logger.warning(
+                "Trigger of event '%s' is not persistent, which a reset cannot "
+                "express: it fires whenever the trigger becomes true.",
+                sid,
+            )
+        events.append(
+            _Event(
+                sid,
+                unique_sid(f"{sid}_trigger", used),
+                trigger.getMath().deepCopy(),
+                assignments,
+                _priority(event),
+            )
+        )
+    return events
+
+
+#: operators of an SBML formula which no CellML model can express
+_UNSUPPORTED_MATH = frozenset(
+    {
+        libsbml.AST_FUNCTION_FACTORIAL,
+        libsbml.AST_FUNCTION_DELAY,
+        libsbml.AST_FUNCTION_RATE_OF,
+    }
+)
+
+
+def _unsupported_math(node: libsbml.ASTNode | None) -> bool:
+    """Whether a formula uses an operator CellML has no counterpart for.
+
+    Args:
+        node: root of the formula, `None` for a formula which is not set.
+
+    Returns:
+        Whether the formula or one of its children is such an operator.
+    """
+    if node is None:
+        return False
+    if node.getType() in _UNSUPPORTED_MATH:
+        return True
+    return any(
+        _unsupported_math(node.getChild(k)) for k in range(node.getNumChildren())
+    )
+
+
+def _priority(event: libsbml.Event) -> float:
+    """Priority of an event, 0 when it has none or none which is a number.
+
+    Args:
+        event: the SBML event.
+
+    Returns:
+        The value of the priority, which orders the resets of the events.
+    """
+    priority: libsbml.Priority = event.getPriority()
+    if priority is None or not priority.isSetMath():
+        return 0.0
+    math_node: libsbml.ASTNode = priority.getMath()
+    if math_node.isNumber():
+        return float(math_node.getValue())
+    logger.warning(
+        "Priority of event '%s' is no number, the resets keep the order of the events.",
+        event.getId(),
+    )
+    return 0.0
+
+
+def _variable_ids(model_sbml: libsbml.Model) -> set[str]:
+    """Ids of the SBML elements which become variables of the component.
+
+    Args:
+        model_sbml: the SBML model.
+
+    Returns:
+        The ids of the compartments, species, parameters, reactions and
+        species references.
+    """
+    ids = {element.getId() for element in model_sbml.getListOfCompartments()}
+    ids |= {element.getId() for element in model_sbml.getListOfSpecies()}
+    ids |= {element.getId() for element in model_sbml.getListOfParameters()}
+    reaction: libsbml.Reaction
+    for reaction in model_sbml.getListOfReactions():
+        ids.add(reaction.getId())
+        reference: libsbml.SpeciesReference
+        for reference in [
+            *reaction.getListOfReactants(),
+            *reaction.getListOfProducts(),
+        ]:
+            if reference.isSetId():
+                ids.add(reference.getId())
+    return ids
+
+
 def _uses_time(model_sbml: libsbml.Model) -> bool:
-    """Whether a rule or a kinetic law uses the time symbol."""
+    """Whether a rule, a kinetic law or an event uses the time symbol."""
     names: set[str] = set()
     rule: libsbml.Rule
     for rule in model_sbml.getListOfRules():
@@ -1191,6 +1557,14 @@ def _uses_time(model_sbml: libsbml.Model) -> bool:
             _collect_names(
                 reaction.getKineticLaw().getMath(), libsbml.AST_NAME_TIME, names
             )
+    event: libsbml.Event
+    for event in model_sbml.getListOfEvents():
+        trigger: libsbml.Trigger = event.getTrigger()
+        if trigger is not None:
+            _collect_names(trigger.getMath(), libsbml.AST_NAME_TIME, names)
+        assignment: libsbml.EventAssignment
+        for assignment in event.getListOfEventAssignments():
+            _collect_names(assignment.getMath(), libsbml.AST_NAME_TIME, names)
     return bool(names)
 
 
