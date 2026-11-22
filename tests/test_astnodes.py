@@ -57,9 +57,8 @@ def test_mathml_of_an_ast_does_not_change_it() -> None:
     assert not node.getChild(0).isSetUnits()
 
 
-def test_negative_number_is_the_negative_of_a_number() -> None:
-    """libcellml generates `--1.0` for the negative of a negative number."""
+def test_negative_number_is_a_number_with_its_sign() -> None:
+    """CellML takes a negative real, with the units of the number."""
     mathml = process_mathml_for_cellml(astnodes.number(-2.5, "litre"))
-    assert "<minus/>" in mathml
-    assert '<cn cellml:units="litre"> 2.5 </cn>' in mathml
-    assert "-2.5" not in mathml
+    assert '<cn cellml:units="litre"> -2.5 </cn>' in mathml
+    assert "<minus/>" not in mathml

@@ -1,7 +1,6 @@
-"""Tests of the test suite cases: download, cache, parsing."""
+"""Tests of the test suite cases: fetch, cache, parsing."""
 
-import io
-import zipfile
+import shutil
 from pathlib import Path
 
 import pytest
@@ -115,7 +114,6 @@ def test_load_case() -> None:
 
 
 def test_load_case_renames_time_column(tmp_path: Path) -> None:
-    import shutil
 
     case_dir = tmp_path / "10006"
     shutil.copytree(FIXTURES / "00001", case_dir)
@@ -145,7 +143,6 @@ def test_load_cases_sorted_and_filtered() -> None:
 
 
 def test_skip_reasons(tmp_path: Path) -> None:
-    import shutil
 
     src = FIXTURES / "00001"
     # no L3V2 file
@@ -177,72 +174,63 @@ def test_skip_reasons(tmp_path: Path) -> None:
     assert skip_reason(load_case(other)) == "test type SteadyState"
 
 
-def test_ensure_suite_downloads_once(
+def test_ensure_suite_fetches_once(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    # a zip with the layout of the release: semantic/00001/...
-    buffer = io.BytesIO()
-    with zipfile.ZipFile(buffer, "w") as archive:
-        for f in (FIXTURES / "00001").iterdir():
-            archive.write(f, f"semantic/00001/{f.name}")
-    calls: list[str] = []
+    calls: list[list[str]] = []
 
-    class Response:
-        def __init__(self) -> None:
-            self.content = buffer.getvalue()
+    def fake_git(arguments: list[str], cwd: Path) -> None:
+        calls.append(arguments)
+        if arguments[0] == "checkout":
+            # the sparse checkout of the cases of the commit
+            target = cwd / cases.SUITE_CASES / "00001"
+            target.mkdir(parents=True)
+            for f in (FIXTURES / "00001").iterdir():
+                shutil.copy(f, target / f.name)
 
-        def raise_for_status(self) -> None:
-            pass
-
-        def iter_content(self, chunk_size: int):
-            yield self.content
-
-        def __enter__(self) -> "Response":
-            return self
-
-        def __exit__(self, *args: object) -> None:
-            pass
-
-    def fake_get(url: str, stream: bool, timeout: float) -> Response:
-        calls.append(url)
-        return Response()
-
-    monkeypatch.setattr(cases.requests, "get", fake_get)
+    monkeypatch.setattr(cases, "_git", fake_git)
     monkeypatch.setenv(cases.CACHE_ENV, str(tmp_path))
     semantic = ensure_suite()
     assert semantic == tmp_path / "sbml-test-suite" / cases.SUITE_VERSION / "semantic"
     assert (semantic / "00001" / "00001-settings.txt").is_file()
-    assert calls == [cases.SUITE_URL.format(version=cases.SUITE_VERSION)]
+    assert ["checkout", "--quiet", "FETCH_HEAD"] in calls
+    assert any(
+        cases.SUITE_COMMIT in arguments and arguments[0] == "fetch"
+        for arguments in calls
+    )
+    assert not (semantic.parent / "clone").exists()
+    fetches = len(calls)
     ensure_suite()
-    assert len(calls) == 1
+    assert len(calls) == fetches
 
 
-def test_ensure_suite_corrupt_zip_raises_and_leaves_no_semantic(
+def test_ensure_suite_failed_fetch_raises_and_leaves_no_semantic(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    class Response:
-        def __init__(self) -> None:
-            self.content = b"not a zip file"
+    def fake_git(arguments: list[str], cwd: Path) -> None:
+        if arguments[0] == "fetch":
+            raise TestSuiteError("git fetch failed")
 
-        def raise_for_status(self) -> None:
-            pass
-
-        def iter_content(self, chunk_size: int):
-            yield self.content
-
-        def __enter__(self) -> "Response":
-            return self
-
-        def __exit__(self, *args: object) -> None:
-            pass
-
-    def fake_get(url: str, stream: bool, timeout: float) -> Response:
-        return Response()
-
-    monkeypatch.setattr(cases.requests, "get", fake_get)
+    monkeypatch.setattr(cases, "_git", fake_git)
     monkeypatch.setenv(cases.CACHE_ENV, str(tmp_path))
     with pytest.raises(TestSuiteError):
         ensure_suite()
     root = tmp_path / "sbml-test-suite" / cases.SUITE_VERSION
     assert not (root / "semantic").exists()
-    assert not (root / "extracting").exists()
+    assert not (root / "clone").exists()
+
+
+def test_ensure_suite_without_cases_raises(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # a commit whose checkout has no cases/semantic directory
+    monkeypatch.setattr(cases, "_git", lambda arguments, cwd: None)
+    monkeypatch.setenv(cases.CACHE_ENV, str(tmp_path))
+    with pytest.raises(TestSuiteError, match=cases.SUITE_CASES):
+        ensure_suite()
+    assert not (tmp_path / "sbml-test-suite" / cases.SUITE_VERSION / "clone").exists()
+
+
+def test_git_reports_a_failed_command(tmp_path: Path) -> None:
+    with pytest.raises(TestSuiteError, match="rev-parse"):
+        cases._git(["rev-parse", "--verify", "nothing-here"], tmp_path)

@@ -3,30 +3,46 @@
 import re
 from collections import Counter, defaultdict
 from pathlib import Path, PurePosixPath
+from statistics import median
 
-from sbml2cellml.testsuite.figure import dark_path, write_figures
+from sbml2cellml.testsuite.figure import (
+    dark_path,
+    timing_pairs,
+    write_figures,
+    write_timing_figures,
+)
 from sbml2cellml.testsuite.results import STAGES, SuiteResult
 from sbml2cellml.testsuite.runner import SOLVER_SETTINGS
 
 #: intro paragraphs of the SBML test suite report
 TESTSUITE_INTRO = (
     "Semantic test cases of the [SBML test suite](https://github.com/sbmlteam/sbml-test-suite) "
-    "{suite}. Every case is simulated with roadrunner (`roadrunner`), converted to "
+    "at commit [`{suite}`](https://github.com/sbmlteam/sbml-test-suite/commit/{suite}). Every "
+    "case is simulated with [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/) "
+    "(`sbmlsim`), converted to "
     "CellML (`sbml2cellml`), simulated with libopencor (`libopencor`), converted back to SBML "
-    "(`cellml2sbml`) and simulated with roadrunner again (`roundtrip`). See "
+    "(`cellml2sbml`) and simulated with sbmlsim-core again (`roundtrip`). See "
     "[Development](development.md#sbml-test-suite) for how to run it.\n\n"
     "Every simulation is compared with the expected results of the case: a value passes when "
     "`|value - expected| <= absolute + relative * |expected|` with the absolute and the "
     "relative tolerance of the settings of the case. {solver}\n\n"
-    "A `roadrunner` failure means roadrunner itself cannot simulate the case (algebraic rules, "
-    "delays), it says nothing about the converters."
+    "An `sbmlsim` failure means sbmlsim-core itself cannot simulate the case, it says nothing "
+    "about the converters."
 )
 #: bar diagram of the SBML test suite report, relative to the report; written
 #: by `sbml2cellml.testsuite.figure.write_figures`
 TESTSUITE_FIGURE = "images/testsuite.svg"
+#: heading of the timing section, without the `##` of the markdown
+TIMINGS_HEADING = "Timings"
+#: the stages with a simulation, with the simulator and the model they time
+TIMED_STAGES = (
+    ("sbmlsim", "sbmlsim-core", "SBML model"),
+    ("libopencor", "libopencor", "CellML model"),
+    ("roundtrip", "sbmlsim-core", "roundtrip SBML model"),
+)
 #: reason of the cases whose values exceed the tolerance of the comparison
 MISMATCH = "numerical mismatch"
-#: quoted text, e.g. the formula of an algebraic rule roadrunner does not support
+#: quoted text, e.g. the formula of an algebraic rule a simulator does not support
 _QUOTED = re.compile(r"'[^']*'")
 #: a number preceded by a space, `(`, `,` or `=`, so identifiers such as
 #: `S1` are left untouched; `nan` and `inf` count as numbers too
@@ -68,8 +84,159 @@ def solver_text() -> str:
         f"(relative/absolute {tight}) and up to {steps} internal steps between "
         "two time points, so the comparison measures the conversion and not "
         "the integrator; only when CVODE gives up with these tolerances the "
-        f"simulation is repeated with {' and '.join(relaxed)}."
+        f"simulation is repeated with {' and '.join(relaxed)}. The absolute "
+        "tolerance of the SBML simulation is scaled with the smallest initial "
+        "amount of the model when it is below one, since the states of the "
+        "SBML side are amounts and the states of the CellML side "
+        "concentrations."
     )
+
+
+def timings_figure(figure: str) -> str:
+    """Path of the timing figure next to the bar diagram.
+
+    Args:
+        figure: path of the bar diagram, e.g. `images/testsuite.svg`.
+
+    Returns:
+        The path with `_timings` added to the file name, e.g.
+        `images/testsuite_timings.svg`.
+    """
+    path = PurePosixPath(figure)
+    return str(path.with_name(f"{path.stem}_timings{path.suffix}"))
+
+
+def duration_text(seconds: float) -> str:
+    """A wall time as it is written in the reports.
+
+    Args:
+        seconds: a wall time.
+
+    Returns:
+        Milliseconds below one second, with a decimal below ten
+        milliseconds, seconds below a minute and minutes above it, e.g.
+        `1.4 ms`, `18 ms`, `2.4 s`, `3.1 min`.
+    """
+    if seconds < 0.01:
+        return f"{seconds * 1e3:.1f} ms"
+    if seconds < 1.0:
+        return f"{seconds * 1e3:.0f} ms"
+    if seconds < 60.0:
+        return f"{seconds:.1f} s"
+    return f"{seconds / 60.0:.1f} min"
+
+
+def _quantile(values: list[float], fraction: float) -> float:
+    """Value at a fraction of the sorted values, the nearest rank.
+
+    Args:
+        values: the values, not empty.
+        fraction: the fraction, e.g. `0.95`.
+
+    Returns:
+        The value at the fraction.
+    """
+    ordered = sorted(values)
+    index = min(len(ordered) - 1, round(fraction * (len(ordered) - 1)))
+    return ordered[index]
+
+
+def timing_lines(result: SuiteResult, figure: str | None = None) -> list[str]:
+    """Lines of the timing section of a report.
+
+    Args:
+        result: a suite run.
+        figure: path of the timing figure relative to the report, shown with
+            its variant for dark backgrounds; no figure when `None`.
+
+    Returns:
+        The markdown lines, empty when no simulation of the run was timed.
+    """
+    timed = {stage: result.seconds(stage) for stage, _, _ in TIMED_STAGES}
+    if not any(timed.values()):
+        return []
+    lines = [
+        f"## {TIMINGS_HEADING}",
+        "",
+        "Wall time of the simulations which pass or fail, measured around "
+        "the call of the simulator in its worker process: the compilation of "
+        "the model is part of it, the conversions and the comparison are "
+        "not. Every simulator runs in one process for the whole run, so a "
+        "model is compiled by a warm simulator, and the cases run one after "
+        "the other.",
+        "",
+        "The two simulators do not always integrate with the same absolute "
+        "tolerance: the tolerance of an SBML simulation is scaled with the "
+        "smallest initial amount of the model, so a model with small amounts "
+        "is integrated more tightly than its CellML conversion, whose states "
+        "are concentrations.",
+        "",
+    ]
+    if figure is not None:
+        alt = "Simulation time of libopencor against sbmlsim-core per case"
+        dark = dark_path(PurePosixPath(figure))
+        lines += [
+            f"![{alt}]({figure}#only-light)",
+            f"![{alt}]({dark}#only-dark)",
+            "",
+        ]
+    lines += [
+        "| stage | simulator | model | simulations | total | median | p95 | slowest |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    for stage, simulator, model in TIMED_STAGES:
+        seconds = list(timed[stage].values())
+        if not seconds:
+            continue
+        lines.append(
+            f"| {stage} | {simulator} | {model} | {len(seconds)} | "
+            f"{duration_text(sum(seconds))} | "
+            f"{duration_text(median(seconds))} | "
+            f"{duration_text(_quantile(seconds, 0.95))} | "
+            f"{duration_text(max(seconds))} |"
+        )
+    pairs = timing_pairs(result)
+    if pairs:
+        ratios = [libopencor / sbmlsim for sbmlsim, libopencor in pairs.values()]
+        faster = sum(1 for ratio in ratios if ratio <= 1.0)
+        middle = median(ratios)
+        comparison = (
+            f"{1 / middle:.1f} times faster"
+            if middle < 1.0
+            else f"{middle:.1f} times slower"
+        )
+        lines += [
+            "",
+            f"Both simulators ran {len(pairs)} cases. libopencor is "
+            f"{comparison} than sbmlsim-core for the median case and faster "
+            f"for {faster} of them; the medians are "
+            f"{duration_text(median([pair[0] for pair in pairs.values()]))} "
+            "for sbmlsim-core and "
+            f"{duration_text(median([pair[1] for pair in pairs.values()]))} "
+            "for libopencor.",
+        ]
+    return [*lines, ""]
+
+
+def without_timings(markdown: str) -> str:
+    """A report without its timing section.
+
+    The wall times of a run differ from run to run and from machine to
+    machine, so the gating test of the full suite compares the committed
+    report and the rendered one without them.
+
+    Args:
+        markdown: a rendered report.
+
+    Returns:
+        The report without the `## Timings` section, unchanged when it has
+        none.
+    """
+    start = markdown.find(f"## {TIMINGS_HEADING}\n")
+    if start < 0:
+        return markdown
+    end = markdown.find("## ", start + 3)
+    return markdown[:start] + (markdown[end:] if end >= 0 else "")
 
 
 def _cell(text: str) -> str:
@@ -158,7 +325,8 @@ def render_report(
         names: whether the cases table gets a `name` column.
         figure: path of the bar diagram relative to the report, shown in the
             summary together with its variant for dark backgrounds
-            (`sbml2cellml.testsuite.figure`); no figure when `None`.
+            (`sbml2cellml.testsuite.figure`); the timing section shows
+            `timings_figure` of it; no figure when `None`.
 
     Returns:
         The markdown page.
@@ -209,8 +377,8 @@ def render_report(
             "than the tolerance band for at least one variable.",
         ]
 
+    lines += ["", *timing_lines(result, timings_figure(figure) if figure else None)]
     lines += [
-        "",
         "## Failure reasons",
         "",
         "The cases which fail a stage, grouped by their error: errors which "
@@ -309,7 +477,8 @@ def write_report(
         command: command named in the generated-by header.
         names: whether the cases table gets a `name` column.
         figure: path of the bar diagram relative to the report, written for
-            light and dark backgrounds; no figure when `None`.
+            light and dark backgrounds, next to the timing figure
+            (`timings_figure`); no figure when `None`.
         figure_title: start of the title of the figure, the SBML test suite
             with its version when `None`.
         figure_cases: what a case is in the figure, e.g. `models`.
@@ -329,4 +498,10 @@ def write_report(
     if figure is not None:
         write_figures(
             result, path.parent / figure, title=figure_title, cases=figure_cases
+        )
+        write_timing_figures(
+            result,
+            path.parent / timings_figure(figure),
+            title=figure_title,
+            cases=figure_cases,
         )

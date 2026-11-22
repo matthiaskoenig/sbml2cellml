@@ -12,7 +12,7 @@ Features include
 - names, notes, SBO terms, annotations and the model history as RDF next to the CellML model, restored in the conversion back to SBML
 - conversion of CellML models to SBML: parameters with rules, unit definitions and units of numbers, resets as events, imports resolved
 - validation of the result with libcellml
-- timecourse simulation of the SBML with roadrunner and of the CellML with libopencor, both optional
+- timecourse simulation of the SBML with sbmlsim-core and of the CellML with libopencor, both optional
 - the `sbml2cellml` and `cellml2sbml` command lines
 - the SBML test suite harness: every semantic case through both converters and both simulators, results on the [SBML test suite](https://matthiaskoenig.github.io/sbml2cellml/testsuite/) page
 - the same check for the manually curated models of [BioModels](https://www.biomodels.org), results on the [BioModels](https://matthiaskoenig.github.io/sbml2cellml/biomodels/) page
@@ -26,7 +26,7 @@ cellml2sbml model.cellml -o model.xml
 In the SBML to CellML direction events and delays are not converted yet, see the [conversion issues](https://matthiaskoenig.github.io/sbml2cellml/conversion-issues/).
 
 # SBML test suite
-Every semantic case of the [SBML test suite](https://github.com/sbmlteam/sbml-test-suite) is simulated with roadrunner (`roadrunner`), converted to CellML (`sbml2cellml`), simulated with libopencor (`libopencor`), converted back to SBML (`cellml2sbml`) and simulated with roadrunner again (`roundtrip`). The details are on the [SBML test suite](https://matthiaskoenig.github.io/sbml2cellml/testsuite/) page.
+Every semantic case of the [SBML test suite](https://github.com/sbmlteam/sbml-test-suite) is simulated with [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/) (`sbmlsim`), converted to CellML (`sbml2cellml`), simulated with libopencor (`libopencor`), converted back to SBML (`cellml2sbml`) and simulated with sbmlsim-core again (`roundtrip`). The details are on the [SBML test suite](https://matthiaskoenig.github.io/sbml2cellml/testsuite/) page.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/testsuite_dark.svg">
@@ -34,7 +34,7 @@ Every semantic case of the [SBML test suite](https://github.com/sbmlteam/sbml-te
 </picture>
 
 # BioModels
-The manually curated SBML models of [BioModels](https://www.biomodels.org) go through the same roundtrip. They have no expected results, so the roadrunner simulation of the original model over 100 time units (`roadrunner`) is what the libopencor simulation of the CellML (`libopencor`) and the roadrunner simulation of the SBML converted back (`roundtrip`) are compared with. The details are on the [BioModels](https://matthiaskoenig.github.io/sbml2cellml/biomodels/) page.
+The manually curated SBML models of [BioModels](https://www.biomodels.org) go through the same roundtrip. They have no expected results, so the sbmlsim-core simulation of the original model over 100 time units (`sbmlsim`) is what the libopencor simulation of the CellML (`libopencor`) and the sbmlsim-core simulation of the SBML converted back (`roundtrip`) are compared with. The details are on the [BioModels](https://matthiaskoenig.github.io/sbml2cellml/biomodels/) page.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/biomodels_dark.svg">

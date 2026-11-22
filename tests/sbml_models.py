@@ -63,6 +63,43 @@ def simple_model(mid: str = "simple") -> libsbml.Model:
     return model
 
 
+def small_compartment_model(size: float = 1e-13, mid: str = "small") -> libsbml.Model:
+    """`A` decays with `k * A * c` in a compartment of `size` litre.
+
+    The concentration of `A` is 1, so its amount is `size`: the state of the
+    solver is far below the usual absolute tolerance.
+    """
+    doc = libsbml.SBMLDocument(3, 2)
+    model: libsbml.Model = doc.createModel()
+    model.setId(mid)
+    c: libsbml.Compartment = model.createCompartment()
+    c.setId("c")
+    c.setSize(size)
+    c.setConstant(True)
+    s: libsbml.Species = model.createSpecies()
+    s.setId("A")
+    s.setCompartment("c")
+    s.setInitialConcentration(1.0)
+    s.setHasOnlySubstanceUnits(False)
+    s.setBoundaryCondition(False)
+    s.setConstant(False)
+    p: libsbml.Parameter = model.createParameter()
+    p.setId("k")
+    p.setValue(1.0)
+    p.setConstant(True)
+    r: libsbml.Reaction = model.createReaction()
+    r.setId("decay")
+    r.setReversible(False)
+    reactant: libsbml.SpeciesReference = r.createReactant()
+    reactant.setSpecies("A")
+    reactant.setConstant(True)
+    reactant.setStoichiometry(1.0)
+    klaw: libsbml.KineticLaw = r.createKineticLaw()
+    klaw.setMath(libsbml.parseL3Formula("k * A * c"))
+    _SBML_DOCUMENTS.append(doc)
+    return model
+
+
 def growing_compartment_model(mid: str = "growing") -> libsbml.Model:
     """`simple_model` whose compartment grows: `d cell / d time = 0.5 * cell`."""
     model = simple_model(mid)

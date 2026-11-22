@@ -3,7 +3,8 @@
 `SimulatorWorker` starts a process (spawn context, so nothing of the parent
 is inherited) which runs the functions of `sbml2cellml.testsuite.simulators`
 on request. Every call has a timeout; a worker which times out or dies is
-replaced, so one bad case never takes the suite down.
+replaced, so one bad case never takes the suite down, and a simulator which
+crashes the process never takes the run down with it.
 
 Starting a process (spawn context) means importing
 `sbml2cellml.testsuite.simulators` from scratch, which can take a while when
@@ -58,7 +59,7 @@ class SimulatorWorker:
         """Create the worker, not started yet.
 
         Args:
-            name: name for the logs, e.g. `roadrunner`.
+            name: name for the logs, e.g. `sbmlsim`.
             timeout: seconds a call may take before the worker is replaced.
         """
         self.name = name

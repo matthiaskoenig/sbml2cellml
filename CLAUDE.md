@@ -6,11 +6,12 @@ This file provides guidance when working with code in this repository.
 
 `sbml2cellml` converts SBML models to CellML 2.0 and CellML models to SBML
 L3V2 with libsbml and libcellml and simulates the result with libopencor.
-Python 3.13 and 3.14 (`.python-version` is 3.14), packaged with
+Python 3.14 (`.python-version`), packaged with
 hatchling (version in `src/sbml2cellml/__init__.py`). Runtime dependencies:
-`python-libsbml`, `libcellml`, `rich`. The `simulate` extra adds `libopencor`,
-`pandas` and `matplotlib`; the `testsuite` extra (in `dev`) adds
-`libroadrunner`.
+`python-libsbml`, `libcellml`, `rich`. The `simulate` extra adds `libopencor`
+(CellML), `sbmlsim-core` (SBML), `pandas` and `matplotlib`; the `testsuite`
+extra (in `dev`) adds `requests` for the download of the BioModels models,
+the cases of the SBML test suite are fetched with `git`.
 
 ## Commands
 
@@ -20,9 +21,9 @@ uv run pre-commit install
 
 pytest                          # all tests (parallel, pytest-xdist)
 pytest tests/test_sbml2cellml.py::test_simple_model_initial_values
-tox r -e py3.14                 # tests from uv.lock via tox-uv (also py3.13)
+tox r -e py3.14                 # tests from uv.lock via tox-uv
 tox r -e ty                     # type check
-tox run-parallel                # py3.13, py3.14 and ty, run before opening a pull request
+tox run-parallel                # py3.14 and ty, run before opening a pull request
 
 ruff check
 ruff format
@@ -45,7 +46,7 @@ uv run sbml2cellml-biomodels update     # refresh the committed selection biomod
 uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the figures from the results file
 ```
 
-`develop` is the default branch and takes every change through a pull request; the rulesets in `.github/rulesets/` (applied with `apply.sh`) require the `tests`, `ruff`, `ty` and `docs` checks. Continuous integration is kept minimal: `tests` runs only `py3.14`, on linux and macos, every workflow cancels a superseded run (`cancel-in-progress: true`), uv caches packages and interpreters, dependabot runs monthly; `py3.13` runs only locally. `main` tracks the latest release and is fast-forwarded by the `sync-main` job of the release workflow. Release steps are in `docs/development.md`: release branch, `uvx bump-my-version bump [major|minor|patch]` (updates `__init__.py` and `CITATION.cff`, no tag), release notes in `docs/release-notes/`, pull request, tag on `develop` after the merge.
+`develop` is the default branch and takes every change through a pull request; the rulesets in `.github/rulesets/` (applied with `apply.sh`) require the `tests`, `ruff`, `ty` and `docs` checks. Continuous integration is kept minimal: `tests` runs `py3.14` on linux, macos and windows, every workflow cancels a superseded run (`cancel-in-progress: true`), uv caches packages and interpreters, dependabot runs monthly. `main` tracks the latest release and is fast-forwarded by the `sync-main` job of the release workflow. Release steps are in `docs/development.md`: release branch, `uvx bump-my-version bump [major|minor|patch]` (updates `__init__.py` and `CITATION.cff`, no tag), release notes in `docs/release-notes/`, pull request, tag on `develop` after the merge.
 
 ## Architecture
 
@@ -116,11 +117,10 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   the CellML name of the units (`units` callable),
   make every number a real with units (`dimensionless` when it has none),
   replace the time symbol by the variable `time` and avogadro by its value
-  (`normalize_math`) and wrap the equations into the component math. A
-  negative number is written as the negative of a number and the negation of
-  a product or quotient which starts with a negation is cancelled
-  (`cancel_negations`): libcellml 0.7.1 generates `--2.0*a` for
-  `-((-2) * a)`, which C reads as a decrement and libopencor cannot compile.
+  (`normalize_math`) and wrap the equations into the component math. The
+  formulas are written as the SBML model has them, negations included:
+  libcellml 0.7.2 generates `-(-2.0*a)` for `-((-2) * a)`, which compiles
+  (0.7.1 generated `--2.0*a`, a decrement in C).
 - `astnodes.py`: construction of formulas as libsbml ASTs (`name`, `number`,
   `apply`, `signed_sum`; `text` for logs only). The converter never turns a
   formula into text and back: the L3 parser reads an id such as `avogadro`,
@@ -152,6 +152,21 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   solver steps between two time points instead of the 500 of libopencor.
   Results drop the `component/` prefix of the
   variable names. Issues raise `SimulationError`.
+- `sbmlsim.py`: sbmlsim-core timecourse of an SBML model (path or text), the
+  library is imported inside `run_timecourse` as well. `compilable_sbml`
+  gives the compiler what it reads: level 1 and 2 are converted to L3V2
+  (strictly, else without the strict check and with a warning: libsbml
+  refuses a strict conversion over issues without mathematics, e.g. the
+  `outside` attribute of level 2) and a model which requires `comp` is
+  flattened with libsbml. Every field of a
+  request of `simulation/1` is explicit (`solver_settings`), the `Runtime`
+  is created once per process (`runtime`), `[S1]` selects a concentration.
+  The states of the solver are amounts, so `run_timecourse` multiplies the
+  absolute tolerance with the smallest initial value of a state when it is
+  below one (`state_scale`, as roadrunner does): the amounts of a model with
+  a small compartment are below the tolerance otherwise and CVODE accepts
+  any trajectory (`scale_tolerance=False` switches it off, the CellML side
+  needs no scaling since its states are concentrations).
 - `cellml2sbml.py`: `convert_cellml2sbml(cellml_path, sbml_path=None, validate=True)`,
   analyser driven: parameters by variable type, rules by equation type, initial
   assignments for computed constants and variable-referenced initial values,
@@ -177,26 +192,34 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   logging. Library code logs with `logging.getLogger(__name__)` and lazy `%s`
   formatting (ruff `G`), it never prints.
 - `testsuite/`: `sbml2cellml-testsuite run|report` runs the SBML test suite
-  through both converters and both simulators. `cases.py` downloads and reads
+  through both converters and both simulators. `cases.py` fetches
+  `cases/semantic` of the pinned `SUITE_COMMIT` of the suite repository into
+  the cache (partial, one commit deep `git` clone, `_git`) and reads
   the cases; `compare.py` checks a simulation against the expected results
   (`|value - expected| <= absolute + relative * |expected|` with the
   tolerances of the settings of the case, not the tolerances of the solver);
   `runner.py`'s `SOLVER_SETTINGS` are the solver settings of every
   simulation (tolerances 1e-9/1e-12, 100000 internal steps between two time
   points; relaxed tolerances only when CVODE fails, `_simulate`);
-  `simulators.py` has the plain roadrunner and libopencor functions run
+  `simulators.py` has the sbmlsim-core and libopencor functions run
   inside `worker.py`'s `SimulatorWorker` processes (one process per
-  simulator for the whole run, roadrunner and libopencor bundle different
-  LLVM versions); `runner.py` is the five-stage pipeline
-  (`roadrunner`/`sbml2cellml`/`libopencor`/`cellml2sbml`/`roundtrip`) per
-  case, a failed stage keeps the complete text of its exception (`_message`);
-  `results.py` is `SuiteResult` (JSON) with `regressions`/
-  `improvements`; `report.py` renders `docs/testsuite.md` (the solver
-  settings of the intro come from `SOLVER_SETTINGS`, the failing cases are
+  simulator for the whole run, for the timeout and the isolation of a
+  crash); `runner.py` is the five-stage pipeline
+  (`sbmlsim`/`sbml2cellml`/`libopencor`/`cellml2sbml`/`roundtrip`) per
+  case, a failed stage keeps the complete text of its exception (`_message`)
+  and the wall time of its simulation (`StageResult.seconds`, measured in
+  the worker around the call of the simulator, the compilation of the model
+  included); `results.py` is `SuiteResult` (JSON) with `regressions`/
+  `improvements` and `seconds` per stage; `report.py` renders
+  `docs/testsuite.md` (the solver
+  settings of the intro come from `SOLVER_SETTINGS`, `timing_lines` is the
+  timing section of the two simulators, the failing cases are
   grouped by `_reason` and listed with their complete errors in fenced
   blocks, nothing is shortened or replaced); `figure.py` its
   bar diagram `docs/images/testsuite.svg` and `testsuite_dark.svg` (also in
-  `README.md`); `cli.py` is the
+  `README.md`) and the timings `testsuite_timings.svg` and
+  `testsuite_timings_dark.svg` (libopencor against sbmlsim-core per case on
+  logarithmic axes); `cli.py` is the
   `sbml2cellml-testsuite` entry point.
 - `biomodels/` (run locally, never in CI; see `biomodels/README.md`):
   `sbml2cellml-biomodels run|update|report` runs the manually
@@ -207,8 +230,8 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   time units, 100 steps; comparison tolerances `RELATIVE` 1e-3 and `ABSOLUTE`
   1e-6); `runner.py` turns a list of ids into cases (skipping
   a failed download or a model without variables) and calls
-  `sbml2cellml.testsuite.runner.run_suite`, whose `roadrunner` stage uses the
-  roadrunner simulation of the original model as the expected results since
+  `sbml2cellml.testsuite.runner.run_suite`, whose `sbmlsim` stage uses the
+  sbmlsim-core simulation of the original model as the expected results since
   BioModels has none; `cli.py` is the `sbml2cellml-biomodels` entry point,
   which renders the report `docs/biomodels.md` with the report and figure
   code of the test suite.
@@ -226,8 +249,7 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   `examples/repressilator_example.py --docs` writes the models, the table and
   the figures of the documentation page `docs/roundtrip.md`
   (`docs/roundtrip/`, `docs/images/repressilator*.svg`, included with
-  `pymdownx.snippets`; roadrunner runs in a process of its own,
-  `examples/roadrunner_timecourse.py`); `tests/test_examples.py` fails when
+  `pymdownx.snippets`); `tests/test_examples.py` fails when
   the documented models differ from the ones the example writes. Generated
   CellML goes to the gitignored `examples/results/`. Small fixtures created
   for a test go to `tests/data/`.
@@ -249,11 +271,12 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   part of the documentation site.
 - Test models built with libcellml live in `tests/cellml_models.py`;
   `tests/data/` holds the import fixtures.
-- roadrunner and libopencor bundle different LLVM versions and crash in one
-  process, so the roundtrip tests run roadrunner in a subprocess
-  (`tests/simulators.py`).
+- the roundtrip tests simulate the SBML side with sbmlsim-core
+  (`tests/simulators.py`) and the CellML side with libopencor, both in the
+  process of the test.
 - `testsuite/results.json`, `docs/testsuite.md` and `docs/images/testsuite*.svg`
-  are generated by `sbml2cellml-testsuite run` (or `report`) and committed;
+  (the bar diagram and the timings) are generated by `sbml2cellml-testsuite
+  run` (or `report`) and committed;
   the full-suite test (`tests/test_testsuite_full.py`) fails on regressions
   against them; accept improvements by regenerating them.
 - `biomodels/models.json`, `biomodels/results.json`, `docs/biomodels.md` and

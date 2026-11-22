@@ -1,5 +1,5 @@
-| protein | 2 CellML, libopencor | 3 SBML, roadrunner |
+| protein | 2 CellML, libopencor | 3 SBML, sbmlsim-core |
 | --- | ---: | ---: |
-| LacI (`PX`) | 0.03 | 0.002 |
-| TetR (`PY`) | 0.02 | 0.005 |
-| cI (`PZ`) | 0.03 | 0.01 |
+| LacI (`PX`) | 0.008 | 3e-09 |
+| TetR (`PY`) | 0.005 | 2e-09 |
+| cI (`PZ`) | 0.006 | 3e-09 |

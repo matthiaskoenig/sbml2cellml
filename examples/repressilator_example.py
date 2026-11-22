@@ -4,9 +4,9 @@ The model is the repressilator of Elowitz and Leibler (2000), BIOMD0000000012
 of BioModels. Its names, notes and annotations go into an RDF file next to the
 CellML model and come back in the SBML model of the roundtrip. The model is
 simulated three times:
-the SBML model with roadrunner, the converted CellML model with libopencor and
-the SBML model converted back from the CellML with roadrunner again. The three
-timecourses of the proteins are plotted side by side.
+the SBML model with sbmlsim-core, the converted CellML model with libopencor
+and the SBML model converted back from the CellML with sbmlsim-core again. The
+three timecourses of the proteins are plotted side by side.
 
 `python repressilator_example.py --docs` also updates the files of the
 documentation page `docs/roundtrip.md`.
@@ -15,8 +15,6 @@ documentation page `docs/roundtrip.md`.
 import argparse
 import io
 import shutil
-import subprocess
-import sys
 from pathlib import Path
 
 import matplotlib as mpl
@@ -26,6 +24,7 @@ from matplotlib.figure import Figure
 
 from sbml2cellml import convert_cellml2sbml, convert_sbml2cellml, log
 from sbml2cellml.console import console
+from sbml2cellml.sbmlsim import run_timecourse as run_sbml_timecourse
 from sbml2cellml.simulate import run_timecourse
 
 EXAMPLES_DIR: Path = Path(__file__).parent
@@ -72,27 +71,11 @@ def convert(sbml_path: Path, results_dir: Path) -> tuple[Path, Path]:
     return cellml_path, roundtrip_path
 
 
-def simulate_roadrunner(sbml_path: Path, csv_path: Path) -> pd.DataFrame:
-    """Simulate an SBML model with roadrunner in a process of its own.
-
-    roadrunner and libopencor crash in one process, see
-    `roadrunner_timecourse.py`.
-    """
-    subprocess.run(
-        [
-            sys.executable,
-            str(EXAMPLES_DIR / "roadrunner_timecourse.py"),
-            str(sbml_path),
-            str(csv_path),
-            *PROTEINS,
-            "--end",
-            str(END),
-            "--steps",
-            str(STEPS),
-        ],
-        check=True,
-    )
-    return pd.read_csv(csv_path)
+def simulate_sbml(sbml_path: Path, csv_path: Path) -> pd.DataFrame:
+    """Simulate an SBML model with sbmlsim-core and write the timecourse."""
+    df = run_sbml_timecourse(sbml_path, list(PROTEINS), start=0.0, end=END, steps=STEPS)
+    df.to_csv(csv_path, index=False)
+    return df
 
 
 def simulate_libopencor(cellml_path: Path) -> pd.DataFrame:
@@ -193,11 +176,11 @@ def main(update_docs: bool = False) -> None:
 
     console.rule("simulate", style="white")
     timecourses = {
-        "1 SBML, roadrunner": simulate_roadrunner(
+        "1 SBML, sbmlsim-core": simulate_sbml(
             sbml_path, RESULTS_DIR / "repressilator_sbml.csv"
         ),
         "2 CellML, libopencor": simulate_libopencor(cellml_path),
-        "3 SBML, roadrunner": simulate_roadrunner(
+        "3 SBML, sbmlsim-core": simulate_sbml(
             roundtrip_path, RESULTS_DIR / "repressilator_roundtrip.csv"
         ),
     }

@@ -80,7 +80,7 @@ def test_json_rounds_max_excess(tmp_path: Path) -> None:
 def test_counts() -> None:
     result = suite("fail")
     assert result.counts("roundtrip") == {"pass": 0, "fail": 1, "skip": 1}
-    assert result.counts("roadrunner") == {"pass": 1, "fail": 0, "skip": 1}
+    assert result.counts("sbmlsim") == {"pass": 1, "fail": 0, "skip": 1}
 
 
 def test_regressions_and_improvements() -> None:
@@ -94,3 +94,62 @@ def test_regressions_and_improvements() -> None:
     missing = suite("pass")
     del missing.cases["00002"]
     assert regressions(old, missing) == ["00002: missing"]
+
+
+def test_regressions_and_improvements_ignore_a_stage_of_one_side_only() -> None:
+    """A renamed stage (e.g. `roadrunner` to `sbmlsim`) has nothing to compare."""
+    old = suite("pass")
+    new = suite("fail", "S1 exceeds the tolerance")
+    for case in old.cases.values():
+        case.stages.pop("sbmlsim")
+    assert regressions(old, new) == [
+        "00001 roundtrip: pass -> fail (S1 exceeds the tolerance)"
+    ]
+    assert improvements(new, old) == ["00001 roundtrip: fail -> pass"]
+
+
+def test_seconds_of_a_stage() -> None:
+    result = SuiteResult(
+        "3.5.0",
+        "0.1.0",
+        {
+            "00001": CaseResult(
+                "00001",
+                [],
+                [],
+                {
+                    "sbmlsim": StageResult("pass", seconds=0.5),
+                    "libopencor": StageResult("fail", "x", seconds=1.5),
+                },
+            ),
+            "00002": CaseResult(
+                "00002",
+                [],
+                [],
+                {
+                    "sbmlsim": StageResult("pass", seconds=0.25),
+                    "libopencor": StageResult("skip", "sbmlsim failed"),
+                },
+            ),
+        },
+    )
+    assert result.seconds("sbmlsim") == {"00001": 0.5, "00002": 0.25}
+    # a stage without a simulation has no time
+    assert result.seconds("libopencor") == {"00001": 1.5}
+    assert result.seconds("roundtrip") == {}
+
+
+def test_json_rounds_the_seconds(tmp_path: Path) -> None:
+    result = SuiteResult(
+        "3.5.0",
+        "0.1.0",
+        {
+            "00001": CaseResult(
+                "00001", [], [], {"sbmlsim": StageResult("pass", seconds=0.123456789)}
+            )
+        },
+    )
+    path = tmp_path / "results.json"
+    result.to_json(path)
+    assert '"seconds": 0.123' in path.read_text(encoding="utf-8")
+    assert SuiteResult.from_json(path).cases["00001"].stages["sbmlsim"].seconds == 0.123

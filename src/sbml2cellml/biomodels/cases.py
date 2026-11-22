@@ -1,7 +1,7 @@
 """Case construction for a BioModels model.
 
 Every curated model runs the same generic timecourse: there are no expected
-results (`Case.expected` is `None`, the roadrunner simulation of the
+results (`Case.expected` is `None`, the sbmlsim-core simulation of the
 original SBML becomes the expected results the later stages are compared
 with, see `sbml2cellml.testsuite.runner`).
 """

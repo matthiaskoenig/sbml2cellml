@@ -1,8 +1,8 @@
 """The pipeline of the harness.
 
-Every runnable case goes through five stages: the roadrunner simulation of
+Every runnable case goes through five stages: the sbmlsim-core simulation of
 the original SBML, the conversion to CellML, the libopencor
-simulation of the CellML, the conversion back to SBML and the roadrunner
+simulation of the CellML, the conversion back to SBML and the sbmlsim-core
 simulation of the roundtrip SBML. Every simulation is compared with the
 expected results of the case. The simulators run in worker processes, the
 conversions in this process.
@@ -33,7 +33,7 @@ from sbml2cellml.testsuite.worker import SimulationFailure, SimulatorWorker, fra
 
 logger = logging.getLogger(__name__)
 
-#: solver settings of every roadrunner and libopencor simulation, tried in this
+#: solver settings of every sbmlsim-core and libopencor simulation, tried in this
 #: order. The first ones are tight, so that the comparison measures the
 #: conversion and not the integrator; the next ones are only used when CVODE
 #: gives up, which it does for some models with tolerances this tight. Looser
@@ -52,8 +52,9 @@ SOLVER_SETTINGS: tuple[dict[str, float | int], ...] = tuple(
         (1e-7, 1e-9),
     )
 )
-#: part of the message of a failure of the integrator, of both simulators
-INTEGRATOR_FAILURE = "CVODE"
+#: parts of the message of a failure of the integrator, of both simulators:
+#: libopencor names CVODE, sbmlsim-core raises an `IntegrationError`
+INTEGRATOR_FAILURES = ("CVODE", "IntegrationError")
 #: an absolute path quoted in an exception message (e.g. the suite path of a
 #: `CellMLValidationError`), reduced to its basename so the message does not
 #: depend on the machine it ran on
@@ -81,24 +82,35 @@ def _message(err: BaseException) -> str:
     text = _ABSOLUTE_PATH.sub(r"'\1'", str(err))
     lines = [
         _LONG_DECIMAL.sub(lambda m: f"{float(m.group()):.3g}", line)
-        if INTEGRATOR_FAILURE in line
+        if any(failure in line for failure in INTEGRATOR_FAILURES)
         else line
         for line in (line.rstrip() for line in text.strip().splitlines())
     ]
     return f"{type(err).__name__}: " + "\n".join(lines)
 
 
-def _stage(comparison: Comparison) -> StageResult:
-    """Stage result of a comparison."""
+def _stage(comparison: Comparison, seconds: float | None = None) -> StageResult:
+    """Stage result of a comparison.
+
+    Args:
+        comparison: the comparison of the simulation with the expected
+            results.
+        seconds: wall time of the simulation, see
+            `sbml2cellml.testsuite.simulators`.
+
+    Returns:
+        The result of the stage.
+    """
     return StageResult(
         "pass" if comparison.passed else "fail",
         comparison.message,
         None if not comparison.variables else comparison.max_excess,
+        seconds,
     )
 
 
-def roadrunner_selections(case: Case, model: libsbml.Model) -> list[str]:
-    """Roadrunner selections of the settings variables of the original model.
+def selections(case: Case, model: libsbml.Model) -> list[str]:
+    """Selections of the settings variables of the original model.
 
     A species expected as concentration is selected as `[id]`, everything
     else by id.
@@ -134,7 +146,7 @@ def _simulate(
             result = worker.call(function, **arguments, **settings)
         except SimulationFailure as err:
             first = first or err
-            if INTEGRATOR_FAILURE not in str(err):
+            if not any(failure in str(err) for failure in INTEGRATOR_FAILURES):
                 break
             continue
         if first is not None:
@@ -151,29 +163,29 @@ def _simulate(
 
 
 def run_case(
-    case: Case, work_dir: Path, roadrunner: SimulatorWorker, libopencor: SimulatorWorker
+    case: Case, work_dir: Path, sbmlsim: SimulatorWorker, libopencor: SimulatorWorker
 ) -> CaseResult:
     """Run the five stages of a case.
 
     Args:
         case: a runnable case.
         work_dir: directory for the converted files.
-        roadrunner: worker for the SBML simulations.
+        sbmlsim: worker for the SBML simulations.
         libopencor: worker for the CellML simulation.
 
     Returns:
         The stage results; a stage whose input stage failed is `skip`. Every
         stage is `fail` when the case itself cannot be set up (e.g. an
         unparsable SBML file). When `case.expected` is `None`, the
-        `roadrunner` simulation of the original model becomes the expected
+        `sbmlsim` simulation of the original model becomes the expected
         results for `libopencor` and `roundtrip` when it succeeds; when it
-        fails, those two stages are `skip` (`roadrunner failed`) instead of
-        running, and `roadrunner` itself has no `max_excess` (there is
+        fails, those two stages are `skip` (`sbmlsim failed`) instead of
+        running, and `sbmlsim` itself has no `max_excess` (there is
         nothing to compare it with). `CaseResult.informative` is
         `sbml2cellml.testsuite.compare.is_informative` of the expected frame
-        (the case's expected results, or the `roadrunner` simulation once it
+        (the case's expected results, or the `sbmlsim` simulation once it
         is known), `None` when there is no expected frame, i.e.
-        `case.expected` is `None` and the `roadrunner` stage failed.
+        `case.expected` is `None` and the `sbmlsim` stage failed.
     """
     assert case.sbml_path is not None
     settings = case.settings
@@ -203,14 +215,14 @@ def run_case(
 
     stages: dict[str, StageResult] = {}
 
-    # roadrunner
+    # sbmlsim
     expected: pd.DataFrame | None = case.expected
     try:
         result = _simulate(
-            roadrunner,
+            sbmlsim,
             "simulate_sbml",
             sbml=case.sbml_path.read_text(encoding="utf-8"),
-            selections=roadrunner_selections(case, model),
+            selections=selections(case, model),
             start=settings.start,
             end=settings.end,
             steps=settings.steps,
@@ -218,11 +230,13 @@ def run_case(
         original = strip_brackets(frame(result))
         if expected is None:
             expected = original
-            stages["roadrunner"] = StageResult("pass")
+            stages["sbmlsim"] = StageResult("pass", seconds=result["seconds"])
         else:
-            stages["roadrunner"] = _stage(compare(original, expected, settings))
+            stages["sbmlsim"] = _stage(
+                compare(original, expected, settings), result["seconds"]
+            )
     except Exception as err:
-        stages["roadrunner"] = StageResult("fail", _message(err))
+        stages["sbmlsim"] = StageResult("fail", _message(err))
 
     informative = is_informative(expected, settings) if expected is not None else None
 
@@ -239,7 +253,7 @@ def run_case(
 
     # libopencor
     if expected is None:
-        stages["libopencor"] = StageResult("skip", "roadrunner failed")
+        stages["libopencor"] = StageResult("skip", "sbmlsim failed")
     else:
         try:
             result = _simulate(
@@ -251,7 +265,9 @@ def run_case(
                 steps=settings.steps,
             )
             df = requested_frame(frame(result), quantities, settings)
-            stages["libopencor"] = _stage(compare(df, expected, settings))
+            stages["libopencor"] = _stage(
+                compare(df, expected, settings), result["seconds"]
+            )
         except Exception as err:
             stages["libopencor"] = StageResult("fail", _message(err))
 
@@ -267,21 +283,25 @@ def run_case(
 
     # roundtrip
     if expected is None:
-        stages["roundtrip"] = StageResult("skip", "roadrunner failed")
+        stages["roundtrip"] = StageResult("skip", "sbmlsim failed")
     else:
         try:
-            selections = list(dict.fromkeys([*settings.variables, *compartments]))
+            roundtrip_selections = list(
+                dict.fromkeys([*settings.variables, *compartments])
+            )
             result = _simulate(
-                roadrunner,
+                sbmlsim,
                 "simulate_sbml",
                 sbml=roundtrip_path.read_text(encoding="utf-8"),
-                selections=selections,
+                selections=roundtrip_selections,
                 start=settings.start,
                 end=settings.end,
                 steps=settings.steps,
             )
             df = requested_frame(frame(result), quantities, settings)
-            stages["roundtrip"] = _stage(compare(df, expected, settings))
+            stages["roundtrip"] = _stage(
+                compare(df, expected, settings), result["seconds"]
+            )
         except Exception as err:
             stages["roundtrip"] = StageResult("fail", _message(err))
 
@@ -301,7 +321,7 @@ def run_suite(
         work_dir: directory for the converted files, created if needed.
         timeout: seconds per simulator call.
         progress: called with the finished status line of the case after
-            every runnable case, e.g. `00001 roadrunner=pass sbml2cellml=pass
+            every runnable case, e.g. `00001 sbmlsim=pass sbml2cellml=pass
             libopencor=fail cellml2sbml=pass roundtrip=fail`.
 
     Returns:
@@ -320,12 +340,12 @@ def run_suite(
     if not runnable:
         return result
     with (
-        SimulatorWorker("roadrunner", timeout) as roadrunner,
+        SimulatorWorker("sbmlsim", timeout) as sbmlsim,
         SimulatorWorker("libopencor", timeout) as libopencor,
     ):
         for case in runnable:
             logger.info("case %s", case.id)
-            case_result = run_case(case, work_dir, roadrunner, libopencor)
+            case_result = run_case(case, work_dir, sbmlsim, libopencor)
             result.cases[case.id] = case_result
             if progress is not None:
                 statuses = " ".join(

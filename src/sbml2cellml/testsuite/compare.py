@@ -124,7 +124,7 @@ def is_informative(expected: pd.DataFrame, settings: Settings) -> bool:
 
     Args:
         expected: the expected frame, i.e. the case's expected results or,
-            when there are none, the roadrunner simulation of the original model.
+            when there are none, the sbmlsim-core simulation of the original model.
         settings: settings of the case (variables and tolerances).
 
     Returns:
@@ -185,7 +185,7 @@ def requested_frame(
 
     Raises:
         CompareError: `df` has no time column or duplicate column names (e.g.
-            a parameter with the id `time` next to roadrunner's time), or a
+            a parameter with the id `time` next to the simulator's time), or a
             variable needs converting between amount and concentration and
             its compartment column is missing from `df`.
     """
@@ -220,7 +220,7 @@ def requested_frame(
 
 
 def strip_brackets(df: pd.DataFrame) -> pd.DataFrame:
-    """Rename roadrunner's `[S]` concentration columns to `S`."""
+    """Rename the `[S]` concentration columns of the simulator to `S`."""
     return df.rename(
         columns={
             c: c[1:-1] for c in df.columns if c.startswith("[") and c.endswith("]")

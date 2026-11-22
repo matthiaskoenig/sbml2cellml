@@ -27,14 +27,14 @@ A pull request can only be merged once the four required checks are green:
 
 | check   | workflow      | content                                                             |
 | ------- | ------------- | --------------------------------------------------------------------|
-| `tests` | `ci-cd.yml`   | the test matrix, python 3.14 on linux and macos                     |
+| `tests` | `ci-cd.yml`   | the test matrix, python 3.14 on linux, macos and windows            |
 | `ruff`  | `ruff.yml`    | `ruff check` and `ruff format --check`                              |
 | `ty`    | `ty.yml`      | `tox r -e ty`                                                       |
 | `docs`  | `docs.yml`    | the zensical build including the api reference and the agent files  |
 
-`tests` aggregates the test matrix into a single job, so the name of the required check stays the same when the matrix changes. The CI runs the standalone interpreters of uv (`UV_PYTHON_PREFERENCE=only-managed`); on linux it puts their `lib` directory on `LD_LIBRARY_PATH`, because the roadrunner extension links against libpython, which these interpreters ship but never load.
+`tests` aggregates the test matrix into a single job, so the name of the required check stays the same when the matrix changes. The CI runs the standalone interpreters of uv (`UV_PYTHON_PREFERENCE=only-managed`). The linux jobs run on `ubuntu-24.04` and not on `ubuntu-latest`: the wheels of libcellml link `libxml2.so.2` and ubuntu 26.04 ships libxml2 2.15 as `libxml2-16`, which provides `libxml2.so.16` only.
 
-Continuous integration is kept small: every workflow cancels its running build when a newer commit of the same branch or pull request arrives, uv caches the packages and the interpreters between runs, dependabot proposes its updates once a month, and the matrix tests only the newest python. Python 3.13 is tested locally, see [Testing](#testing), before a pull request is opened.
+Continuous integration is kept small: every workflow cancels its running build when a newer commit of the same branch or pull request arrives, uv caches the packages and the interpreters between runs, dependabot proposes its updates once a month, and the matrix runs python 3.14, the only supported version.
 
 Further rules of a pull request:
 
@@ -99,7 +99,7 @@ A single sync creates the virtual environment in `.venv`, installs `sbml2cellml`
 uv sync --extra dev
 ```
 
-The `dev` extra contains everything used below, i.e., pytest, ruff, ty, tox, pre-commit, zensical and bump-my-version, together with the `simulate` extra (libopencor, pandas, matplotlib) and libroadrunner for the roundtrip tests. The python version is taken from `.python-version` (3.14, the newest supported version; 3.13 is supported as well).
+The `dev` extra contains everything used below, i.e., pytest, ruff, ty, tox, pre-commit, zensical and bump-my-version, together with the `simulate` extra (libopencor, sbmlsim-core, pandas, matplotlib). The python version is taken from `.python-version` (3.14, the only supported version).
 
 The tools are then run either with `uv run <command>`, which uses the environment without activating it, or from the activated environment:
 
@@ -123,7 +123,7 @@ From now on every commit is checked with ruff (lint and format) and ty, i.e., th
 
 The tests are written with pytest, tox runs them against the supported python versions.
 
-The tox environments are `py3.13`, `py3.14` and `ty` (see `envlist` in `tox.ini`); a test environment is run with
+The tox environments are `py3.14` and `ty` (see `envlist` in `tox.ini`); a test environment is run with
 ```bash
 tox r -e py3.14
 ```
@@ -134,7 +134,7 @@ tox run-parallel
 
 The tox environments are created from `uv.lock` by tox-uv (`runner = uv-venv-lock-runner` in `tox.ini`).
 
-This needs the interpreters to be available, which uv installs with `uv python install 3.13 3.14`. It is the complete test and is run before a pull request is opened: continuous integration runs only `py3.14`, on linux and macos, as `uvx --with tox-uv tox -e py3.14 -- --durations=15`, which lists the 15 slowest tests so that a test which becomes slow is seen. The tests run in parallel on every core (pytest-xdist, `addopts = "-n auto"`).
+This needs the interpreter to be available, which uv installs with `uv python install 3.14`. It is the complete test and is run before a pull request is opened: continuous integration runs `py3.14` on linux, macos and windows, as `uvx --with tox-uv tox -e py3.14 -- --durations=15`, which lists the 15 slowest tests so that a test which becomes slow is seen. The tests run in parallel on every core (pytest-xdist, `addopts = "-n auto"`).
 
 To run the tests directly against the development environment use
 
@@ -146,7 +146,7 @@ pytest tests/test_cellml.py::test_read_model                 # a single test
 
 The simulation tests and the examples need libopencor and are skipped without it; with `uv sync --extra dev` it is installed.
 
-The roundtrip tests (`tests/test_roundtrip.py`) need roadrunner and are skipped without it. roadrunner and libopencor bundle different LLVM versions and crash once both have JIT-compiled in one process, so roadrunner runs in a subprocess (`tests/simulators.py`); the same rule shapes the process model of the [SBML test suite](#sbml-test-suite) harness.
+The roundtrip tests (`tests/test_roundtrip.py`) simulate the SBML side with sbmlsim-core (`tests/simulators.py`) and the CellML side with libopencor; both are installed with `uv sync --extra dev` and the tests are skipped without them.
 
 ## Linting and formatting
 
@@ -226,21 +226,21 @@ The one-time setup of the GitHub repository, for the record:
 
 ## SBML test suite { #sbml-test-suite }
 
-`sbml2cellml.testsuite` runs the [SBML test suite](https://github.com/sbmlteam/sbml-test-suite) through both converters and both simulators, so that every conversion gap is measured against a real corpus instead of a handful of examples. Each runnable case goes through five stages: the original SBML is simulated with roadrunner (`roadrunner`), converted to CellML (`sbml2cellml`), the CellML is simulated with libopencor (`libopencor`), converted back to SBML (`cellml2sbml`) and the roundtrip SBML is simulated again with roadrunner (`roundtrip`); every simulation is compared with the expected results of the case. A value passes when `|value - expected| <= absolute + relative * |expected|` at every time point, with the absolute and the relative tolerance of the settings of the case (`NNNNN-settings.txt`; the relative tolerance is `1e-4` for most cases, the absolute tolerance between `1e-9` and `0.15`). Cases with an SBML package the converters do not support, without a level 3 version 2 file or of a test type other than `TimeCourse` are skipped.
+`sbml2cellml.testsuite` runs the [SBML test suite](https://github.com/sbmlteam/sbml-test-suite) through both converters and both simulators, so that every conversion gap is measured against a real corpus instead of a handful of examples. Each runnable case goes through five stages: the original SBML is simulated with sbmlsim-core (`sbmlsim`), converted to CellML (`sbml2cellml`), the CellML is simulated with libopencor (`libopencor`), converted back to SBML (`cellml2sbml`) and the roundtrip SBML is simulated again with sbmlsim-core (`roundtrip`); every simulation is compared with the expected results of the case. A value passes when `|value - expected| <= absolute + relative * |expected|` at every time point, with the absolute and the relative tolerance of the settings of the case (`NNNNN-settings.txt`; the relative tolerance is `1e-4` for most cases, the absolute tolerance between `1e-9` and `0.15`). Cases with an SBML package the converters do not support, without a level 3 version 2 file or of a test type other than `TimeCourse` are skipped.
 
 ```bash
 uv run sbml2cellml-testsuite run
 ```
 
-downloads the suite into `~/.cache/sbml2cellml` on first use (`SBML2CELLML_CACHE` overrides the cache root), runs the pipeline and writes `testsuite/results.json`, `docs/testsuite.md` and its bar diagram `docs/images/testsuite.svg` (`testsuite_dark.svg` for dark backgrounds, also shown in `README.md`). `--cases 00001,00002` restricts the run to a subset of case ids and `--suite-dir` points at a local copy of the `semantic/` directory instead of downloading. The tolerances of the comparison are not the tolerances of the solver: every roadrunner and libopencor simulation integrates with tight solver tolerances (`1e-9` relative, `1e-12` absolute), so the comparison measures the conversion rather than the default integrator tolerances, an amendment to the original harness design. CVODE gives up on some models with tolerances this tight (`CV_TOO_MUCH_WORK`, `CV_CONV_FAILURE`, `CV_ERR_FAILURE`); only then the simulation is repeated with `1e-8`/`1e-10` and `1e-7`/`1e-9` (`SOLVER_SETTINGS` of `sbml2cellml.testsuite.runner`), and the failure with the tight tolerances is reported when the model integrates with none. Looser tolerances for every simulation are no alternative: with `1e-8`/`1e-10` 4 cases of the test suite and 22 stages of the BioModels check which pass would fail, with `1e-6`/`1e-8` 78 and 123. Both simulators may take 100000 internal steps between two time points; the 500 steps of libopencor ended the integration of 147 curated models of BioModels.
+fetches the cases of the pinned commit of the suite into `~/.cache/sbml2cellml` on first use (`SUITE_COMMIT` of `sbml2cellml.testsuite.cases`, a partial `git` clone of `cases/semantic`; `SBML2CELLML_CACHE` overrides the cache root), runs the pipeline and writes `testsuite/results.json`, `docs/testsuite.md`, its bar diagram `docs/images/testsuite.svg` (`testsuite_dark.svg` for dark backgrounds, also shown in `README.md`) and the timings `docs/images/testsuite_timings.svg` (`testsuite_timings_dark.svg`), the wall time of the libopencor simulation of every case against the wall time of its sbmlsim-core simulation. The report lists the total, median, 95th percentile and slowest simulation of every stage: the time is measured around the call of the simulator in its worker process, so it holds the compilation of the model but no overhead of the harness. `--cases 00001,00002` restricts the run to a subset of case ids and `--suite-dir` points at a local copy of the `semantic/` directory instead of downloading. The tolerances of the comparison are not the tolerances of the solver: every sbmlsim-core and libopencor simulation integrates with tight solver tolerances (`1e-9` relative, `1e-12` absolute), so the comparison measures the conversion rather than the default integrator tolerances, an amendment to the original harness design. CVODE gives up on some models with tolerances this tight (`CV_TOO_MUCH_WORK`, `CV_CONV_FAILURE`, `CV_ERR_FAILURE`); only then the simulation is repeated with `1e-8`/`1e-10` and `1e-7`/`1e-9` (`SOLVER_SETTINGS` of `sbml2cellml.testsuite.runner`), and the failure with the tight tolerances is reported when the model integrates with none. Looser tolerances for every simulation are no alternative: with `1e-8`/`1e-10` 4 cases of the test suite and 22 stages of the BioModels check which pass would fail, with `1e-6`/`1e-8` 78 and 123. Both simulators may take 100000 internal steps between two time points; the 500 steps of libopencor ended the integration of 147 curated models of BioModels.
 
 `testsuite/results.json`, `docs/testsuite.md` and the figures `docs/images/testsuite*.svg` are generated and committed. `tests/test_testsuite_full.py` (enabled with `SBML2CELLML_TESTSUITE=1`, run with `tox r -e testsuite` and in the linux CI job of python 3.14; the pipeline runs with python 3.14 only, the unit tests with every supported python) reruns the full suite and fails if any case regresses against the committed results or if the rendered report no longer matches `docs/testsuite.md`. The failure reasons of the report list every failing case with its complete error: the message of a stage in `testsuite/results.json` is the full text of the exception with all its lines, only absolute paths are reduced to the file name and the long decimals of a CVODE diagnostic rounded, so that the committed files do not depend on the machine. To accept an improvement, rerun `uv run sbml2cellml-testsuite run` and commit the updated `testsuite/results.json`, `docs/testsuite.md` and figures together in the same pull request. `uv run sbml2cellml-testsuite report` rerenders the report and the figures from the committed results, e.g., after a change of the report itself.
 
-roadrunner and libopencor bundle different LLVM versions and crash once both have JIT-compiled in one process (see [Testing](#testing)); the harness therefore runs each simulator in its own worker process (`sbml2cellml.testsuite.worker`) for the whole run, instead of starting a subprocess per call.
+The harness runs each simulator in a worker process of its own (`sbml2cellml.testsuite.worker`) for the whole run, instead of starting a subprocess per call: a call has a timeout and a simulator which hangs or crashes the process costs one case instead of the run.
 
 ## BioModels { #biomodels }
 
-`sbml2cellml.biomodels` runs the manually curated SBML models of [BioModels](https://www.biomodels.org) (about 1075) through the pipeline of the SBML test suite, reusing `sbml2cellml.testsuite`, so the converters are measured against published models in addition to the test cases. These models have no expected results: the `roadrunner` stage simulates the original SBML with roadrunner over a generic timecourse (0 to 100 time units, 100 steps), and its result is what the `libopencor` and `roundtrip` simulations are compared with, using the comparison of the test suite with a relative tolerance of `1e-3` and an absolute tolerance of `1e-6` (`RELATIVE` and `ABSOLUTE` of `sbml2cellml.biomodels.cases`); the solver settings are the ones of the test suite (`1e-9`/`1e-12`, relaxed only when CVODE fails). A `roadrunner` failure means roadrunner cannot simulate the model, it says nothing about the converters; models with an SBML package or without a variable (no species and no target of a rate rule or assignment rule) are skipped.
+`sbml2cellml.biomodels` runs the manually curated SBML models of [BioModels](https://www.biomodels.org) (about 1075) through the pipeline of the SBML test suite, reusing `sbml2cellml.testsuite`, so the converters are measured against published models in addition to the test cases. These models have no expected results: the `sbmlsim` stage simulates the original SBML with sbmlsim-core over a generic timecourse (0 to 100 time units, 100 steps), and its result is what the `libopencor` and `roundtrip` simulations are compared with, using the comparison of the test suite with a relative tolerance of `1e-3` and an absolute tolerance of `1e-6` (`RELATIVE` and `ABSOLUTE` of `sbml2cellml.biomodels.cases`); the solver settings are the ones of the test suite (`1e-9`/`1e-12`, relaxed only when CVODE fails). An `sbmlsim` failure means sbmlsim-core cannot simulate the model, it says nothing about the converters; models with an SBML package or without a variable (no species and no target of a rate rule or assignment rule) are skipped.
 
 ```bash
 uv run sbml2cellml-biomodels run

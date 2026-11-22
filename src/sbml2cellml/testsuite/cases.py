@@ -3,30 +3,35 @@
 A case is a directory `NNNNN` with the model in several SBML levels and
 versions, `NNNNN-settings.txt` (simulation settings and tolerances),
 `NNNNN-results.csv` (expected timecourse) and `NNNNN-model.m` (tags and the
-test type). The suite is downloaded from its GitHub release into a cache on
-first use.
+test type). The cases are fetched from a pinned commit of the repository of
+the suite into a cache on first use: the fixes of the cases arrive in the
+repository long before they are released, so `SUITE_COMMIT` and not a
+release is what the harness runs.
 """
 
 import logging
 import os
 import re
 import shutil
-import zipfile
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
 import pandas as pd
-import requests
 
 logger = logging.getLogger(__name__)
 
-#: version of the SBML test suite
-SUITE_VERSION = "3.5.0"
-#: download url of the semantic test cases, formatted with the version
-SUITE_URL = (
-    "https://github.com/sbmlteam/sbml-test-suite/releases/download/"
-    "{version}/semantic_tests_v{version}.zip"
-)
+#: commit of the suite the harness runs; bump it to take in new cases and
+#: fixed expected results, then regenerate the committed results
+SUITE_COMMIT = "bbcbc80c4daec79fea301299f981746408a1742b"
+#: label of the suite in the results and the report
+SUITE_VERSION = SUITE_COMMIT[:7]
+#: repository of the SBML test suite
+SUITE_REPOSITORY = "https://github.com/sbmlteam/sbml-test-suite.git"
+#: path of the semantic cases inside the repository
+SUITE_CASES = "cases/semantic"
+#: seconds the git commands of the download may take
+SUITE_TIMEOUT = 600.0
 #: environment variable overriding the cache root
 CACHE_ENV = "SBML2CELLML_CACHE"
 #: name of a case directory
@@ -58,56 +63,99 @@ def cache_dir() -> Path:
     return Path(os.environ.get(CACHE_ENV, Path.home() / ".cache" / "sbml2cellml"))
 
 
-def ensure_suite(version: str = SUITE_VERSION, cache: Path | None = None) -> Path:
-    """Directory of the semantic cases, downloaded and unpacked on first use.
+def _git(arguments: list[str], cwd: Path) -> None:
+    """Run a git command in a directory.
 
     Args:
-        version: release of the test suite.
+        arguments: the arguments after `git`.
+        cwd: working directory of the command.
+
+    Raises:
+        TestSuiteError: if git is missing, times out or fails; the message
+            carries the output of the command.
+    """
+    try:
+        completed = subprocess.run(
+            ["git", *arguments],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=SUITE_TIMEOUT,
+        )
+    except FileNotFoundError as err:
+        raise TestSuiteError(
+            "git is needed to fetch the cases of the SBML test suite"
+        ) from err
+    except subprocess.TimeoutExpired as err:
+        raise TestSuiteError(f"git {' '.join(arguments)} timed out") from err
+    if completed.returncode != 0:
+        raise TestSuiteError(
+            f"git {' '.join(arguments)} failed:\n{completed.stdout}{completed.stderr}"
+        )
+
+
+def ensure_suite(commit: str = SUITE_COMMIT, cache: Path | None = None) -> Path:
+    """Directory of the semantic cases, fetched on first use.
+
+    The cases are the only part of the repository which is fetched: a
+    partial clone without blobs, one commit deep, with `cases/semantic`
+    checked out (about 80 MB of the 400 MB of the repository).
+
+    Args:
+        commit: commit of the suite to fetch.
         cache: cache root, `cache_dir()` by default.
 
     Returns:
-        The `semantic/` directory with one subdirectory per case.
+        The directory with one subdirectory per case.
 
     Raises:
-        TestSuiteError: if the download fails or the archive has not the
-            expected layout.
+        TestSuiteError: if git is missing or the fetch fails, or if the
+            commit has no `cases/semantic` directory.
     """
-    root = (cache or cache_dir()) / "sbml-test-suite" / version
+    root = (cache or cache_dir()) / "sbml-test-suite" / commit[:7]
     semantic = root / "semantic"
     if semantic.is_dir():
         return semantic
     root.mkdir(parents=True, exist_ok=True)
-    url = SUITE_URL.format(version=version)
-    zip_path = root / f"semantic_tests_v{version}.zip"
-    logger.info("Downloading the SBML test suite %s from %s", version, url)
+    # the cases are checked out into a scratch directory next to the target
+    # and renamed into place only once the checkout is complete, so a
+    # process killed in the middle never leaves a half `semantic/` that a
+    # later call returns
+    clone = root / "clone"
+    if clone.is_dir():
+        shutil.rmtree(clone)
+    clone.mkdir()
+    logger.info("Fetching %s of the SBML test suite %s", SUITE_CASES, commit[:7])
     try:
-        with requests.get(url, stream=True, timeout=120) as response:
-            response.raise_for_status()
-            with zip_path.open("wb") as f_zip:
-                for chunk in response.iter_content(1 << 16):
-                    f_zip.write(chunk)
-    except requests.RequestException as err:
-        raise TestSuiteError(f"Download of {url} failed: {err}") from err
-    # extract into a scratch directory next to the target and rename it into
-    # place only once the extraction is complete, so a process killed mid
-    # extraction never leaves a half `semantic/` that a later call returns
-    extracting = root / "extracting"
-    if extracting.is_dir():
-        shutil.rmtree(extracting)
-    try:
-        with zipfile.ZipFile(zip_path) as archive:
-            archive.extractall(extracting)
-    except (zipfile.BadZipFile, OSError) as err:
-        shutil.rmtree(extracting, ignore_errors=True)
-        raise TestSuiteError(f"Could not extract {zip_path}: {err}") from err
-    extracted_semantic = extracting / "semantic"
-    if not extracted_semantic.is_dir():
-        shutil.rmtree(extracting, ignore_errors=True)
-        raise TestSuiteError(f"No 'semantic' directory in {zip_path}")
-    os.replace(extracted_semantic, semantic)
-    shutil.rmtree(extracting, ignore_errors=True)
-    zip_path.unlink()
-    logger.info("SBML test suite unpacked to %s", semantic)
+        _git(["init", "--quiet", "."], clone)
+        _git(["remote", "add", "origin", SUITE_REPOSITORY], clone)
+        # a partial clone needs the extension on the repository it lazily
+        # fetches the missing objects from
+        _git(["config", "extensions.partialClone", "origin"], clone)
+        _git(["sparse-checkout", "set", "--cone", SUITE_CASES], clone)
+        _git(
+            [
+                "fetch",
+                "--quiet",
+                "--depth",
+                "1",
+                "--filter=blob:none",
+                "origin",
+                commit,
+            ],
+            clone,
+        )
+        _git(["checkout", "--quiet", "FETCH_HEAD"], clone)
+        cases = clone / SUITE_CASES
+        if not cases.is_dir():
+            raise TestSuiteError(f"Commit {commit} has no '{SUITE_CASES}' directory")
+        os.replace(cases, semantic)
+    except BaseException:
+        shutil.rmtree(clone, ignore_errors=True)
+        raise
+    shutil.rmtree(clone, ignore_errors=True)
+    logger.info("SBML test suite %s unpacked to %s", commit[:7], semantic)
     return semantic
 
 
@@ -222,7 +270,7 @@ class Case:
     """One semantic test case.
 
     `expected` is `None` for a case without expected results (e.g. a model
-    from a model repository): the roadrunner simulation of the original model
+    from a model repository): the sbmlsim-core simulation of the original model
     becomes the expected results for the later stages. `name` is a display name (e.g. the model
     name), empty for the SBML test suite cases.
     """
@@ -272,7 +320,7 @@ def load_case(case_dir: Path) -> Case:
     # with a variable of that name (e.g. 01820/01821, which declare a
     # variable "time"/"Time"/"TIME" among their settings variables); those
     # two cases fail with "duplicate column names" regardless, from
-    # roadrunner's own selection labels colliding, not from this rename
+    # the selection labels of the simulator colliding, not from this rename
     if "time" not in expected.columns[1:]:
         expected = expected.rename(columns={expected.columns[0]: "time"})
     return Case(

@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 #: the stages of the pipeline, in order
-STAGES = ("roadrunner", "sbml2cellml", "libopencor", "cellml2sbml", "roundtrip")
+STAGES = ("sbmlsim", "sbml2cellml", "libopencor", "cellml2sbml", "roundtrip")
 #: possible statuses of a stage
 STATUSES = ("pass", "fail", "skip")
 
@@ -18,6 +18,11 @@ class StageResult:
     status: str
     message: str = ""
     max_excess: float | None = None
+    #: wall time of the simulation of the stage in seconds, measured in the
+    #: worker process around the call of the simulator (the compilation of
+    #: the model included); `None` for a stage without a simulation and for
+    #: a simulation which failed
+    seconds: float | None = None
 
 
 @dataclass
@@ -31,7 +36,7 @@ class CaseResult:
     name: str = ""
     #: whether the expected frame moves more than the tolerance band for at
     #: least one variable (`sbml2cellml.testsuite.compare.is_informative`);
-    #: `None` when there is no expected frame, i.e. the `roadrunner` stage
+    #: `None` when there is no expected frame, i.e. the `sbmlsim` stage
     #: failed for a case without expected results of its own
     informative: bool | None = None
 
@@ -44,6 +49,23 @@ class SuiteResult:
     version: str
     cases: dict[str, CaseResult] = field(default_factory=dict)
     skipped: dict[str, str] = field(default_factory=dict)
+
+    def seconds(self, stage: str) -> dict[str, float]:
+        """Wall time of the passing simulations of a stage, by case.
+
+        Args:
+            stage: name of the stage.
+
+        Returns:
+            The seconds of every case whose stage was simulated and timed,
+            by case id.
+        """
+        timed = {}
+        for cid, case in self.cases.items():
+            seconds = case.stages[stage].seconds if stage in case.stages else None
+            if seconds is not None:
+                timed[cid] = seconds
+        return timed
 
     def counts(self, stage: str) -> dict[str, int]:
         """Number of cases per status of a stage."""
@@ -65,6 +87,10 @@ class SuiteResult:
             for stage in case_data["stages"].values():
                 if stage["max_excess"] is not None:
                     stage["max_excess"] = float(f"{stage['max_excess']:.3g}")
+                # the wall time differs from run to run anyway, three
+                # significant digits keep the committed file readable
+                if stage["seconds"] is not None:
+                    stage["seconds"] = float(f"{stage['seconds']:.3g}")
             cases[cid] = case_data
         data: dict[str, Any] = {
             "suite": self.suite,
@@ -104,6 +130,10 @@ class SuiteResult:
 def regressions(old: SuiteResult, new: SuiteResult) -> list[str]:
     """Stages which passed before and do not pass now, and missing cases.
 
+    A stage which only one of the two results has (e.g. after a stage was
+    renamed) is left out of the comparison: it has no status to compare
+    with.
+
     Args:
         old: committed result.
         new: current result.
@@ -117,22 +147,31 @@ def regressions(old: SuiteResult, new: SuiteResult) -> list[str]:
             lines.append(f"{cid}: missing")
             continue
         for stage in STAGES:
-            before = case.stages[stage].status
-            after = new.cases[cid].stages[stage]
-            if before == "pass" and after.status != "pass":
+            before = case.stages.get(stage)
+            after = new.cases[cid].stages.get(stage)
+            if before is None or after is None:
+                continue
+            if before.status == "pass" and after.status != "pass":
                 lines.append(f"{cid} {stage}: pass -> {after.status} ({after.message})")
     return lines
 
 
 def improvements(old: SuiteResult, new: SuiteResult) -> list[str]:
-    """Stages which did not pass before and pass now."""
+    """Stages which did not pass before and pass now.
+
+    A stage which only one of the two results has is left out, as in
+    `regressions`.
+    """
     lines: list[str] = []
     for cid, case in sorted(new.cases.items()):
         if cid not in old.cases:
             lines.append(f"{cid}: new")
             continue
         for stage in STAGES:
-            before = old.cases[cid].stages[stage].status
-            if before != "pass" and case.stages[stage].status == "pass":
-                lines.append(f"{cid} {stage}: {before} -> pass")
+            before = old.cases[cid].stages.get(stage)
+            after = case.stages.get(stage)
+            if before is None or after is None:
+                continue
+            if before.status != "pass" and after.status == "pass":
+                lines.append(f"{cid} {stage}: {before.status} -> pass")
     return lines

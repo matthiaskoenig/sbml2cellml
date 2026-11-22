@@ -15,7 +15,8 @@ The API reference is generated from the docstrings of the package.
 | [units](units.md) | CellML units to SBML unit definitions |
 | [cellmlunits](cellmlunits.md) | SBML units to CellML units, the units of the variables |
 | [variables](variables.md) | SBML ids of the CellML variables |
-| [simulate](simulate.md) | Timecourse simulation with libopencor (optional dependency) |
+| [simulate](simulate.md) | Timecourse simulation of CellML models with libopencor (optional dependency) |
+| [sbmlsim](sbmlsim.md) | Timecourse simulation of SBML models with sbmlsim-core (optional dependency) |
 | [cli](cli.md) | The `sbml2cellml` and `cellml2sbml` commands |
 | [console](console.md) | Shared rich console |
 | [log](log.md) | Logging of the package |
@@ -26,9 +27,9 @@ The `sbml2cellml-testsuite` command runs the [SBML test suite](https://github.co
 
 | module | description |
 | --- | --- |
-| [testsuite.cases](testsuite.cases.md) | Downloading the suite, reading and filtering the semantic test cases |
+| [testsuite.cases](testsuite.cases.md) | Fetching the suite, reading and filtering the semantic test cases |
 | [testsuite.compare](testsuite.compare.md) | Comparison of a simulation with the expected results of a case |
-| [testsuite.simulators](testsuite.simulators.md) | The roadrunner and libopencor simulator functions run inside a worker |
+| [testsuite.simulators](testsuite.simulators.md) | The sbmlsim-core and libopencor simulator functions run inside a worker |
 | [testsuite.worker](testsuite.worker.md) | Simulators in their own processes |
 | [testsuite.runner](testsuite.runner.md) | The pipeline of the harness, five stages per case |
 | [testsuite.results](testsuite.results.md) | Results of a suite run: per case and stage, JSON, regressions |

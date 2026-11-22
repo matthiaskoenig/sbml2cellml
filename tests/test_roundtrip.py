@@ -1,15 +1,10 @@
 """SBML to CellML to SBML roundtrips, checked by simulation.
 
-Skipped without roadrunner (and libopencor for the CellML side); both are
-part of the dev extra. roadrunner bundles a different LLVM than libopencor
-and the two crash once both have JIT-compiled in one interpreter, so
-roadrunner is only ever run in a subprocess (see `tests/simulators.py`); the
-availability check below uses `importlib.util.find_spec` instead of
-`pytest.importorskip` so it does not itself import (and thus load) roadrunner
-into this, the libopencor-using, process.
+The SBML side runs with sbmlsim-core (see `tests/simulators.py`), the CellML
+side with libopencor; both are part of the dev extra and the module is
+skipped without them.
 """
 
-import importlib.util
 from pathlib import Path
 
 import libsbml
@@ -22,8 +17,7 @@ from tests.conftest import MODELS_DIR, TEST_MODEL_PATH
 from tests.sbml_models import simple_model, write_sbml
 from tests.simulators import simulate_sbml
 
-if importlib.util.find_spec("roadrunner") is None:
-    pytest.skip("roadrunner not installed", allow_module_level=True)
+pytest.importorskip("sbmlsim_core")
 
 END = 100.0
 STEPS = 10

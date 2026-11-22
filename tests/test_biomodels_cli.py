@@ -42,7 +42,7 @@ def test_cli_run_with_ids(tmp_path: Path, capsys: pytest.CaptureFixture[str]) ->
     assert report_path.is_file()
     out = capsys.readouterr().out
     assert "BIOMD_A" in out
-    assert "roadrunner: " in out
+    assert "sbmlsim: " in out
 
 
 def test_cli_run_with_models_file(tmp_path: Path) -> None:
