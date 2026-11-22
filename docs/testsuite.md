@@ -3,7 +3,7 @@
 
 Semantic test cases of the [SBML test suite](https://github.com/sbmlteam/sbml-test-suite) at commit [`bbcbc80`](https://github.com/sbmlteam/sbml-test-suite/commit/bbcbc80). Every case is simulated with [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/) (`sbmlsim`), converted to CellML (`sbml2cellml`), simulated with libopencor (`libopencor`), converted back to SBML (`cellml2sbml`) and simulated with sbmlsim-core again (`roundtrip`). See [Development](development.md#sbml-test-suite) for how to run it.
 
-Every simulation is compared with the expected results of the case: a value passes when `|value - expected| <= absolute + relative * |expected|` with the absolute and the relative tolerance of the settings of the case. Both simulators integrate with CVODE with tight tolerances (relative/absolute `1e-9`/`1e-12`) and up to 100000 internal steps between two time points, so the comparison measures the conversion and not the integrator; only when CVODE gives up with these tolerances the simulation is repeated with `1e-8`/`1e-10` and `1e-7`/`1e-9`.
+Every simulation is compared with the expected results of the case: a value passes when `|value - expected| <= absolute + relative * |expected|` with the absolute and the relative tolerance of the settings of the case. Both simulators integrate with CVODE with tight tolerances (relative/absolute `1e-9`/`1e-12`) and up to 100000 internal steps between two time points, so the comparison measures the conversion and not the integrator; only when CVODE gives up with these tolerances the simulation is repeated with `1e-8`/`1e-10` and `1e-7`/`1e-9`. The absolute tolerance of the SBML simulation is scaled with the smallest initial amount of the model when it is below one, since the states of the SBML side are amounts and the states of the CellML side concentrations.
 
 An `sbmlsim` failure means sbmlsim-core itself cannot simulate the case, it says nothing about the converters.
 
@@ -23,6 +23,21 @@ An `sbmlsim` failure means sbmlsim-core itself cannot simulate the case, it says
 | roundtrip | 1535 | 1044 | 420 | 71 | 68.0% |
 
 939 of the 1044 cases with a passing libopencor stage are informative: the expected results move more than the tolerance band for at least one variable.
+
+## Timings
+
+Wall time of the simulations which pass or fail, measured around the call of the simulator in its worker process: the compilation of the model is part of it, the conversions and the comparison are not. Every simulator runs in one process for the whole run, so a model is compiled by a warm simulator, and the cases run one after the other.
+
+![Simulation time of libopencor against sbmlsim-core per case](images/testsuite_timings.svg#only-light)
+![Simulation time of libopencor against sbmlsim-core per case](images/testsuite_timings_dark.svg#only-dark)
+
+| stage | simulator | model | simulations | total | median | p95 | slowest |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| sbmlsim | sbmlsim-core | SBML model | 1535 | 3.8 s | 1.3 ms | 2.8 ms | 763 ms |
+| libopencor | libopencor | CellML model | 1462 | 8.2 s | 5.4 ms | 8.1 ms | 38 ms |
+| roundtrip | sbmlsim-core | roundtrip SBML model | 1464 | 2.4 s | 1.6 ms | 2.5 ms | 12 ms |
+
+Both simulators ran 1462 cases. libopencor is 4.1 times slower than sbmlsim-core for the median case and faster for 28 of them; the medians are 1.4 ms for sbmlsim-core and 5.4 ms for libopencor.
 
 ## Failure reasons
 

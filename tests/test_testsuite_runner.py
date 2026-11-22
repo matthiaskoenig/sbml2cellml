@@ -105,6 +105,12 @@ def test_run_suite_on_fixtures(tmp_path: Path) -> None:
     first = result.cases["00001"].stages
     assert first["sbmlsim"].status == "pass", first["sbmlsim"].message
     assert first["sbml2cellml"].status == "pass", first["sbml2cellml"].message
+    # the simulated stages are timed, the conversions are not
+    for stage in ("sbmlsim", "libopencor", "roundtrip"):
+        seconds = first[stage].seconds
+        assert seconds is not None and seconds > 0.0
+    assert first["sbml2cellml"].seconds is None
+    assert first["cellml2sbml"].seconds is None
     assert (tmp_path / "00001.cellml").is_file()
     # a stage after a failed conversion is skipped, never run
     for case in result.cases.values():

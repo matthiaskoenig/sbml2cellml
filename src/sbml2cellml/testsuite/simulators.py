@@ -2,7 +2,10 @@
 
 Every function imports its simulator lazily, so a worker process loads only
 the simulator it is used for. Results are plain dictionaries (`columns`,
-`rows`) so they can be sent between processes.
+`rows`, `seconds`) so they can be sent between processes. `seconds` is the
+wall time of the simulation, measured around the call of the simulator in
+the worker process, so it holds no overhead of the harness: it is the time a
+user waits for the model, the compilation of the model included.
 """
 
 import time
@@ -37,10 +40,11 @@ def simulate_sbml(
             `None`.
 
     Returns:
-        `columns` (the selections with `time` first) and `rows`.
+        `columns` (the selections with `time` first), `rows` and `seconds`.
     """
     from sbml2cellml.sbmlsim import run_timecourse
 
+    started = time.perf_counter()
     df = run_timecourse(
         sbml,
         selections,
@@ -51,7 +55,12 @@ def simulate_sbml(
         absolute_tolerance=absolute_tolerance,
         maximum_number_of_steps=maximum_number_of_steps,
     )
-    return {"columns": list(df.columns), "rows": df.to_numpy().tolist()}
+    seconds = time.perf_counter() - started
+    return {
+        "columns": list(df.columns),
+        "rows": df.to_numpy().tolist(),
+        "seconds": seconds,
+    }
 
 
 def simulate_cellml(
@@ -78,10 +87,11 @@ def simulate_cellml(
             two time points, the default of `run_timecourse` when `None`.
 
     Returns:
-        `columns` (`time` first, then every variable) and `rows`.
+        `columns` (`time` first, then every variable), `rows` and `seconds`.
     """
     from sbml2cellml.simulate import MAXIMUM_NUMBER_OF_STEPS, run_timecourse
 
+    started = time.perf_counter()
     df, _ = run_timecourse(
         Path(cellml_path),
         start=start,
@@ -95,7 +105,12 @@ def simulate_cellml(
             else maximum_number_of_steps
         ),
     )
-    return {"columns": list(df.columns), "rows": df.to_numpy().tolist()}
+    seconds = time.perf_counter() - started
+    return {
+        "columns": list(df.columns),
+        "rows": df.to_numpy().tolist(),
+        "seconds": seconds,
+    }
 
 
 def sleep(seconds: float) -> dict[str, Any]:

@@ -18,6 +18,11 @@ class StageResult:
     status: str
     message: str = ""
     max_excess: float | None = None
+    #: wall time of the simulation of the stage in seconds, measured in the
+    #: worker process around the call of the simulator (the compilation of
+    #: the model included); `None` for a stage without a simulation and for
+    #: a simulation which failed
+    seconds: float | None = None
 
 
 @dataclass
@@ -45,6 +50,23 @@ class SuiteResult:
     cases: dict[str, CaseResult] = field(default_factory=dict)
     skipped: dict[str, str] = field(default_factory=dict)
 
+    def seconds(self, stage: str) -> dict[str, float]:
+        """Wall time of the passing simulations of a stage, by case.
+
+        Args:
+            stage: name of the stage.
+
+        Returns:
+            The seconds of every case whose stage was simulated and timed,
+            by case id.
+        """
+        timed = {}
+        for cid, case in self.cases.items():
+            seconds = case.stages[stage].seconds if stage in case.stages else None
+            if seconds is not None:
+                timed[cid] = seconds
+        return timed
+
     def counts(self, stage: str) -> dict[str, int]:
         """Number of cases per status of a stage."""
         counts = dict.fromkeys(STATUSES, 0)
@@ -65,6 +87,10 @@ class SuiteResult:
             for stage in case_data["stages"].values():
                 if stage["max_excess"] is not None:
                     stage["max_excess"] = float(f"{stage['max_excess']:.3g}")
+                # the wall time differs from run to run anyway, three
+                # significant digits keep the committed file readable
+                if stage["seconds"] is not None:
+                    stage["seconds"] = float(f"{stage['seconds']:.3g}")
             cases[cid] = case_data
         data: dict[str, Any] = {
             "suite": self.suite,

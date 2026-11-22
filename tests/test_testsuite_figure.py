@@ -1,10 +1,19 @@
-"""Tests of the bar diagram of a suite run."""
+"""Tests of the figures of a suite run."""
 
 from pathlib import Path
 
-from sbml2cellml.testsuite.figure import dark_path, render_figure, write_figures
+import numpy as np
+
+from sbml2cellml.testsuite.figure import (
+    dark_path,
+    render_figure,
+    render_timings,
+    timing_pairs,
+    write_figures,
+    write_timing_figures,
+)
 from sbml2cellml.testsuite.results import STAGES, SuiteResult
-from tests.test_testsuite_report import sample
+from tests.test_testsuite_report import sample, timed_sample
 
 
 def test_render_figure() -> None:
@@ -54,3 +63,54 @@ def test_write_figures_is_deterministic(tmp_path: Path) -> None:
     write_figures(sample(), first)
     write_figures(sample(), second)
     assert first.read_bytes() == second.read_bytes()
+
+
+def test_timing_pairs() -> None:
+    pairs = timing_pairs(timed_sample())
+    assert pairs == {"00001": (0.02, 0.01), "00002": (0.04, 0.12), "00006": (0.06, 0.3)}
+    # a run without timings has no pairs
+    assert timing_pairs(sample()) == {}
+
+
+def test_render_timings() -> None:
+    ax = render_timings(timed_sample()).axes[0]
+    assert ax.get_xscale() == "log"
+    assert ax.get_yscale() == "log"
+    assert ax.get_xlabel() == "sbmlsim-core, SBML model (s)"
+    assert ax.get_ylabel() == "libopencor, CellML model (s)"
+    assert ax.get_title(loc="left") == "SBML test suite 3.5.0: simulation time"
+    # the cases and the medians, 40 ms of sbmlsim-core and 120 ms of libopencor
+    assert [text.get_text() for text in ax.texts] == [
+        "3 cases, median 40 ms and 120 ms"
+    ]
+    legend = ax.get_legend()
+    assert legend is not None
+    assert [text.get_text() for text in legend.get_texts()] == [
+        "libopencor faster (1)",
+        "sbmlsim-core faster (2)",
+    ]
+
+
+def test_render_timings_title_and_cases() -> None:
+    ax = render_timings(timed_sample(), title="BioModels", cases="models").axes[0]
+    assert ax.get_title(loc="left") == "BioModels: simulation time"
+    assert ax.texts[0].get_text().startswith("3 models, median")
+
+
+def test_render_timings_without_timings() -> None:
+    ax = render_timings(sample()).axes[0]
+    # no points, so no median either
+    assert len(ax.texts) == 0
+    assert all(np.size(collection.get_offsets()) == 0 for collection in ax.collections)
+
+
+def test_write_timing_figures(tmp_path: Path) -> None:
+    path = tmp_path / "images" / "testsuite_timings.svg"
+    write_timing_figures(timed_sample(), path)
+    dark = dark_path(path)
+    assert dark == tmp_path / "images" / "testsuite_timings_dark.svg"
+    for file in (path, dark):
+        text = file.read_text(encoding="utf-8")
+        assert text.startswith("<?xml") and text.endswith("</svg>\n")
+        assert all(line == line.rstrip() for line in text.splitlines())
+    assert path.read_bytes() != dark.read_bytes()

@@ -132,6 +132,61 @@ def compilable_sbml(sbml: str) -> str:
     return str(libsbml.writeSBMLToString(document)) if converted else sbml
 
 
+def state_scale(model: libsbml.Model) -> float:
+    """Smallest nonzero magnitude of the initial value of a state.
+
+    The states of the solver are the species, in amounts, and the
+    compartments and parameters a rate rule determines. An absolute
+    tolerance above the magnitude of a state makes its trajectory
+    meaningless, and the amounts of a model with a small compartment are
+    small: a species with a concentration of 1 in a compartment of
+    1e-13 litre has the amount 1e-13. `run_timecourse` therefore scales the
+    absolute tolerance with this magnitude, as roadrunner does.
+
+    Args:
+        model: the model, after the conversion to level 3.
+
+    Returns:
+        The smallest nonzero magnitude of an initial value of a state, `1.0`
+        when the model has no state with a value.
+    """
+    assignments = set()
+    rates = set()
+    for index in range(model.getNumRules()):
+        rule = model.getRule(index)
+        if rule.isAssignment():
+            assignments.add(rule.getVariable())
+        elif rule.isRate():
+            rates.add(rule.getVariable())
+    sizes = {}
+    values = []
+    for index in range(model.getNumCompartments()):
+        compartment = model.getCompartment(index)
+        if compartment.isSetSize():
+            sizes[compartment.getId()] = compartment.getSize()
+            if compartment.getId() in rates:
+                values.append(abs(compartment.getSize()))
+    for index in range(model.getNumParameters()):
+        parameter = model.getParameter(index)
+        if parameter.getId() in rates and parameter.isSetValue():
+            values.append(abs(parameter.getValue()))
+    for index in range(model.getNumSpecies()):
+        species = model.getSpecies(index)
+        if species.getConstant() or species.getId() in assignments:
+            continue
+        if species.isSetInitialAmount():
+            values.append(abs(species.getInitialAmount()))
+        elif species.isSetInitialConcentration():
+            size = (
+                1.0
+                if species.getHasOnlySubstanceUnits()
+                else sizes.get(species.getCompartment(), 1.0)
+            )
+            values.append(abs(species.getInitialConcentration() * size))
+    nonzero = [value for value in values if value > 0.0]
+    return min(nonzero) if nonzero else 1.0
+
+
 def solver_settings(
     relative_tolerance: float | None = None,
     absolute_tolerance: float | None = None,
@@ -177,6 +232,32 @@ def solver_settings(
     }
 
 
+def _scaled_tolerance(sbml: str, absolute_tolerance: float | None) -> float:
+    """Absolute tolerance scaled with the smallest initial value of a state.
+
+    Args:
+        sbml: the compilable SBML document as string.
+        absolute_tolerance: the absolute tolerance to scale,
+            `ABSOLUTE_TOLERANCE` when `None`.
+
+    Returns:
+        The scaled tolerance, the given one when the model has no state
+        below one or the scaled tolerance underflows to zero.
+    """
+    tolerance = ABSOLUTE_TOLERANCE if absolute_tolerance is None else absolute_tolerance
+    model = libsbml.readSBMLFromString(sbml).getModel()
+    scale = 1.0 if model is None else min(1.0, state_scale(model))
+    if scale >= 1.0 or tolerance * scale == 0.0:
+        return tolerance
+    logger.info(
+        "scaling the absolute tolerance %g with the smallest initial value of a "
+        "state, %g",
+        tolerance,
+        scale,
+    )
+    return tolerance * scale
+
+
 def run_timecourse(
     sbml: str | Path,
     selections: list[str],
@@ -186,6 +267,7 @@ def run_timecourse(
     relative_tolerance: float | None = None,
     absolute_tolerance: float | None = None,
     maximum_number_of_steps: int | None = None,
+    scale_tolerance: bool = True,
 ) -> pd.DataFrame:
     """Uniform timecourse of an SBML model.
 
@@ -202,6 +284,10 @@ def run_timecourse(
             `solver_settings`.
         maximum_number_of_steps: internal steps of CVODE between two time
             points, see `solver_settings`.
+        scale_tolerance: multiply the absolute tolerance with the smallest
+            initial value of a state when it is below one (`state_scale`),
+            the tolerance of a model with small amounts would be above its
+            states otherwise.
 
     Returns:
         The timecourse with `time` as first column and the selections after
@@ -214,7 +300,10 @@ def run_timecourse(
             or simulate the model.
     """
     text = Path(sbml).read_text(encoding="utf-8") if isinstance(sbml, Path) else sbml
-    compiled = _sbmlsim_core().compile_sbml(compilable_sbml(text))
+    compilable = compilable_sbml(text)
+    if scale_tolerance:
+        absolute_tolerance = _scaled_tolerance(compilable, absolute_tolerance)
+    compiled = _sbmlsim_core().compile_sbml(compilable)
     model = runtime().load(compiled.wasm, compiled.description)
     output = model.instance().simulate(
         {

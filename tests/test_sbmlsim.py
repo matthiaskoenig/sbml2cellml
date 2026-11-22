@@ -17,9 +17,10 @@ from sbml2cellml.sbmlsim import (
     compilable_sbml,
     run_timecourse,
     solver_settings,
+    state_scale,
 )
 from tests.conftest import MODELS_DIR
-from tests.sbml_models import simple_model, write_sbml
+from tests.sbml_models import simple_model, small_compartment_model, write_sbml
 
 pytest.importorskip("sbmlsim_core")
 
@@ -134,3 +135,52 @@ def test_solver_settings_are_given_through(tmp_path: Path) -> None:
             absolute_tolerance=1e-14,
             maximum_number_of_steps=3,
         )
+
+
+def test_state_scale_of_a_concentration_in_a_small_compartment() -> None:
+    """The state is the amount, the concentration times the size."""
+    assert state_scale(small_compartment_model()) == pytest.approx(1e-13)
+
+
+def test_state_scale_of_a_model_with_states_of_one() -> None:
+    """S1 has the amount 20 and S2 the amount 4, so nothing is scaled."""
+    assert state_scale(simple_model()) == pytest.approx(4.0)
+
+
+def test_state_scale_ignores_a_species_an_assignment_rule_determines() -> None:
+    """An assignment rule determines its target, it is no state."""
+    model = small_compartment_model()
+    rule: libsbml.AssignmentRule = model.createAssignmentRule()
+    rule.setVariable("A")
+    rule.setMath(libsbml.parseL3Formula("k"))
+    assert state_scale(model) == pytest.approx(1.0)
+
+
+def test_run_timecourse_scales_the_absolute_tolerance(tmp_path: Path) -> None:
+    """[A] = exp(-t) is lost when the tolerance is above the amounts.
+
+    The amount of `A` is 1e-13, the absolute tolerance 1e-12: CVODE accepts
+    any trajectory of the amount without the scaling of `state_scale`.
+    """
+    sbml_path = write_sbml(tmp_path / "small.xml", small_compartment_model())
+    scaled = run_timecourse(
+        sbml_path,
+        ["[A]"],
+        start=0.0,
+        end=10.0,
+        steps=10,
+        relative_tolerance=1e-9,
+        absolute_tolerance=1e-12,
+    )
+    assert scaled["[A]"].iloc[-1] == pytest.approx(np.exp(-10.0), rel=1e-6)
+    unscaled = run_timecourse(
+        sbml_path,
+        ["[A]"],
+        start=0.0,
+        end=10.0,
+        steps=10,
+        relative_tolerance=1e-9,
+        absolute_tolerance=1e-12,
+        scale_tolerance=False,
+    )
+    assert unscaled["[A]"].iloc[-1] != pytest.approx(np.exp(-10.0), rel=1e-3)

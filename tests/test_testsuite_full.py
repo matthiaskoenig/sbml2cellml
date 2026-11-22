@@ -3,7 +3,8 @@
 Enabled with `SBML2CELLML_TESTSUITE=1` (the linux CI job of python 3.14, `tox -e testsuite`).
 Downloads the suite into the cache, runs every runnable case and compares
 with the committed `testsuite/results.json`; the rendered report must equal
-the committed `docs/testsuite.md`. Improvements are printed: rerun
+the committed `docs/testsuite.md` apart from the timing section, whose wall
+times differ from run to run. Improvements are printed: rerun
 `sbml2cellml-testsuite run` and commit both files to accept them.
 """
 
@@ -13,7 +14,11 @@ from pathlib import Path
 import pytest
 
 from sbml2cellml.testsuite.cases import ensure_suite, load_cases
-from sbml2cellml.testsuite.report import TESTSUITE_FIGURE, render_report
+from sbml2cellml.testsuite.report import (
+    TESTSUITE_FIGURE,
+    render_report,
+    without_timings,
+)
 from sbml2cellml.testsuite.results import SuiteResult, improvements, regressions
 from sbml2cellml.testsuite.runner import run_suite
 
@@ -39,6 +44,9 @@ def test_full_suite_no_regression(tmp_path: Path) -> None:
         )
     worse = regressions(committed, result)
     assert worse == [], "regressions:\n" + "\n".join(worse)
-    assert render_report(result, figure=TESTSUITE_FIGURE) == REPORT.read_text(
-        encoding="utf-8"
-    ), "docs/testsuite.md is stale, rerun `sbml2cellml-testsuite run`"
+    # without the timings: the wall times of a run differ from run to run
+    assert without_timings(
+        render_report(result, figure=TESTSUITE_FIGURE)
+    ) == without_timings(REPORT.read_text(encoding="utf-8")), (
+        "docs/testsuite.md is stale, rerun `sbml2cellml-testsuite run`"
+    )

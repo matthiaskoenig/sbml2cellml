@@ -36,6 +36,8 @@ The converted CellML model has one variable per compartment, parameter and speci
 
 The compiler of sbmlsim-core reads flat SBML level 3 without a required package: a level 1 or 2 model is converted to level 3 version 2 with libsbml and a model which requires the `comp` package is flattened, both by `run_timecourse` itself (`compilable_sbml`). libsbml refuses the strict conversion of a model over issues which have no mathematics, e.g., the `outside` attribute of a compartment of level 2 or inconsistent units; the conversion is then repeated without the strict check and the issues are logged as a warning. A model it cannot compile or integrate raises an error of sbmlsim-core; without sbmlsim-core the import of `sbml2cellml.sbmlsim` works and `run_timecourse` raises an `ImportError` with the installation hint.
 
+The states of the solver are the amounts of the species, so a model with a small compartment has small states: a species with the concentration 1 in a compartment of 1e-13 litre has the amount 1e-13, far below an absolute tolerance of 1e-12, and CVODE accepts any trajectory of it. `run_timecourse` therefore multiplies the absolute tolerance with the smallest initial value of a state when it is below one (`state_scale`), as roadrunner does; `scale_tolerance=False` switches it off.
+
 ## CellML with libopencor
 
 [`sbml2cellml.simulate`](api/simulate.md) runs a uniform timecourse of a CellML file with libopencor:

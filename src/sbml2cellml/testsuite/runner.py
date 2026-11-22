@@ -89,12 +89,23 @@ def _message(err: BaseException) -> str:
     return f"{type(err).__name__}: " + "\n".join(lines)
 
 
-def _stage(comparison: Comparison) -> StageResult:
-    """Stage result of a comparison."""
+def _stage(comparison: Comparison, seconds: float | None = None) -> StageResult:
+    """Stage result of a comparison.
+
+    Args:
+        comparison: the comparison of the simulation with the expected
+            results.
+        seconds: wall time of the simulation, see
+            `sbml2cellml.testsuite.simulators`.
+
+    Returns:
+        The result of the stage.
+    """
     return StageResult(
         "pass" if comparison.passed else "fail",
         comparison.message,
         None if not comparison.variables else comparison.max_excess,
+        seconds,
     )
 
 
@@ -219,9 +230,11 @@ def run_case(
         original = strip_brackets(frame(result))
         if expected is None:
             expected = original
-            stages["sbmlsim"] = StageResult("pass")
+            stages["sbmlsim"] = StageResult("pass", seconds=result["seconds"])
         else:
-            stages["sbmlsim"] = _stage(compare(original, expected, settings))
+            stages["sbmlsim"] = _stage(
+                compare(original, expected, settings), result["seconds"]
+            )
     except Exception as err:
         stages["sbmlsim"] = StageResult("fail", _message(err))
 
@@ -252,7 +265,9 @@ def run_case(
                 steps=settings.steps,
             )
             df = requested_frame(frame(result), quantities, settings)
-            stages["libopencor"] = _stage(compare(df, expected, settings))
+            stages["libopencor"] = _stage(
+                compare(df, expected, settings), result["seconds"]
+            )
         except Exception as err:
             stages["libopencor"] = StageResult("fail", _message(err))
 
@@ -284,7 +299,9 @@ def run_case(
                 steps=settings.steps,
             )
             df = requested_frame(frame(result), quantities, settings)
-            stages["roundtrip"] = _stage(compare(df, expected, settings))
+            stages["roundtrip"] = _stage(
+                compare(df, expected, settings), result["seconds"]
+            )
         except Exception as err:
             stages["roundtrip"] = StageResult("fail", _message(err))
 

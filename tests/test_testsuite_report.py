@@ -1,5 +1,6 @@
 """Tests of the report and the command line."""
 
+import dataclasses
 from pathlib import Path
 
 import pytest
@@ -9,14 +10,38 @@ from sbml2cellml.testsuite.cli import main
 from sbml2cellml.testsuite.report import (
     TESTSUITE_FIGURE,
     _reason,
+    duration_text,
     render_report,
+    timing_lines,
+    timings_figure,
     tolerance_text,
+    without_timings,
     write_report,
 )
 from sbml2cellml.testsuite.results import STAGES, CaseResult, StageResult, SuiteResult
 from sbml2cellml.testsuite.runner import _message
 
 FIXTURES = Path(__file__).parent / "data" / "testsuite" / "semantic"
+
+
+def timed_sample() -> SuiteResult:
+    """`sample` with the wall time of every simulated stage."""
+    result = sample()
+    seconds = {
+        "00001": (0.02, 0.01),
+        "00002": (0.04, 0.12),
+        "00006": (0.06, 0.30),
+    }
+    for cid, (sbmlsim, libopencor) in seconds.items():
+        stages = result.cases[cid].stages
+        stages["sbmlsim"] = dataclasses.replace(stages["sbmlsim"], seconds=sbmlsim)
+        stages["libopencor"] = dataclasses.replace(
+            stages["libopencor"], seconds=libopencor
+        )
+        stages["roundtrip"] = dataclasses.replace(
+            stages["roundtrip"], seconds=sbmlsim * 2
+        )
+    return result
 
 
 def sample() -> SuiteResult:
@@ -344,3 +369,57 @@ def test_cli_missing_results(tmp_path: Path) -> None:
         )
         == 1
     )
+
+
+def test_duration_text() -> None:
+    assert duration_text(0.0014) == "1.4 ms"
+    assert duration_text(0.0182) == "18 ms"
+    assert duration_text(2.42) == "2.4 s"
+    assert duration_text(186.0) == "3.1 min"
+
+
+def test_timings_figure() -> None:
+    assert timings_figure("images/testsuite.svg") == "images/testsuite_timings.svg"
+
+
+def test_timing_lines_without_timings() -> None:
+    assert timing_lines(sample()) == []
+
+
+def test_timing_lines() -> None:
+    lines = timing_lines(timed_sample(), figure="images/testsuite_timings.svg")
+    text = "\n".join(lines)
+    assert "## Timings" in text
+    assert "![" in text and "images/testsuite_timings_dark.svg#only-dark" in text
+    assert (
+        "| stage | simulator | model | simulations | total | median | p95 | slowest |"
+        in text
+    )
+    # 20 ms, 40 ms and 60 ms of sbmlsim-core, the median is 40 ms
+    assert "| sbmlsim | sbmlsim-core | SBML model | 3 | 120 ms | 40 ms |" in text
+    assert "| libopencor | libopencor | CellML model | 3 | 430 ms | 120 ms |" in text
+    assert "| roundtrip | sbmlsim-core | roundtrip SBML model | 3 |" in text
+    # the ratios are 0.5, 3 and 5, so libopencor is 3 times slower
+    assert "libopencor is 3.0 times slower than sbmlsim-core" in text
+    assert "faster for 1 of them" in text
+
+
+def test_render_report_with_timings() -> None:
+    text = render_report(timed_sample(), figure="images/testsuite.svg")
+    assert "## Timings" in text
+    assert "images/testsuite_timings.svg#only-light" in text
+    # the timings come between the summary and the failures
+    assert (
+        text.index("## Summary")
+        < text.index("## Timings")
+        < text.index("## Failure reasons")
+    )
+
+
+def test_without_timings() -> None:
+    text = render_report(timed_sample(), figure="images/testsuite.svg")
+    stripped = without_timings(text)
+    assert "## Timings" not in stripped
+    assert "## Summary" in stripped and "## Failure reasons" in stripped
+    # a report without timings is left as it is
+    assert without_timings(render_report(sample())) == render_report(sample())
