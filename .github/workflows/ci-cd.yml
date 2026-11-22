@@ -24,15 +24,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     env:
-      # the tests run with the standalone interpreter uv manages, whose libpython
-      # is put on the library search path below
+      # the tests run with the standalone interpreter uv manages
       UV_PYTHON_PREFERENCE: only-managed
     strategy:
       fail-fast: false
       matrix:
         # libcellml 0.7.2 publishes x64 windows wheels again
         # (https://github.com/cellml/libcellml/issues/1460)
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        # ubuntu 24.04 instead of ubuntu-latest: the wheels of libcellml link
+        # libxml2.so.2 and ubuntu 26.04 ships libxml2 2.15 as libxml2-16,
+        # which provides libxml2.so.16 only
+        os: [ubuntu-24.04, macos-latest, windows-latest]
         # python 3.14 is the only supported version, see docs/development.md
         python-version: ["3.14"]
 

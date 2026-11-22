@@ -32,7 +32,7 @@ A pull request can only be merged once the four required checks are green:
 | `ty`    | `ty.yml`      | `tox r -e ty`                                                       |
 | `docs`  | `docs.yml`    | the zensical build including the api reference and the agent files  |
 
-`tests` aggregates the test matrix into a single job, so the name of the required check stays the same when the matrix changes. The CI runs the standalone interpreters of uv (`UV_PYTHON_PREFERENCE=only-managed`).
+`tests` aggregates the test matrix into a single job, so the name of the required check stays the same when the matrix changes. The CI runs the standalone interpreters of uv (`UV_PYTHON_PREFERENCE=only-managed`). The linux jobs run on `ubuntu-24.04` and not on `ubuntu-latest`: the wheels of libcellml link `libxml2.so.2` and ubuntu 26.04 ships libxml2 2.15 as `libxml2-16`, which provides `libxml2.so.16` only.
 
 Continuous integration is kept small: every workflow cancels its running build when a newer commit of the same branch or pull request arrives, uv caches the packages and the interpreters between runs, dependabot proposes its updates once a month, and the matrix runs python 3.14, the only supported version.
 

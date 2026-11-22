@@ -21,7 +21,8 @@ jobs:
   docs:
     # the name the branch protection requires, see .github/rulesets/
     name: docs
-    runs-on: ubuntu-latest
+    # ubuntu 24.04 instead of ubuntu-latest, see the `test` job of ci-cd.yml
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     env:
       # the standalone interpreter uv manages, see the `test` job of ci-cd.yml
