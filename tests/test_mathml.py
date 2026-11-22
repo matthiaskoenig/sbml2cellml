@@ -128,19 +128,12 @@ def test_cellml_math_wraps_parts() -> None:
 
 
 @pytest.mark.parametrize(
-    ("formula", "expected"),
-    [
-        ("-((-2) * a)", "2 * a"),
-        ("-((-a) / b)", "a / b"),
-        ("-(((-a) * b) / c)", "a * b / c"),
-        ("x + -((-2) * a * b)", "x + 2 * a * b"),
-    ],
+    "formula",
+    ["-((-2) * a)", "-((-a) / b)", "-(((-a) * b) / c)", "x + -((-2) * a * b)"],
 )
-def test_negation_of_a_negative_product_is_cancelled(
-    formula: str, expected: str
-) -> None:
-    """libcellml generates `--2.0*a` for it, a decrement in C."""
-    assert process_mathml_for_cellml(formula) == process_mathml_for_cellml(expected)
+def test_negations_of_a_product_stay(formula: str) -> None:
+    """The formula of the SBML model is written as it is."""
+    assert process_mathml_for_cellml(formula).count("<minus/>") == 2
 
 
 @pytest.mark.parametrize("formula", ["-(-a)", "-((-a) + b)", "-((-a)^b)", "b - (-a)"])

@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 #: the stages of the pipeline, in order
-STAGES = ("roadrunner", "sbml2cellml", "libopencor", "cellml2sbml", "roundtrip")
+STAGES = ("sbmlsim", "sbml2cellml", "libopencor", "cellml2sbml", "roundtrip")
 #: possible statuses of a stage
 STATUSES = ("pass", "fail", "skip")
 
@@ -31,7 +31,7 @@ class CaseResult:
     name: str = ""
     #: whether the expected frame moves more than the tolerance band for at
     #: least one variable (`sbml2cellml.testsuite.compare.is_informative`);
-    #: `None` when there is no expected frame, i.e. the `roadrunner` stage
+    #: `None` when there is no expected frame, i.e. the `sbmlsim` stage
     #: failed for a case without expected results of its own
     informative: bool | None = None
 

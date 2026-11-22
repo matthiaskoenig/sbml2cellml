@@ -15,8 +15,8 @@ from sbml2cellml.testsuite.runner import (
     SOLVER_SETTINGS,
     _message,
     _simulate,
-    roadrunner_selections,
     run_suite,
+    selections,
 )
 from sbml2cellml.testsuite.worker import SimulationFailure, SimulatorWorker
 from tests.sbml_models import simple_model, write_sbml
@@ -77,16 +77,16 @@ def test_message_keeps_long_decimals_outside_integrator_failures() -> None:
     assert _message(RuntimeError(text)) == f"RuntimeError: {text}"
 
 
-def test_roadrunner_selections() -> None:
+def test_selections() -> None:
     case = load_cases(FIXTURES, ids=["00001"])[0]
     model = libsbml.readSBMLFromFile(str(case.sbml_path)).getModel()
     # 00001 expects amounts
-    assert roadrunner_selections(case, model) == ["S1", "S2"]
+    assert selections(case, model) == ["S1", "S2"]
     concentration = dataclasses.replace(
         case.settings, amount=frozenset(), concentration=frozenset({"S1", "S2"})
     )
     case_c = dataclasses.replace(case, settings=concentration)
-    assert roadrunner_selections(case_c, model) == ["[S1]", "[S2]"]
+    assert selections(case_c, model) == ["[S1]", "[S2]"]
 
 
 def test_run_suite_on_fixtures(tmp_path: Path) -> None:
@@ -103,7 +103,7 @@ def test_run_suite_on_fixtures(tmp_path: Path) -> None:
         for stage in case.stages.values():
             assert stage.status in STATUSES
     first = result.cases["00001"].stages
-    assert first["roadrunner"].status == "pass", first["roadrunner"].message
+    assert first["sbmlsim"].status == "pass", first["sbmlsim"].message
     assert first["sbml2cellml"].status == "pass", first["sbml2cellml"].message
     assert (tmp_path / "00001.cellml").is_file()
     # a stage after a failed conversion is skipped, never run
@@ -156,46 +156,44 @@ def test_run_suite_setup_failure(tmp_path: Path) -> None:
         assert stage.message.startswith("setup:"), stage.message
 
 
-def test_run_suite_without_expected_uses_roadrunner(tmp_path: Path) -> None:
-    """A case without expected results is compared against roadrunner."""
+def test_run_suite_without_expected_uses_the_reference_simulator(
+    tmp_path: Path,
+) -> None:
+    """A case without expected results is compared against sbmlsim-core."""
     import dataclasses
 
     case = load_cases(FIXTURES, ids=["00001"])[0]
     case = dataclasses.replace(case, expected=None, name="first case")
     result = run_suite([case], tmp_path)
     stages = result.cases["00001"].stages
-    assert (
-        stages["roadrunner"].status == "pass"
-        and stages["roadrunner"].max_excess is None
-    )
+    assert stages["sbmlsim"].status == "pass" and stages["sbmlsim"].max_excess is None
     for stage in ("sbml2cellml", "libopencor", "cellml2sbml", "roundtrip"):
         assert stages[stage].status == "pass", (stage, stages[stage].message)
     assert result.cases["00001"].name == "first case"
 
 
-def test_run_suite_roadrunner_failure_skips_simulations(tmp_path: Path) -> None:
+def test_run_suite_reference_failure_skips_simulations(tmp_path: Path) -> None:
     import dataclasses
     import shutil
 
     root = tmp_path / "semantic"
     shutil.copytree(FIXTURES / "00001", root / "00001")
     sbml = root / "00001" / "00001-sbml-l3v2.xml"
-    # an algebraic rule roadrunner cannot handle, the conversion still runs
+    # a required package sbmlsim-core does not compile, the conversion still runs
     text = sbml.read_text().replace(
-        "<listOfReactions>",
-        '<listOfRules><algebraicRule><math xmlns="http://www.w3.org/1998/Math/MathML">'
-        "<apply><minus/><ci>S1</ci><ci>S1</ci></apply></math></algebraicRule></listOfRules>"
-        "<listOfReactions>",
+        "<sbml ",
+        '<sbml xmlns:fbc="http://www.sbml.org/sbml/level3/version1/fbc/version2" '
+        'fbc:required="true" ',
         1,
     )
     sbml.write_text(text)
     case = dataclasses.replace(load_cases(root)[0], expected=None)
     result = run_suite([case], tmp_path / "work")
     stages = result.cases["00001"].stages
-    assert stages["roadrunner"].status == "fail"
+    assert stages["sbmlsim"].status == "fail"
     assert (
         stages["libopencor"].status == "skip"
-        and "roadrunner failed" in stages["libopencor"].message
+        and "sbmlsim failed" in stages["libopencor"].message
     )
     assert stages["roundtrip"].status == "skip"
     assert stages["sbml2cellml"].status in ("pass", "fail")
@@ -218,7 +216,7 @@ def test_run_suite_converts_quantities(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     # cell has size 2; [S1](t) = 10 exp(-0.25 t), S1(t) = 2 [S1](t), and
-    # S2(t) = 4 + 20 (1 - exp(-0.25 t)); verified against a roadrunner run of
+    # S2(t) = 4 + 20 (1 - exp(-0.25 t)); verified against a simulation of
     # this exact model in a spike, agreeing to better than 1e-7 relative.
     (case_dir / "90001-results.csv").write_text(
         "time,S1,S2\n"
@@ -241,7 +239,7 @@ def test_run_suite_converts_quantities(tmp_path: Path) -> None:
     )
     result = run_suite(load_cases(case_dir.parent), tmp_path / "work")
     stages = result.cases["90001"].stages
-    for name in ("roadrunner", "sbml2cellml", "libopencor", "cellml2sbml", "roundtrip"):
+    for name in ("sbmlsim", "sbml2cellml", "libopencor", "cellml2sbml", "roundtrip"):
         assert stages[name].status == "pass", f"{name}: {stages[name].message}"
 
 
@@ -260,7 +258,7 @@ class _Worker:
         return {"columns": ["time"], "rows": [[0.0]]}
 
 
-CVODE_FAILURE = "roadrunner: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK"
+CVODE_FAILURE = "libopencor: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK"
 
 
 def test_simulate_uses_the_tight_settings_first() -> None:
@@ -282,6 +280,17 @@ def test_simulate_relaxes_the_tolerances_when_cvode_fails() -> None:
     assert relaxed["absolute_tolerance"] > tight["absolute_tolerance"]
 
 
+def test_simulate_relaxes_the_tolerances_for_an_integration_error() -> None:
+    """sbmlsim-core raises an `IntegrationError` instead of naming CVODE."""
+    message = (
+        "sbmlsim: IntegrationError: integration failed at t = 7.41e-07 (flag -1): "
+        "CVode: mxstep steps taken before reaching tout."
+    )
+    worker = _Worker(failures=1, message=message)
+    _simulate(cast(SimulatorWorker, worker), "simulate_sbml", start=0.0)
+    assert len(worker.calls) == 2
+
+
 def test_simulate_raises_the_first_failure_when_no_settings_integrate() -> None:
     worker = _Worker(failures=len(SOLVER_SETTINGS), message=CVODE_FAILURE)
     with pytest.raises(SimulationFailure, match=r"CV_TOO_MUCH_WORK \(1\)"):
@@ -290,8 +299,10 @@ def test_simulate_raises_the_first_failure_when_no_settings_integrate() -> None:
 
 
 def test_simulate_does_not_retry_other_failures() -> None:
-    """E.g. delay differential equations: no settings of the solver help."""
-    worker = _Worker(failures=1, message="roadrunner: RuntimeError: Unable to support")
-    with pytest.raises(SimulationFailure, match="Unable to support"):
+    """E.g. a required package: no settings of the solver help."""
+    worker = _Worker(
+        failures=1, message="sbmlsim: CompileError: required package is not supported"
+    )
+    with pytest.raises(SimulationFailure, match="required package"):
         _simulate(cast(SimulatorWorker, worker), "simulate_sbml", start=0.0)
     assert len(worker.calls) == 1

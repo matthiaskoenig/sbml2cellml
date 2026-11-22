@@ -24,7 +24,7 @@ def sample() -> SuiteResult:
     bad = dict(ok)
     bad["libopencor"] = StageResult("fail", "S1 exceeds the tolerance by 0.5", 0.5)
     bad["roundtrip"] = StageResult(
-        "fail", "SimulationFailure: roadrunner: RuntimeError: x", None
+        "fail", "SimulationFailure: sbmlsim: RuntimeError: x", None
     )
     bad2 = dict(ok)
     bad2["libopencor"] = StageResult("fail", "S2 exceeds the tolerance by 0.3", 0.3)
@@ -61,7 +61,7 @@ def test_render_report() -> None:
     )
     assert (
         "**1 case**\n\n```text\n"
-        "00002: SimulationFailure: roadrunner: RuntimeError: x\n```" in text
+        "00002: SimulationFailure: sbmlsim: RuntimeError: x\n```" in text
     )
     assert "| package comp | 2 |" in text
     assert "| 00002 | Compartment | pass | pass | fail | pass | fail |" in text
@@ -176,7 +176,7 @@ def test_render_report_lists_every_case_of_a_group() -> None:
     cases = {}
     for k in range(25):
         stages = dict(ok)
-        stages["roadrunner"] = StageResult(
+        stages["sbmlsim"] = StageResult(
             "fail", f"RuntimeError: The formula '0 = S{k}' is not supported."
         )
         cases[f"{k:05}"] = CaseResult(f"{k:05}", ["Amount"], ["Compartment"], stages)
@@ -324,7 +324,7 @@ def test_cli_run_and_report(tmp_path: Path, capsys: pytest.CaptureFixture[str]) 
     figure = tmp_path / TESTSUITE_FIGURE
     assert figure.is_file()
     out = capsys.readouterr().out
-    assert "00001" in out and "roadrunner" in out
+    assert "00001" in out and "sbmlsim" in out
     report.unlink()
     figure.unlink()
     assert main(["report", "--results", str(results), "--output", str(report)]) == 0

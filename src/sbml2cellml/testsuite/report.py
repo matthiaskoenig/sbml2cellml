@@ -11,22 +11,24 @@ from sbml2cellml.testsuite.runner import SOLVER_SETTINGS
 #: intro paragraphs of the SBML test suite report
 TESTSUITE_INTRO = (
     "Semantic test cases of the [SBML test suite](https://github.com/sbmlteam/sbml-test-suite) "
-    "{suite}. Every case is simulated with roadrunner (`roadrunner`), converted to "
+    "at commit [`{suite}`](https://github.com/sbmlteam/sbml-test-suite/commit/{suite}). Every "
+    "case is simulated with [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/) "
+    "(`sbmlsim`), converted to "
     "CellML (`sbml2cellml`), simulated with libopencor (`libopencor`), converted back to SBML "
-    "(`cellml2sbml`) and simulated with roadrunner again (`roundtrip`). See "
+    "(`cellml2sbml`) and simulated with sbmlsim-core again (`roundtrip`). See "
     "[Development](development.md#sbml-test-suite) for how to run it.\n\n"
     "Every simulation is compared with the expected results of the case: a value passes when "
     "`|value - expected| <= absolute + relative * |expected|` with the absolute and the "
     "relative tolerance of the settings of the case. {solver}\n\n"
-    "A `roadrunner` failure means roadrunner itself cannot simulate the case (algebraic rules, "
-    "delays), it says nothing about the converters."
+    "An `sbmlsim` failure means sbmlsim-core itself cannot simulate the case, it says nothing "
+    "about the converters."
 )
 #: bar diagram of the SBML test suite report, relative to the report; written
 #: by `sbml2cellml.testsuite.figure.write_figures`
 TESTSUITE_FIGURE = "images/testsuite.svg"
 #: reason of the cases whose values exceed the tolerance of the comparison
 MISMATCH = "numerical mismatch"
-#: quoted text, e.g. the formula of an algebraic rule roadrunner does not support
+#: quoted text, e.g. the formula of an algebraic rule a simulator does not support
 _QUOTED = re.compile(r"'[^']*'")
 #: a number preceded by a space, `(`, `,` or `=`, so identifiers such as
 #: `S1` are left untouched; `nan` and `inf` count as numbers too

@@ -12,7 +12,7 @@
 - names, notes, SBO terms, annotations and the model history as RDF next to the CellML model, restored in the conversion back to SBML
 - conversion of CellML models to SBML: parameters with rules, unit definitions and units of numbers, resets as events, imports resolved
 - validation of the result with [libcellml](https://libcellml.org/)
-- timecourse simulation of the SBML with [roadrunner](https://www.libroadrunner.org/) and of the CellML with [libopencor](https://opencor.ws/libopencor/), both optional, see [Simulation](simulation.md)
+- timecourse simulation of the SBML with [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/) and of the CellML with [libopencor](https://opencor.ws/libopencor/), both optional, see [Simulation](simulation.md)
 - the `sbml2cellml` and `cellml2sbml` command lines
 - the SBML test suite harness: every semantic case through both converters and both simulators, results on the [SBML test suite](testsuite.md) page
 - the same check for the manually curated models of [BioModels](https://www.biomodels.org), results on the [BioModels](biomodels.md) page
@@ -33,7 +33,7 @@ sbml2cellml model.xml -o model.cellml
 cellml2sbml model.cellml -o model.xml
 ```
 
-The conversion is validated with [libcellml](https://libcellml.org/); the resulting file can be simulated with [libopencor](https://opencor.ws/libopencor/) and compared with the roadrunner simulation of the SBML model, see [Simulation](simulation.md). The [roundtrip example](roundtrip.md) shows the complete pipeline for the repressilator: the scripts, the three models and their simulations side by side.
+The conversion is validated with [libcellml](https://libcellml.org/); the resulting file can be simulated with [libopencor](https://opencor.ws/libopencor/) and compared with the sbmlsim-core simulation of the SBML model, see [Simulation](simulation.md). The [roundtrip example](roundtrip.md) shows the complete pipeline for the repressilator: the scripts, the three models and their simulations side by side.
 
 ## What is converted
 

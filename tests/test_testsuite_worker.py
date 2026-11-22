@@ -1,4 +1,4 @@
-"""Tests of the simulator workers (roadrunner and libopencor in own processes)."""
+"""Tests of the simulator workers (sbmlsim-core and libopencor in own processes)."""
 
 from pathlib import Path
 
@@ -17,7 +17,7 @@ FIXTURES = Path(__file__).parent / "data" / "testsuite" / "semantic"
 
 def test_simulate_sbml_in_worker() -> None:
     sbml = (FIXTURES / "00001" / "00001-sbml-l3v2.xml").read_text()
-    with SimulatorWorker("roadrunner") as worker:
+    with SimulatorWorker("sbmlsim") as worker:
         result = worker.call(
             "simulate_sbml",
             sbml=sbml,
@@ -37,8 +37,8 @@ def test_simulate_sbml_maximum_number_of_steps() -> None:
     """The step limit of the integrator is a setting of the simulation."""
     sbml = (FIXTURES / "00001" / "00001-sbml-l3v2.xml").read_text()
     with (
-        SimulatorWorker("roadrunner") as worker,
-        pytest.raises(SimulationFailure, match="CV_TOO_MUCH_WORK"),
+        SimulatorWorker("sbmlsim") as worker,
+        pytest.raises(SimulationFailure, match="mxstep steps taken"),
     ):
         worker.call(
             "simulate_sbml",
@@ -85,8 +85,8 @@ def test_simulate_cellml_in_worker() -> None:
 
 
 def test_worker_error_is_raised() -> None:
-    with SimulatorWorker("roadrunner") as worker:
-        with pytest.raises(SimulationFailure, match=r"RuntimeError|Exception"):
+    with SimulatorWorker("sbmlsim") as worker:
+        with pytest.raises(SimulationFailure, match=r"SimulationError|CompileError"):
             worker.call(
                 "simulate_sbml",
                 sbml="<sbml/>",
@@ -119,9 +119,9 @@ def test_worker_timeout_restarts() -> None:
 
 def test_two_workers_side_by_side() -> None:
     sbml = (FIXTURES / "00001" / "00001-sbml-l3v2.xml").read_text()
-    with SimulatorWorker("roadrunner") as rr, SimulatorWorker("libopencor") as oc:
+    with SimulatorWorker("sbmlsim") as reference, SimulatorWorker("libopencor") as oc:
         for _ in range(2):
-            rr.call(
+            reference.call(
                 "simulate_sbml",
                 sbml=sbml,
                 selections=["S1"],

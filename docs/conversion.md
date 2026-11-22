@@ -140,4 +140,4 @@ CellML has no species, compartments or reactions: every variable becomes a param
 
 - A system of coupled implicit equations (`x + y = 4`, `x - y = 2`) cannot be analysed by libcellml, and external variables are not supported; both raise `CellML2SBMLConversionError`.
 - New base units other than `item` have no SBML counterpart and are `dimensionless`, with a warning.
-- A reset triggers on the equality of the test variable and the test value. A continuous simulator detects the equality only when the test variable crosses the test value at an integrator step, so a reset may not fire in SBML simulators; the roundtrip harness reports this per model.
+- A reset triggers on the equality of the test variable and the test value. A continuous simulator detects the equality only when the test variable crosses the test value at an integrator step, so a reset may not fire in SBML simulators; the roundtrip harness reports this per model. libopencor 1.20261113.0 applies no reset at all, so the CellML side of such a model integrates as if it had none.

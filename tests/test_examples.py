@@ -38,9 +38,8 @@ def test_example_runs(
 
 
 @pytest.mark.skipif(
-    # not imported: roadrunner and libopencor crash in one process
-    importlib.util.find_spec("roadrunner") is None,
-    reason="the roundtrip example simulates with roadrunner",
+    importlib.util.find_spec("sbmlsim_core") is None,
+    reason="the roundtrip example simulates with sbmlsim-core",
 )
 def test_roundtrip_example_matches_the_documentation(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path

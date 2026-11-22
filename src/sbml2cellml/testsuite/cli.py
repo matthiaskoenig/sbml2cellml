@@ -4,8 +4,9 @@
                               [--results FILE] [--report FILE] [--timeout SECONDS] [-v]
     sbml2cellml-testsuite report --results FILE --output FILE
 
-`run` downloads the suite when no `--suite-dir` is given, runs the pipeline,
-writes the results and the report. `report` renders a results file. Both write
+`run` fetches the cases of the pinned commit of the suite when no
+`--suite-dir` is given, runs the pipeline and writes the results and the
+report. `report` renders a results file. Both write
 the bar diagram of the report next to it (`images/testsuite.svg` and
 `images/testsuite_dark.svg`, see `sbml2cellml.testsuite.figure`).
 """
@@ -41,7 +42,7 @@ def build_parser() -> argparse.ArgumentParser:
     run = subparsers.add_parser("run", help="run the suite, write results and report")
     run.add_argument("--cases", help="comma separated case ids, all by default")
     run.add_argument(
-        "--suite-dir", help="semantic directory of the suite, downloaded by default"
+        "--suite-dir", help="semantic directory of the suite, fetched by default"
     )
     run.add_argument(
         "--work-dir", default="testsuite/work", help="directory for the converted files"

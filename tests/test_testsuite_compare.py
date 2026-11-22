@@ -269,7 +269,7 @@ def test_requested_frame_many_variables_without_warning() -> None:
 
 
 def test_requested_frame_duplicate_columns_raise() -> None:
-    """E.g. roadrunner's time column and a parameter with the id `time`."""
+    """E.g. the time column of the simulator and a parameter with the id `time`."""
     df = pd.DataFrame([[0.0, 10.0], [1.0, 10.0]], columns=["time", "time"])
     settings = Settings(0.0, 1.0, 1, ("time",), 0, 0, frozenset(), frozenset())
     with pytest.raises(CompareError, match="duplicate column names"):

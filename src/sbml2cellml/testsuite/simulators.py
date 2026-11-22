@@ -1,9 +1,8 @@
 """Simulator functions run inside a `SimulatorWorker`.
 
 Every function imports its simulator lazily, so a worker process loads only
-the simulator it is used for: roadrunner and libopencor bundle different LLVM
-versions and crash once both have compiled in the same process. Results are
-plain dictionaries (`columns`, `rows`) so they can be sent between processes.
+the simulator it is used for. Results are plain dictionaries (`columns`,
+`rows`) so they can be sent between processes.
 """
 
 import time
@@ -21,40 +20,38 @@ def simulate_sbml(
     absolute_tolerance: float | None = None,
     maximum_number_of_steps: int | None = None,
 ) -> dict[str, Any]:
-    """Uniform timecourse of an SBML model with roadrunner.
+    """Uniform timecourse of an SBML model with sbmlsim-core.
 
     Args:
         sbml: SBML document as string.
-        selections: roadrunner selections after `time`, e.g. `S1`, `[S1]`.
+        selections: selections after `time`, e.g. `S1`, `[S1]`.
         start: start time.
         end: end time.
         steps: number of intervals, the result has `steps + 1` rows.
         relative_tolerance: relative tolerance of the integrator, the
-            roadrunner default when `None`.
+            default of `sbml2cellml.sbmlsim` when `None`.
         absolute_tolerance: absolute tolerance of the integrator, the
-            roadrunner default when `None`.
+            default of `sbml2cellml.sbmlsim` when `None`.
         maximum_number_of_steps: internal steps of the integrator between
-            two time points, the roadrunner default (20000) when `None`.
+            two time points, the default of `sbml2cellml.sbmlsim` when
+            `None`.
 
     Returns:
         `columns` (the selections with `time` first) and `rows`.
     """
-    import roadrunner
+    from sbml2cellml.sbmlsim import run_timecourse
 
-    roadrunner.Logger.setLevel(roadrunner.Logger.LOG_ERROR)
-    rr = roadrunner.RoadRunner(sbml)
-    if relative_tolerance is not None:
-        rr.integrator.setValue("relative_tolerance", relative_tolerance)
-    if absolute_tolerance is not None:
-        rr.integrator.setValue("absolute_tolerance", absolute_tolerance)
-    if maximum_number_of_steps is not None:
-        rr.integrator.setValue("maximum_num_steps", maximum_number_of_steps)
-    rr.timeCourseSelections = ["time", *selections]
-    result = rr.simulate(start, end, steps + 1)
-    return {
-        "columns": list(result.colnames),
-        "rows": [[float(value) for value in row] for row in result],
-    }
+    df = run_timecourse(
+        sbml,
+        selections,
+        start=start,
+        end=end,
+        steps=steps,
+        relative_tolerance=relative_tolerance,
+        absolute_tolerance=absolute_tolerance,
+        maximum_number_of_steps=maximum_number_of_steps,
+    )
+    return {"columns": list(df.columns), "rows": df.to_numpy().tolist()}
 
 
 def simulate_cellml(

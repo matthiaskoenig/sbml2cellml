@@ -1,10 +1,6 @@
 # Installation
 
-`sbml2cellml` requires python 3.13 or 3.14 and is available from [pypi](https://pypi.org/project/sbml2cellml). The dependencies [python-libsbml](https://pypi.org/project/python-libsbml/) and [libcellml](https://pypi.org/project/libcellml/) ship wheels for Linux, macOS and Windows.
-
-!!! warning "Windows"
-
-    Windows is currently not supported: the Windows wheels of libcellml 0.7.1 contain ARM64 binaries, which do not load on x64 Windows ([cellml/libcellml#1460](https://github.com/cellml/libcellml/issues/1460)). Linux and macOS are tested.
+`sbml2cellml` requires python 3.14 and is available from [pypi](https://pypi.org/project/sbml2cellml). The dependencies [python-libsbml](https://pypi.org/project/python-libsbml/) and [libcellml](https://pypi.org/project/libcellml/) ship wheels for Linux, macOS and Windows.
 
 ## With uv
 
@@ -26,19 +22,15 @@ pip install sbml2cellml
 
 ## Simulators { #simulators }
 
-The simulators are optional, see [Simulation](simulation.md): [roadrunner](https://www.libroadrunner.org/) simulates the SBML models, [libopencor](https://opencor.ws/libopencor/) the CellML models. The `simulate` extra adds libopencor together with pandas and matplotlib for the timecourse results and plots of [`sbml2cellml.simulate`](api/simulate.md):
+The simulators are optional, see [Simulation](simulation.md): [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/) simulates the SBML models, [libopencor](https://opencor.ws/libopencor/) the CellML models. The `simulate` extra adds both, together with pandas and matplotlib for the timecourse results and plots of [`sbml2cellml.simulate`](api/simulate.md) and [`sbml2cellml.sbmlsim`](api/sbmlsim.md):
 
 ```bash
 pip install "sbml2cellml[simulate]"
 ```
 
-### roadrunner
+### sbmlsim-core { #simulation-with-sbmlsim-core }
 
-roadrunner is available from [pypi](https://pypi.org/project/libroadrunner/):
-
-```bash
-pip install libroadrunner
-```
+sbmlsim-core is available from [pypi](https://pypi.org/project/sbmlsim-core/) and installed with the `simulate` extra. It compiles an SBML model to WebAssembly and simulates it with CVODE of SUNDIALS; wheels exist for python 3.14 on Linux (x86_64, aarch64), macOS (Intel, Apple silicon) and Windows (x86_64). Without sbmlsim-core everything except `sbml2cellml.sbmlsim` works.
 
 ### libopencor { #simulation-with-libopencor }
 
@@ -46,13 +38,13 @@ libopencor is available from [pypi](https://pypi.org/project/libopencor/) and in
 
 ## Running the SBML test suite
 
-The `testsuite` extra adds `libroadrunner` and `requests` for the `sbml2cellml-testsuite` command:
+The `testsuite` extra adds `requests` for the download of the models of BioModels; the cases of the SBML test suite are fetched with `git`:
 
 ```bash
 pip install "sbml2cellml[testsuite]"
 ```
 
-It includes the `simulate` extra and with it libopencor.
+It includes the `simulate` extra and with it both simulators.
 
 ## Development version
 

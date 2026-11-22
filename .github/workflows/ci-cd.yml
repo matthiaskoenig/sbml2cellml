@@ -30,11 +30,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # no windows for now: the win_amd64 wheels of libcellml 0.7.1 contain
-        # ARM64 binaries (https://github.com/cellml/libcellml/issues/1460)
-        os: [ubuntu-latest, macos-latest]
-        # continuous integration tests the newest python, 3.13 is tested
-        # locally with `tox run-parallel`, see docs/development.md
+        # libcellml 0.7.2 publishes x64 windows wheels again
+        # (https://github.com/cellml/libcellml/issues/1460)
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        # python 3.14 is the only supported version, see docs/development.md
         python-version: ["3.14"]
 
     steps:
@@ -49,26 +48,15 @@ jobs:
         enable-cache: true
         # the interpreter is cached with the packages instead of downloaded by every run
         cache-python: true
-    - name: Put libpython on the library search path (linux only)
-      # the extension of libroadrunner links against libpython3.X.so.1.0. The
-      # standalone interpreters of uv ship it in their `lib` directory but are
-      # linked statically and never load it, so without this the import of
-      # roadrunner fails. tox passes LD_LIBRARY_PATH on to the tests.
-      if: runner.os == 'Linux'
-      env:
-        PYTHON_VERSION: ${{ matrix.python-version }}
-      run: |
-        uv python install "$PYTHON_VERSION"
-        prefix="$("$(uv python find --no-project "$PYTHON_VERSION")" -c 'import sys; print(sys.base_prefix)')"
-        echo "LD_LIBRARY_PATH=${prefix}/lib" >> "$GITHUB_ENV"
-      shell: bash
     - name: Cache the SBML test suite
       # the complete SBML test suite runs on linux only
       if: runner.os == 'Linux'
       uses: actions/cache@v6
       with:
         path: ~/.cache/sbml2cellml
-        key: sbml-test-suite-3.5.0
+        # the key is the commit of the suite, see SUITE_COMMIT of
+        # sbml2cellml.testsuite.cases
+        key: sbml-test-suite-bbcbc80
     - name: Test with tox
       env:
         # the complete SBML test suite runs on linux only
