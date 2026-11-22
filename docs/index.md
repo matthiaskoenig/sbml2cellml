@@ -7,7 +7,7 @@
 
 ## Features
 
-- conversion of compartments, parameters, species, assignment and rate rules and reactions into a single CellML component
+- conversion of compartments, parameters, species, assignment and rate rules, reactions and events into a single CellML component
 - conversion of the units: unit definitions, the units of numbers and, for a model with a complete unit annotation, the units of every variable
 - names, notes, SBO terms, annotations and the model history as RDF next to the CellML model, restored in the conversion back to SBML
 - conversion of CellML models to SBML: parameters with rules, unit definitions and units of numbers, resets as events, imports resolved
@@ -55,7 +55,7 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | unit kinds `item` and `avogadro` | new base units `item`, dimensionless units `avogadro` with the multiplier 6.02214179e23; every other unit kind is a standard unit of CellML |
 | units of a compartment, parameter or species | units of the variable when the unit annotation of the model is complete, else every variable is `dimensionless`, see [Units](conversion.md#units) |
 | numbers in formulas | real numbers with their units, `dimensionless` when they have none |
-| time and avogadro symbols | the variable of integration `time`, the number 6.02214179e23 |
+| time and avogadro symbols | the variable of integration `time` (another name when an element of the model is called `time`), the number 6.02214179e23 |
 | id which is a symbol of the formula syntax of libsbml (`avogadro`, `pi`, `NaN`, `true`) | variable of that name like every other id: the formulas are converted as the MathML trees of the model, never as text |
 | rateOf symbol | the right-hand side of the differential equation of its variable, 0 without one |
 | delay symbol | not yet |
@@ -65,9 +65,12 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | function definition | calls replaced by the body of the function |
 | names, notes, SBO terms, annotations (CV terms) and the model history | RDF file next to the CellML file which points at the `id` of the elements, see [Metadata](conversion.md#metadata); `cellml2sbml` reads it back |
 | local parameter of a kinetic law | variable `<reaction>_<parameter>` (numeric suffix when taken) |
-| event | not yet, a warning is logged |
+| event | resets: the variable `<event>_trigger` is `piecewise(1, trigger, 0)` and every assignment a reset which fires when it reaches 1; an event with a delay is skipped with a warning |
 | algebraic rule | implicit equation `0 = formula` for the variable the rule determines, which starts from the solution at the start time; the constants of the rule become equations `y = value` |
 | `plus`, `times`, `and`, `or`, `xor` with less than two arguments | their value (the argument or the identity element) |
+| relation of more than two arguments (`a < b < c`) | the conjunction of its pairs, `and(a < b, b < c)` |
+| `quotient`, `implies` | `floor(a / b)`, `not a or b`: CellML has neither operator |
+| `factorial` | not converted, CellML has no counterpart; an event which uses it is skipped |
 
 The reverse direction, [CellML to SBML](conversion.md#cellml-to-sbml), maps every variable to a parameter with rules and converts units and resets.
 

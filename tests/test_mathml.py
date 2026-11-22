@@ -139,3 +139,18 @@ def test_negations_of_a_product_stay(formula: str) -> None:
 @pytest.mark.parametrize("formula", ["-(-a)", "-((-a) + b)", "-((-a)^b)", "b - (-a)"])
 def test_other_negations_stay(formula: str) -> None:
     assert process_mathml_for_cellml(formula).count("<minus/>") == 2
+
+
+def test_simplify_operators_splits_an_n_ary_relation() -> None:
+    """CellML has only binary relations, `a < b < c` is the conjunction of its pairs."""
+    mathml = process_mathml_for_cellml("lt(a, b, c)")
+    assert mathml.count("<lt/>") == 2
+    assert "<and/>" in mathml
+
+
+def test_simplify_operators_rewrites_quotient_and_implies() -> None:
+    """CellML has neither operator, both are expressed with the ones it has."""
+    assert "<floor/>" in process_mathml_for_cellml("quotient(a, b)")
+    implies = process_mathml_for_cellml("implies(a, b)")
+    assert "<or/>" in implies
+    assert "<not/>" in implies

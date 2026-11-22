@@ -91,7 +91,21 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   kinetic law`), which the equations of its species use. A model without rate rules,
   reactions and uses of time gets no `time` variable (CellML knows the
   variable of integration only from a differential equation); `simulate`
-  runs such an algebraic model as a steady state. `_collect_formulas` gathers
+  runs such an algebraic model as a steady state. A model whose formulas
+  use time without a differential equation gets the state `time_state`
+  (`_Formulas.time_state`) with `d time_state / d time = 1`, so time is the
+  variable of integration. The variable of integration is `time` unless a
+  compartment, species, parameter, reaction or species reference has that
+  id (`_variable_ids`, `_Formulas.time_id`, the `time_id` of the mathml
+  helpers). Events become resets (`_collect_events`, `_Event`,
+  `_add_resets`): a variable `<event>_trigger` with the equation
+  `piecewise(1, trigger, 0)` and one reset per event assignment, which
+  fires when the trigger variable reaches 1 (an event with a delay is
+  skipped with a warning; the assignment of a species with an `_amount`
+  variable resets the amount). An unset initial value is the value a
+  simulator of the SBML model takes (`_initial_value`): 0 for the initial
+  amount of a species, 1 for a compartment size, a stoichiometry and a
+  parameter. `_collect_formulas` gathers
   all formulas before the initial assignments are evaluated (they do not
   depend on initial values) and replaces `rateOf(x)` by the right-hand side
   of the equation of `x`, also in the initial assignments. An algebraic rule
@@ -101,9 +115,9 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   `_constants_of_algebraic_rules` turns the other initial values of the rule
   into equations, since libcellml takes any variable with an initial value in
   an implicit equation for its unknown. An infinite or NaN value of
-  a variable which is not a state becomes an equation. Events, algebraic
-  rules, unevaluated initial assignments and unset initial values (set to 1.0)
-  are logged as warnings. The generated CellML is a fixed contract: tests compare the
+  a variable which is not a state becomes an equation. Algebraic
+  rules, unevaluated initial assignments and unset initial values are logged
+  as warnings. The generated CellML is a fixed contract: tests compare the
   structure and the validity of the example models.
 - `cellmlunits.py`: `CellMLUnits` converts every unit definition to CellML
   units (scale to prefix, a power of ten multiplier too, any other multiplier
@@ -116,8 +130,12 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   the declaration and `math` element, map `sbml:units` to `cellml:units` with
   the CellML name of the units (`units` callable),
   make every number a real with units (`dimensionless` when it has none),
-  replace the time symbol by the variable `time` and avogadro by its value
-  (`normalize_math`) and wrap the equations into the component math. The
+  replace the time symbol by the variable of integration (`time_id`, `time`
+  by default) and avogadro by its value (`normalize_math`), replace the
+  operators CellML does not have (`simplify_operators`: an n-ary relation by
+  the conjunction of its pairs, `quotient` by the floor of the division,
+  `implies` by `not a or b`, an n-ary operator with less than two arguments
+  by its value) and wrap the equations into the component math. The
   formulas are written as the SBML model has them, negations included:
   libcellml 0.7.2 generates `-(-2.0*a)` for `-((-2) * a)`, which compiles
   (0.7.1 generated `--2.0*a`, a decrement in C).
@@ -150,7 +168,12 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   `run_timecourse` so the package works without it. The settings are applied
   to `document.simulations[0]`, with `MAXIMUM_NUMBER_OF_STEPS` (100000) internal
   solver steps between two time points instead of the 500 of libopencor.
-  Results drop the `component/` prefix of the
+  The absolute tolerance is scaled with the smallest initial value of a
+  state as on the SBML side (`_state_scale`, `scale_tolerance`): libopencor
+  fills the arrays of the states only when it runs, so a model whose states
+  are small is run once with the given tolerance and again with the scaled
+  one, and the first run counts as setup. `timings` takes the wall time of
+  `setup` and `simulate`. Results drop the `component/` prefix of the
   variable names. Issues raise `SimulationError`.
 - `sbmlsim.py`: sbmlsim-core timecourse of an SBML model (path or text), the
   library is imported inside `run_timecourse` as well. `compilable_sbml`
@@ -158,21 +181,33 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   (strictly, else without the strict check and with a warning: libsbml
   refuses a strict conversion over issues without mathematics, e.g. the
   `outside` attribute of level 2) and a model which requires `comp` is
-  flattened with libsbml. Every field of a
+  flattened with libsbml. `load_model` converts, compiles (`optimize=True`,
+  the results are the same and the module is smaller) and loads a model and
+  keeps it by the hash of its text (`MODEL_CACHE_SIZE`), so the same model
+  is neither converted nor compiled twice in a process, as libopencor
+  caches a CellML file; an instance is per simulation. Every field of a
   request of `simulation/1` is explicit (`solver_settings`), the `Runtime`
-  is created once per process (`runtime`), `[S1]` selects a concentration.
-  The states of the solver are amounts, so `run_timecourse` multiplies the
-  absolute tolerance with the smallest initial value of a state when it is
-  below one (`state_scale`, as roadrunner does): the amounts of a model with
-  a small compartment are below the tolerance otherwise and CVODE accepts
-  any trajectory (`scale_tolerance=False` switches it off, the CellML side
-  needs no scaling since its states are concentrations).
+  is created once per process (`runtime`; the engine is WebAssembly which
+  Wasmtime compiles to native code, cached in `~/.cache/wasmtime`), `[S1]`
+  selects a concentration. The states of the solver are amounts, so
+  `run_timecourse` multiplies the absolute tolerance with the smallest
+  initial value of a state when it is below one (`state_scale` over the
+  states of the compiled description and the initial values of the loaded
+  model, as roadrunner does): the amounts of a model with a small
+  compartment are below the tolerance otherwise and CVODE accepts any
+  trajectory (`scale_tolerance=False` switches it off). `timings` takes the
+  wall time of the phases, `setup` (conversion, compilation, loading,
+  nothing of it for a cached model) and `simulate`.
 - `cellml2sbml.py`: `convert_cellml2sbml(cellml_path, sbml_path=None, validate=True)`,
   analyser driven: parameters by variable type, rules by equation type, initial
   assignments for computed constants and variable-referenced initial values,
   implicit (NLA) equations as algebraic rules,
   resets as events with `eq` trigger and `-order` priority, imports flattened
-  with `Importer`.
+  with `Importer`. A reset whose test variable is
+  `piecewise(1, condition, 0)` and whose test value is 1, as `sbml2cellml`
+  writes an event, gives the event the condition as its trigger
+  (`_condition_of_a_trigger`): a simulator evaluates it as a boolean
+  instead of looking for the root of a step.
 - `variables.py`: `VariableIds` gives one SBML id per equivalence set, a
   component prefix on name clashes; `unique_sid` adds a numeric suffix for
   colliding ids (parameters, unit definitions, the model id and event ids);
@@ -210,7 +245,8 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   and the wall time of its simulation (`StageResult.seconds`, measured in
   the worker around the call of the simulator, the compilation of the model
   included); `results.py` is `SuiteResult` (JSON) with `regressions`/
-  `improvements` and `seconds` per stage; `report.py` renders
+  `improvements` and `seconds` per stage (the integration, and the setup of
+  the simulator with `setup=True`); `report.py` renders
   `docs/testsuite.md` (the solver
   settings of the intro come from `SOLVER_SETTINGS`, `timing_lines` is the
   timing section of the two simulators, the failing cases are

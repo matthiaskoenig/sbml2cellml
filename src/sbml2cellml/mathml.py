@@ -20,6 +20,7 @@ which a name which is a symbol of the syntax (`avogadro`, `pi`, `NaN`, `time`)
 is that symbol and not an id of the model; the converter passes ASTs.
 """
 
+import itertools
 import math
 import re
 from collections.abc import Callable
@@ -61,11 +62,14 @@ _EMPTY_OPERATORS = {
 
 
 def simplify_operators(node: libsbml.ASTNode) -> libsbml.ASTNode:
-    """Replace n-ary operators with less than two arguments.
+    """Replace the operators CellML does not have or has only with two arguments.
 
     MathML allows `plus`, `times`, `and`, `or` and `xor` with one argument
     (the argument) and without any (the identity element), CellML requires
-    two.
+    two. A relation of more than two arguments, `a < b < c`, becomes the
+    conjunction of its pairs, `and(a < b, b < c)`, which CellML has.
+    `quotient(a, b)` becomes `floor(a / b)` and `implies(a, b)` becomes
+    `not a or b`: CellML has neither of the two operators.
 
     Args:
         node: root of the libsbml AST of the formula, changed in place.
@@ -73,6 +77,30 @@ def simplify_operators(node: libsbml.ASTNode) -> libsbml.ASTNode:
     Returns:
         The root, which is another node when the root itself was replaced.
     """
+    if node.getType() == libsbml.AST_FUNCTION_QUOTIENT and node.getNumChildren() == 2:
+        # CellML has no quotient: it is the floor of the division
+        division = libsbml.ASTNode(libsbml.AST_DIVIDE)
+        division.addChild(node.getChild(0).deepCopy())
+        division.addChild(node.getChild(1).deepCopy())
+        node = libsbml.ASTNode(libsbml.AST_FUNCTION_FLOOR)
+        node.addChild(division)
+    elif node.getType() == libsbml.AST_LOGICAL_IMPLIES and node.getNumChildren() == 2:
+        # CellML has no implies: `a implies b` is `not a or b`
+        negation = libsbml.ASTNode(libsbml.AST_LOGICAL_NOT)
+        negation.addChild(node.getChild(0).deepCopy())
+        disjunction = libsbml.ASTNode(libsbml.AST_LOGICAL_OR)
+        disjunction.addChild(negation)
+        disjunction.addChild(node.getChild(1).deepCopy())
+        node = disjunction
+    if node.getType() in _RELATIONS and node.getNumChildren() > 2:
+        children = [node.getChild(k).deepCopy() for k in range(node.getNumChildren())]
+        conjunction = libsbml.ASTNode(libsbml.AST_LOGICAL_AND)
+        for left, right in itertools.pairwise(children):
+            pair = libsbml.ASTNode(node.getType())
+            pair.addChild(left.deepCopy())
+            pair.addChild(right.deepCopy())
+            conjunction.addChild(pair)
+        node = conjunction
     while node.getType() in _EMPTY_OPERATORS and node.getNumChildren() < 2:
         if node.getNumChildren() == 1:
             node = node.getChild(0).deepCopy()
@@ -89,6 +117,18 @@ def simplify_operators(node: libsbml.ASTNode) -> libsbml.ASTNode:
     return node
 
 
+#: relations which MathML allows with more than two arguments
+_RELATIONS = frozenset(
+    {
+        libsbml.AST_RELATIONAL_EQ,
+        libsbml.AST_RELATIONAL_NEQ,
+        libsbml.AST_RELATIONAL_LT,
+        libsbml.AST_RELATIONAL_LEQ,
+        libsbml.AST_RELATIONAL_GT,
+        libsbml.AST_RELATIONAL_GEQ,
+    }
+)
+
 #: CellML units of the SBML units of a number
 type UnitsNames = Callable[[str], str]
 #: a formula as libsbml AST or as text in the syntax of libsbml
@@ -99,6 +139,7 @@ def normalize_math(
     node: libsbml.ASTNode,
     units: UnitsNames | None = None,
     number_units: str = NUMBER_UNITS,
+    time_id: str = TIME_ID,
 ) -> None:
     """Make the numbers and symbols of a formula valid CellML, in place.
 
@@ -115,10 +156,12 @@ def normalize_math(
         units: CellML units of the SBML units of a number
             (`CellMLUnits.number_units`), the same name when `None`.
         number_units: CellML units of a number without units.
+        time_id: name of the variable of integration, `TIME_ID` unless the
+            model has an element of that id.
     """
     if node.getType() == libsbml.AST_NAME_TIME:
         node.setType(libsbml.AST_NAME)
-        node.setName(TIME_ID)
+        node.setName(time_id)
         # else written as <ci definitionURL=".../symbols/time">
         node.setDefinitionURL("")
     elif node.getType() == libsbml.AST_NAME_AVOGADRO:
@@ -131,11 +174,14 @@ def normalize_math(
         elif units is not None:
             node.setUnits(units(node.getUnits()))
     for k in range(node.getNumChildren()):
-        normalize_math(node.getChild(k), units, number_units)
+        normalize_math(node.getChild(k), units, number_units, time_id)
 
 
 def process_mathml_for_cellml(
-    formula: Formula, units: UnitsNames | None = None, number_units: str = NUMBER_UNITS
+    formula: Formula,
+    units: UnitsNames | None = None,
+    number_units: str = NUMBER_UNITS,
+    time_id: str = TIME_ID,
 ) -> str:
     """Render a formula as a MathML fragment for CellML.
 
@@ -145,6 +191,7 @@ def process_mathml_for_cellml(
         units: CellML units of the SBML units of a number, see
             `normalize_math`.
         number_units: CellML units of a number without units.
+        time_id: name of the variable of integration, see `normalize_math`.
 
     Returns:
         The MathML of the formula without xml declaration and `math` element,
@@ -164,7 +211,7 @@ def process_mathml_for_cellml(
     else:
         ast = formula.deepCopy()
     ast = simplify_operators(ast)
-    normalize_math(ast, units, number_units)
+    normalize_math(ast, units, number_units, time_id)
     mathml: str = libsbml.writeMathMLToString(ast)
     mathml = XML_DECLARATION.sub("", mathml)
     mathml = MATH_OPEN.sub("", mathml, count=1)
@@ -178,6 +225,7 @@ def mathml_for_assignment(
     formula: Formula,
     units: UnitsNames | None = None,
     number_units: str = NUMBER_UNITS,
+    time_id: str = TIME_ID,
 ) -> str:
     """MathML of the assignment `vid = formula`.
 
@@ -188,11 +236,12 @@ def mathml_for_assignment(
             `normalize_math`.
         number_units: CellML units of a number without units, e.g. the units
             of `vid` when the formula is its value.
+        time_id: name of the variable of integration, see `normalize_math`.
 
     Returns:
         The `apply` element of the equation.
     """
-    rhs = process_mathml_for_cellml(formula, units, number_units)
+    rhs = process_mathml_for_cellml(formula, units, number_units, time_id)
     return f"""<apply>
   <eq/>
   <ci>{vid}</ci>
@@ -201,7 +250,9 @@ def mathml_for_assignment(
 """
 
 
-def mathml_for_algebraic(formula: Formula, units: UnitsNames | None = None) -> str:
+def mathml_for_algebraic(
+    formula: Formula, units: UnitsNames | None = None, time_id: str = TIME_ID
+) -> str:
     """MathML of the implicit equation `0 = formula`.
 
     Args:
@@ -209,11 +260,12 @@ def mathml_for_algebraic(formula: Formula, units: UnitsNames | None = None) -> s
             `process_mathml_for_cellml`.
         units: CellML units of the SBML units of a number, see
             `normalize_math`.
+        time_id: name of the variable of integration, see `normalize_math`.
 
     Returns:
         The `apply` element of the equation.
     """
-    rhs = process_mathml_for_cellml(formula, units)
+    rhs = process_mathml_for_cellml(formula, units, time_id=time_id)
     return f"""<apply>
   <eq/>
   <cn {CELLML_UNITS_ATTRIBUTE}="{NUMBER_UNITS}">0</cn>
@@ -237,7 +289,7 @@ def mathml_for_diff(
     Returns:
         The `apply` element of the equation.
     """
-    rhs = process_mathml_for_cellml(formula, units)
+    rhs = process_mathml_for_cellml(formula, units, time_id=ivid)
     return f"""<apply>
   <eq/>
   <apply>

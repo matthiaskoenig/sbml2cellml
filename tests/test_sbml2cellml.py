@@ -13,10 +13,13 @@ from sbml2cellml.cellml import CellMLValidationError, errors, read_model, valida
 from sbml2cellml.sbml2cellml import COMPONENT_ID, TIME_ID, SBML2CellMLConversionError
 from tests.conftest import GLIMEPIRIDE_MODELS, MODELS_DIR
 from tests.sbml_models import (
+    analytic_time_model,
     delay_model,
+    event_model,
     growing_compartment_model,
     simple_model,
     symbol_ids_model,
+    time_id_model,
     write_sbml,
 )
 
@@ -947,19 +950,92 @@ def test_nan_initial_value_logs_warning(
     assert "k_undefined" in caplog.text
 
 
-def test_event_logs_warning(tmp_path: Path, caplog: pytest.LogCaptureFixture) -> None:
-    model_sbml = simple_model("events")
-    event: libsbml.Event = model_sbml.createEvent()
-    event.setId("e1")
-    event.setUseValuesFromTriggerTime(True)
-    trigger: libsbml.Trigger = event.createTrigger()
+def test_event_becomes_a_reset(tmp_path: Path) -> None:
+    """The trigger is a variable which is 1 while it holds, the assignment a reset."""
+    sbml_path = write_sbml(tmp_path / "events.xml", event_model())
+    model = convert_sbml2cellml(sbml_path, cellml_path=tmp_path / "events.cellml")
+    component = model.component(0)
+    assert component.variable("e1_trigger") is not None
+    assert "<piecewise>" in component.math()
+    assert component.resetCount() == 1
+    reset = component.reset(0)
+    assert reset.variable().name() == "k1"
+    assert reset.testVariable().name() == "e1_trigger"
+    assert "<ci>k1</ci>" in reset.resetValue()
+
+
+def test_event_with_a_delay_logs_warning(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    """CellML has no counterpart for the delay of an event."""
+    model_sbml = event_model("delayed")
+    delay: libsbml.Delay = model_sbml.getEvent("e1").createDelay()
+    delay.setMath(libsbml.parseL3Formula("2"))
+    sbml_path = write_sbml(tmp_path / "delayed.xml", model_sbml)
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        model = convert_sbml2cellml(sbml_path)
+    assert "Event 'e1' has a delay" in caplog.text
+    assert model.component(0).resetCount() == 0
+
+
+def test_convert_model_with_an_element_called_time(tmp_path: Path) -> None:
+    """The variable of integration takes another name, the parameter keeps it."""
+    sbml_path = write_sbml(tmp_path / "timeid.xml", time_id_model())
+    model = convert_sbml2cellml(sbml_path, cellml_path=tmp_path / "timeid.cellml")
+    component = model.component(0)
+    names = {component.variable(k).name() for k in range(component.variableCount())}
+    assert "time" in names
+    assert "time_2" in names
+    assert component.variable("time").initialValue() == "2"
+    math = component.math()
+    assert "<bvar>\n      <ci>time_2</ci>" in math
+
+
+def test_convert_analytic_model_of_time(tmp_path: Path) -> None:
+    """A model without a differential equation gets a state which integrates time."""
+    sbml_path = write_sbml(tmp_path / "analytic.xml", analytic_time_model())
+    model = convert_sbml2cellml(sbml_path, cellml_path=tmp_path / "analytic.cellml")
+    component = model.component(0)
+    state = component.variable("time_state")
+    assert state is not None
+    assert state.initialValue() == "0"
+    assert "<ci>time_state</ci>" in component.math()
+
+
+def test_event_with_math_which_is_no_cellml_is_not_converted(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    """A factorial has no CellML counterpart, the model keeps its other equations."""
+    model_sbml = event_model("factorial")
+    model_sbml.getEvent("e1").getEventAssignment(0).setMath(
+        libsbml.parseL3Formula("factorial(3)")
+    )
+    sbml_path = write_sbml(tmp_path / "factorial.xml", model_sbml)
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        model = convert_sbml2cellml(sbml_path)
+    assert "Event 'e1' uses math CellML has no counterpart for" in caplog.text
+    assert model.component(0).resetCount() == 0
+    assert model.component(0).variable("S1") is not None
+
+
+def test_events_are_ordered_by_their_priority(tmp_path: Path) -> None:
+    """SBML applies the highest priority first, CellML the lowest order."""
+    model_sbml = event_model("priority")
+    first: libsbml.Event = model_sbml.getEvent("e1")
+    first.createPriority().setMath(libsbml.parseL3Formula("1"))
+    second: libsbml.Event = model_sbml.createEvent()
+    second.setId("e2")
+    second.setUseValuesFromTriggerTime(True)
+    trigger: libsbml.Trigger = second.createTrigger()
     trigger.setMath(libsbml.parseL3Formula("time > 10"))
     trigger.setPersistent(True)
     trigger.setInitialValue(True)
-    ea: libsbml.EventAssignment = event.createEventAssignment()
-    ea.setVariable("k1")
-    ea.setMath(libsbml.parseL3Formula("1.0"))
-    sbml_path = write_sbml(tmp_path / "events.xml", model_sbml)
-    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
-        convert_sbml2cellml(sbml_path, validate=False)
-    assert "Event 'e1'" in caplog.text
+    second.createPriority().setMath(libsbml.parseL3Formula("2"))
+    assignment: libsbml.EventAssignment = second.createEventAssignment()
+    assignment.setVariable("k1")
+    assignment.setMath(libsbml.parseL3Formula("3.0"))
+    sbml_path = write_sbml(tmp_path / "priority.xml", model_sbml)
+    component = convert_sbml2cellml(sbml_path).component(0)
+    assert component.resetCount() == 2
+    assert component.reset(0).testVariable().name() == "e2_trigger"
+    assert component.reset(1).testVariable().name() == "e1_trigger"
