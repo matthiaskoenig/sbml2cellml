@@ -101,10 +101,22 @@ def compilable_sbml(sbml: str) -> str:
             document.getLevel(),
             document.getVersion(),
         )
+        # the strict conversion refuses a model which it cannot convert
+        # without a change of its meaning, which includes constructs without
+        # mathematics (the `outside` attribute of a compartment of level 2)
+        # and inconsistent units; the conversion is then repeated without the
+        # check, which drops what level 3 has no place for
         if not document.setLevelAndVersion(3, 2, True):
-            raise SimulationError(
-                "the model cannot be converted to SBML level 3 version 2: "
-                f"{_errors(document)}"
+            problems = _errors(document)
+            if not document.setLevelAndVersion(3, 2, False):
+                raise SimulationError(
+                    "the model cannot be converted to SBML level 3 version 2: "
+                    f"{problems}"
+                )
+            logger.warning(
+                "the model was converted to SBML level 3 version 2 without the "
+                "strict check: %s",
+                problems,
             )
         converted = True
     if document.getPackageRequired("comp"):

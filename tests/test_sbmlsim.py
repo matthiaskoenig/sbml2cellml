@@ -76,6 +76,27 @@ def test_compilable_sbml_converts_a_level_2_model() -> None:
     assert (document.getLevel(), document.getVersion()) == (3, 2)
 
 
+def test_compilable_sbml_converts_a_model_the_strict_check_refuses(
+    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    """libsbml refuses a strict conversion over issues without mathematics."""
+    strict_conversion = libsbml.SBMLDocument.setLevelAndVersion
+
+    def refuse_strict(
+        document: libsbml.SBMLDocument, level: int, version: int, strict: bool
+    ) -> bool:
+        if strict:
+            return False
+        return bool(strict_conversion(document, level, version, strict))
+
+    monkeypatch.setattr(libsbml.SBMLDocument, "setLevelAndVersion", refuse_strict)
+    text = (MODELS_DIR / "repressilator.xml").read_text(encoding="utf-8")
+    with caplog.at_level("WARNING"):
+        converted = libsbml.readSBMLFromString(compilable_sbml(text))
+    assert (converted.getLevel(), converted.getVersion()) == (3, 2)
+    assert "without the strict check" in caplog.text
+
+
 def test_compilable_sbml_flattens_the_comp_package() -> None:
     text = (MODELS_DIR / "glimepiride_liver.xml").read_text(encoding="utf-8")
     converted = compilable_sbml(text)

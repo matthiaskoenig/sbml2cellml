@@ -104,6 +104,10 @@ class SuiteResult:
 def regressions(old: SuiteResult, new: SuiteResult) -> list[str]:
     """Stages which passed before and do not pass now, and missing cases.
 
+    A stage which only one of the two results has (e.g. after a stage was
+    renamed) is left out of the comparison: it has no status to compare
+    with.
+
     Args:
         old: committed result.
         new: current result.
@@ -117,22 +121,31 @@ def regressions(old: SuiteResult, new: SuiteResult) -> list[str]:
             lines.append(f"{cid}: missing")
             continue
         for stage in STAGES:
-            before = case.stages[stage].status
-            after = new.cases[cid].stages[stage]
-            if before == "pass" and after.status != "pass":
+            before = case.stages.get(stage)
+            after = new.cases[cid].stages.get(stage)
+            if before is None or after is None:
+                continue
+            if before.status == "pass" and after.status != "pass":
                 lines.append(f"{cid} {stage}: pass -> {after.status} ({after.message})")
     return lines
 
 
 def improvements(old: SuiteResult, new: SuiteResult) -> list[str]:
-    """Stages which did not pass before and pass now."""
+    """Stages which did not pass before and pass now.
+
+    A stage which only one of the two results has is left out, as in
+    `regressions`.
+    """
     lines: list[str] = []
     for cid, case in sorted(new.cases.items()):
         if cid not in old.cases:
             lines.append(f"{cid}: new")
             continue
         for stage in STAGES:
-            before = old.cases[cid].stages[stage].status
-            if before != "pass" and case.stages[stage].status == "pass":
-                lines.append(f"{cid} {stage}: {before} -> pass")
+            before = old.cases[cid].stages.get(stage)
+            after = case.stages.get(stage)
+            if before is None or after is None:
+                continue
+            if before.status != "pass" and after.status == "pass":
+                lines.append(f"{cid} {stage}: {before.status} -> pass")
     return lines

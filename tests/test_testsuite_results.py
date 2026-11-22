@@ -94,3 +94,15 @@ def test_regressions_and_improvements() -> None:
     missing = suite("pass")
     del missing.cases["00002"]
     assert regressions(old, missing) == ["00002: missing"]
+
+
+def test_regressions_and_improvements_ignore_a_stage_of_one_side_only() -> None:
+    """A renamed stage (e.g. `roadrunner` to `sbmlsim`) has nothing to compare."""
+    old = suite("pass")
+    new = suite("fail", "S1 exceeds the tolerance")
+    for case in old.cases.values():
+        case.stages.pop("sbmlsim")
+    assert regressions(old, new) == [
+        "00001 roundtrip: pass -> fail (S1 exceeds the tolerance)"
+    ]
+    assert improvements(new, old) == ["00001 roundtrip: fail -> pass"]

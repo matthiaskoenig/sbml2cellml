@@ -154,8 +154,11 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   variable names. Issues raise `SimulationError`.
 - `sbmlsim.py`: sbmlsim-core timecourse of an SBML model (path or text), the
   library is imported inside `run_timecourse` as well. `compilable_sbml`
-  gives the compiler what it reads: level 1 and 2 are converted to L3V2 and
-  a model which requires `comp` is flattened with libsbml. Every field of a
+  gives the compiler what it reads: level 1 and 2 are converted to L3V2
+  (strictly, else without the strict check and with a warning: libsbml
+  refuses a strict conversion over issues without mathematics, e.g. the
+  `outside` attribute of level 2) and a model which requires `comp` is
+  flattened with libsbml. Every field of a
   request of `simulation/1` is explicit (`solver_settings`), the `Runtime`
   is created once per process (`runtime`), `[S1]` selects a concentration.
 - `cellml2sbml.py`: `convert_cellml2sbml(cellml_path, sbml_path=None, validate=True)`,

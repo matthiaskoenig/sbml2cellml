@@ -34,7 +34,7 @@ The first argument is the path of an SBML file or the document as a string, the 
 
 The converted CellML model has one variable per compartment, parameter and species, named by the SBML id, where a species is a concentration unless it has `hasOnlySubstanceUnits` (a species in concentration whose compartment changes in time has the additional variable `<species>_amount`), so selecting `[S1]` gives the column which the CellML variable `S1` is compared with.
 
-The compiler of sbmlsim-core reads flat SBML level 3 without a required package: a level 1 or 2 model is converted to level 3 version 2 with libsbml and a model which requires the `comp` package is flattened, both by `run_timecourse` itself (`compilable_sbml`). A model it cannot compile or integrate raises an error of sbmlsim-core; without sbmlsim-core the import of `sbml2cellml.sbmlsim` works and `run_timecourse` raises an `ImportError` with the installation hint.
+The compiler of sbmlsim-core reads flat SBML level 3 without a required package: a level 1 or 2 model is converted to level 3 version 2 with libsbml and a model which requires the `comp` package is flattened, both by `run_timecourse` itself (`compilable_sbml`). libsbml refuses the strict conversion of a model over issues which have no mathematics, e.g., the `outside` attribute of a compartment of level 2 or inconsistent units; the conversion is then repeated without the strict check and the issues are logged as a warning. A model it cannot compile or integrate raises an error of sbmlsim-core; without sbmlsim-core the import of `sbml2cellml.sbmlsim` works and `run_timecourse` raises an `ImportError` with the installation hint.
 
 ## CellML with libopencor
 
