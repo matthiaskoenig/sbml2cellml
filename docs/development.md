@@ -304,6 +304,8 @@ The two pages are generated and committed, and they are rendered from the result
 
 `math.rs` writes a formula of SBML as the mathematics of CellML. Both are content MathML, so an operator keeps its element, and what the conversion changes is what CellML states differently or does not have: every number carries the CellML name of its units and `dimensionless` when the formula gives it none, an infinity and a NaN become the elements of MathML, the time symbol becomes the variable of integration and the avogadro symbol the number SBML defines for it. `quotient(a, b)` becomes `floor(a / b)` and `implies(a, b)` becomes `not a or b`, the two operators CellML does not have; a relation of more than two arguments becomes the conjunction of its pairs (`a < b < c` is `and(a < b, b < c)`) and an n-ary operator of less than two arguments its value (`plus()` is 0, `times(a)` is `a`). CellML has no functions, so `Functions` expands every call of a function definition, the arguments of a call and the body of a definition included; a definition which is part of a cycle of calls, a call of the wrong arity, a call of a function the model does not define and a definition without a lambda are refused, as are `delay` and a `rateOf` which the conversion did not replace.
 
+`model.rs` builds the CellML model, the structure which `sbml2cellml.py` writes in python: one component `sbml` holds one variable per compartment, parameter and species, the local parameters of a kinetic law as `<reaction>_<parameter>`, one variable per reaction with its rate and one per species reference which has an id with its stoichiometry. An assignment rule becomes an equation, a rate rule and the reaction terms of a species a differential equation, where the terms of a species in concentration are divided by its compartment, and a species in a compartment which changes in time gets its `<species>_amount` with the terms and the equation `species = amount / compartment`, since SBML keeps the amount when the size changes. `time` is the variable of integration, a model which uses time without a differential equation gets the state `time_state` with `d time_state / d time = 1`, and an algebraic model gets no `time` at all, as CellML knows the variable of integration from a differential equation only. `Formulas` holds the formulas of the model and expands `rateOf` to the right hand side of the equation of its variable, and the variables get their units when the unit annotation of the model is complete, else all of them are `dimensionless`, as in the python converter. The stages of [issue #82](https://github.com/matthiaskoenig/sbml2cellml/issues/82) which follow convert what the conversion refuses so far: an algebraic rule, an event, an initial assignment which has to be evaluated, and a model which needs a package.
+
 `crates/python` is the module `sbml2cellml._rust`, built with [pyo3](https://pyo3.rs) and the stable ABI of python 3.14 (`abi3-py314`), which gives the package the conversion in the process; `sbml2cellml.rust` wraps it, `src/sbml2cellml/_rust.pyi` is its signature for the type checker. maturin is the build backend of the package (`[tool.maturin]` of `pyproject.toml`), so `uv sync` and `uv build` compile the crates and put the module next to the python code. The crate is no default member of the workspace: a test binary of it would have to link libpython, so `cargo test` leaves it out and the `rust` workflow lints it on its own.
 
 ```bash
@@ -311,11 +313,12 @@ cargo test                  # the rust tests, over the CellML fixtures of the re
 cargo clippy --all-targets  # the lints, denied in the workspace
 cargo clippy -p sbml2cellml-python   # the lints of the python module
 cargo fmt --check           # the formatting
-cargo build --release       # the cellml-info, cellml-convert and cellml-write commands in target/release
+cargo build --release       # the cellml-info, cellml-convert, cellml-write and sbml-convert commands in target/release
 cargo build --target wasm32-unknown-unknown -p sbml2cellml-cellml -p sbml2cellml-convert
 
 target/release/cellml-convert model.cellml            # writes model.xml
 target/release/cellml-convert -o - model.cellml       # to the standard output
+target/release/sbml-convert model.xml                 # writes model.cellml
 
 uv sync --extra dev         # builds sbml2cellml._rust as well
 uv build                    # the wheel with the module and the sdist
@@ -328,6 +331,7 @@ cargo build --release
 uv run python scripts/cellml_parity.py        # the reader against libcellml
 uv run python scripts/cellml_write_parity.py  # the writer against libcellml
 uv run python scripts/cellml2sbml_parity.py   # the converter against the python converter
+uv run python scripts/sbml2cellml_parity.py   # the forward converter against the python converter
 uv run python scripts/cellml_parity.py --count 10 -v
 ```
 
@@ -393,3 +397,7 @@ the release is prepared on a branch and tagged once that pull request is merged:
     ```
 
 9. once Zenodo has archived the release, update the citation information, i.e., `date-released` in `CITATION.cff` and the version, date and version DOI of the release in the citation of `README.md` and `docs/index.md`. `bump-my-version` only updates the version, not the date and the DOI, which are only known after the release. These changes go in through a pull request like everything else
+
+`scripts/sbml2cellml_parity.py` measures the conversion of an SBML model against the python converter, over the models of `examples/models`, the cases of the SBML test suite and the models of the BioModels cache (`--corpus models|suite|biomodels|all`). It converts every model with both converters, validates the CellML of the rust converter with libcellml and compares the variables with their units and their initial value and the equations by the variable they determine, where a formula is written as a canonical expression. The units of a variable and of a number are compared by what they are and not by the name they carry, since both converters take a unit definition of the SBML model for the units of a concentration and pick a different one when the model states the same units in two ways; an initial value is compared to twelve significant digits, since libcellml writes fifteen of them and the rust writer every digit of the double.
+
+Of the 1692 cases of the SBML test suite, 747 are converted by both converters, and every one of them gives the same CellML model. 820 are refused by the rust converter, which are the stages of issue #82 that follow, and 125 need the `comp` package, whose submodels the python converter flattens with libsbml first. Of the 1075 models of the BioModels cache, 768 are converted by both and 767 of them give the same model: `BIOMD0000000040` differs because the rust path converts the `<stoichiometryMath>` of a species reference, which the reader of SBML writes as an assignment rule of the id it gives the reference, while the python converter takes the stoichiometry as it stands ([issue #86](https://github.com/matthiaskoenig/sbml2cellml/issues/86)).
