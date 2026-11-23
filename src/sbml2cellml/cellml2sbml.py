@@ -32,7 +32,12 @@ import libcellml
 import libsbml
 
 from sbml2cellml import cellml, rust, sbml
-from sbml2cellml.metadata import Record, apply_metadata, read_metadata
+from sbml2cellml.metadata import (
+    Record,
+    apply_event,
+    apply_metadata,
+    read_metadata,
+)
 from sbml2cellml.rust import Engine
 from sbml2cellml.sbml import SBMLValidationError
 from sbml2cellml.sbmlmath import (
@@ -74,6 +79,10 @@ SUPPORTED_MODEL_TYPES = (
 class CellML2SBMLConversionError(ValueError):
     """The CellML model cannot be converted."""
 
+
+#: suffix of the variable `sbml2cellml` writes the trigger of an SBML event
+#: as, which the event of its resets takes its id from again
+_TRIGGER_SUFFIX = "_trigger"
 
 #: suffix of the file with the metadata, next to the CellML file
 METADATA_SUFFIX = ".rdf"
@@ -239,9 +248,11 @@ def _apply_records(
 
     The conversion gives the SBML element of every CellML element with an
     id, which is the subject of its metadata: the model itself, a unit
-    definition or the parameter of the equivalence set of a variable. The
-    id is the metaid of the SBML element, as in `_add_metadata` of the
-    python engine, and the first record of a parameter wins.
+    definition, the parameter of the equivalence set of a variable or the
+    event of the resets of a trigger variable, which takes the delay, the
+    priority and the flags of the record (`apply_event`). The id is the
+    metaid of the SBML element, as in `_add_metadata` of the python engine,
+    and the first record of a parameter wins.
 
     Args:
         model_sbml: the SBML model of the conversion.
@@ -250,6 +261,14 @@ def _apply_records(
     """
     elements: dict[str, libsbml.SBase] = {}
     for cid, kind, sid in mappings:
+        if kind == "event":
+            # the trigger variable of an event is a parameter as well, the
+            # event takes what a reset cannot express
+            record = records.get(cid)
+            event: libsbml.Event = model_sbml.getEvent(sid)
+            if record is not None and record.event is not None and event is not None:
+                apply_event(event, record.event)
+            continue
         if cid in elements:
             continue
         element: libsbml.SBase | None
@@ -483,6 +502,8 @@ def build_document(
         for k in range(component.resetCount())
     }
 
+    changing = _changing_variables(analyser_model, ids, reset_targets)
+
     for k in range(analyser_model.stateCount()):
         _add_parameter(
             model_sbml, analyser_model.state(k), ids, unit_ids, constant=False
@@ -496,7 +517,7 @@ def build_document(
         sid = ids.id_for(variable.variable())
         constant = (
             variable_type in (VariableType.CONSTANT, VariableType.COMPUTED_CONSTANT)
-            and sid not in reset_targets
+            and sid not in changing
         )
         _add_parameter(model_sbml, variable, ids, unit_ids, constant=constant)
 
@@ -505,10 +526,16 @@ def build_document(
 
     number_units = NumberUnits(model, ids, sbml_unit_id)
     for k in range(analyser_model.analyserEquationCount()):
-        _add_equation(model_sbml, analyser_model.analyserEquation(k), ids, number_units)
+        _add_equation(
+            model_sbml,
+            analyser_model.analyserEquation(k),
+            ids,
+            number_units,
+            changing,
+        )
 
-    _add_events(model_sbml, model, ids, sbml_unit_id)
-    _add_metadata(model_sbml, model, ids, unit_ids, records or {})
+    events = _add_events(model_sbml, model, ids, sbml_unit_id)
+    _add_metadata(model_sbml, model, ids, unit_ids, records or {}, events)
     return doc
 
 
@@ -523,6 +550,67 @@ def _first_variable(node: Any) -> Any | None:
         if found is not None:
             return found
     return None
+
+
+def _ast_variables(node: Any) -> Iterator[Any]:
+    """Every variable of an analyser AST, depth first."""
+    if node is None:
+        return
+    if node.type() == AstType.CI:
+        yield node.variable()
+    yield from _ast_variables(node.leftChild())
+    yield from _ast_variables(node.rightChild())
+
+
+def _changing_variables(
+    analyser_model: Any, ids: VariableIds, reset_targets: set[str]
+) -> set[str]:
+    """The ids of the variables a reset changes, with what follows them.
+
+    A reset writes its variable, which the analyser does not see: it types
+    the variable and everything computed from it as a constant, since no
+    equation determines them. Such a variable is no constant of SBML and a
+    quantity computed from it is no initial assignment but an assignment
+    rule, which holds whenever the reset fired.
+
+    Args:
+        analyser_model: the analysed model.
+        ids: the SBML id of every variable.
+        reset_targets: the ids of the variables a reset writes.
+
+    Returns:
+        The ids of the variables a reset writes and of the computed
+        constants which use one of them, directly or through another
+        computed constant.
+    """
+    changing = set(reset_targets)
+    computed: list[tuple[str, set[str]]] = []
+    for k in range(analyser_model.analyserEquationCount()):
+        equation = analyser_model.analyserEquation(k)
+        if equation.type() not in (
+            EquationType.CONSTANT,
+            EquationType.COMPUTED_CONSTANT,
+        ):
+            continue
+        ast = equation.ast()
+        left = ast.leftChild() if ast is not None else None
+        right = ast.rightChild() if ast is not None else None
+        if left is None or left.type() != AstType.CI:
+            continue
+        computed.append(
+            (
+                ids.id_for(left.variable()),
+                {ids.id_for(variable) for variable in _ast_variables(right)},
+            )
+        )
+    grew = True
+    while grew:
+        grew = False
+        for sid, used in computed:
+            if sid not in changing and used & changing:
+                changing.add(sid)
+                grew = True
+    return changing
 
 
 def _equation_component(equation: Any) -> str | None:
@@ -632,10 +720,12 @@ def _add_component_parameters(
     equations: list[Any],
     ids: ComponentIds,
     unit_ids: dict[str, str],
+    changing: set[str],
 ) -> None:
     """Add a parameter for every variable of a component to its definition.
 
-    A variable the component computes is not constant, the others are: their
+    A variable the component computes is not constant, nor is one a reset
+    writes or one computed from it (`changing`); the others are: their
     value comes from the model the submodel is used in, through the
     replacement of the variable (`_add_replacements`).
 
@@ -645,6 +735,8 @@ def _add_component_parameters(
         equations: the analyser equations of that component.
         ids: the local ids of the variables.
         unit_ids: the SBML unit ids by CellML units name.
+        changing: the local ids of the variables which change in time
+            although no equation of the component determines them.
 
     Raises:
         MathConversionError: if an initial value names a variable which is
@@ -658,7 +750,7 @@ def _add_component_parameters(
         sid = ids.id_for(variable)
         parameter: libsbml.Parameter = definition.createParameter()
         parameter.setId(sid)
-        parameter.setConstant(variable.name() not in computed)
+        parameter.setConstant(variable.name() not in computed and sid not in changing)
         parameter.setUnits(unit_id(variable.units().name(), unit_ids))
         if sid != variable.name():
             parameter.setName(variable.name())
@@ -689,9 +781,19 @@ def _add_component_resets(
     ids: ComponentIds,
     sbml_unit_id: Callable[[str], str],
 ) -> None:
-    """Add an event per reset of a component to its model definition."""
+    """Add an event per group of resets of a component to its definition.
+
+    The resets which share their test variable and their test value become
+    one event, as they do in the flat conversion (`_add_events`).
+    """
+    groups: dict[tuple[str, str], list[Any]] = {}
     for k in range(component.resetCount()):
-        _add_reset(definition, component, component.reset(k), k + 1, ids, sbml_unit_id)
+        reset = component.reset(k)
+        key = (reset.testVariable().name(), reset.testValue())
+        groups.setdefault(key, []).append(reset)
+    for index, group in enumerate(groups.values(), start=1):
+        resets = sorted(group, key=lambda reset: reset.order())
+        _add_event(definition, component, resets, index, ids, sbml_unit_id)
 
 
 def _replacement_path(variable: Any) -> list[str]:
@@ -833,6 +935,12 @@ def build_hierarchical_document(
         return unit_id(units_name, unit_ids)
 
     number_units = NumberUnits(model, local, sbml_unit_id)
+    local_resets = {
+        local.id_for(component.reset(k).variable())
+        for component in components(model)
+        for k in range(component.resetCount())
+    }
+    local_changing = _changing_variables(analyser_model, local, local_resets)
     equations = _equations_by_component(analyser_model)
     definitions: dict[str, str] = {}
     used: set[str] = set()
@@ -849,10 +957,15 @@ def build_hierarchical_document(
         add_units(model, definition)
         component_equations = equations.get(component.name(), [])
         _add_component_parameters(
-            definition, component, component_equations, local, unit_ids
+            definition,
+            component,
+            component_equations,
+            local,
+            unit_ids,
+            local_changing,
         )
         for equation in component_equations:
-            _add_equation(definition, equation, local, number_units)
+            _add_equation(definition, equation, local, number_units, local_changing)
         _add_component_resets(definition, component, local, sbml_unit_id)
         logger.info(
             "'%s' model definition of component '%s' with %d parameters",
@@ -882,12 +995,13 @@ def build_hierarchical_document(
         for component in components(model)
         for k in range(component.resetCount())
     }
+    changing = _changing_variables(analyser_model, ids, reset_targets)
     for analyser_variable in _connected_variables(analyser_model, model):
         sid = ids.id_for(analyser_variable.variable())
         variable_type = analyser_variable.type()
         constant = (
             variable_type in (VariableType.CONSTANT, VariableType.COMPUTED_CONSTANT)
-            and sid not in reset_targets
+            and sid not in changing
         )
         _add_parameter(model_sbml, analyser_variable, ids, unit_ids, constant=constant)
         _add_replacements(
@@ -909,6 +1023,7 @@ def _add_metadata(
     ids: VariableIds,
     unit_ids: dict[str, str],
     records: dict[str, Record],
+    events: dict[str, libsbml.Event] | None = None,
 ) -> None:
     """Set the metadata on the elements of the SBML model.
 
@@ -916,6 +1031,10 @@ def _add_metadata(
     a variable (of the equivalence set of the variable, the first record
     wins), to the unit definition of units, or to the model. The id is the
     metaid of the SBML element, it is unique in the CellML model.
+
+    The record of the trigger variable of an event holds what the resets of
+    the event cannot express as well, which goes to the event of the resets
+    (`apply_event`).
     """
     elements: dict[str, libsbml.SBase] = {}
     if model.id():
@@ -936,6 +1055,8 @@ def _add_metadata(
                 continue  # not part of the analysed model
             if parameter is not None:
                 elements[variable.id()] = parameter
+
+    _apply_events(records, elements, events or {}, ids, model)
 
     applied: set[str] = set()
     for cid, record in records.items():
@@ -1017,8 +1138,14 @@ def _add_equation(
     equation: Any,
     ids: VariableIds,
     number_units: NumberUnits,
+    changing: set[str],
 ) -> None:
-    """Add the rule or initial assignment of an equation."""
+    """Add the rule or initial assignment of an equation.
+
+    A computed constant becomes an initial assignment, unless it uses a
+    variable a reset writes (`changing`): it changes in time whenever the
+    reset fires, so it becomes an assignment rule.
+    """
     equation_type = equation.type()
     type_name = libcellml.AnalyserEquation.typeAsString(equation_type)
     names = [variable.variable().name() for variable in _equation_variables(equation)]
@@ -1069,15 +1196,23 @@ def _add_equation(
             f"'variable = expression' is supported."
         )
     sid = ids.id_for(left.variable())
-    if equation_type in (
-        EquationType.CONSTANT,
-        EquationType.COMPUTED_CONSTANT,
+    if (
+        equation_type
+        in (
+            EquationType.CONSTANT,
+            EquationType.COMPUTED_CONSTANT,
+        )
+        and sid not in changing
     ):
         assignment: libsbml.InitialAssignment = model_sbml.createInitialAssignment()
         assignment.setSymbol(sid)
         assignment.setMath(rhs)
         logger.info("%s = %s (initial assignment)", sid, libsbml.formulaToL3String(rhs))
-    elif equation_type == EquationType.ALGEBRAIC:
+    elif equation_type in (
+        EquationType.CONSTANT,
+        EquationType.COMPUTED_CONSTANT,
+        EquationType.ALGEBRAIC,
+    ):
         rule = model_sbml.createAssignmentRule()
         rule.setVariable(sid)
         rule.setMath(rhs)
@@ -1101,47 +1236,74 @@ def _add_events(
     model: libcellml.Model,
     ids: VariableIds,
     sbml_unit_id: Callable[[str], str],
-) -> None:
-    """Add an event per reset of every component."""
+) -> dict[str, libsbml.Event]:
+    """Add an event per group of resets of every component.
+
+    The resets of a component which share their test variable and their
+    test value fire at the same moment and become one event with one
+    assignment each, which is the event `sbml2cellml` wrote them from: SBML
+    evaluates the assignments of an event together and applies them at
+    once.
+
+    Returns:
+        The event of every group, by the id of its test variable, which the
+        metadata of the conversion carries the delay and the other
+        attributes of the original event in.
+    """
     index = 0
+    events: dict[str, libsbml.Event] = {}
     for component in _components(model):
+        groups: dict[tuple[str, str], list[Any]] = {}
         for k in range(component.resetCount()):
+            reset = component.reset(k)
+            key = (reset.testVariable().name(), reset.testValue())
+            groups.setdefault(key, []).append(reset)
+        for group in groups.values():
             index += 1
-            _add_reset(
-                model_sbml, component, component.reset(k), index, ids, sbml_unit_id
+            resets = sorted(group, key=lambda reset: reset.order())
+            test_sid = ids.id_for(resets[0].testVariable())
+            events[test_sid] = _add_event(
+                model_sbml, component, resets, index, ids, sbml_unit_id
             )
+    return events
 
 
-def _add_reset(
+def _add_event(
     model_sbml: libsbml.Model,
     component: Any,
-    reset: Any,
+    resets: list[Any],
     index: int,
     ids: VariableIds,
     sbml_unit_id: Callable[[str], str],
-) -> None:
-    """Add the event of a reset.
+) -> libsbml.Event:
+    """Add the event of the resets which fire together.
 
     The trigger is the equality of the test variable and the test value, or
     the condition of a test variable which is `piecewise(1, condition, 0)`
-    (`_condition_of_a_trigger`), the priority the negated order (CellML
-    applies the lowest order first, SBML the highest priority), the
-    assignment sets the reset variable.
+    (`_condition_of_a_trigger`), the priority the negated order of the
+    first reset (CellML applies the lowest order first, SBML the highest
+    priority), and every reset sets its variable in an assignment of the
+    event. An event of such a trigger takes its name from the test
+    variable, `<event>_trigger` of the conversion, so it keeps the id of
+    the SBML event it was written from.
+
+    Returns:
+        The event.
     """
-    test_variable = reset.testVariable()
-    variable = reset.variable()
+    first = resets[0]
+    test_variable = first.testVariable()
     event: libsbml.Event = model_sbml.createEvent()
-    event.setId(ids.reserve(f"reset_{index}"))
     event.setUseValuesFromTriggerTime(True)
 
     trigger: libsbml.Trigger = event.createTrigger()
     trigger.setPersistent(True)
     trigger.setInitialValue(True)
     value = _reset_expression(
-        reset.testValue(), test_variable, component, ids, sbml_unit_id
+        first.testValue(), test_variable, component, ids, sbml_unit_id
     )
     test_sid = ids.id_for(test_variable)
     condition = _condition_of_a_trigger(model_sbml, test_sid, value)
+    event.setId(_event_id(test_sid, index, ids, condition is not None))
     if condition is None:
         condition = libsbml.ASTNode(libsbml.AST_RELATIONAL_EQ)
         condition.addChild(variable_node(test_variable, ids))
@@ -1150,21 +1312,90 @@ def _add_reset(
 
     priority: libsbml.Priority = event.createPriority()
     order = libsbml.ASTNode(libsbml.AST_REAL)
-    order.setValue(-float(reset.order()))
+    order.setValue(-float(first.order()))
     priority.setMath(order)
 
-    assignment: libsbml.EventAssignment = event.createEventAssignment()
-    assignment.setVariable(ids.id_for(variable))
-    assignment.setMath(
-        _reset_expression(reset.resetValue(), variable, component, ids, sbml_unit_id)
-    )
+    for reset in resets:
+        variable = reset.variable()
+        assignment: libsbml.EventAssignment = event.createEventAssignment()
+        assignment.setVariable(ids.id_for(variable))
+        assignment.setMath(
+            _reset_expression(
+                reset.resetValue(), variable, component, ids, sbml_unit_id
+            )
+        )
     logger.info(
-        "reset_%d: %s == %s -> %s",
-        index,
-        ids.id_for(test_variable),
+        "%s: %s == %s -> %s",
+        event.getId(),
+        test_sid,
         libsbml.formulaToL3String(condition.getChild(1)),
-        ids.id_for(variable),
+        ", ".join(ids.id_for(reset.variable()) for reset in resets),
     )
+    return event
+
+
+def _event_id(test_sid: str, index: int, ids: VariableIds, is_trigger: bool) -> str:
+    """The id of the event of a group of resets.
+
+    Args:
+        test_sid: id of the test variable of the resets.
+        index: number of the group, for an event without such a trigger.
+        ids: the ids of the model, which the id is reserved in.
+        is_trigger: whether the test variable is the trigger variable
+            `sbml2cellml` writes an SBML event as.
+
+    Returns:
+        The id of the SBML event: the id of the event the conversion wrote
+        the trigger variable from, else `reset_<index>`.
+    """
+    if is_trigger and test_sid.endswith(_TRIGGER_SUFFIX):
+        name = test_sid[: -len(_TRIGGER_SUFFIX)]
+        if name:
+            return ids.reserve(name)
+    return ids.reserve(f"reset_{index}")
+
+
+def _apply_events(
+    records: dict[str, Record],
+    elements: dict[str, libsbml.SBase],
+    events: dict[str, libsbml.Event],
+    ids: VariableIds,
+    model: libcellml.Model,
+) -> None:
+    """Restore what the resets of an event cannot express.
+
+    The record of the trigger variable of an event holds the delay, the
+    priority and the flags of the event `sbml2cellml` wrote the resets
+    from, which the event of those resets takes again.
+
+    Args:
+        records: the records of the metadata, by the id of the CellML
+            element.
+        elements: the SBML element of every CellML element with an id.
+        events: the event of every group of resets, by the id of its test
+            variable.
+        ids: the ids of the variables of the model.
+        model: the CellML model.
+    """
+    if not events:
+        return
+    for component in _components(model):
+        for k in range(component.variableCount()):
+            variable = component.variable(k)
+            record = records.get(variable.id())
+            if record is None or record.event is None:
+                continue
+            try:
+                event = events.get(ids.id_for(variable))
+            except KeyError:
+                continue
+            if event is None:
+                logger.info(
+                    "The event of '%s' has no reset in the model", variable.id()
+                )
+                continue
+            apply_event(event, record.event)
+            elements.setdefault(f"{variable.id()}_event", event)
 
 
 def _condition_of_a_trigger(

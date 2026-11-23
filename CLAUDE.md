@@ -121,12 +121,19 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   differential equations; a concentration species
   gets its reaction terms divided by the compartment. A concentration
   species in a compartment which changes in time (`_changing`: the target of
-  a rate or algebraic rule, or of an assignment rule which uses time or a
+  a rate or algebraic rule, of an event assignment, or of an assignment rule
+  which uses time or a
   changing variable; not an assignment rule of constants such as a volume
   from a body weight) and which no rule determines gets a second variable
   `<species>_amount` (`_amounts`, `unique_sid`) with the reaction terms and
   the initial amount, and the equation `species = amount / compartment`:
-  SBML keeps the amount when the size changes. `rateOf` of such a species is
+  SBML keeps the amount when the size changes; a species a rate rule
+  determines gets the amount when an event sets the size of its compartment
+  (`_rate_rules_of_amounts`: the rule gives the rate of the concentration,
+  which the amount integrates as `rate * compartment + species *
+  rateOf(compartment)`, so the amount does not change when the size jumps),
+  where a size a rule gives changes continuously and both forms are the same
+  equations. `rateOf` of such a species is
   `(dA/dt - S * rateOf(C)) / C` (`_Formulas.derivatives`). The initial size
   of a compartment an assignment rule sets is evaluated by libsbml
   (`_value_at_start`). The local parameters of
@@ -214,7 +221,15 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   removes the file of an earlier conversion when the model has no metadata.
   `cellml2sbml._add_metadata` applies a record to the parameter of the
   equivalence set of the variable, the unit definition or the model, with
-  the CellML id as metaid.
+  the CellML id as metaid. `EventRecord` is what a reset of CellML cannot
+  express (`event_record`, `_event_lines`, `_event_of`, `apply_event`): the
+  delay and the priority of an SBML event as MathML (the calls of the
+  function definitions expanded, as the conversion expands them everywhere)
+  and the flags `initialValue`, `persistent` and
+  `useValuesFromTriggerTime`, written as `<sbml2cellml:event>` under the
+  subject of the trigger variable of the event in the namespace
+  `SBML2CELLML_NS`, which `cellml2sbml` applies to the event of the
+  conversion again.
 - `cellml.py`: libcellml `Parser`, `Printer`, `Validator` and `Analyser`
   wrappers; issues are returned, `errors()` filters level `ERROR`,
   `CellMLValidationError`. `cellml_version` reads the CellML version from
@@ -290,12 +305,22 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   analyser driven: parameters by variable type, rules by equation type, initial
   assignments for computed constants and variable-referenced initial values,
   implicit (NLA) equations as algebraic rules,
-  resets as events with `eq` trigger and `-order` priority, imports flattened
+  the resets of one test variable and test value one event with one
+  assignment per reset (`_add_events`, `_add_event`, ordered by `order`,
+  the trigger `eq` and the priority `-order`, the id of the SBML event the
+  trigger variable was written from, `_event_id`), imports flattened
   with `Importer`. A reset whose test variable is
   `piecewise(1, condition, 0)` and whose test value is 1, as `sbml2cellml`
   writes an event, gives the event the condition as its trigger
   (`_condition_of_a_trigger`): a simulator evaluates it as a boolean
-  instead of looking for the root of a step. `read_cellml_model` reads a
+  instead of looking for the root of a step. The metadata of the trigger
+  variable gives the event its delay, its priority and the flags of SBML
+  (`_apply_events` with `metadata.apply_event`), which the resets do not
+  carry. A variable a reset writes is no constant, and neither is one
+  computed from it (`_changing_variables`, the fixed point over the
+  computed constants of the analyser): the equation of such a variable
+  becomes an assignment rule and no initial assignment, since it changes
+  whenever the reset fires. `read_cellml_model` reads a
   file of any CellML version (1.0 and 1.1 in the permissive mode of
   libcellml, `cellml.cellml_version`) and flattens its imports,
   `analyse_model` analyses it; both are also used by the Physiome check.
@@ -374,11 +399,20 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   refused. `scripts/cellml2sbml_parity.py` compares the SBML of
   `cellml-convert` with the SBML of the python converter over the corpus
   (local only, as the other corpus checks) and validates it with libsbml.
-  The resets of a model become the events of SBML (`events.rs`: the
-  trigger is the equality of the test variable and the test value, or the
-  condition of a test variable which is `piecewise(1, condition, 0)` as
-  the conversion of an SBML event writes it; the priority is the negated
-  order, a variable which only a reset writes is no constant).
+  The resets of a model become the events of SBML (`events.rs`: `groups`
+  gathers the resets of one component, test variable and test value, which
+  become one event with one assignment per reset in the order of their
+  `order`, and `name` gives the event the id of the SBML event its trigger
+  variable was written from; the trigger is the equality of the test
+  variable and the test value, or the condition of a test variable which is
+  `piecewise(1, condition, 0)` as the conversion of an SBML event writes
+  it; the priority is the negated order, a variable which only a reset
+  writes is no constant and neither is one computed from it, whose equation
+  becomes an assignment rule and no initial assignment, since it changes
+  whenever the reset fires (`analysis.rs`, `targets`); `mappings` gives the
+  event of a group under the id of its test variable (`Kind::Event`), which
+  the python package applies the delay, the priority and the flags of the
+  metadata to).
   `crates/tocellml` is the conversion of an SBML model to CellML, the
   counterpart of `crates/convert` (issue #82, the stages of its plan): the
   SBML document is read by `sbmlsim-sbml` of sbmlsim-core, the crate of
@@ -444,8 +478,10 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   `piecewise(1, condition, 0)`, `add_resets` of `model.rs` one reset per
   assignment which fires when the trigger variable reaches 1, ordered by the
   priority of the event, where the assignment of a species with an
-  `_amount` variable sets the amount; an event without a trigger or an
-  assignment, one with a delay which has mathematics and one whose formulas
+  `_amount` variable sets the amount; an event with a delay becomes a reset
+  which fires when the trigger holds, with a warning, since the metadata of
+  the conversion keeps the delay; an event without a trigger or an
+  assignment and one whose formulas
   use a factorial, a delay or a `rateOf` is not converted, with a warning,
   as in the python converter). `algebraic.rs` converts the algebraic rules
   of the model to the implicit equations `0 = formula` of CellML, which name
@@ -469,7 +505,8 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   `origins` of a conversion is the SBML element of every element of the
   CellML model which stands for one (`Origin`, `Kind`: the model, a
   compartment, a species, a parameter, a reaction, a species reference, a
-  local parameter or a unit definition, in the order the python converter
+  local parameter, a unit definition or an event, under the variable of its
+  trigger, in the order the python converter
   collects them), which the python package turns into the metadata of the
   conversion.
   `crates/python` is the module `sbml2cellml._rust` (pyo3, `abi3-py314`,

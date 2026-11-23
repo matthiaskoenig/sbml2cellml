@@ -479,23 +479,25 @@ fn a_reset_becomes_an_event() {
     let document = cellml::read(text).unwrap();
     let conversion = convert::convert(&document.model).unwrap();
     let events = &conversion.document.model.events;
-    assert_eq!(events.len(), 2);
+    // the two resets share their test variable and their test value, so
+    // they fire together and become one event with two assignments
+    assert_eq!(events.len(), 1);
     assert_eq!(events[0].id, "reset_1");
-    assert_eq!(events[1].id, "reset_2");
     // the trigger is the equality of the test variable and the test value,
-    // the priority the negated order
+    // the priority the negated order of the first reset
     assert_eq!(
         events[0].trigger.math,
         Math::apply("eq", vec![Math::identifier("m"), Math::identifier("m_div")])
     );
     assert_eq!(
-        events[1].priority,
+        events[0].priority,
         Some(Math::Number {
-            value: -1.0,
+            value: -0.0,
             units: None
         })
     );
     assert_eq!(events[0].assignments[0].variable, "m");
+    assert_eq!(events[0].assignments[1].variable, "count");
     // `count` is written by a reset only, so it is no constant
     let count = conversion
         .document

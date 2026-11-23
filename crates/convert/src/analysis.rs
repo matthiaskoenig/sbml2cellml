@@ -8,6 +8,7 @@
 //! single variable is implicit. A variable which no equation determines
 //! keeps the value it is initialised with.
 
+use crate::events;
 use crate::ids::Ids;
 use crate::math::{MathError, equality, rate_variables as math_rates, variables};
 use cellml::{Model, Node};
@@ -464,6 +465,10 @@ pub fn analyse(model: &Model, ids: &Ids) -> Result<Analysis, AnalysisError> {
             _ => None,
         })
         .collect();
+    // a variable a reset writes has no equation and is a constant of the
+    // analysis, but it changes whenever the reset fires: what is computed
+    // from it changes with it and is no computed constant either
+    let reset_targets = events::targets(model, ids);
     let mut again = true;
     while again {
         again = false;
@@ -479,8 +484,9 @@ pub fn analyse(model: &Model, ids: &Ids) -> Result<Analysis, AnalysisError> {
                 match ids.quantity_of(model, *component, name) {
                     Some(quantity) => {
                         quantity == *target
-                            || analysis.constants.contains(&quantity)
-                            || analysis.computed.contains(&quantity)
+                            || ((analysis.constants.contains(&quantity)
+                                || analysis.computed.contains(&quantity))
+                                && !reset_targets.contains(&quantity))
                     }
                     // a variable the component does not have is reported
                     // when the equation is written

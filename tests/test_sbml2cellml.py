@@ -10,6 +10,7 @@ import pytest
 
 from sbml2cellml import convert_sbml2cellml
 from sbml2cellml.cellml import CellMLValidationError, errors, read_model, validate_model
+from sbml2cellml.metadata import read_metadata
 from sbml2cellml.sbml import flatten_comp
 from sbml2cellml.sbml2cellml import COMPONENT_ID, TIME_ID, SBML2CellMLConversionError
 from tests.conftest import GLIMEPIRIDE_MODELS, MODELS_DIR
@@ -161,6 +162,66 @@ def test_species_in_a_changing_compartment_is_a_state_in_amount(
         "<eq/><ci>S1</ci><apply><divide/><ci>S1_amount</ci><ci>cell</ci></apply>"
         in math_text
     )
+
+
+def test_rate_rule_of_a_species_whose_compartment_an_event_sets(
+    tmp_path: Path,
+) -> None:
+    """The amount integrates the rate of the concentration.
+
+    SBML keeps the amount when the size of the compartment jumps, so the
+    state of the CellML model is the amount of the species and the rate of
+    its concentration becomes the rate of the amount.
+    """
+    model_sbml = growing_compartment_model("event_size")
+    model_sbml.removeReaction("r1")
+    rule: libsbml.RateRule = model_sbml.createRateRule()
+    rule.setVariable("S1")
+    rule.setMath(libsbml.parseL3Formula("0.4"))
+    event: libsbml.Event = model_sbml.createEvent()
+    event.setId("e1")
+    event.setUseValuesFromTriggerTime(True)
+    trigger: libsbml.Trigger = event.createTrigger()
+    trigger.setInitialValue(True)
+    trigger.setPersistent(True)
+    trigger.setMath(libsbml.parseL3Formula("time >= 1"))
+    assignment: libsbml.EventAssignment = event.createEventAssignment()
+    assignment.setVariable("cell")
+    assignment.setMath(libsbml.parseL3Formula("0.2"))
+    sbml_path = write_sbml(tmp_path / "event_size.xml", model_sbml)
+
+    for engine in ("rust", "python"):
+        model = convert_sbml2cellml(sbml_path, engine=engine)
+        v = variables(model)
+        assert "S1_amount" in v, engine
+        # the concentration 10 in the compartment of size 2
+        assert float(v["S1_amount"].initialValue()) == 20.0, engine
+        math_text = model.component(0).math().replace(" ", "").replace("\n", "")
+        assert "<bvar><ci>time</ci></bvar><ci>S1_amount</ci>" in math_text, engine
+        assert "<bvar><ci>time</ci></bvar><ci>S1</ci>" not in math_text, engine
+        assert (
+            "<eq/><ci>S1</ci><apply><divide/><ci>S1_amount</ci><ci>cell</ci></apply>"
+            in math_text
+        ), engine
+        # the rate of the amount is `rate * cell + S1 * rateOf(cell)`, with
+        # the rate rule of the compartment in place of the rateOf
+        assert "<ci>S1_amount</ci></apply><apply><plus/>" in math_text, engine
+
+
+def test_a_rate_rule_of_a_species_in_a_continuous_compartment_keeps_it(
+    tmp_path: Path,
+) -> None:
+    """A size which a rule gives changes continuously, no amount is needed."""
+    model_sbml = growing_compartment_model("rate_size")
+    model_sbml.removeReaction("r1")
+    rule: libsbml.RateRule = model_sbml.createRateRule()
+    rule.setVariable("S1")
+    rule.setMath(libsbml.parseL3Formula("0.4"))
+    sbml_path = write_sbml(tmp_path / "rate_size.xml", model_sbml)
+    for engine in ("rust", "python"):
+        v = variables(convert_sbml2cellml(sbml_path, engine=engine))
+        assert "S1_amount" not in v, engine
+        assert float(v["S1"].initialValue()) == 10.0, engine
 
 
 def test_species_without_reactions_in_a_changing_compartment(tmp_path: Path) -> None:
@@ -968,18 +1029,23 @@ def test_event_becomes_a_reset(tmp_path: Path) -> None:
     assert "<ci>k1</ci>" in reset.resetValue()
 
 
-def test_event_with_a_delay_logs_warning(
+def test_event_with_a_delay_keeps_the_delay_in_the_metadata(
     tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:
-    """CellML has no counterpart for the delay of an event."""
+    """A reset fires when the trigger holds, the delay is in the metadata."""
     model_sbml = event_model("delayed")
     delay: libsbml.Delay = model_sbml.getEvent("e1").createDelay()
     delay.setMath(libsbml.parseL3Formula("2"))
     sbml_path = write_sbml(tmp_path / "delayed.xml", model_sbml)
+    cellml_path = tmp_path / "delayed.cellml"
     with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
-        model = convert_sbml2cellml(sbml_path, engine="python")
+        model = convert_sbml2cellml(sbml_path, cellml_path=cellml_path, engine="python")
     assert "Event 'e1' has a delay" in caplog.text
-    assert model.component(0).resetCount() == 0
+    assert model.component(0).resetCount() == 1
+    records = read_metadata(cellml_path.with_suffix(".rdf"), cellml_path.name)
+    event = records["e1_trigger"].event
+    assert event is not None
+    assert "<cn" in event.delay
 
 
 def test_convert_model_with_an_element_called_time(tmp_path: Path) -> None:

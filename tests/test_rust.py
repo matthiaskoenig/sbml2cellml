@@ -302,3 +302,35 @@ def test_both_engines_apply_the_metadata_of_a_model(tmp_path: Path) -> None:
     assert applied["rust"] == applied["python"]
     assert applied["rust"]["S1"][2] == "S1"
     assert "kegg.compound/C00031" in applied["rust"]["S1"][3]
+
+
+def test_both_engines_keep_the_attributes_of_an_event(tmp_path: Path) -> None:
+    """The delay, the priority and the flags survive the roundtrip."""
+    model_sbml = event_model("attributes")
+    event: libsbml.Event = model_sbml.getEvent("e1")
+    event.createDelay().setMath(libsbml.parseL3Formula("2"))
+    event.createPriority().setMath(libsbml.parseL3Formula("3 * 2"))
+    event.getTrigger().setInitialValue(False)
+    event.getTrigger().setPersistent(False)
+    event.setUseValuesFromTriggerTime(False)
+    sbml_path = write_sbml(tmp_path / "attributes.xml", model_sbml)
+
+    found = {}
+    for engine in ("rust", "python"):
+        cellml_path = tmp_path / f"{engine}.cellml"
+        convert_sbml2cellml(sbml_path, cellml_path=cellml_path, engine=engine)
+        document = convert_cellml2sbml(
+            cellml_path, sbml_path=tmp_path / f"{engine}.xml", engine=engine
+        )
+        back: libsbml.Event = document.getModel().getEvent(0)
+        trigger: libsbml.Trigger = back.getTrigger()
+        found[engine] = (
+            back.getId(),
+            libsbml.formulaToL3String(back.getDelay().getMath()),
+            libsbml.formulaToL3String(back.getPriority().getMath()),
+            trigger.getPersistent(),
+            trigger.getInitialValue(),
+            back.getUseValuesFromTriggerTime(),
+        )
+    assert found["rust"] == found["python"]
+    assert found["rust"] == ("e1", "2", "3 * 2", False, False, False)

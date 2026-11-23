@@ -111,12 +111,18 @@ fn the_resets_are_ordered_by_the_priority_of_their_event() {
 }
 
 #[test]
-fn an_event_with_a_delay_is_not_converted() {
+fn an_event_with_a_delay_becomes_a_reset_which_fires_at_the_trigger() {
+    // the delay has no counterpart in CellML: the reset fires when the
+    // trigger holds and the metadata of the conversion keeps the delay,
+    // which the conversion back to SBML gives the event again
     let delay =
         r#"<delay><math xmlns="http://www.w3.org/1998/Math/MathML"><cn>1</cn></math></delay>"#;
     let events = full("e", "<true/>", delay, "p", "<cn>5</cn>");
     let found = conversion(&with_events(&events));
-    assert!(resets(&found).is_empty(), "no reset: {:?}", resets(&found));
+    assert_eq!(
+        resets(&found),
+        vec!["0: p = 5 when e_trigger = 1 [e_trigger]"]
+    );
     assert!(
         found
             .warnings

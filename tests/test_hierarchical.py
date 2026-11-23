@@ -135,7 +135,9 @@ def test_the_hierarchical_model_simulates_like_the_flat_one() -> None:
 def test_a_reset_becomes_an_event_of_its_component() -> None:
     doc = hierarchical(reset_model())
     definition = next(iter(definitions(doc).values()))
-    assert definition.getNumEvents() == 2
+    # the resets of the component fire together and become one event
+    assert definition.getNumEvents() == 1
+    assert definition.getEvent(0).getNumEventAssignments() == 2
     assert validate_document(doc) == []
 
 
