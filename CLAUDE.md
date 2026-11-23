@@ -61,7 +61,8 @@ cargo build --release                   # target/release/cellml-info
 cargo build --target wasm32-unknown-unknown -p sbml2cellml-cellml
 
 # local only, needs the release build and the physiome cache
-uv run python scripts/cellml_parity.py  # the rust reader against libcellml over the corpus
+uv run python scripts/cellml_parity.py       # the rust reader against libcellml over the corpus
+uv run python scripts/cellml2sbml_parity.py  # the rust converter against the python converter
 ```
 
 `develop` is the default branch and takes every change through a pull request; the rulesets in `.github/rulesets/` (applied with `apply.sh`) require the `tests`, `ruff`, `ty` and `docs` checks. Continuous integration is kept minimal: `tests` runs `py3.14` on linux, macos and windows, every workflow cancels a superseded run (`cancel-in-progress: true`), uv caches packages and interpreters, dependabot runs monthly. `main` tracks the latest release and is fast-forwarded by the `sync-main` job of the release workflow. Release steps are in `docs/development.md`: release branch, `uvx bump-my-version bump [major|minor|patch]` (updates `__init__.py` and `CITATION.cff`, no tag), release notes in `docs/release-notes/`, pull request, tag on `develop` after the merge.
@@ -273,7 +274,29 @@ uv run python scripts/cellml_parity.py  # the rust reader against libcellml over
 - `cli.py`: argparse, `[project.scripts]` entry point.
 - `crates/` (rust, issue #68: the reader and the converter in rust, so a
   conversion is fast and runs in a browser next to sbmlsim-core, whose
-  compiler takes SBML text): `crates/cellml` is the reader of CellML 2.0,
+  compiler takes SBML text). `crates/sbml` is the SBML level 3 version 2
+  document the conversion writes (unit definitions, parameters, initial
+  assignments, rules; a CellML model has no reactions) and its XML, which
+  it writes itself: no libsbml in the workspace. `crates/convert` is the
+  conversion of a CellML model: `Ids` is one parameter per equivalence set
+  (the name of its first variable, the component as a prefix on a clash),
+  `units` expands the custom units to the base units of SBML as
+  `units.py` does, `analysis` reads what the equations determine where the
+  python converter asks the analyser of libcellml (a `Candidate` per side
+  of an equation, the rate of a state or the value of a variable, matched
+  to the equations which can determine one only first, so `J = dx/dt`
+  next to `dx/dt = f` determines `J`; an equation which no candidate is
+  left for, one whose right hand side uses its own target and a cycle of
+  them are algebraic rules, `cyclic`), and `math` writes the mathematics
+  with the ids of the quantities, the time of SBML for the variable of
+  integration, `rateOf` for a derivative inside an expression and no
+  degree on a square root. An operator SBML does not have, units the
+  model does not define, an imported component, imported units and rate
+  equations which give each other's rate (cellml/libcellml#1531) are
+  refused. `scripts/cellml2sbml_parity.py` compares the SBML of
+  `cellml-convert` with the SBML of the python converter over the corpus
+  (local only, as the other corpus checks) and validates it with libsbml.
+  `crates/cellml` is the reader of CellML 2.0,
   1.1 and 1.0 (`read` gives a `Document` with the version and the `Model`:
   unit definitions, components with their variables and their MathML
   (`math::Node`), connections, encapsulation and imports; a document of
@@ -285,8 +308,10 @@ uv run python scripts/cellml_parity.py  # the rust reader against libcellml over
   nothing, resolves no import, does no file system and no network access
   and builds for `wasm32-unknown-unknown`. `crates/cli` is `cellml-info`,
   which prints what the reader reads as JSON, and
-  `scripts/cellml_parity.py` compares that with libcellml over the models
-  of the Physiome selection (local only, as the other corpus checks).
+  `cellml-convert`, which writes the SBML of a document;
+  `scripts/cellml_parity.py` compares what the reader reads with
+  libcellml over the models of the Physiome selection (local only, as the
+  other corpus checks).
 - `console.py`, `log.py`: rich console for scripts and the CLI, opt-in rich
   logging. Library code logs with `logging.getLogger(__name__)` and lazy `%s`
   formatting (ruff `G`), it never prints.

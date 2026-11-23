@@ -1,6 +1,6 @@
 [package]
 name = "sbml2cellml-cli"
-description = "Command line of the rust CellML reader"
+description = "Command line of the rust CellML reader and converter"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -12,8 +12,13 @@ publish = false
 name = "cellml-info"
 path = "src/main.rs"
 
+[[bin]]
+name = "cellml-convert"
+path = "src/convert.rs"
+
 [dependencies]
 cellml = { package = "sbml2cellml-cellml", path = "../cellml" }
+convert = { package = "sbml2cellml-convert", path = "../convert" }
 
 [lints]
 workspace = true

@@ -8,7 +8,7 @@
 use crate::model::Model;
 
 /// A variable of a model, by the index of its component and of itself.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct VariableRef {
     /// The index of the component in [`Model::components`].
     pub component: usize,
