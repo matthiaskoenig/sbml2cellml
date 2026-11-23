@@ -5,7 +5,6 @@ on:
     # feature branches are built through their pull request
     branches: [develop, main]
   pull_request:
-    branches: [develop, main]
   workflow_dispatch:
 
 permissions:

@@ -6,7 +6,6 @@ on:
     branches: [develop, main]
     tags: ['*']
   pull_request:
-    branches: [develop, main]
   workflow_dispatch:
 
 # least privilege by default, the release job raises what it needs
