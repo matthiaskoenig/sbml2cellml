@@ -20,15 +20,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.0028,
-     "setup_seconds": 0.107,
+     "seconds": 0.00292,
+     "setup_seconds": 0.115,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00286,
-     "setup_seconds": 0.0811,
+     "seconds": 0.00285,
+     "setup_seconds": 0.0846,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -41,8 +41,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00311,
-     "setup_seconds": 0.0289,
+     "seconds": 0.00329,
+     "setup_seconds": 0.0351,
      "status": "pass"
     }
    },
@@ -68,15 +68,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000951,
-     "setup_seconds": 0.038,
+     "seconds": 0.00121,
+     "setup_seconds": 0.0397,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000961,
-     "setup_seconds": 0.0336,
+     "seconds": 0.000966,
+     "setup_seconds": 0.0342,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -89,8 +89,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00115,
-     "setup_seconds": 0.00979,
+     "seconds": 0.0021,
+     "setup_seconds": 0.0144,
      "status": "pass"
     }
    },
@@ -164,15 +164,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000144,
-     "setup_seconds": 0.0194,
+     "seconds": 0.000148,
+     "setup_seconds": 0.0207,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00016,
-     "setup_seconds": 0.00607,
+     "seconds": 0.000152,
+     "setup_seconds": 0.00642,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -185,8 +185,8 @@
     "sbmlsim": {
      "max_excess": -9.98e-07,
      "message": "",
-     "seconds": 0.000193,
-     "setup_seconds": 0.00206,
+     "seconds": 0.000205,
+     "setup_seconds": 0.00549,
      "status": "pass"
     }
    },
@@ -212,15 +212,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.548,
-     "setup_seconds": 0.482,
+     "seconds": 0.531,
+     "setup_seconds": 0.497,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.565,
-     "setup_seconds": 0.473,
+     "seconds": 0.516,
+     "setup_seconds": 0.471,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -233,8 +233,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.495,
-     "setup_seconds": 0.519,
+     "seconds": 0.491,
+     "setup_seconds": 0.522,
      "status": "pass"
     }
    },
@@ -260,15 +260,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00698,
-     "setup_seconds": 0.113,
+     "seconds": 0.00797,
+     "setup_seconds": 0.115,
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": -9.93e-07,
+     "max_excess": -9.95e-07,
      "message": "",
-     "seconds": 0.00723,
-     "setup_seconds": 0.1,
+     "seconds": 0.00757,
+     "setup_seconds": 0.101,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -279,10 +279,10 @@
      "status": "pass"
     },
     "sbmlsim": {
-     "max_excess": -9.94e-07,
+     "max_excess": -9.87e-07,
      "message": "",
-     "seconds": 0.00761,
-     "setup_seconds": 0.029,
+     "seconds": 0.0077,
+     "setup_seconds": 0.0309,
      "status": "pass"
     }
    },
@@ -308,15 +308,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00501,
-     "setup_seconds": 0.0924,
+     "seconds": 0.00568,
+     "setup_seconds": 0.0999,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00508,
-     "setup_seconds": 0.0874,
+     "seconds": 0.00607,
+     "setup_seconds": 0.0889,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -329,8 +329,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00644,
-     "setup_seconds": 0.0237,
+     "seconds": 0.00688,
+     "setup_seconds": 0.0256,
      "status": "pass"
     }
    },
@@ -404,7 +404,7 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000239,
+     "seconds": 0.000253,
      "setup_seconds": 0.0113,
      "status": "pass"
     },
@@ -412,7 +412,7 @@
      "max_excess": -1e-06,
      "message": "",
      "seconds": 0.000247,
-     "setup_seconds": 0.0106,
+     "setup_seconds": 0.0101,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -425,8 +425,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00034,
-     "setup_seconds": 0.00273,
+     "seconds": 0.00033,
+     "setup_seconds": 0.00615,
      "status": "pass"
     }
    },
@@ -452,15 +452,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00433,
-     "setup_seconds": 0.0597,
+     "seconds": 0.00574,
+     "setup_seconds": 0.0593,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00471,
-     "setup_seconds": 0.0508,
+     "seconds": 0.00442,
+     "setup_seconds": 0.0499,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -473,8 +473,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00422,
-     "setup_seconds": 0.0179,
+     "seconds": 0.00414,
+     "setup_seconds": 0.0176,
      "status": "pass"
     }
    },
@@ -500,15 +500,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00123,
-     "setup_seconds": 0.0836,
+     "seconds": 0.00125,
+     "setup_seconds": 0.0835,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00125,
-     "setup_seconds": 0.0695,
+     "seconds": 0.00134,
+     "setup_seconds": 0.0702,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -521,8 +521,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00319,
-     "setup_seconds": 0.0211,
+     "seconds": 0.00337,
+     "setup_seconds": 0.0209,
      "status": "pass"
     }
    },
@@ -548,15 +548,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000351,
-     "setup_seconds": 0.0134,
+     "seconds": 0.000462,
+     "setup_seconds": 0.0183,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000348,
-     "setup_seconds": 0.0106,
+     "seconds": 0.000349,
+     "setup_seconds": 0.0129,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -569,8 +569,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000831,
-     "setup_seconds": 0.0034,
+     "seconds": 0.00144,
+     "setup_seconds": 0.00495,
      "status": "pass"
     }
    },
@@ -596,15 +596,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.0782,
-     "setup_seconds": 0.0868,
+     "seconds": 0.0712,
+     "setup_seconds": 0.0855,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1.01e-06,
      "message": "",
-     "seconds": 0.074,
-     "setup_seconds": 0.0798,
+     "seconds": 0.0801,
+     "setup_seconds": 0.0847,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -617,8 +617,8 @@
     "sbmlsim": {
      "max_excess": -1.01e-06,
      "message": "",
-     "seconds": 0.078,
-     "setup_seconds": 0.0811,
+     "seconds": 0.0809,
+     "setup_seconds": 0.0844,
      "status": "pass"
     }
    },
@@ -644,15 +644,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000235,
-     "setup_seconds": 0.011,
+     "seconds": 0.000233,
+     "setup_seconds": 0.0107,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000239,
-     "setup_seconds": 0.00994,
+     "seconds": 0.000253,
+     "setup_seconds": 0.00985,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -665,8 +665,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000301,
-     "setup_seconds": 0.00224,
+     "seconds": 0.000316,
+     "setup_seconds": 0.00258,
      "status": "pass"
     }
    },
@@ -692,15 +692,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000235,
-     "setup_seconds": 0.0175,
+     "seconds": 0.000233,
+     "setup_seconds": 0.0172,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00024,
-     "setup_seconds": 0.015,
+     "seconds": 0.000232,
+     "setup_seconds": 0.0145,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -713,8 +713,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00028,
-     "setup_seconds": 0.00327,
+     "seconds": 0.000282,
+     "setup_seconds": 0.00332,
      "status": "pass"
     }
    },
@@ -740,14 +740,14 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000438,
-     "setup_seconds": 0.0205,
+     "seconds": 0.000458,
+     "setup_seconds": 0.0207,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000425,
+     "seconds": 0.000437,
      "setup_seconds": 0.0177,
      "status": "pass"
     },
@@ -761,8 +761,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000532,
-     "setup_seconds": 0.000912,
+     "seconds": 0.000559,
+     "setup_seconds": 0.000964,
      "status": "pass"
     }
    },
@@ -788,15 +788,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000139,
-     "setup_seconds": 0.0091,
+     "seconds": 0.000146,
+     "setup_seconds": 0.00942,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1.23e-06,
      "message": "",
-     "seconds": 0.000137,
-     "setup_seconds": 0.00798,
+     "seconds": 0.000145,
+     "setup_seconds": 0.00809,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -809,8 +809,8 @@
     "sbmlsim": {
      "max_excess": -1.23e-06,
      "message": "",
-     "seconds": 0.000215,
-     "setup_seconds": 0.00207,
+     "seconds": 0.000196,
+     "setup_seconds": 0.00227,
      "status": "pass"
     }
    },
@@ -836,15 +836,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00121,
-     "setup_seconds": 0.0694,
+     "seconds": 0.00125,
+     "setup_seconds": 0.0701,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
      "seconds": 0.00125,
-     "setup_seconds": 0.0615,
+     "setup_seconds": 0.0612,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -857,8 +857,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00264,
-     "setup_seconds": 0.0168,
+     "seconds": 0.00299,
+     "setup_seconds": 0.0178,
      "status": "pass"
     }
    },
@@ -884,15 +884,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000286,
-     "setup_seconds": 0.00919,
+     "seconds": 0.000289,
+     "setup_seconds": 0.00938,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000285,
-     "setup_seconds": 0.00824,
+     "seconds": 0.000302,
+     "setup_seconds": 0.00856,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -905,8 +905,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000414,
-     "setup_seconds": 0.0026,
+     "seconds": 0.000441,
+     "setup_seconds": 0.00258,
      "status": "pass"
     }
    },
@@ -932,15 +932,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000256,
-     "setup_seconds": 0.00605,
+     "seconds": 0.000272,
+     "setup_seconds": 0.00715,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000254,
-     "setup_seconds": 0.00611,
+     "seconds": 0.000263,
+     "setup_seconds": 0.00618,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -953,8 +953,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000296,
-     "setup_seconds": 0.00168,
+     "seconds": 0.000333,
+     "setup_seconds": 0.00194,
      "status": "pass"
     }
    },
@@ -980,15 +980,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000271,
-     "setup_seconds": 0.00681,
+     "seconds": 0.000283,
+     "setup_seconds": 0.00737,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1.02e-06,
      "message": "",
-     "seconds": 0.000272,
-     "setup_seconds": 0.00672,
+     "seconds": 0.000289,
+     "setup_seconds": 0.00694,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1001,8 +1001,8 @@
     "sbmlsim": {
      "max_excess": -1.02e-06,
      "message": "",
-     "seconds": 0.000353,
-     "setup_seconds": 0.00182,
+     "seconds": 0.000372,
+     "setup_seconds": 0.00192,
      "status": "pass"
     }
    },
@@ -1028,15 +1028,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00112,
-     "setup_seconds": 0.0538,
+     "seconds": 0.00114,
+     "setup_seconds": 0.0549,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.0012,
-     "setup_seconds": 0.0471,
+     "seconds": 0.00123,
+     "setup_seconds": 0.0461,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1049,8 +1049,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00131,
-     "setup_seconds": 0.0167,
+     "seconds": 0.00137,
+     "setup_seconds": 0.0175,
      "status": "pass"
     }
    },
@@ -1076,15 +1076,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00115,
-     "setup_seconds": 0.0399,
+     "seconds": 0.000986,
+     "setup_seconds": 0.0385,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000986,
-     "setup_seconds": 0.0332,
+     "seconds": 0.000993,
+     "setup_seconds": 0.033,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1097,8 +1097,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00116,
-     "setup_seconds": 0.0102,
+     "seconds": 0.00118,
+     "setup_seconds": 0.00987,
      "status": "pass"
     }
    },
@@ -1124,14 +1124,14 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00101,
-     "setup_seconds": 0.0226,
+     "seconds": 0.000994,
+     "setup_seconds": 0.0225,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00113,
+     "seconds": 0.00105,
      "setup_seconds": 0.0181,
      "status": "pass"
     },
@@ -1145,8 +1145,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00121,
-     "setup_seconds": 0.00467,
+     "seconds": 0.00124,
+     "setup_seconds": 0.00483,
      "status": "pass"
     }
    },
@@ -1173,14 +1173,14 @@
      "max_excess": null,
      "message": "",
      "seconds": 0.000408,
-     "setup_seconds": 0.0136,
+     "setup_seconds": 0.0135,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000417,
-     "setup_seconds": 0.0126,
+     "seconds": 0.000401,
+     "setup_seconds": 0.0122,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1193,8 +1193,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000802,
-     "setup_seconds": 0.0035,
+     "seconds": 0.000799,
+     "setup_seconds": 0.00366,
      "status": "pass"
     }
    },
@@ -1220,15 +1220,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00158,
-     "setup_seconds": 0.00901,
+     "seconds": 0.00153,
+     "setup_seconds": 0.00868,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1.11e-06,
      "message": "",
      "seconds": 0.00155,
-     "setup_seconds": 0.00822,
+     "setup_seconds": 0.0082,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1241,8 +1241,8 @@
     "sbmlsim": {
      "max_excess": -1.11e-06,
      "message": "",
-     "seconds": 0.00189,
-     "setup_seconds": 0.00359,
+     "seconds": 0.0019,
+     "setup_seconds": 0.00374,
      "status": "pass"
     }
    },
@@ -1268,15 +1268,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.0045,
-     "setup_seconds": 0.0885,
+     "seconds": 0.00516,
+     "setup_seconds": 0.0911,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00429,
-     "setup_seconds": 0.0769,
+     "seconds": 0.00534,
+     "setup_seconds": 0.0812,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1289,8 +1289,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00632,
-     "setup_seconds": 0.0267,
+     "seconds": 0.00629,
+     "setup_seconds": 0.0264,
      "status": "pass"
     }
    },
@@ -1316,15 +1316,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000558,
-     "setup_seconds": 0.0154,
+     "seconds": 0.000586,
+     "setup_seconds": 0.0156,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000586,
-     "setup_seconds": 0.0138,
+     "seconds": 0.000615,
+     "setup_seconds": 0.0142,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1337,8 +1337,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000873,
-     "setup_seconds": 0.00369,
+     "seconds": 0.000885,
+     "setup_seconds": 0.00395,
      "status": "pass"
     }
    },
@@ -1364,15 +1364,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000261,
-     "setup_seconds": 0.00656,
+     "seconds": 0.00026,
+     "setup_seconds": 0.00664,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000253,
-     "setup_seconds": 0.00603,
+     "seconds": 0.000262,
+     "setup_seconds": 0.00616,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1385,8 +1385,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000316,
-     "setup_seconds": 0.000653,
+     "seconds": 0.000327,
+     "setup_seconds": 0.000743,
      "status": "pass"
     }
    },
@@ -1412,15 +1412,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.0125,
-     "setup_seconds": 0.075,
+     "seconds": 0.0135,
+     "setup_seconds": 0.0761,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.0122,
-     "setup_seconds": 0.067,
+     "seconds": 0.0125,
+     "setup_seconds": 0.0691,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1433,8 +1433,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.0123,
-     "setup_seconds": 0.0268,
+     "seconds": 0.0128,
+     "setup_seconds": 0.0269,
      "status": "pass"
     }
    },
@@ -1460,15 +1460,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00387,
-     "setup_seconds": 0.074,
+     "seconds": 0.00389,
+     "setup_seconds": 0.0759,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00368,
-     "setup_seconds": 0.0676,
+     "seconds": 0.0054,
+     "setup_seconds": 0.0765,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1481,8 +1481,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.0065,
-     "setup_seconds": 0.0221,
+     "seconds": 0.00585,
+     "setup_seconds": 0.0226,
      "status": "pass"
     }
    },
@@ -1508,15 +1508,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00134,
-     "setup_seconds": 0.0362,
+     "seconds": 0.00276,
+     "setup_seconds": 0.0517,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00141,
-     "setup_seconds": 0.0285,
+     "seconds": 0.00131,
+     "setup_seconds": 0.0287,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1529,8 +1529,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00107,
-     "setup_seconds": 0.00597,
+     "seconds": 0.00111,
+     "setup_seconds": 0.00609,
      "status": "pass"
     }
    },
@@ -1556,15 +1556,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000954,
-     "setup_seconds": 0.0207,
+     "seconds": 0.000998,
+     "setup_seconds": 0.0211,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000995,
-     "setup_seconds": 0.019,
+     "seconds": 0.00101,
+     "setup_seconds": 0.0191,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1577,8 +1577,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00146,
-     "setup_seconds": 0.00683,
+     "seconds": 0.00156,
+     "setup_seconds": 0.00707,
      "status": "pass"
     }
    },
@@ -1604,15 +1604,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00389,
-     "setup_seconds": 0.0569,
+     "seconds": 0.00378,
+     "setup_seconds": 0.0585,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00365,
-     "setup_seconds": 0.0483,
+     "seconds": 0.00376,
+     "setup_seconds": 0.046,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1626,7 +1626,7 @@
      "max_excess": -1e-06,
      "message": "",
      "seconds": 0.0043,
-     "setup_seconds": 0.0142,
+     "setup_seconds": 0.0146,
      "status": "pass"
     }
    },
@@ -1652,15 +1652,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000156,
-     "setup_seconds": 0.00514,
+     "seconds": 0.000152,
+     "setup_seconds": 0.00513,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000168,
-     "setup_seconds": 0.00481,
+     "seconds": 0.000161,
+     "setup_seconds": 0.00463,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1673,8 +1673,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000223,
-     "setup_seconds": 0.00128,
+     "seconds": 0.00024,
+     "setup_seconds": 0.00148,
      "status": "pass"
     }
    },
@@ -1700,15 +1700,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000227,
-     "setup_seconds": 0.0136,
+     "seconds": 0.000232,
+     "setup_seconds": 0.0135,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000235,
-     "setup_seconds": 0.0118,
+     "seconds": 0.000388,
+     "setup_seconds": 0.0168,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1721,8 +1721,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000363,
-     "setup_seconds": 0.00337,
+     "seconds": 0.000342,
+     "setup_seconds": 0.00326,
      "status": "pass"
     }
    },
@@ -1748,15 +1748,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000277,
-     "setup_seconds": 0.013,
+     "seconds": 0.000385,
+     "setup_seconds": 0.0188,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00032,
-     "setup_seconds": 0.0138,
+     "seconds": 0.000316,
+     "setup_seconds": 0.012,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1769,8 +1769,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000378,
-     "setup_seconds": 0.00338,
+     "seconds": 0.000613,
+     "setup_seconds": 0.00471,
      "status": "pass"
     }
    },
@@ -1796,14 +1796,14 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000501,
-     "setup_seconds": 0.0153,
+     "seconds": 0.000496,
+     "setup_seconds": 0.0151,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000501,
+     "seconds": 0.000504,
      "setup_seconds": 0.013,
      "status": "pass"
     },
@@ -1817,8 +1817,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000637,
-     "setup_seconds": 0.00327,
+     "seconds": 0.000643,
+     "setup_seconds": 0.0034,
      "status": "pass"
     }
    },
@@ -1843,15 +1843,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00014,
-     "setup_seconds": 0.00608,
+     "seconds": 0.000134,
+     "setup_seconds": 0.00644,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000145,
-     "setup_seconds": 0.00601,
+     "seconds": 0.000137,
+     "setup_seconds": 0.00577,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1864,8 +1864,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000195,
-     "setup_seconds": 0.00159,
+     "seconds": 0.000198,
+     "setup_seconds": 0.00165,
      "status": "pass"
     }
    },
@@ -1891,15 +1891,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000871,
-     "setup_seconds": 0.0142,
+     "seconds": 0.00101,
+     "setup_seconds": 0.0146,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": 0.00304,
      "message": "dmdt exceeds the tolerance by 0.00304",
-     "seconds": 0.00091,
-     "setup_seconds": 0.0128,
+     "seconds": 0.00095,
+     "setup_seconds": 0.0132,
      "status": "fail"
     },
     "sbml2cellml": {
@@ -1912,8 +1912,8 @@
     "sbmlsim": {
      "max_excess": 0.00315,
      "message": "dmdt exceeds the tolerance by 0.00315",
-     "seconds": 0.000994,
-     "setup_seconds": 0.00409,
+     "seconds": 0.00104,
+     "setup_seconds": 0.00416,
      "status": "fail"
     }
    },
@@ -1939,15 +1939,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00442,
-     "setup_seconds": 0.058,
+     "seconds": 0.00441,
+     "setup_seconds": 0.0581,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00436,
-     "setup_seconds": 0.0491,
+     "seconds": 0.00491,
+     "setup_seconds": 0.0514,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -1960,8 +1960,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00424,
-     "setup_seconds": 0.0175,
+     "seconds": 0.00432,
+     "setup_seconds": 0.0173,
      "status": "pass"
     }
    },
@@ -1987,15 +1987,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000663,
-     "setup_seconds": 0.0303,
+     "seconds": 0.000614,
+     "setup_seconds": 0.0337,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000597,
-     "setup_seconds": 0.0258,
+     "seconds": 0.000628,
+     "setup_seconds": 0.0267,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2008,8 +2008,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00079,
-     "setup_seconds": 0.00502,
+     "seconds": 0.000858,
+     "setup_seconds": 0.00519,
      "status": "pass"
     }
    },
@@ -2035,15 +2035,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000845,
-     "setup_seconds": 0.0315,
+     "seconds": 0.000983,
+     "setup_seconds": 0.0309,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000843,
-     "setup_seconds": 0.027,
+     "seconds": 0.000856,
+     "setup_seconds": 0.0278,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2056,8 +2056,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000884,
-     "setup_seconds": 0.00517,
+     "seconds": 0.000919,
+     "setup_seconds": 0.00574,
      "status": "pass"
     }
    },
@@ -2083,15 +2083,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000383,
-     "setup_seconds": 0.0106,
+     "seconds": 0.000377,
+     "setup_seconds": 0.0105,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000384,
-     "setup_seconds": 0.00787,
+     "seconds": 0.000386,
+     "setup_seconds": 0.00788,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2104,8 +2104,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000475,
-     "setup_seconds": 0.00241,
+     "seconds": 0.000481,
+     "setup_seconds": 0.00263,
      "status": "pass"
     }
    },
@@ -2131,15 +2131,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.303,
-     "setup_seconds": 0.339,
+     "seconds": 0.295,
+     "setup_seconds": 0.342,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.289,
-     "setup_seconds": 0.326,
+     "seconds": 0.3,
+     "setup_seconds": 0.327,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2150,11 +2150,11 @@
      "status": "pass"
     },
     "sbmlsim": {
-     "max_excess": -1e-06,
-     "message": "",
-     "seconds": 0.286,
-     "setup_seconds": 0.31,
-     "status": "pass"
+     "max_excess": 5.16e-05,
+     "message": "delta_fCMs exceeds the tolerance by 5.16e-05",
+     "seconds": 0.294,
+     "setup_seconds": 0.315,
+     "status": "fail"
     }
    },
    "test_tags": []
@@ -2179,15 +2179,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 8.83e-05,
-     "setup_seconds": 0.009,
+     "seconds": 8.88e-05,
+     "setup_seconds": 0.00898,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 9.99e-05,
-     "setup_seconds": 0.00739,
+     "seconds": 0.000101,
+     "setup_seconds": 0.00793,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2200,8 +2200,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000349,
-     "setup_seconds": 0.00294,
+     "seconds": 0.00034,
+     "setup_seconds": 0.00336,
      "status": "pass"
     }
    },
@@ -2227,15 +2227,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.0042,
-     "setup_seconds": 0.0678,
+     "seconds": 0.00428,
+     "setup_seconds": 0.0684,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00425,
-     "setup_seconds": 0.0601,
+     "seconds": 0.00427,
+     "setup_seconds": 0.0558,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2248,8 +2248,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00722,
-     "setup_seconds": 0.0206,
+     "seconds": 0.00755,
+     "setup_seconds": 0.0214,
      "status": "pass"
     }
    },
@@ -2275,15 +2275,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000454,
-     "setup_seconds": 0.0103,
+     "seconds": 0.000452,
+     "setup_seconds": 0.0107,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -0.000201,
      "message": "",
-     "seconds": 0.000439,
-     "setup_seconds": 0.00961,
+     "seconds": 0.000446,
+     "setup_seconds": 0.0097,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2296,8 +2296,8 @@
     "sbmlsim": {
      "max_excess": -0.000201,
      "message": "",
-     "seconds": 0.000554,
-     "setup_seconds": 0.00243,
+     "seconds": 0.000558,
+     "setup_seconds": 0.00287,
      "status": "pass"
     }
    },
@@ -2323,15 +2323,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000427,
-     "setup_seconds": 0.0086,
+     "seconds": 0.000423,
+     "setup_seconds": 0.00899,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1.06e-06,
      "message": "",
-     "seconds": 0.000416,
-     "setup_seconds": 0.00802,
+     "seconds": 0.000429,
+     "setup_seconds": 0.00852,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2344,8 +2344,8 @@
     "sbmlsim": {
      "max_excess": -1.06e-06,
      "message": "",
-     "seconds": 0.000902,
-     "setup_seconds": 0.00296,
+     "seconds": 0.000903,
+     "setup_seconds": 0.00297,
      "status": "pass"
     }
    },
@@ -2371,15 +2371,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 6.15e-05,
-     "setup_seconds": 0.00482,
+     "seconds": 7.59e-05,
+     "setup_seconds": 0.00549,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 6.79e-05,
-     "setup_seconds": 0.005,
+     "seconds": 7.16e-05,
+     "setup_seconds": 0.0052,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2392,8 +2392,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000112,
-     "setup_seconds": 0.00129,
+     "seconds": 0.000123,
+     "setup_seconds": 0.00158,
      "status": "pass"
     }
    },
@@ -2419,15 +2419,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000349,
-     "setup_seconds": 0.00925,
+     "seconds": 0.000397,
+     "setup_seconds": 0.00982,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000405,
-     "setup_seconds": 0.00814,
+     "seconds": 0.0004,
+     "setup_seconds": 0.00837,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2440,8 +2440,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000419,
-     "setup_seconds": 0.0023,
+     "seconds": 0.000407,
+     "setup_seconds": 0.0026,
      "status": "pass"
     }
    },
@@ -2467,15 +2467,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 6.91e-05,
-     "setup_seconds": 0.00647,
+     "seconds": 7.4e-05,
+     "setup_seconds": 0.0069,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 6.2e-05,
-     "setup_seconds": 0.00547,
+     "seconds": 6.29e-05,
+     "setup_seconds": 0.00536,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2488,8 +2488,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000104,
-     "setup_seconds": 0.00219,
+     "seconds": 0.000122,
+     "setup_seconds": 0.00247,
      "status": "pass"
     }
    },
@@ -2515,15 +2515,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00144,
-     "setup_seconds": 0.0906,
+     "seconds": 0.00148,
+     "setup_seconds": 0.0892,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00145,
-     "setup_seconds": 0.0777,
+     "seconds": 0.00149,
+     "setup_seconds": 0.0787,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2535,7 +2535,7 @@
     },
     "sbmlsim": {
      "max_excess": null,
-     "message": "SimulationFailure: sbmlsim: IntegrationError: integration failed at t = 3.01 (flag -1): CVode: At t = 3.01, mxstep steps taken before reaching tout.",
+     "message": "SimulationFailure: sbmlsim: IntegrationError: integration failed at t = 4.25 (flag -1): 100000 steps taken before reaching the next output time (the steps of the restarts at the roots of discontinuities, of the returns at roots and of the executions of events close to the last applied root included)",
      "seconds": null,
      "setup_seconds": null,
      "status": "fail"
@@ -2611,15 +2611,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000225,
-     "setup_seconds": 0.0137,
+     "seconds": 0.000249,
+     "setup_seconds": 0.0138,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000231,
-     "setup_seconds": 0.0118,
+     "seconds": 0.000269,
+     "setup_seconds": 0.0122,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2632,8 +2632,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000353,
-     "setup_seconds": 0.00297,
+     "seconds": 0.00037,
+     "setup_seconds": 0.00572,
      "status": "pass"
     }
    },
@@ -2659,15 +2659,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.0201,
-     "setup_seconds": 0.154,
+     "seconds": 0.0204,
+     "setup_seconds": 0.157,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.0194,
-     "setup_seconds": 0.135,
+     "seconds": 0.0197,
+     "setup_seconds": 0.136,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2680,8 +2680,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.012,
-     "setup_seconds": 0.0247,
+     "seconds": 0.0117,
+     "setup_seconds": 0.0254,
      "status": "pass"
     }
    },
@@ -2707,15 +2707,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000299,
-     "setup_seconds": 0.00805,
+     "seconds": 0.000304,
+     "setup_seconds": 0.00788,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000302,
-     "setup_seconds": 0.00773,
+     "seconds": 0.000314,
+     "setup_seconds": 0.00776,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2728,8 +2728,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000734,
-     "setup_seconds": 0.00258,
+     "seconds": 0.000712,
+     "setup_seconds": 0.0027,
      "status": "pass"
     }
    },
@@ -2755,15 +2755,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.272,
-     "setup_seconds": 0.331,
+     "seconds": 0.274,
+     "setup_seconds": 0.334,
      "status": "pass"
     },
     "roundtrip": {
-     "max_excess": 0.000271,
-     "message": "tau_f1 exceeds the tolerance by 0.000271",
-     "seconds": 0.274,
-     "setup_seconds": 0.32,
+     "max_excess": 0.00086,
+     "message": "tau_f1 exceeds the tolerance by 0.00086",
+     "seconds": 0.281,
+     "setup_seconds": 0.329,
      "status": "fail"
     },
     "sbml2cellml": {
@@ -2776,8 +2776,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.353,
-     "setup_seconds": 0.37,
+     "seconds": 0.342,
+     "setup_seconds": 0.36,
      "status": "pass"
     }
    },
@@ -2803,14 +2803,14 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.0104,
-     "setup_seconds": 0.164,
+     "seconds": 0.0122,
+     "setup_seconds": 0.16,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00989,
+     "seconds": 0.0123,
      "setup_seconds": 0.138,
      "status": "pass"
     },
@@ -2824,8 +2824,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.0115,
-     "setup_seconds": 0.0471,
+     "seconds": 0.0118,
+     "setup_seconds": 0.0499,
      "status": "pass"
     }
    },
@@ -2851,15 +2851,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000367,
-     "setup_seconds": 0.0121,
+     "seconds": 0.000382,
+     "setup_seconds": 0.0123,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000366,
-     "setup_seconds": 0.0108,
+     "seconds": 0.000374,
+     "setup_seconds": 0.0105,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2872,8 +2872,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000761,
-     "setup_seconds": 0.00316,
+     "seconds": 0.000807,
+     "setup_seconds": 0.00601,
      "status": "pass"
     }
    },
@@ -2899,15 +2899,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00202,
-     "setup_seconds": 0.0763,
+     "seconds": 0.00218,
+     "setup_seconds": 0.0757,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00204,
-     "setup_seconds": 0.0676,
+     "seconds": 0.00222,
+     "setup_seconds": 0.068,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -2995,14 +2995,14 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00724,
-     "setup_seconds": 0.181,
+     "seconds": 0.0098,
+     "setup_seconds": 0.18,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.0079,
+     "seconds": 0.00913,
      "setup_seconds": 0.149,
      "status": "pass"
     },
@@ -3016,8 +3016,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.0103,
-     "setup_seconds": 0.05,
+     "seconds": 0.00974,
+     "setup_seconds": 0.0497,
      "status": "pass"
     }
    },
@@ -3043,15 +3043,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.000149,
-     "setup_seconds": 0.0169,
+     "seconds": 0.000147,
+     "setup_seconds": 0.0173,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.000143,
-     "setup_seconds": 0.0144,
+     "seconds": 0.000142,
+     "setup_seconds": 0.0143,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -3064,8 +3064,8 @@
     "sbmlsim": {
      "max_excess": 454.0,
      "message": "V_m exceeds the tolerance by 137; h exceeds the tolerance by 0.838; m exceeds the tolerance by 0.97; p exceeds the tolerance by 0.799; s exceeds the tolerance by 0.63; n exceeds the tolerance by 0.923; i_Lk exceeds the tolerance by 0.961; i_Ks exceeds the tolerance by 5.86; i_Nap exceeds the tolerance by 0.859; i_Naf exceeds the tolerance by 14.5; beta_m exceeds the tolerance by 19.1; alpha_m exceeds the tolerance by 454; beta_h exceeds the tolerance by 12.4; alpha_h exceeds the tolerance by 0.951; beta_p exceeds the tolerance by 0.0483; alpha_p exceeds the tolerance by 2.67; beta_s exceeds the tolerance by 0.00586; alpha_s exceeds the tolerance by 0.3; beta_n exceeds the tolerance by 2.1; alpha_n exceeds the tolerance by 6.09",
-     "seconds": 0.005,
-     "setup_seconds": 0.0083,
+     "seconds": 0.00496,
+     "setup_seconds": 0.00848,
      "status": "fail"
     }
    },
@@ -3091,15 +3091,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00109,
-     "setup_seconds": 0.0584,
+     "seconds": 0.00105,
+     "setup_seconds": 0.0586,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00109,
-     "setup_seconds": 0.0478,
+     "seconds": 0.0011,
+     "setup_seconds": 0.0491,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -3112,8 +3112,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.0023,
-     "setup_seconds": 0.0138,
+     "seconds": 0.00235,
+     "setup_seconds": 0.0137,
      "status": "pass"
     }
    },
@@ -3139,15 +3139,15 @@
     "libopencor": {
      "max_excess": null,
      "message": "",
-     "seconds": 0.00664,
+     "seconds": 0.00663,
      "setup_seconds": 0.145,
      "status": "pass"
     },
     "roundtrip": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00679,
-     "setup_seconds": 0.125,
+     "seconds": 0.00684,
+     "setup_seconds": 0.126,
      "status": "pass"
     },
     "sbml2cellml": {
@@ -3160,8 +3160,8 @@
     "sbmlsim": {
      "max_excess": -1e-06,
      "message": "",
-     "seconds": 0.00734,
-     "setup_seconds": 0.0377,
+     "seconds": 0.00757,
+     "setup_seconds": 0.0397,
      "status": "pass"
     }
    },

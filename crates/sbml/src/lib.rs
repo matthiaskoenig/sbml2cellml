@@ -37,5 +37,6 @@ pub use write::{MATHML_NS, SBML_NS, number_text};
 
 pub use math::{Constant, Math};
 pub use model::{
-    Document, InitialAssignment, Model, Parameter, Rule, Unit, UnitDefinition, UnitKind,
+    Document, Event, EventAssignment, InitialAssignment, Model, Parameter, Rule, Trigger, Unit,
+    UnitDefinition, UnitKind,
 };

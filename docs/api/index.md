@@ -7,6 +7,7 @@ The API reference is generated from the docstrings of the package.
 | [sbml2cellml](sbml2cellml.md) | Conversion of SBML models to CellML, `convert_sbml2cellml` |
 | [cellml2sbml](cellml2sbml.md) | Conversion of CellML models to SBML, `convert_cellml2sbml` |
 | [cellml](cellml.md) | Reading, writing and validating CellML models with libcellml |
+| [rust](rust.md) | The reader and the converter in rust, the module `sbml2cellml._rust` |
 | [sbml](sbml.md) | Reading, writing and validating SBML documents with libsbml |
 | [mathml](mathml.md) | MathML fragments of the equations |
 | [astnodes](astnodes.md) | Construction of formulas as libsbml ASTs |

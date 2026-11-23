@@ -86,14 +86,14 @@ permission on the repository.
 
 ## Setup development environment
 
-Development needs [uv](https://docs.astral.sh/uv/) and a checkout of the repository:
+Development needs [uv](https://docs.astral.sh/uv/), a [rust toolchain](https://rustup.rs) for the module `sbml2cellml._rust` (the version is pinned by `rust-toolchain.toml`, which rustup reads on the first `cargo` call) and a checkout of the repository:
 
 ```bash
 git clone https://github.com/matthiaskoenig/sbml2cellml.git
 cd sbml2cellml
 ```
 
-A single sync creates the virtual environment in `.venv`, installs `sbml2cellml` into it in editable mode and adds the complete tooling:
+A single sync creates the virtual environment in `.venv`, builds the rust module, installs `sbml2cellml` into it in editable mode and adds the complete tooling:
 
 ```bash
 uv sync --extra dev
@@ -282,21 +282,27 @@ The two pages are generated and committed, and they are rendered from the result
 
 ## Rust workspace { #rust }
 
-[Issue #68](https://github.com/matthiaskoenig/sbml2cellml/issues/68) moves the reader and the converter to rust, so that a conversion is fast and runs in a browser next to [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/), whose compiler takes SBML text and whose engine is WebAssembly: a CellML model converted to SBML in the browser is simulated there without a server. The reader and the conversion of CellML to SBML are there, the python package keeps libcellml and libsbml until the rust path is measured against them over the three checks.
+[Issue #68](https://github.com/matthiaskoenig/sbml2cellml/issues/68) moves the reader and the converter to rust, so that a conversion is fast and runs in a browser next to [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/), whose compiler takes SBML text and whose engine is WebAssembly: a CellML model converted to SBML in the browser is simulated there without a server. The reader and the conversion of CellML to SBML are there, and the python package converts with them: `sbml2cellml._rust` is the module of `crates/python`, which maturin builds into the wheel, and `convert_cellml2sbml` takes the engine to use (`auto` by default, see [Conversion](conversion.md#engines)). libcellml stays for what the rust converter does not do - the metadata of the elements, the hierarchical conversion and the imports of a document, which it flattens before the rust converter reads it - and libsbml reads the SBML text the conversion writes, validates it and writes the file.
 
 `crates/cellml` reads a document of CellML 2.0, 1.1 or 1.0 and gives the model with its unit definitions, its components with their variables and their mathematics, its connections, its encapsulation and its imports. A document of CellML 1.0 is read as it is written, with its `public_interface` and its groups of the relationship `encapsulation`, and gives the same model as the document of CellML 2.0 of the same system, so what reads the model afterwards does not know the version; the built in units CellML 2.0 renamed (`meter`, `liter`) are read as `metre` and `litre` unless the model defines units of that name, as libcellml reads them. The crate validates nothing and resolves nothing: an import keeps its `href`, there is no file system and no network access, and the crate builds for `wasm32-unknown-unknown`. `equivalence_sets` gives the variables a chain of connections makes one quantity, which the conversion to SBML needs. `crates/cli` is the command `cellml-info`, which prints what the reader reads of a document as JSON.
 
-`crates/sbml` holds the SBML level 3 version 2 document the conversion writes - unit definitions, parameters, initial assignments and rules, since a CellML model has no reactions - and its XML, which it writes itself: there is no libsbml in the rust workspace. `crates/convert` is the conversion. It reads the equations of the model where the python converter asks the analyser of libcellml: every equivalence set of variables becomes one parameter, a derivative on one side of an equation makes the other side the rate of a state, an equation with a single variable on one side determines that variable, an equation which determines no single variable becomes an algebraic rule, and a variable which an equation computes from constants only becomes an initial assignment. The custom units become unit definitions of the base units of SBML, and the mathematics keeps its operators, with the variable of integration written as the time of SBML and a derivative inside an expression as its `rateOf`. An equation whose variable its own right hand side uses, and a pair of equations which compute each other, are implicit and become algebraic rules, which is what SBML needs: an assignment rule must not depend on itself. An operator which SBML does not have, units which the model does not define, an imported component or imported units are refused, so that nothing is written which a simulator reads as something else. `crates/cli` holds the two commands, `cellml-info`, which prints what the reader reads of a document as JSON, and `cellml-convert`, which writes the SBML of a document.
+`crates/sbml` holds the SBML level 3 version 2 document the conversion writes - unit definitions, parameters, initial assignments and rules, since a CellML model has no reactions - and its XML, which it writes itself: there is no libsbml in the rust workspace. `crates/convert` is the conversion. It reads the equations of the model where the python converter asks the analyser of libcellml: every equivalence set of variables becomes one parameter, named after the variable the equation of the quantity is written next to, else one with an initial value, else the first of the set, which is the variable the analyser of libcellml takes, so that both converters give a quantity the same id; a derivative on one side of an equation makes the other side the rate of a state, an equation with a single variable on one side determines that variable, an equation which determines no single variable becomes an algebraic rule, and a variable which an equation computes from constants only becomes an initial assignment. The custom units become unit definitions of the base units of SBML, and the mathematics keeps its operators, with the variable of integration written as the time of SBML and a derivative inside an expression as its `rateOf`. An equation whose variable its own right hand side uses, and a pair of equations which compute each other, are implicit and become algebraic rules, which is what SBML needs: an assignment rule must not depend on itself. An operator which SBML does not have, units which the model does not define, an imported component or imported units are refused, so that nothing is written which a simulator reads as something else. `crates/cli` holds the two commands, `cellml-info`, which prints what the reader reads of a document as JSON, and `cellml-convert`, which writes the SBML of a document.
+
+`crates/python` is the module `sbml2cellml._rust`, built with [pyo3](https://pyo3.rs) and the stable ABI of python 3.14 (`abi3-py314`), which gives the package the conversion in the process; `sbml2cellml.rust` wraps it, `src/sbml2cellml/_rust.pyi` is its signature for the type checker. maturin is the build backend of the package (`[tool.maturin]` of `pyproject.toml`), so `uv sync` and `uv build` compile the crates and put the module next to the python code. The crate is no default member of the workspace: a test binary of it would have to link libpython, so `cargo test` leaves it out and the `rust` workflow lints it on its own.
 
 ```bash
 cargo test                  # the rust tests, over the CellML fixtures of the repository
 cargo clippy --all-targets  # the lints, denied in the workspace
+cargo clippy -p sbml2cellml-python   # the lints of the python module
 cargo fmt --check           # the formatting
 cargo build --release       # the cellml-info and cellml-convert commands in target/release
 cargo build --target wasm32-unknown-unknown -p sbml2cellml-cellml -p sbml2cellml-convert
 
 target/release/cellml-convert model.cellml            # writes model.xml
 target/release/cellml-convert -o - model.cellml       # to the standard output
+
+uv sync --extra dev         # builds sbml2cellml._rust as well
+uv build                    # the wheel with the module and the sdist
 ```
 
 The `rust` workflow runs these in continuous integration. `scripts/cellml_parity.py` measures the reader against libcellml over the models of the Physiome selection and the CellML files of the repository, which is run locally like the checks of BioModels and of the Physiome repository:
@@ -316,9 +322,20 @@ the value, as the specification defines it.
 
 `scripts/cellml2sbml_parity.py` measures the conversion against the python converter over the same corpus: it converts every document with both, validates the SBML of the rust converter with libsbml and compares the parameters with their value, their units and whether they are constant, the rules by kind and target, the initial assignments and the formula of every rule, which `libsbml.formulaToL3String` writes for both sides.
 
-Of the 102 documents of the corpus, the rust converter converts 92, and libsbml validates every one of those without an error. 68 documents are converted by both: 35 give the same SBML model, 23 differ in the notation or in the nesting of a formula only (the rust converter writes the mathematics as the CellML model has it and a square root without the degree two, the python converter writes the tree of the analyser of libcellml and keeps the degree with its units), and 10 differ in which variable of an equivalence set gives its parameter the id, since the python converter takes the variable the analyser of libcellml picked and the rust converter the first one of the document. 24 documents are converted by the rust converter alone, since the analyser of libcellml refuses the model; 1 by the python converter alone, the fixture with an import, which the rust converter does not resolve yet; 9 by neither.
+Of the 102 documents of the corpus, the rust converter converts 92, and libsbml validates every one of those without an error. 68 documents are converted by both: 38 give the same SBML model and 30 differ in the notation of a formula or in the nesting of its sums and products only, nothing in what an equation computes. The notation differs where the rust converter writes the mathematics as the CellML model has it, a square root without the degree two and the exponent of a number as the model writes it, while the python converter writes the tree of the analyser of libcellml; the nesting differs because the rust converter keeps the `a + b + c` of the model and the analyser of libcellml gives it as the binary tree `a + (b + c)`, which is the same sum in another association. The ids are the same for every document, since both converters name a quantity after the variable the equation of the quantity is written next to. 24 documents are converted by the rust converter alone, since the analyser of libcellml refuses the model; 1 by the python converter alone, the fixture with an import, which the rust converter does not resolve yet; 9 by neither.
 
-What the rust converter does not do yet: resolve the imports of a document, convert the resets of a model to events, and write the metadata of the CellML elements. Those are the next steps of the issue, together with the binding which lets the python package use the rust path.
+The resets of a model become the events of SBML, as they do in the python converter: the trigger is the equality of the test variable and the test value, or the condition of a test variable which is `piecewise(1, condition, 0)`, which is how the conversion of an SBML event writes it, and the priority is the negated order.
+
+What the rust converter does not do yet: resolve the imports of a document, write the metadata of the CellML elements and write a hierarchical model. The python engine converts such a model, and the imports are flattened with libcellml before the rust converter reads the document.
+
+`scripts/convert_benchmark.py` measures the two engines over the same corpus, three runs per model and engine, the fastest of the three:
+
+```bash
+uv run python scripts/convert_benchmark.py      # writes docs/images/convert_benchmark*.svg
+uv run python scripts/convert_benchmark.py --count 10 --repeats 5
+```
+
+Of the 102 documents, 68 are converted by both engines. The python engine takes 129 ms for the median model and 16.9 s for all of them, the rust engine 2.3 ms and 0.37 s, and the rust conversion alone, without the libsbml document the python API returns, 0.4 ms and 0.07 s. The rust engine is 48 times faster for the median model and between 13 and 193 times faster over the corpus; the conversion alone is 288 times faster. The largest model of the selection, `Schoeberl_EichlerJonsson_Gilles_Muller_2002` with 228 components, takes 2.3 s with the python engine and 12 ms with the rust engine.
 
 ## Release
 
@@ -329,7 +346,7 @@ the release is prepared on a branch and tagged once that pull request is merged:
 2. write the release notes for the version in `docs/release-notes/x.y.z.md`, with the logo below the heading as in the earlier notes, and add the page to the `Release notes` section of `nav` in `zensical.toml` and to the overview `docs/release-notes/index.md`, newest first. The notes are part of the [documentation](release-notes/index.md) and the body of the GitHub release; `tests/test_package.py` fails when the current version has no notes or a page is missing in the navigation or the overview
 3. make sure everything passes: `tox run-parallel`, `ruff check`, `tox r -e ty`
 4. check the version bump: `uvx bump-my-version bump [major|minor|patch] --dry-run -vv`
-5. bump the version: `uvx bump-my-version bump [major|minor|patch]`, which updates `src/sbml2cellml/__init__.py` and `CITATION.cff` and commits. It does not create the tag; a squash or rebase merge would rewrite the commit and leave the tag behind on a commit which is not part of `develop`
+5. bump the version: `uvx bump-my-version bump [major|minor|patch]`, which updates `pyproject.toml` (the version of the wheel, which maturin reads), `src/sbml2cellml/__init__.py` and `CITATION.cff` and commits. It does not create the tag; a squash or rebase merge would rewrite the commit and leave the tag behind on a commit which is not part of `develop`
 6. push the branch, open the pull request against `develop` and merge it once the checks are green
 7. tag the merged commit on `develop` and push the tag:
 
@@ -340,9 +357,12 @@ the release is prepared on a branch and tagged once that pull request is merged:
     git push origin x.y.z
     ```
 
-    This starts the `CI-CD` workflow, which runs the test matrix, publishes to
-    [pypi](https://pypi.org/project/sbml2cellml/), creates the GitHub release
-    from `docs/release-notes/x.y.z.md` and fast-forwards `main` to the tagged commit.
+    This starts the `CI-CD` workflow, which runs the test matrix, builds the
+    wheels of linux (x86_64, aarch64), macOS (universal2) and windows with
+    [maturin](https://www.maturin.rs) and the source distribution, publishes
+    them to [pypi](https://pypi.org/project/sbml2cellml/), creates the GitHub
+    release from `docs/release-notes/x.y.z.md` and fast-forwards `main` to the
+    tagged commit.
     Check the version before pushing, a tag cannot be moved or deleted
     afterwards.
 

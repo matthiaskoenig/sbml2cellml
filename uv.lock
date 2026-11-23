@@ -1286,6 +1286,7 @@ wheels = [
 
 [[package]]
 name = "sbml2cellml"
+version = "0.5.0"
 source = { editable = "." }
 dependencies = [
     { name = "libcellml" },
@@ -1329,33 +1330,26 @@ testsuite = [
 requires-dist = [
     { name = "bump-my-version", marker = "extra == 'dev'", specifier = ">=1.5.1" },
     { name = "libcellml", specifier = ">=0.7.2" },
-    { name = "libopencor", marker = "extra == 'dev'", specifier = ">=1.20261113.0" },
     { name = "libopencor", marker = "extra == 'simulate'", specifier = ">=1.20261113.0" },
-    { name = "libopencor", marker = "extra == 'testsuite'", specifier = ">=1.20261113.0" },
-    { name = "matplotlib", marker = "extra == 'dev'", specifier = ">=3.11.1" },
     { name = "matplotlib", marker = "extra == 'simulate'", specifier = ">=3.11.1" },
-    { name = "matplotlib", marker = "extra == 'testsuite'", specifier = ">=3.11.1" },
     { name = "mkdocstrings-python", marker = "extra == 'dev'", specifier = ">=2.0.8" },
-    { name = "pandas", marker = "extra == 'dev'", specifier = ">=3.0.5" },
     { name = "pandas", marker = "extra == 'simulate'", specifier = ">=3.0.5" },
-    { name = "pandas", marker = "extra == 'testsuite'", specifier = ">=3.0.5" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.6.2" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.1.1" },
     { name = "pytest-xdist", marker = "extra == 'dev'", specifier = ">=3.8" },
     { name = "python-libsbml", specifier = ">=5.21.2" },
-    { name = "requests", marker = "extra == 'dev'", specifier = ">=2.32" },
     { name = "requests", marker = "extra == 'testsuite'", specifier = ">=2.32" },
     { name = "rich", specifier = ">=15.0.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.16.6" },
-    { name = "sbmlsim-core", marker = "extra == 'dev'", specifier = ">=0.19.0" },
+    { name = "sbml2cellml", extras = ["simulate"], marker = "extra == 'testsuite'" },
+    { name = "sbml2cellml", extras = ["testsuite"], marker = "extra == 'dev'" },
     { name = "sbmlsim-core", marker = "extra == 'simulate'", specifier = ">=0.19.0" },
-    { name = "sbmlsim-core", marker = "extra == 'testsuite'", specifier = ">=0.19.0" },
     { name = "tox", marker = "extra == 'dev'", specifier = ">=4.61.2" },
     { name = "tox-uv", marker = "extra == 'dev'", specifier = ">=1.20" },
     { name = "ty", marker = "extra == 'dev'", specifier = ">=0.0.79" },
     { name = "zensical", marker = "extra == 'dev'", specifier = ">=0.0.60" },
 ]
-provides-extras = ["dev", "simulate", "testsuite"]
+provides-extras = ["simulate", "testsuite", "dev"]
 
 [[package]]
 name = "sbmlsim-core"

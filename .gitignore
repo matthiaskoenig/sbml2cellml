@@ -3,8 +3,11 @@ __pycache__/
 *.pyc
 *.egg-info/
 
-# packaging artifacts (hatchling builds into dist/)
+# packaging artifacts (maturin builds into dist/)
 dist/
+# the rust module of the editable install, built by maturin into the package
+src/sbml2cellml/_rust*.so
+src/sbml2cellml/_rust*.pyd
 
 # environments, tool caches
 .venv/

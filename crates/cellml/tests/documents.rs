@@ -321,3 +321,40 @@ fn the_degree_of_a_root_and_the_base_of_a_logarithm_are_qualifiers() {
     assert_eq!(qualifier(&math[0]), Some(("degree".to_string(), 3.0)));
     assert_eq!(qualifier(&math[1]), Some(("logbase".to_string(), 2.0)));
 }
+
+#[test]
+fn a_component_holds_its_resets() {
+    let text = r#"<model xmlns="http://www.cellml.org/cellml/2.0#"
+                         xmlns:cellml="http://www.cellml.org/cellml/2.0#" name="growth">
+      <component name="c">
+        <variable name="m" units="dimensionless" initial_value="1"/>
+        <variable name="m_div" units="dimensionless" initial_value="7"/>
+        <reset variable="m" test_variable="m" order="2">
+          <test_value>
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+              <apply><eq/><ci>m</ci><ci>m_div</ci></apply>
+            </math>
+          </test_value>
+          <reset_value>
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+              <apply><eq/><ci>m</ci>
+                <apply><divide/><ci>m</ci>
+                  <cn cellml:units="dimensionless">2</cn></apply></apply>
+            </math>
+          </reset_value>
+        </reset>
+      </component>
+    </model>"#;
+    let document = cellml::read(text).unwrap();
+    let [reset] = &document.model.components[0].resets[..] else {
+        panic!("the component has one reset");
+    };
+    assert_eq!(reset.variable, "m");
+    assert_eq!(reset.test_variable, "m");
+    assert_eq!(reset.order, 2);
+    assert!(matches!(
+        reset.test_value,
+        Some(Node::Apply { ref arguments, .. }) if arguments.len() == 2
+    ));
+    assert!(reset.reset_value.is_some());
+}

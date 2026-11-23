@@ -91,7 +91,7 @@ SBML level 1 and 2 have the units `substance`, `time`, `volume`, `area` and `len
 
 ## CellML to SBML
 
-[`convert_cellml2sbml`](api/cellml2sbml.md) reads a CellML file of any version, resolves its imports relative to the file, analyses it with libcellml and builds an SBML level 3 version 2 document:
+[`convert_cellml2sbml`](api/cellml2sbml.md) reads a CellML file of any version, resolves its imports relative to the file and builds an SBML level 3 version 2 document:
 
 ```python
 from pathlib import Path
@@ -108,10 +108,30 @@ cellml2sbml model.cellml -o out/model.xml
 cellml2sbml model.cellml --no-validate   # write even if libsbml reports errors
 cellml2sbml model.cellml --no-metadata   # do not read model.rdf
 cellml2sbml model.cellml --hierarchical  # one comp submodel per component
+cellml2sbml model.cellml --engine python # convert with libcellml instead of rust
 cellml2sbml model.cellml -v
 ```
 
 By default the document is checked with the libsbml consistency checks and a `SBMLValidationError` with the messages is raised on errors (unit problems are warnings and do not stop the conversion).
+
+### Engines
+
+The conversion runs in rust: the crates of [`crates/`](development.md#rust) read the CellML document, decide what every equation determines and write the SBML themselves, which the module `sbml2cellml._rust` makes available in the process. The python engine, which uses the analyser of libcellml and builds the document with libsbml, writes the same model and stays available.
+
+| engine | what it converts |
+| --- | --- |
+| `auto` (the default) | the rust engine, and the python engine for a model with the metadata of a conversion next to it (`<stem>.rdf`), for the hierarchical conversion and for a model the rust converter refuses |
+| `rust` | the rust engine only; a model it refuses raises `CellML2SBMLConversionError` |
+| `python` | libcellml and the code of `sbml2cellml.cellml2sbml` |
+
+```python
+doc = convert_cellml2sbml(Path("model.cellml"), engine="python")
+```
+
+The rust engine converts a model about 48 times faster than the python engine (the median over the models of the [Physiome](physiome.md) selection; the conversion alone, without the libsbml document the python API returns, 288 times), and it converts models the analyser of libcellml refuses, 24 of the 101 models of that selection. A document whose components are imported is flattened with libcellml before the rust converter reads it, since the crates resolve no import and read no file.
+
+![Conversion time of the two engines](images/convert_benchmark.svg#only-light)
+![Conversion time of the two engines](images/convert_benchmark_dark.svg#only-dark)
 
 ### Mapping
 
@@ -135,7 +155,7 @@ CellML has no species, compartments or reactions: every variable becomes a param
 | imports | resolved and flattened before the conversion |
 | metadata in `model.rdf` next to `model.cellml`, see [Metadata](#metadata) | name, notes, SBO term, CV terms and history of the parameter of the variable, the unit definition of the units and the model with that `id`; the `id` is the `metaid` |
 | implicit equation (`a + s = 5`, a model of type DAE or NLA) | algebraic rule `0 = a + s - 5`, the unknown a `parameter constant="false"` with its initial value (the guess of the solver) |
-| model which cannot be analysed (e.g. underconstrained) | CellML2SBMLConversionError |
+| model which cannot be analysed (e.g. underconstrained) | CellML2SBMLConversionError with the python engine; the rust engine writes the equations it can and an algebraic rule for the rest |
 
 A CellML 1.0 or 1.1 document, as the models of the [Physiome Model Repository](https://models.physiomeproject.org) are, is read in the permissive mode of libcellml, which maps it to the CellML 2.0 structures; a warning names the version. The [Physiome](physiome.md) page reports how many of the published models convert and simulate.
 
@@ -166,6 +186,7 @@ The other direction, an SBML model with `comp` submodels, is flattened before it
 
 ### Limitations
 
-- A system of coupled implicit equations (`x + y = 4`, `x - y = 2`) cannot be analysed by libcellml, and external variables are not supported; both raise `CellML2SBMLConversionError`.
+- A system of coupled implicit equations (`x + y = 4`, `x - y = 2`) becomes two algebraic rules with the rust engine, which needs no guess; libcellml cannot analyse such a model, so the python engine raises `CellML2SBMLConversionError`, as it does for an external variable.
+- The rust engine writes no metadata and no hierarchical model, and it refuses an operator SBML does not have, units the model does not define and rate equations which give each other's rate; `auto` converts such a model with the python engine.
 - New base units other than `item` have no SBML counterpart and are `dimensionless`, with a warning.
 - A reset triggers on the equality of the test variable and the test value. A continuous simulator detects the equality only when the test variable crosses the test value at an integrator step, so a reset may not fire in SBML simulators; the roundtrip harness reports this per model. libopencor 1.20261113.0 applies no reset at all, so the CellML side of such a model integrates as if it had none.

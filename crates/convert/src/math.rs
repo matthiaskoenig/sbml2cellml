@@ -97,6 +97,10 @@ const OPERATORS: &[&str] = &[
     "xor",
 ];
 
+/// The operators of MathML which take any number of arguments: with one
+/// argument the value of such an operator is the argument itself.
+const N_ARY: [&str; 5] = ["plus", "times", "and", "or", "xor"];
+
 /// What the mathematics of a model is written with: the ids of the
 /// quantities, the ids of the units and the variable of integration.
 #[derive(Debug, Clone, Copy)]
@@ -170,6 +174,13 @@ pub fn expression(node: &Node, component: usize, context: Context) -> Result<Mat
             let name = operator.name();
             if !OPERATORS.contains(&name) {
                 return Err(MathError::Operator(name.to_string()));
+            }
+            // MathML allows an n-ary operator with one argument, which is
+            // that argument: `plus(x)` is `x`. The value is written instead
+            // of the operator, as `mathml.simplify_operators` writes it on
+            // the way to CellML, so that no redundant operator reaches SBML
+            if N_ARY.contains(&name) && arguments.len() == 1 {
+                return expression(&arguments[0], component, context);
             }
             Ok(Math::Apply {
                 operator: name.to_string(),

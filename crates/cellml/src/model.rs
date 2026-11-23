@@ -244,6 +244,8 @@ pub struct Component {
     pub math: Vec<Node>,
     /// The unit definitions inside the component (CellML 1.0 and 1.1).
     pub units: Vec<Units>,
+    /// The resets of the component (CellML 2.0).
+    pub resets: Vec<Reset>,
 }
 
 impl Component {
@@ -251,6 +253,24 @@ impl Component {
     pub fn variable(&self, name: &str) -> Option<usize> {
         self.variables.iter().position(|v| v.name == name)
     }
+}
+
+/// A reset of a component (CellML 2.0): when the test variable reaches the
+/// test value, the variable takes the reset value.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Reset {
+    /// The name of the variable the reset sets, in its component.
+    pub variable: String,
+    /// The name of the variable the reset tests.
+    pub test_variable: String,
+    /// The order, which decides which of several resets is applied first,
+    /// the lowest first.
+    pub order: i32,
+    /// The mathematics of the test value, the expression itself or the
+    /// equation `test_variable = expression`.
+    pub test_value: Option<Node>,
+    /// The mathematics of the reset value, written the same way.
+    pub reset_value: Option<Node>,
 }
 
 /// A connection of two components and the variables it maps.
@@ -445,6 +465,7 @@ fn model(root: X, version: Version) -> Result<Model, ReadError> {
                         variables: Vec::new(),
                         math: Vec::new(),
                         units: Vec::new(),
+                        resets: Vec::new(),
                     });
                 }
                 for item in &element.units {
@@ -548,6 +569,7 @@ fn component(node: X, version: Version) -> Result<Component, ReadError> {
         variables: Vec::new(),
         math: Vec::new(),
         units: Vec::new(),
+        resets: Vec::new(),
     };
     for child in children(node, version) {
         match child.tag_name().name() {
@@ -564,6 +586,7 @@ fn component(node: X, version: Version) -> Result<Component, ReadError> {
                 ),
             }),
             "units" => component.units.push(units(child, version)?),
+            "reset" => component.resets.push(reset(child, version, &name)?),
             _ => {}
         }
     }
@@ -579,6 +602,46 @@ fn component(node: X, version: Version) -> Result<Component, ReadError> {
         );
     }
     Ok(component)
+}
+
+/// A reset and the mathematics of its two values.
+fn reset(node: X, version: Version, component: &str) -> Result<Reset, ReadError> {
+    let mut reset = Reset {
+        variable: attribute(node, "variable")?,
+        test_variable: attribute(node, "test_variable")?,
+        order: node
+            .attribute("order")
+            .and_then(|text| text.trim().parse().ok())
+            .unwrap_or(0),
+        test_value: None,
+        reset_value: None,
+    };
+    for child in children(node, version) {
+        let name = child.tag_name().name();
+        if !matches!(name, "test_value" | "reset_value") {
+            continue;
+        }
+        let math = child
+            .children()
+            .filter(|child| {
+                child.is_element() && child.tag_name().namespace() == Some(math::MATHML_NS)
+            })
+            .map(|element| math::equations(element, version.namespace()))
+            .collect::<Result<Vec<_>, _>>()
+            .map_err(|source| ReadError::Math {
+                component: component.to_string(),
+                source,
+            })?
+            .into_iter()
+            .flatten()
+            .next();
+        if name == "test_value" {
+            reset.test_value = math;
+        } else {
+            reset.reset_value = math;
+        }
+    }
+    Ok(reset)
 }
 
 /// A connection, the components of CellML 2.0 or of its `<map_components>`.

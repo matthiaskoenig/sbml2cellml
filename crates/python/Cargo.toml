@@ -1,0 +1,27 @@
+[package]
+name = "sbml2cellml-python"
+description = "The python module of the rust reader and converter, sbml2cellml._rust"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+publish = false
+
+[lib]
+name = "_rust"
+crate-type = ["cdylib"]
+
+[features]
+# the module is loaded by the interpreter and does not link libpython,
+# which is what maturin builds; `cargo test` of the workspace leaves the
+# crate out (`default-members` of the workspace)
+default = ["pyo3/extension-module"]
+
+[dependencies]
+cellml = { package = "sbml2cellml-cellml", path = "../cellml" }
+convert = { package = "sbml2cellml-convert", path = "../convert" }
+pyo3 = { workspace = true }
+
+[lints]
+workspace = true

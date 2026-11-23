@@ -148,6 +148,7 @@ fn component_json(component: &cellml::Component) -> String {
             })),
         ),
         ("equations", component.math.len().to_string()),
+        ("resets", component.resets.len().to_string()),
         (
             "units",
             list(component.units.iter().map(|units| string(&units.name))),

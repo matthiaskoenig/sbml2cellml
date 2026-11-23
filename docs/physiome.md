@@ -18,11 +18,11 @@ A `libopencor` failure means libopencor cannot simulate the model of the reposit
 | --- | --- | --- | --- | --- | --- |
 | libopencor | 66 | 62 | 4 | 0 | 93.9% |
 | cellml2sbml | 66 | 62 | 0 | 4 | 93.9% |
-| sbmlsim | 66 | 58 | 4 | 4 | 87.9% |
+| sbmlsim | 66 | 57 | 5 | 4 | 86.4% |
 | sbml2cellml | 66 | 62 | 0 | 4 | 93.9% |
 | roundtrip | 66 | 60 | 2 | 4 | 90.9% |
 
-58 of the 58 cases with a passing sbmlsim stage are informative: the expected results move more than the tolerance band for at least one variable.
+57 of the 57 cases with a passing sbmlsim stage are informative: the expected results move more than the tolerance band for at least one variable.
 
 ## Timings
 
@@ -35,11 +35,11 @@ The two simulators integrate with the same relative tolerance and with an absolu
 
 | stage | simulator | model | simulations | setup median | integration median | integration p95 | integration slowest | integration total |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| libopencor | libopencor | CellML model | 62 | 21 ms | 0.86 ms | 78 ms | 548 ms | 1.3 s |
-| sbmlsim | sbmlsim-core | SBML model | 60 | 4.4 ms | 0.95 ms | 78 ms | 495 ms | 1.4 s |
-| roundtrip | libopencor | roundtrip CellML model | 62 | 18 ms | 0.88 ms | 74 ms | 565 ms | 1.3 s |
+| libopencor | libopencor | CellML model | 62 | 21 ms | 0.98 ms | 71 ms | 531 ms | 1.3 s |
+| sbmlsim | sbmlsim-core | SBML model | 60 | 5.7 ms | 1.1 ms | 81 ms | 491 ms | 1.4 s |
+| roundtrip | libopencor | roundtrip CellML model | 62 | 18 ms | 0.90 ms | 80 ms | 516 ms | 1.3 s |
 
-The two simulators integrate the same dynamics for 58 cases, those whose SBML model reproduces the expected results. libopencor is 1.3 times faster than sbmlsim-core for the median of them and faster for 50; over these cases the medians are 0.89 ms for sbmlsim-core and 0.75 ms for libopencor.
+The two simulators integrate the same dynamics for 57 cases, those whose SBML model reproduces the expected results. libopencor is 1.3 times faster than sbmlsim-core for the median of them and faster for 47; over these cases the medians are 0.92 ms for sbmlsim-core and 0.61 ms for libopencor.
 
 ## Failure reasons
 
@@ -70,20 +70,26 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 
 ### sbmlsim
 
-4 of 66 cases fail.
+5 of 66 cases fail.
 
-**2 cases**
-
-```text
-513: SimulationFailure: sbmlsim: IntegrationError: integration failed at t = 3.01 (flag -1): CVode: At t = 3.01, mxstep steps taken before reaching tout.
-5f: SimulationFailure: sbmlsim: IntegrationError: integration failed at t = 0.376 (flag -1): CVode: At t = 0.376, mxstep steps taken before reaching tout.
-```
-
-**2 cases, numerical mismatch**
+**3 cases, numerical mismatch**
 
 ```text
 447: dmdt exceeds the tolerance by 0.00315
+48a: delta_fCMs exceeds the tolerance by 5.16e-05
 5f7: V_m exceeds the tolerance by 137; h exceeds the tolerance by 0.838; m exceeds the tolerance by 0.97; p exceeds the tolerance by 0.799; s exceeds the tolerance by 0.63; n exceeds the tolerance by 0.923; i_Lk exceeds the tolerance by 0.961; i_Ks exceeds the tolerance by 5.86; i_Nap exceeds the tolerance by 0.859; i_Naf exceeds the tolerance by 14.5; beta_m exceeds the tolerance by 19.1; alpha_m exceeds the tolerance by 454; beta_h exceeds the tolerance by 12.4; alpha_h exceeds the tolerance by 0.951; beta_p exceeds the tolerance by 0.0483; alpha_p exceeds the tolerance by 2.67; beta_s exceeds the tolerance by 0.00586; alpha_s exceeds the tolerance by 0.3; beta_n exceeds the tolerance by 2.1; alpha_n exceeds the tolerance by 6.09
+```
+
+**1 case**
+
+```text
+5f: SimulationFailure: sbmlsim: IntegrationError: integration failed at t = 0.376 (flag -1): CVode: At t = 0.376, mxstep steps taken before reaching tout.
+```
+
+**1 case**
+
+```text
+513: SimulationFailure: sbmlsim: IntegrationError: integration failed at t = 4.25 (flag -1): 100000 steps taken before reaching the next output time (the steps of the restarts at the roots of discontinuities, of the returns at roots and of the executions of events close to the last applied root included)
 ```
 
 ### roundtrip
@@ -94,7 +100,7 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 
 ```text
 447: dmdt exceeds the tolerance by 0.00304
-594: tau_f1 exceeds the tolerance by 0.000271
+594: tau_f1 exceeds the tolerance by 0.00086
 ```
 
 ## Skipped cases
@@ -155,7 +161,7 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 | 47 | Bornheimer, Maurya, Farquhar, Subramaniam, 2004 | 27 components, DifferentialEquations, Units | pass | pass | pass | pass | pass | yes |
 | 47f | Kholodenko, Demin, Moehren, Hoek, 1999 | 50 components, DifferentialEquations, Units | pass | pass | pass | pass | pass | yes |
 | 48 | Elowitz, Leibler, 2000 | 8 components, DifferentialEquations, Units | pass | pass | pass | pass | pass | yes |
-| 48a | Computational analysis of the human sinus node action potential: model development and effects of mutations | 38 components, DifferentialEquations, Units | pass | pass | pass | pass | pass | yes |
+| 48a | Computational analysis of the human sinus node action potential: model development and effects of mutations | 38 components, DifferentialEquations, Units | pass | pass | fail | pass | pass | yes |
 | 4a7 | A model of intracellular pH control | 1 components, DifferentialEquations, Units | pass | pass | pass | pass | pass | yes |
 | 4bc | Varela - Canine Atrial Cell Models | 37 components, DifferentialEquations, Units | pass | pass | pass | pass | pass | yes |
 | 4d | Goldbeter, 1995 | 8 components, DifferentialEquations, Units | pass | pass | pass | pass | pass | yes |

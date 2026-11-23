@@ -151,9 +151,20 @@ def test_cellml2sbml_verbose_logs(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     out = tmp_path / "test_model.xml"
-    assert main_cellml2sbml([str(TEST_MODEL_PATH), "-o", str(out), "-v"]) == 0
+    arguments = [str(TEST_MODEL_PATH), "-o", str(out), "-v", "--engine", "python"]
+    assert main_cellml2sbml(arguments) == 0
     captured = capsys.readouterr()
     assert "parameter for variable" in captured.out + captured.err
+
+
+def test_cellml2sbml_logs_the_rust_engine(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The rust engine converts by default, which the log says."""
+    out = tmp_path / "test_model.xml"
+    assert main_cellml2sbml([str(TEST_MODEL_PATH), "-o", str(out), "-v"]) == 0
+    captured = capsys.readouterr()
+    assert "rust engine" in captured.out + captured.err
 
 
 def test_cellml2sbml_version(capsys: pytest.CaptureFixture[str]) -> None:
@@ -209,7 +220,9 @@ def test_cellml2sbml_no_validate_writes(
     monkeypatch.setattr(cellml2sbml, "build_document", inconsistent_build_document)
 
     out = tmp_path / "out.xml"
-    assert main_cellml2sbml([str(path), "-o", str(out)]) == 1
+    # the patched document comes from the python engine
+    python = ["--engine", "python"]
+    assert main_cellml2sbml([str(path), "-o", str(out), *python]) == 1
     assert not out.exists()
-    assert main_cellml2sbml([str(path), "-o", str(out), "--no-validate"]) == 0
+    assert main_cellml2sbml([str(path), "-o", str(out), "--no-validate", *python]) == 0
     assert out.is_file()

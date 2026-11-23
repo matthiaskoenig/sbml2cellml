@@ -2,6 +2,8 @@
 
 `sbml2cellml` requires python 3.14 and is available from [pypi](https://pypi.org/project/sbml2cellml). The dependencies [python-libsbml](https://pypi.org/project/python-libsbml/) and [libcellml](https://pypi.org/project/libcellml/) ship wheels for Linux, macOS and Windows.
 
+The package holds the rust module `sbml2cellml._rust`, which converts a CellML model to SBML in the process (see [Engines](conversion.md#engines)). Wheels with it are published for Linux (x86_64, aarch64), macOS (Intel, Apple silicon) and Windows (x86_64); they use the stable ABI of python 3.14, so one wheel per platform serves every later version as well. An installation from the source distribution builds the module and needs a [rust toolchain](https://rustup.rs), which `rust-toolchain.toml` pins.
+
 ## With uv
 
 ```bash

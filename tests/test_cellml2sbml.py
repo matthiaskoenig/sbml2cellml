@@ -182,30 +182,72 @@ def test_reset_target_on_connected_copy_is_not_constant() -> None:
     assert validate_document(doc) == []
 
 
-def test_convert_nla_model_raises(tmp_path: Path) -> None:
+def test_convert_nla_model_with_the_rust_engine(tmp_path: Path) -> None:
+    """An implicit system without a guess becomes two algebraic rules.
+
+    The analyser of libcellml refuses such a model, since it has no initial
+    value to start the solver from, which the rust converter does not need:
+    SBML writes the system and leaves the guess to the simulator.
+    """
+    cellml_path = tmp_path / "nla.cellml"
+    write_model(nla_model(), cellml_path)
+    doc = convert_cellml2sbml(cellml_path)
+    model_sbml: libsbml.Model = doc.getModel()
+    rules = [r for r in model_sbml.getListOfRules() if r.isAlgebraic()]
+    assert [libsbml.formulaToL3String(r.getMath()) for r in rules] == [
+        "x + y - 4 dimensionless",
+        "x - y - 2 dimensionless",
+    ]
+    assert validate_document(doc) == []
+
+
+def test_convert_nla_model_with_the_python_engine_raises(tmp_path: Path) -> None:
     cellml_path = tmp_path / "nla.cellml"
     write_model(nla_model(), cellml_path)
     with pytest.raises(
         CellML2SBMLConversionError, match="cannot be analysed"
     ) as excinfo:
-        convert_cellml2sbml(cellml_path)
+        convert_cellml2sbml(cellml_path, engine="python")
     assert "x" in str(excinfo.value) and "y" in str(excinfo.value)
 
 
-def test_convert_dae_model_has_an_algebraic_rule(tmp_path: Path) -> None:
-    """An implicit equation becomes the algebraic rule `0 = left - right`."""
+def _dae_model_path(tmp_path: Path) -> Path:
+    """`a = x` with an initial value of `a`, which libcellml reads as implicit."""
     cellml_path = tmp_path / "dae.cellml"
     model = math_model({"a": "<ci>x</ci>"})
     # with an initial value (the guess of the solver) `a = x` is implicit
     model.component("main").variable("a").setInitialValue(1.0)
     write_model(model, cellml_path)
-    doc = convert_cellml2sbml(cellml_path)
+    return cellml_path
+
+
+def test_convert_dae_model_has_an_algebraic_rule(tmp_path: Path) -> None:
+    """An implicit equation becomes the algebraic rule `0 = left - right`."""
+    doc = convert_cellml2sbml(_dae_model_path(tmp_path), engine="python")
     model_sbml: libsbml.Model = doc.getModel()
     rules = [r for r in model_sbml.getListOfRules() if r.isAlgebraic()]
     assert [libsbml.formulaToL3String(r.getMath()) for r in rules] == ["a - x"]
     a: libsbml.Parameter = model_sbml.getParameter("a")
     assert a.getConstant() is False and a.getValue() == 1.0
     assert model_sbml.getRuleByVariable("x").isRate()
+    assert validate_document(doc) == []
+
+
+def test_dae_model_is_an_assignment_rule_with_the_rust_engine(tmp_path: Path) -> None:
+    """`a = x` determines `a`, which the rust converter writes as a rule.
+
+    The variable has an initial value, which the analyser of libcellml
+    takes for the guess of an implicit equation; the equation determines
+    `a` explicitly, so the rust converter writes an assignment rule and
+    leaves the initial value out, since the rule holds at every time.
+    """
+    doc = convert_cellml2sbml(_dae_model_path(tmp_path))
+    model_sbml: libsbml.Model = doc.getModel()
+    rule = model_sbml.getRuleByVariable("a")
+    assert rule.isAssignment()
+    assert libsbml.formulaToL3String(rule.getMath()) == "x"
+    a: libsbml.Parameter = model_sbml.getParameter("a")
+    assert a.getConstant() is False and not a.isSetValue()
     assert validate_document(doc) == []
 
 
@@ -310,10 +352,10 @@ def test_validate_raises_on_inconsistent_document(
     monkeypatch.setattr(cellml2sbml, "build_document", inconsistent_build_document)
 
     with pytest.raises(SBMLValidationError):
-        convert_cellml2sbml(path)
+        convert_cellml2sbml(path, engine="python")
 
     out = tmp_path / "out.xml"
-    convert_cellml2sbml(path, sbml_path=out, validate=False)
+    convert_cellml2sbml(path, sbml_path=out, validate=False, engine="python")
     assert out.is_file()
 
 
@@ -422,3 +464,20 @@ def test_roundtrip_of_an_event(tmp_path: Path) -> None:
     # the condition of the trigger variable is the trigger of the event again
     trigger = libsbml.formulaToL3String(event.getTrigger().getMath())
     assert trigger.startswith("time > 10")
+
+
+def test_a_single_argument_plus_is_written_without_the_operator(
+    tmp_path: Path,
+) -> None:
+    """MathML allows `plus(x)`, which is `x`: both engines write the value."""
+    cellml_path = tmp_path / "single.cellml"
+    model = math_model({"a": "<apply><plus/><ci>x</ci></apply>"})
+    write_model(model, cellml_path)
+    for engine in ("python", "rust"):
+        doc = convert_cellml2sbml(cellml_path, engine=engine, validate=False)
+        rules = [
+            libsbml.formulaToL3String(rule.getMath())
+            for rule in doc.getModel().getListOfRules()
+        ]
+        assert "x" in rules, (engine, rules)
+        assert not any("plus(" in rule for rule in rules), (engine, rules)

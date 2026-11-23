@@ -1,7 +1,9 @@
 //! The XML of an SBML document.
 
 use crate::math::Math;
-use crate::model::{Document, InitialAssignment, Model, Parameter, Rule, Unit, UnitDefinition};
+use crate::model::{
+    Document, Event, InitialAssignment, Model, Parameter, Rule, Unit, UnitDefinition,
+};
 use std::fmt::Write as _;
 
 /// The namespace of SBML level 3 version 2 core.
@@ -140,8 +142,63 @@ fn write_model(out: &mut String, model: &Model, depth: usize) {
         out.push_str("</listOfRules>\n");
     }
 
+    if !model.events.is_empty() {
+        indent(out, depth + 1);
+        out.push_str("<listOfEvents>\n");
+        for event in &model.events {
+            write_event(out, event, depth + 2);
+        }
+        indent(out, depth + 1);
+        out.push_str("</listOfEvents>\n");
+    }
+
     indent(out, depth);
     out.push_str("</model>\n");
+}
+
+/// Write an event, its trigger, its priority and its assignments.
+fn write_event(out: &mut String, event: &Event, depth: usize) {
+    indent(out, depth);
+    let _ = writeln!(
+        out,
+        "<event id=\"{}\" useValuesFromTriggerTime=\"true\">",
+        escape(&event.id)
+    );
+    indent(out, depth + 1);
+    let _ = writeln!(
+        out,
+        "<trigger persistent=\"{}\" initialValue=\"{}\">",
+        event.trigger.persistent, event.trigger.initial_value
+    );
+    write_math(out, &event.trigger.math, depth + 2);
+    indent(out, depth + 1);
+    out.push_str("</trigger>\n");
+    if let Some(priority) = &event.priority {
+        indent(out, depth + 1);
+        out.push_str("<priority>\n");
+        write_math(out, priority, depth + 2);
+        indent(out, depth + 1);
+        out.push_str("</priority>\n");
+    }
+    if !event.assignments.is_empty() {
+        indent(out, depth + 1);
+        out.push_str("<listOfEventAssignments>\n");
+        for assignment in &event.assignments {
+            indent(out, depth + 2);
+            let _ = writeln!(
+                out,
+                "<eventAssignment variable=\"{}\">",
+                escape(&assignment.variable)
+            );
+            write_math(out, &assignment.math, depth + 3);
+            indent(out, depth + 2);
+            out.push_str("</eventAssignment>\n");
+        }
+        indent(out, depth + 1);
+        out.push_str("</listOfEventAssignments>\n");
+    }
+    indent(out, depth);
+    out.push_str("</event>\n");
 }
 
 /// Write a unit definition and its units.

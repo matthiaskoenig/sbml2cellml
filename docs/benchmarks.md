@@ -27,9 +27,9 @@ The setup is everything a simulator does with a model before it integrates: read
 
 | check | models | sbmlsim-core | libopencor | ratio | libopencor faster | sbmlsim-core sum | libopencor sum |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [SBML test suite](testsuite.md) | 1153 | 0.92 ms | 4.5 ms | 5.10 | 88 of 1153 | 1.4 s | 5.4 s |
-| [BioModels](biomodels.md) | 939 | 23 ms | 15 ms | 0.64 | 824 of 939 | 1.9 min | 54.3 s |
-| [Physiome Model Repository](physiome.md) | 58 | 4.2 ms | 21 ms | 3.88 | 2 of 58 | 1.9 s | 3.5 s |
+| [SBML test suite](testsuite.md) | 1153 | 2.7 ms | 11 ms | 5.00 | 91 of 1153 | 3.8 s | 16.8 s |
+| [BioModels](biomodels.md) | 939 | 29 ms | 18 ms | 0.63 | 838 of 939 | 1.6 min | 55.4 s |
+| [Physiome Model Repository](physiome.md) | 57 | 5.7 ms | 21 ms | 3.69 | 2 of 57 | 1.6 s | 3.2 s |
 
 ## Integration
 
@@ -40,9 +40,9 @@ The integration is the run of the solver over the output grid, the same grid and
 
 | check | models | sbmlsim-core | libopencor | ratio | libopencor faster | sbmlsim-core sum | libopencor sum |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [SBML test suite](testsuite.md) | 1153 | 0.07 ms | 0.06 ms | 0.91 | 818 of 1153 | 71 ms | 64 ms |
-| [BioModels](biomodels.md) | 939 | 0.41 ms | 0.37 ms | 0.88 | 661 of 939 | 1.6 s | 2.6 s |
-| [Physiome Model Repository](physiome.md) | 58 | 0.89 ms | 0.75 ms | 0.78 | 50 of 58 | 1.3 s | 1.3 s |
+| [SBML test suite](testsuite.md) | 1153 | 0.16 ms | 0.13 ms | 0.85 | 788 of 1153 | 513 ms | 275 ms |
+| [BioModels](biomodels.md) | 939 | 0.48 ms | 0.43 ms | 0.88 | 651 of 939 | 1.8 s | 3.2 s |
+| [Physiome Model Repository](physiome.md) | 57 | 0.92 ms | 0.61 ms | 0.77 | 47 of 57 | 1.1 s | 1.0 s |
 
 ## Total
 
@@ -53,9 +53,9 @@ The setup and the integration of a model together, what a simulator costs for a 
 
 | check | models | sbmlsim-core | libopencor | ratio | libopencor faster | sbmlsim-core sum | libopencor sum |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [SBML test suite](testsuite.md) | 1153 | 1.0 ms | 4.5 ms | 4.80 | 88 of 1153 | 1.5 s | 5.4 s |
-| [BioModels](biomodels.md) | 939 | 24 ms | 15 ms | 0.65 | 822 of 939 | 1.9 min | 56.9 s |
-| [Physiome Model Repository](physiome.md) | 58 | 5.6 ms | 21 ms | 3.40 | 1 of 58 | 3.2 s | 4.8 s |
+| [SBML test suite](testsuite.md) | 1153 | 3.0 ms | 12 ms | 4.59 | 95 of 1153 | 4.3 s | 17.1 s |
+| [BioModels](biomodels.md) | 939 | 29 ms | 18 ms | 0.64 | 839 of 939 | 1.6 min | 58.6 s |
+| [Physiome Model Repository](physiome.md) | 57 | 6.4 ms | 21 ms | 3.21 | 2 of 57 | 2.6 s | 4.2 s |
 
 ## Slowest models
 
@@ -65,28 +65,28 @@ The 5 models of every check with the longest integration, by the longer of the t
 
 | model | sbmlsim-core | libopencor | ratio |
 | --- | --- | --- | --- |
-| 01395 | 0.62 ms | 0.60 ms | 0.97 |
-| 01563 | 0.09 ms | 0.54 ms | 5.93 |
-| 00201 | 0.21 ms | 0.17 ms | 0.80 |
-| 00160 | 0.20 ms | 0.14 ms | 0.70 |
-| 01168 | 0.20 ms | 0.17 ms | 0.82 |
+| 00136 | 0.20 ms | 31 ms | 154.77 |
+| 00340 | 28 ms | 0.22 ms | 0.01 |
+| 00258 | 28 ms | 6.4 ms | 0.23 |
+| 00266 | 13 ms | 0.19 ms | 0.01 |
+| 00581 | 13 ms | 0.14 ms | 0.01 |
 
 ### BioModels
 
 | model | name | sbmlsim-core | libopencor | ratio |
 | --- | --- | --- | --- | --- |
-| [BIOMD0000000579](https://www.ebi.ac.uk/biomodels/BIOMD0000000579) | Sengupta2015 - Knowledge base model of human energy pool network (HEPNet) | 40 ms | 204 ms | 5.14 |
-| [BIOMD0000001099](https://www.ebi.ac.uk/biomodels/BIOMD0000001099) | Richards2016 - Genome-scale metabolic reconstruction of Methanococcus maripaludis (iMR539) | 0.42 ms | 161 ms | 384.25 |
-| [BIOMD0000000206](https://www.ebi.ac.uk/biomodels/BIOMD0000000206) | Wolf2000_Glycolytic_Oscillations | 154 ms | 120 ms | 0.78 |
-| [BIOMD0000000497](https://www.ebi.ac.uk/biomodels/BIOMD0000000497) | Stanford2013 - Kinetic model of yeast metabolic network (regulation) | 14 ms | 107 ms | 7.59 |
-| [BIOMD0000000469](https://www.ebi.ac.uk/biomodels/BIOMD0000000469) | Smallbone2013 - E.coli metabolic model with linlog rate law | 2.3 ms | 96 ms | 41.20 |
+| [BIOMD0000001099](https://www.ebi.ac.uk/biomodels/BIOMD0000001099) | Richards2016 - Genome-scale metabolic reconstruction of Methanococcus maripaludis (iMR539) | 1.4 ms | 809 ms | 582.01 |
+| [BIOMD0000000206](https://www.ebi.ac.uk/biomodels/BIOMD0000000206) | Wolf2000_Glycolytic_Oscillations | 154 ms | 121 ms | 0.79 |
+| [BIOMD0000000469](https://www.ebi.ac.uk/biomodels/BIOMD0000000469) | Smallbone2013 - E.coli metabolic model with linlog rate law | 2.4 ms | 116 ms | 47.54 |
+| [BIOMD0000000470](https://www.ebi.ac.uk/biomodels/BIOMD0000000470) | Smallbone2013 - E.coli metabolic model with modular rate law | 2.6 ms | 113 ms | 43.80 |
+| [BIOMD0000000497](https://www.ebi.ac.uk/biomodels/BIOMD0000000497) | Stanford2013 - Kinetic model of yeast metabolic network (regulation) | 14 ms | 106 ms | 7.31 |
 
 ### Physiome Model Repository
 
 | model | name | sbmlsim-core | libopencor | ratio |
 | --- | --- | --- | --- | --- |
-| [139](https://models.physiomeproject.org/e/139) | An updated computational model of rabbit sinoatrial action potential to investigate the mechanisms of heart rate modulation. | 495 ms | 548 ms | 1.11 |
-| [594](https://models.physiomeproject.org/e/594) | Paci, Hyttinen, Aalto-Setala, Severi 2013 HiPSC models | 353 ms | 272 ms | 0.77 |
-| [48a](https://models.physiomeproject.org/e/48a) | Computational analysis of the human sinus node action potential: model development and effects of mutations | 286 ms | 303 ms | 1.06 |
-| [2a6](https://models.physiomeproject.org/e/2a6) | Noble, 1962 | 78 ms | 78 ms | 1.00 |
-| [53](https://models.physiomeproject.org/e/53) | Schoeberl, Eichler-Jonsson, Gilles, Muller, 2002 | 12 ms | 20 ms | 1.68 |
+| [139](https://models.physiomeproject.org/e/139) | An updated computational model of rabbit sinoatrial action potential to investigate the mechanisms of heart rate modulation. | 491 ms | 531 ms | 1.08 |
+| [594](https://models.physiomeproject.org/e/594) | Paci, Hyttinen, Aalto-Setala, Severi 2013 HiPSC models | 342 ms | 274 ms | 0.80 |
+| [2a6](https://models.physiomeproject.org/e/2a6) | Noble, 1962 | 81 ms | 71 ms | 0.88 |
+| [53](https://models.physiomeproject.org/e/53) | Schoeberl, Eichler-Jonsson, Gilles, Muller, 2002 | 12 ms | 20 ms | 1.74 |
+| [41](https://models.physiomeproject.org/e/41) | Bondarenko, Szigeti, Bett, Kim, Rasmusson, 2004 | 13 ms | 14 ms | 1.05 |
