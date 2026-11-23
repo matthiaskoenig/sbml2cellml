@@ -135,7 +135,7 @@ def test_unsupported_node_raises() -> None:
         analyser_model.analyserEquation(k)
         for k in range(analyser_model.analyserEquationCount())
         if analyser_model.analyserEquation(k).type()
-        == libcellml.AnalyserEquation.Type.ODE  # ty: ignore[unresolved-attribute]
+        == libcellml.AnalyserEquation.Type.ODE  # ty: ignore[missing-attribute]
     )
     # the derivative of the left side of an ODE is `rateOf` in an expression,
     # the variable of integration below it has no SBML counterpart

@@ -16,9 +16,9 @@ import libcellml
 
 #: name of every issue level of libcellml
 LEVEL_NAMES: dict[int, str] = {
-    libcellml.Issue.Level.ERROR: "ERROR",  # ty: ignore[unresolved-attribute]
-    libcellml.Issue.Level.WARNING: "WARNING",  # ty: ignore[unresolved-attribute]
-    libcellml.Issue.Level.MESSAGE: "MESSAGE",  # ty: ignore[unresolved-attribute]
+    libcellml.Issue.Level.ERROR: "ERROR",  # ty: ignore[missing-attribute]
+    libcellml.Issue.Level.WARNING: "WARNING",  # ty: ignore[missing-attribute]
+    libcellml.Issue.Level.MESSAGE: "MESSAGE",  # ty: ignore[missing-attribute]
 }
 
 
@@ -65,7 +65,7 @@ def errors(issues: list[libcellml.Issue]) -> list[libcellml.Issue]:
     Returns:
         The subset of issues with level `ERROR`.
     """
-    return [issue for issue in issues if issue.level() == libcellml.Issue.Level.ERROR]  # ty: ignore[unresolved-attribute]
+    return [issue for issue in issues if issue.level() == libcellml.Issue.Level.ERROR]  # ty: ignore[missing-attribute]
 
 
 def model_to_string(model: libcellml.Model) -> str:

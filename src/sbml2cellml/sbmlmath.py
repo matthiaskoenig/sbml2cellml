@@ -25,7 +25,7 @@ from sbml2cellml.variables import VariableIds
 
 logger = logging.getLogger(__name__)
 
-AstType = libcellml.AnalyserEquationAst.Type  # ty: ignore[unresolved-attribute]
+AstType = libcellml.AnalyserEquationAst.Type  # ty: ignore[missing-attribute]
 
 #: name of the SBML time symbol in formulas
 TIME_ID = "time"

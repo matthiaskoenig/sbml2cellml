@@ -53,7 +53,7 @@ def analyse(model: libcellml.Model) -> libcellml.AnalyserModel:
     errors = [
         analyser.issue(k).description()
         for k in range(analyser.issueCount())
-        if analyser.issue(k).level() == libcellml.Issue.Level.ERROR  # ty: ignore[unresolved-attribute]
+        if analyser.issue(k).level() == libcellml.Issue.Level.ERROR  # ty: ignore[missing-attribute]
     ]
     assert not errors, errors
     return analyser.analyserModel()
