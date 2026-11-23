@@ -35,11 +35,11 @@ The two simulators integrate with the same relative tolerance and with an absolu
 
 | stage | simulator | model | simulations | setup median | integration median | integration p95 | integration slowest | integration total |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| libopencor | libopencor | CellML model | 62 | 21 ms | 0.82 ms | 74 ms | 517 ms | 1.3 s |
-| sbmlsim | sbmlsim-core | SBML model | 60 | 6.1 ms | 0.97 ms | 78 ms | 491 ms | 1.4 s |
-| roundtrip | libopencor | roundtrip CellML model | 62 | 18 ms | 0.87 ms | 81 ms | 511 ms | 1.3 s |
+| libopencor | libopencor | CellML model | 62 | 21 ms | 0.87 ms | 75 ms | 532 ms | 1.3 s |
+| sbmlsim | sbmlsim-core | SBML model | 60 | 4.5 ms | 1.0 ms | 83 ms | 494 ms | 1.4 s |
+| roundtrip | libopencor | roundtrip CellML model | 62 | 18 ms | 0.88 ms | 75 ms | 518 ms | 1.3 s |
 
-The two simulators integrate the same dynamics for 57 cases, those whose SBML model reproduces the expected results. libopencor is 1.3 times faster than sbmlsim-core for the median of them and faster for 51; over these cases the medians are 0.89 ms for sbmlsim-core and 0.59 ms for libopencor.
+The two simulators integrate the same dynamics for 57 cases, those whose SBML model reproduces the expected results. libopencor is 1.3 times faster than sbmlsim-core for the median of them and faster for 50; over these cases the medians are 0.95 ms for sbmlsim-core and 0.59 ms for libopencor.
 
 ## Failure reasons
 

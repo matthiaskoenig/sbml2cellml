@@ -50,7 +50,7 @@ dependencies = [
 # (`sbml2cellml.sbmlsim`), results and plots
 simulate = [
 	"libopencor>=1.20261113.0",
-	"sbmlsim-core>=0.19.0",
+	"sbmlsim-core>=0.22.0",
 	"pandas>=3.0.5",
 	"matplotlib>=3.11.1",
 ]
