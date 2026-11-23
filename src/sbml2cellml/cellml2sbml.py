@@ -4,9 +4,11 @@ The conversion runs in rust (`sbml2cellml.rust`, the crates of `crates/`),
 which reads the document and writes the SBML itself, and in python through
 libcellml, which this module implements; `rust.ENGINES` names the two and
 `convert_cellml2sbml` takes the one to use, `"auto"` by default: the rust
-engine, and the python engine for what rust does not do (the metadata of
-the elements and the hierarchical conversion). The document of a model
-whose components are imported is flattened with libcellml before the rust
+engine, and the python engine for the hierarchical conversion, which rust
+does not write, and for a model it refuses. The metadata of the elements is
+applied for both engines, since the rust conversion gives the SBML element
+of every CellML element with an id. The document of a model whose
+components are imported is flattened with libcellml before the rust
 converter reads it.
 
 The libcellml analyser classifies the variables and equations of the model
@@ -102,10 +104,9 @@ def convert_cellml2sbml(
             `build_hierarchical_document`) instead of one flat model.
         engine: `"rust"` converts with the rust crates
             (`sbml2cellml.rust`), `"python"` with libcellml and the code of
-            this module, `"auto"` (the default) with rust where it covers
-            the conversion, which the metadata of the elements and the
-            hierarchical conversion are not part of, and with python for
-            the rest and for a model the rust converter refuses.
+            this module, `"auto"` (the default) with rust and with python
+            for the hierarchical conversion, which the rust converter does
+            not write, and for a model it refuses.
 
     Returns:
         The SBML document.
@@ -125,16 +126,16 @@ def convert_cellml2sbml(
     records = _read_records(cellml_path) if metadata else {}
     doc = None
     if engine != "python":
-        reason = _without_rust(records, hierarchical)
-        if reason is not None and engine == "rust":
-            raise CellML2SBMLConversionError(
-                f"The rust engine cannot convert '{cellml_path}': {reason}"
-            )
-        if reason is not None:
+        if hierarchical:
+            reason = "the hierarchical conversion is implemented in python only"
+            if engine == "rust":
+                raise CellML2SBMLConversionError(
+                    f"The rust engine cannot convert '{cellml_path}': {reason}"
+                )
             logger.info("The python engine converts '%s': %s", cellml_path, reason)
         else:
             try:
-                doc = _convert_with_rust(cellml_path)
+                doc = _convert_with_rust(cellml_path, records)
             except rust.RustError as err:
                 if engine == "rust":
                     raise CellML2SBMLConversionError(
@@ -185,35 +186,21 @@ def _read_records(cellml_path: Path) -> dict[str, Record]:
     return records
 
 
-def _without_rust(records: dict[str, Record], hierarchical: bool) -> str | None:
-    """Why the rust engine cannot convert a model, or `None` when it can.
-
-    Args:
-        records: the metadata of the elements, which the rust converter
-            does not write.
-        hierarchical: whether the components become submodels of `comp`,
-            which the rust converter does not write either.
-
-    Returns:
-        What the rust engine does not cover, `None` when it covers the
-        conversion.
-    """
-    if hierarchical:
-        return "the hierarchical conversion is implemented in python only"
-    if records:
-        return f"the metadata of {len(records)} elements is applied by python"
-    return None
-
-
-def _convert_with_rust(cellml_path: Path) -> libsbml.SBMLDocument:
+def _convert_with_rust(
+    cellml_path: Path, records: dict[str, Record]
+) -> libsbml.SBMLDocument:
     """Convert a CellML file with the rust converter.
 
     The document is handed over as it is, unless it imports a component or
     units: libcellml flattens such a model first, since the rust crates
-    resolve no import and read no file.
+    resolve no import and read no file. The conversion gives the SBML
+    element of every CellML element with an id, which the metadata of the
+    elements is applied to (`_apply_records`).
 
     Args:
         cellml_path: path of the CellML file.
+        records: the metadata of the elements, by the id of the CellML
+            element.
 
     Returns:
         The SBML document, read from the text the rust converter writes.
@@ -226,7 +213,7 @@ def _convert_with_rust(cellml_path: Path) -> libsbml.SBMLDocument:
     if rust.has_imports(text):
         logger.info("Flattening the imports of '%s' with libcellml", cellml_path)
         text = cellml.model_to_string(read_cellml_model(cellml_path))
-    sbml_text, warnings = rust.convert_cellml_to_sbml(text)
+    sbml_text, warnings, mappings = rust.convert_cellml_to_sbml(text)
     for warning in warnings:
         logger.warning("%s", warning)
     doc: libsbml.SBMLDocument = libsbml.readSBMLFromString(sbml_text)
@@ -239,7 +226,54 @@ def _convert_with_rust(cellml_path: Path) -> libsbml.SBMLDocument:
         cellml_path,
         doc.getModel().getId(),
     )
+    _apply_records(doc.getModel(), mappings, records)
     return doc
+
+
+def _apply_records(
+    model_sbml: libsbml.Model,
+    mappings: list[rust.Mapping],
+    records: dict[str, Record],
+) -> None:
+    """Set the metadata of the elements on the SBML model of a conversion.
+
+    The conversion gives the SBML element of every CellML element with an
+    id, which is the subject of its metadata: the model itself, a unit
+    definition or the parameter of the equivalence set of a variable. The
+    id is the metaid of the SBML element, as in `_add_metadata` of the
+    python engine, and the first record of a parameter wins.
+
+    Args:
+        model_sbml: the SBML model of the conversion.
+        mappings: the SBML element of every CellML element with an id.
+        records: the metadata of the elements, by that id.
+    """
+    elements: dict[str, libsbml.SBase] = {}
+    for cid, kind, sid in mappings:
+        if cid in elements:
+            continue
+        element: libsbml.SBase | None
+        if kind == "model":
+            element = model_sbml
+        elif kind == "units":
+            element = model_sbml.getUnitDefinition(sid)
+        else:
+            element = model_sbml.getParameter(sid)
+        if element is not None:
+            elements[cid] = element
+
+    applied: set[str] = set()
+    for cid, record in records.items():
+        element = elements.get(cid)
+        if element is None:
+            logger.info("Metadata of '%s' has no element in the SBML model", cid)
+            continue
+        key = f"{element.getTypeCode()}:{element.getId()}"
+        if key in applied:
+            logger.info("Metadata of '%s' ignored, its parameter has some", cid)
+            continue
+        applied.add(key)
+        apply_metadata(element, record, cid)
 
 
 def _convert_with_python(

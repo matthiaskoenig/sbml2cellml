@@ -12,6 +12,9 @@ pub const CELLML_NS_1_1: &str = "http://www.cellml.org/cellml/1.1#";
 pub const CELLML_NS_2_0: &str = "http://www.cellml.org/cellml/2.0#";
 /// The namespace of XLink, which holds the href of an import.
 pub const XLINK_NS: &str = "http://www.w3.org/1999/xlink";
+/// The namespace of the metadata of CellML 1.0 and 1.1, which holds the
+/// `cmeta:id` of an element; CellML 2.0 writes the id as the attribute `id`.
+pub const CMETA_NS: &str = "http://www.cellml.org/metadata/1.0#";
 
 /// The version of a CellML document.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -115,6 +118,8 @@ pub struct Unit {
 pub struct Units {
     /// The name.
     pub name: String,
+    /// The id of the element, which the metadata of a document points at.
+    pub id: Option<String>,
     /// Whether the definition declares new base units (CellML 1.0 and 1.1).
     pub base_units: bool,
     /// The units it is built from, empty for base units and for an import.
@@ -191,6 +196,8 @@ impl Direction {
 pub struct Variable {
     /// The name, unique in its component.
     pub name: String,
+    /// The id of the element, which the metadata of a document points at.
+    pub id: Option<String>,
     /// The name of its units.
     pub units: String,
     /// The initial value as it is written: a number, or the name of
@@ -320,6 +327,8 @@ pub struct Import {
 pub struct Model {
     /// The name.
     pub name: String,
+    /// The id of the element, which the metadata of a document points at.
+    pub id: Option<String>,
     /// The unit definitions of the model.
     pub units: Vec<Units>,
     /// The components, in the order of the document.
@@ -407,6 +416,15 @@ fn attribute(node: X, name: &str) -> Result<String, ReadError> {
         })
 }
 
+/// The id of an element: the attribute `id` of CellML 2.0, the `cmeta:id`
+/// of CellML 1.0 and 1.1, `None` when it has neither.
+fn element_id(node: X) -> Option<String> {
+    node.attribute("id")
+        .or_else(|| node.attribute((CMETA_NS, "id")))
+        .map(str::to_string)
+        .filter(|id| !id.is_empty())
+}
+
 /// A numeric attribute of an element, its default when it has none.
 fn number(node: X, name: &str, default: f64) -> Result<f64, ReadError> {
     match node.attribute(name) {
@@ -433,6 +451,7 @@ fn children<'a>(node: X<'a, 'a>, version: Version) -> impl Iterator<Item = X<'a,
 fn model(root: X, version: Version) -> Result<Model, ReadError> {
     let mut model = Model {
         name: root.attribute("name").unwrap_or_default().to_string(),
+        id: element_id(root),
         units: Vec::new(),
         components: Vec::new(),
         connections: Vec::new(),
@@ -471,6 +490,7 @@ fn model(root: X, version: Version) -> Result<Model, ReadError> {
                 for item in &element.units {
                     model.units.push(Units {
                         name: item.name.clone(),
+                        id: None,
                         base_units: false,
                         units: Vec::new(),
                         import: Some(ImportRef {
@@ -544,6 +564,7 @@ fn normalize_builtin_units(model: &mut Model) {
 fn units(node: X, version: Version) -> Result<Units, ReadError> {
     let mut definition = Units {
         name: attribute(node, "name")?,
+        id: element_id(node),
         base_units: node.attribute("base_units") == Some("yes"),
         units: Vec::new(),
         import: None,
@@ -575,6 +596,7 @@ fn component(node: X, version: Version) -> Result<Component, ReadError> {
         match child.tag_name().name() {
             "variable" => component.variables.push(Variable {
                 name: attribute(child, "name")?,
+                id: element_id(child),
                 units: attribute(child, "units")?,
                 initial_value: child.attribute("initial_value").map(str::to_string),
                 interface: Interface::from_text(child.attribute("interface").unwrap_or_default()),

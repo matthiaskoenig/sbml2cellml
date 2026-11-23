@@ -150,7 +150,13 @@ def test_simplify_operators_splits_an_n_ary_relation() -> None:
 
 def test_simplify_operators_rewrites_quotient_and_implies() -> None:
     """CellML has neither operator, both are expressed with the ones it has."""
-    assert "<floor/>" in process_mathml_for_cellml("quotient(a, b)")
+    # the integer division truncates towards zero: the ceiling of a negative
+    # quotient and the floor of every other one
+    quotient = process_mathml_for_cellml("quotient(a, b)")
+    assert "<piecewise>" in quotient
+    assert "<ceiling/>" in quotient
+    assert "<floor/>" in quotient
+    assert "<lt/>" in quotient
     implies = process_mathml_for_cellml("implies(a, b)")
     assert "<or/>" in implies
     assert "<not/>" in implies

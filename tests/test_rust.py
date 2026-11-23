@@ -23,7 +23,7 @@ TEST_MODEL_PATH = MODELS_DIR / "test_model.cellml"
 
 
 def test_convert_cellml_to_sbml_writes_a_document() -> None:
-    sbml_text, warnings = rust.convert_cellml_to_sbml(
+    sbml_text, warnings, mappings = rust.convert_cellml_to_sbml(
         TEST_MODEL_PATH.read_text(encoding="utf-8")
     )
     doc = libsbml.readSBMLFromString(sbml_text)
@@ -31,6 +31,7 @@ def test_convert_cellml_to_sbml_writes_a_document() -> None:
     assert doc.getModel().getId() == "test_model"
     assert validate_document(doc) == []
     assert warnings == []
+    assert mappings == []  # the test model has no ids
 
 
 def test_a_document_which_is_no_model_raises() -> None:
@@ -134,7 +135,7 @@ def test_auto_converts_with_python_what_rust_refuses(
 ) -> None:
     """A model the rust converter refuses is converted with python."""
 
-    def refuse(text: str) -> tuple[str, list[str]]:
+    def refuse(text: str) -> tuple[str, list[str], list[rust.Mapping]]:
         raise rust.RustError("refused for the test")
 
     monkeypatch.setattr(rust, "convert_cellml_to_sbml", refuse)
@@ -166,13 +167,19 @@ def test_the_engines_give_a_quantity_the_same_id(tmp_path: Path) -> None:
 
 def test_convert_sbml_to_cellml_writes_a_model() -> None:
     sbml_path = MODELS_DIR / "repressilator.xml"
-    cellml_text, warnings = rust.convert_sbml_to_cellml(
+    cellml_text, warnings, origins = rust.convert_sbml_to_cellml(
         sbml_path.read_text(encoding="utf-8"), "repressilator"
     )
     model = cellml.parse_model(cellml_text)
     assert model.name() == "BIOMD0000000012"
     assert cellml.errors(cellml.validate_model(model)) == []
     assert any("unit annotation is incomplete" in warning for warning in warnings)
+    # the SBML element of every CellML element which stands for one, the
+    # model first, as the python converter collects them
+    assert origins[0] == ("BIOMD0000000012", "model", "", "")
+    assert ("cell", "compartment", "cell", "") in origins
+    assert ("PX", "species", "PX", "") in origins
+    assert ("Reaction1", "reaction", "Reaction1", "") in origins
 
 
 def test_a_document_which_is_no_sbml_model_raises() -> None:
@@ -205,20 +212,26 @@ def test_the_rust_engine_converts_the_events_of_a_model(tmp_path: Path) -> None:
     assert component.reset(0).testVariable().name() == "e1_trigger"
 
 
-def test_the_python_engine_writes_the_metadata_of_a_model(tmp_path: Path) -> None:
-    """A model with metadata is converted by python, which writes the RDF."""
+def test_both_engines_write_the_metadata_of_a_model(tmp_path: Path) -> None:
+    """Every engine gives the elements their ids and writes the same RDF."""
     model_sbml = simple_model("annotated")
     annotated_species(model_sbml)
     sbml_path = write_sbml(tmp_path / "annotated.xml", model_sbml)
-    cellml_path = tmp_path / "annotated.cellml"
-    model = convert_sbml2cellml(sbml_path, cellml_path)
-    assert model.component(0).variable("S1").id() == "S1"
-    assert cellml_path.with_suffix(".rdf").is_file()
-    with pytest.raises(SBML2CellMLConversionError, match="metadata"):
-        convert_sbml2cellml(sbml_path, cellml_path, engine="rust")
+    written = {}
+    for engine in ("rust", "python"):
+        cellml_path = tmp_path / f"{engine}.cellml"
+        model = convert_sbml2cellml(sbml_path, cellml_path, engine=engine)
+        assert model.component(0).variable("S1").id() == "S1"
+        assert model.id() == "annotated"
+        rdf = cellml_path.with_suffix(".rdf")
+        assert rdf.is_file()
+        written[engine] = rdf.read_text(encoding="utf-8").replace(
+            f"{engine}.cellml", "model.cellml"
+        )
+    assert written["rust"] == written["python"]
 
 
-def test_the_rust_engine_converts_an_annotated_model_without_the_metadata(
+def test_the_rust_engine_writes_no_metadata_file_without_metadata(
     tmp_path: Path,
 ) -> None:
     model_sbml = simple_model("annotated")
@@ -226,7 +239,9 @@ def test_the_rust_engine_converts_an_annotated_model_without_the_metadata(
     sbml_path = write_sbml(tmp_path / "annotated.xml", model_sbml)
     cellml_path = tmp_path / "annotated.cellml"
     model = convert_sbml2cellml(sbml_path, cellml_path, metadata=False, engine="rust")
-    assert model.component(0).variable("S1").id() == ""
+    # the ids are written whatever the metadata is, as the python engine
+    # writes them
+    assert model.component(0).variable("S1").id() == "S1"
     assert not cellml_path.with_suffix(".rdf").is_file()
 
 
@@ -250,3 +265,40 @@ def test_the_rust_engine_flattens_the_submodels_with_libsbml() -> None:
         MODELS_DIR / "glimepiride_body_flat.xml", metadata=False, engine="rust"
     )
     assert model.component(0).variableCount() > 0
+
+
+def test_both_engines_apply_the_metadata_of_a_model(tmp_path: Path) -> None:
+    """Every engine applies a record to the same element of the SBML model.
+
+    The conversion of the annotated model writes the CellML model with the
+    ids of its elements and the RDF next to it, which both engines read back
+    into the SBML model of the roundtrip.
+    """
+    model_sbml = simple_model("annotated")
+    model_sbml.setName("the annotated model")
+    annotated_species(model_sbml)
+    sbml_path = write_sbml(tmp_path / "annotated.xml", model_sbml)
+    cellml_path = tmp_path / "annotated.cellml"
+    convert_sbml2cellml(sbml_path, cellml_path, engine="rust")
+    assert cellml_path.with_suffix(".rdf").is_file()
+    applied = {}
+    for engine in ("rust", "python"):
+        model = convert_cellml2sbml(cellml_path, engine=engine).getModel()
+        species = model.getParameter("S1")
+        assert species is not None
+        assert species.getMetaId() == "S1"
+        assert species.getName() == "glucose & co"
+        assert species.getSBOTerm() > 0
+        assert model.getName() == "the annotated model"
+        applied[engine] = {
+            element.getId(): (
+                element.getName(),
+                element.getSBOTerm(),
+                element.getMetaId(),
+                element.getAnnotationString(),
+            )
+            for element in [model, *model.getListOfParameters()]
+        }
+    assert applied["rust"] == applied["python"]
+    assert applied["rust"]["S1"][2] == "S1"
+    assert "kegg.compound/C00031" in applied["rust"]["S1"][3]

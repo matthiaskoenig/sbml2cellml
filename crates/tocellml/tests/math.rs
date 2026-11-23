@@ -241,13 +241,17 @@ fn a_sum_of_sums_and_a_product_of_products_are_written_as_one_operator() {
 }
 
 #[test]
-fn the_quotient_is_the_floor_of_the_division() {
+fn the_quotient_truncates_the_division_towards_zero() {
+    let division = || apply("divide", vec![variable("a"), variable("b")]);
     assert_eq!(
         convert("<apply><quotient/><ci>a</ci><ci>b</ci></apply>"),
-        Ok(apply(
-            "floor",
-            vec![apply("divide", vec![variable("a"), variable("b")])]
-        ))
+        Ok(Node::Piecewise {
+            pieces: vec![(
+                apply("ceiling", vec![division()]),
+                apply("lt", vec![division(), number(0.0, "dimensionless")]),
+            )],
+            otherwise: Some(Box::new(apply("floor", vec![division()]))),
+        })
     );
 }
 

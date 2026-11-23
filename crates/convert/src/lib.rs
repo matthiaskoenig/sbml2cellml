@@ -45,12 +45,12 @@ pub mod math;
 pub mod units;
 
 use analysis::{Analysis, AnalysisError, EquationKind, analyse};
-use cellml::{Model, Node};
+use cellml::{Model, Node, VariableRef};
 use ids::Ids;
 use math::{Context, MathError, equality, expression};
 use sbml::{Document, InitialAssignment, Math, Parameter, Rule};
 use thiserror::Error;
-use units::{UnitsError, unit_definitions};
+use units::{UnitIds, UnitsError, unit_definitions};
 
 /// A failure to convert a model.
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
@@ -89,6 +89,45 @@ pub enum ConvertError {
     },
 }
 
+/// What an element of the CellML model became in the SBML model.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Kind {
+    /// The model itself.
+    Model,
+    /// A unit definition.
+    Units,
+    /// The parameter of the equivalence set of a variable.
+    Parameter,
+}
+
+impl Kind {
+    /// The name of the kind, which the python package reads.
+    #[must_use]
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::Model => "model",
+            Self::Units => "units",
+            Self::Parameter => "parameter",
+        }
+    }
+}
+
+/// The SBML element of an element of the CellML model which has an id.
+///
+/// The metadata of a CellML document is the RDF next to it, whose subjects
+/// are the ids of the elements (`sbml2cellml.metadata`), so the python
+/// package needs the element of every id to apply a record to the SBML
+/// model.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Mapping {
+    /// The id of the CellML element.
+    pub id: String,
+    /// What it became.
+    pub kind: Kind,
+    /// The id of the SBML element, the id of the model for [`Kind::Model`].
+    pub sbml: String,
+}
+
 /// The SBML document of a CellML model and what the conversion found.
 #[derive(Debug, Clone)]
 pub struct Conversion {
@@ -96,6 +135,9 @@ pub struct Conversion {
     pub document: Document,
     /// What the conversion is told about, e.g. a variable without a value.
     pub warnings: Vec<String>,
+    /// The SBML element of every CellML element with an id, for the
+    /// metadata of the conversion.
+    pub mappings: Vec<Mapping>,
 }
 
 /// Convert a CellML model to an SBML level 3 version 2 document.
@@ -255,6 +297,8 @@ pub fn convert(model: &Model) -> Result<Conversion, ConvertError> {
         None => None,
     };
 
+    let mappings = mappings(model, &ids, &unit_ids, analysis.voi, &model_id);
+
     Ok(Conversion {
         document: Document {
             model: sbml::Model {
@@ -269,7 +313,63 @@ pub fn convert(model: &Model) -> Result<Conversion, ConvertError> {
             },
         },
         warnings,
+        mappings,
     })
+}
+
+/// The SBML element of every CellML element which has an id.
+///
+/// The elements are the ones the conversion of an SBML model gives an id
+/// (`sbml2cellml.sbml2cellml._set_ids`): the model, the unit definitions and
+/// the variables, whose quantity is one parameter. A variable of an
+/// equivalence set which several members have an id is listed once per
+/// member, in the order of the components, and the caller takes the first.
+fn mappings(
+    model: &Model,
+    ids: &Ids,
+    unit_ids: &UnitIds,
+    voi: Option<usize>,
+    model_id: &str,
+) -> Vec<Mapping> {
+    let mut mappings = Vec::new();
+    if let Some(id) = &model.id {
+        mappings.push(Mapping {
+            id: id.clone(),
+            kind: Kind::Model,
+            sbml: model_id.to_string(),
+        });
+    }
+    for units in &model.units {
+        if let (Some(id), Some(sbml)) = (&units.id, unit_ids.definition(&units.name)) {
+            mappings.push(Mapping {
+                id: id.clone(),
+                kind: Kind::Units,
+                sbml: sbml.to_string(),
+            });
+        }
+    }
+    for (index, component) in model.components.iter().enumerate() {
+        for (position, variable) in component.variables.iter().enumerate() {
+            let Some(id) = &variable.id else {
+                continue;
+            };
+            let reference = VariableRef {
+                component: index,
+                variable: position,
+            };
+            // the variable of integration is the time of SBML and no
+            // parameter of the model
+            let Some(quantity) = ids.quantity(reference).filter(|q| Some(*q) != voi) else {
+                continue;
+            };
+            mappings.push(Mapping {
+                id: id.clone(),
+                kind: Kind::Parameter,
+                sbml: ids.id(quantity).to_string(),
+            });
+        }
+    }
+    mappings
 }
 
 /// The side of an equation which is not the one the test matches.

@@ -88,8 +88,9 @@ def convert_sbml2cellml(
             for a model without metadata.
         engine: which converter writes the model, `"rust"` for the crates of
             the repository (`sbml2cellml.rust`), `"python"` for libsbml,
-            libcellml and this module, and `"auto"` for rust wherever it
-            covers the conversion (`_without_rust`) and python otherwise.
+            libcellml and this module, and `"auto"` for rust, with python
+            for a model the rust converter refuses (a formula with a
+            delay).
 
     Returns:
         The CellML model.
@@ -122,39 +123,30 @@ def convert_sbml2cellml(
     logger.info("Converting SBML model '%s' from '%s'", mid, sbml_path)
 
     model: libcellml.Model | None = None
-    if engine != "python":
-        reason = _without_rust(model_sbml, metadata and cellml_path is not None)
-        if reason is not None and engine == "rust":
-            raise SBML2CellMLConversionError(
-                f"The rust engine cannot convert '{sbml_path}': {reason}"
-            )
-        if reason is not None:
-            logger.info("The python engine converts '%s': %s", sbml_path, reason)
-        else:
-            try:
-                # the text of the file unless libsbml wrote the flattened
-                # document, so that the model is not serialized again
-                text = (
-                    libsbml.writeSBMLToString(doc)
-                    if flattened is not None
-                    else sbml_path.read_text(encoding="utf-8")
-                )
-                model = _convert_with_rust(text, mid)
-            except rust.RustError as err:
-                if engine == "rust":
-                    raise SBML2CellMLConversionError(
-                        f"SBML model of '{sbml_path}' cannot be converted "
-                        f"by the rust engine: {err}"
-                    ) from err
-                logger.warning(
-                    "The rust engine refused '%s', converting with python: %s",
-                    sbml_path,
-                    err,
-                )
-    # the elements the metadata of the CellML model stands for, which only the
-    # python engine knows: the rust engine converts a model without metadata
-    # (`_without_rust`)
+    # the SBML element of every CellML element which stands for one, for the
+    # metadata of the model
     elements: dict[str, libsbml.SBase] = {}
+    if engine != "python":
+        try:
+            # the text of the file unless libsbml wrote the flattened
+            # document, so that the model is not serialized again
+            text = (
+                libsbml.writeSBMLToString(doc)
+                if flattened is not None
+                else sbml_path.read_text(encoding="utf-8")
+            )
+            model, elements = _convert_with_rust(text, mid, model_sbml)
+        except rust.RustError as err:
+            if engine == "rust":
+                raise SBML2CellMLConversionError(
+                    f"SBML model of '{sbml_path}' cannot be converted "
+                    f"by the rust engine: {err}"
+                ) from err
+            logger.warning(
+                "The rust engine refused '%s', converting with python: %s",
+                sbml_path,
+                err,
+            )
     if model is None:
         model, elements = _convert_with_python(doc, mid)
 
@@ -175,75 +167,87 @@ def convert_sbml2cellml(
     return model
 
 
-def _without_rust(model_sbml: libsbml.Model, metadata: bool) -> str | None:
-    """Why the rust engine cannot convert a model, or `None` when it can.
-
-    Args:
-        model_sbml: the SBML model.
-        metadata: whether the metadata of the elements is written, which the
-            rust converter does not write: it writes no `id` for the RDF to
-            point at.
-
-    Returns:
-        What the rust engine does not cover, `None` when it covers the
-        conversion.
-    """
-    if metadata and _has_metadata(model_sbml):
-        return "the metadata of the elements is written by python"
-    return None
-
-
-def _has_metadata(model_sbml: libsbml.Model) -> bool:
-    """Whether the model or one of its elements has metadata.
-
-    Args:
-        model_sbml: the SBML model.
-
-    Returns:
-        `True` if an element which becomes a CellML element has a name,
-        notes, an SBO term, CV terms or a history (`sbml2cellml.metadata`).
-    """
-    elements: list[libsbml.SBase] = [
-        model_sbml,
-        *model_sbml.getListOfCompartments(),
-        *model_sbml.getListOfSpecies(),
-        *model_sbml.getListOfParameters(),
-        *model_sbml.getListOfReactions(),
-        *model_sbml.getListOfUnitDefinitions(),
-    ]
-    reaction: libsbml.Reaction
-    for reaction in model_sbml.getListOfReactions():
-        law: libsbml.KineticLaw | None = reaction.getKineticLaw()
-        if law is not None:
-            elements.extend(law.getListOfParameters())
-        elements.extend([*reaction.getListOfReactants(), *reaction.getListOfProducts()])
-    return any(sbml_metadata.element_record(element) for element in elements)
-
-
-def _convert_with_rust(text: str, mid: str) -> libcellml.Model:
+def _convert_with_rust(
+    text: str, mid: str, model_sbml: libsbml.Model
+) -> tuple[libcellml.Model, dict[str, libsbml.SBase]]:
     """Convert an SBML document with the rust converter.
 
     The document is handed over as text, with the submodels of a hierarchical
     model flattened by the caller, since the rust crates read no file and
-    know no package.
+    know no package. The conversion gives the SBML element of every element
+    of the CellML model which stands for one, which `_rust_elements` resolves
+    for the metadata; the ids the metadata points at are set here, as the
+    python engine sets them (`_set_ids`).
 
     Args:
         text: the SBML document, flattened.
         mid: the name of the CellML model.
+        model_sbml: the model of the document, for the metadata.
 
     Returns:
-        The model, parsed from the CellML text the rust converter writes.
+        The model, parsed from the CellML text the rust converter writes,
+        and the SBML element of every CellML element which stands for one.
 
     Raises:
         RustError: if the document cannot be read or converted.
         CellMLValidationError: if the CellML text cannot be parsed.
     """
-    cellml_text, warnings = rust.convert_sbml_to_cellml(text, mid)
+    cellml_text, warnings, origins = rust.convert_sbml_to_cellml(text, mid)
     for warning in warnings:
         logger.warning("%s", warning)
     model = cellml.parse_model(cellml_text, f"model '{mid}' of the rust engine")
+    _set_ids(model)
     logger.info("Converted the model '%s' with the rust engine", mid)
-    return model
+    return model, _rust_elements(model_sbml, model, origins)
+
+
+def _rust_elements(
+    model_sbml: libsbml.Model,
+    model: libcellml.Model,
+    origins: list[rust.Origin],
+) -> dict[str, libsbml.SBase]:
+    """The SBML element of every CellML element of a conversion in rust.
+
+    The rust converter names the element of the CellML model which every
+    SBML element became (`sbml2cellml.rust.Origin`); the id of that element
+    is what the metadata points at (`_set_ids`).
+
+    Args:
+        model_sbml: the SBML model, before libsbml expanded anything.
+        model: the CellML model with its ids.
+        origins: the SBML element of every CellML element, from the rust
+            conversion.
+
+    Returns:
+        The SBML element by the id of its CellML element, as
+        `_metadata_elements` gives it for the python engine.
+    """
+    component: libcellml.Component = model.component(COMPONENT_ID)
+    elements: dict[str, libsbml.SBase] = {}
+    for name, kind, sid, pid in origins:
+        element: libsbml.SBase | None
+        cellml_id: str
+        if kind == "model":
+            element, cellml_id = model_sbml, model.id()
+        elif kind == "units":
+            units: libcellml.Units | None = model.units(name)
+            if units is None:
+                continue
+            element, cellml_id = model_sbml.getUnitDefinition(sid), units.id()
+        else:
+            variable: libcellml.Variable | None = component.variable(name)
+            if variable is None:
+                continue
+            cellml_id = variable.id()
+            if kind == "local_parameter":
+                reaction: libsbml.Reaction | None = model_sbml.getReaction(sid)
+                law = None if reaction is None else reaction.getKineticLaw()
+                element = None if law is None else law.getParameter(pid)
+            else:
+                element = model_sbml.getElementBySId(sid)
+        if element is not None and cellml_id:
+            elements[cellml_id] = element
+    return elements
 
 
 def _convert_with_python(
@@ -593,6 +597,9 @@ class _Formulas:
     time_state: str | None = None
     #: the events of the model, which become resets
     events: list["_Event"] = field(default_factory=list)
+    #: the variable of a stoichiometry which a `<stoichiometryMath>`
+    #: computes, by the reaction, the role and the index of its reference
+    stoichiometries: dict[tuple[str, str, int], str] = field(default_factory=dict)
 
     @property
     def computed(self) -> set[str]:
@@ -631,9 +638,6 @@ def _collect_formulas(model_sbml: libsbml.Model) -> _Formulas:
     replaced by the right-hand side it stands for.
     """
     assignment_rules, rate_rules, algebraic = _collect_rules(model_sbml)
-    algebraic_rules = _match_algebraic_rules(
-        model_sbml, algebraic, set(assignment_rules) | set(rate_rules)
-    )
     model_sbml.populateAllElementIdList()
     ids: libsbml.IdList = model_sbml.getAllElementIdList()
     element_ids = {ids.at(k) for k in range(ids.size())}
@@ -642,6 +646,14 @@ def _collect_formulas(model_sbml: libsbml.Model) -> _Formulas:
     # (the ids of the unit definitions are no variables)
     time_id = unique_sid(TIME_ID, _variable_ids(model_sbml))
     used = element_ids | {time_id}
+    # a stoichiometry which a formula of level 1 or 2 computes is the
+    # equation of a variable, as the assignment rule of a species reference
+    # of level 3 is
+    stoichiometries, stoichiometry_names = _stoichiometries(model_sbml, used)
+    assignment_rules.update(stoichiometries)
+    algebraic_rules = _match_algebraic_rules(
+        model_sbml, algebraic, set(assignment_rules) | set(rate_rules)
+    )
     local_ids = _local_parameter_ids(model_sbml, used)
     determined = set(assignment_rules) | set(rate_rules) | set(algebraic_rules)
     changing = _changing(
@@ -649,7 +661,9 @@ def _collect_formulas(model_sbml: libsbml.Model) -> _Formulas:
     )
     amounts = _amounts(model_sbml, determined, changing, used)
     rates = _kinetic_laws(model_sbml, local_ids)
-    reaction_terms = _collect_reaction_terms(model_sbml, rates, amounts)
+    reaction_terms = _collect_reaction_terms(
+        model_sbml, rates, amounts, stoichiometry_names
+    )
     # CellML knows the variable of integration only from a differential
     # equation: a model whose formulas use time without one gets a state
     # which integrates it, `d time_state / d time = 1`
@@ -669,6 +683,7 @@ def _collect_formulas(model_sbml: libsbml.Model) -> _Formulas:
         time_id,
         time_state,
         _collect_events(model_sbml, used),
+        stoichiometry_names,
     )
     derivatives = result.derivatives
     for formulas in (
@@ -829,6 +844,8 @@ def _variable_units(
             if reference.isSetId():
                 # a stoichiometry has no units
                 units[reference.getId()] = UNITS_ID
+    for name in formulas.stoichiometries.values():
+        units[name] = UNITS_ID
     for rid in reaction_ids:
         units[rid] = cellml_units.of_reaction()
 
@@ -1279,34 +1296,47 @@ def _add_species_references(
     model_sbml: libsbml.Model,
     assigned: set[str],
     units: dict[str, str],
+    stoichiometries: dict[tuple[str, str, int], str],
 ) -> None:
     """Add the species references with an id as variables.
 
     The id of a species reference stands for its stoichiometry in formulas,
     and rules may set it; the variable has the stoichiometry as initial
-    value, none when an assignment rule sets it.
+    value, none when an assignment rule sets it. A reference of level 1 or 2
+    whose `<stoichiometryMath>` computes the stoichiometry gets the variable
+    of that formula (`stoichiometries`), which an equation computes.
     """
     reaction: libsbml.Reaction
     for reaction in model_sbml.getListOfReactions():
-        references = [*reaction.getListOfReactants(), *reaction.getListOfProducts()]
-        for reference in references:
-            if not reference.isSetId():
-                continue
-            vid: str = reference.getId()
-            value = (
-                None
-                if vid in assigned
-                else _initial_value(
-                    vid,
-                    _set_value(
-                        reference.isSetStoichiometry(), reference.getStoichiometry()
-                    ),
+        rid: str = reaction.getId()
+        for role, references in (
+            ("reactant", reaction.getListOfReactants()),
+            ("product", reaction.getListOfProducts()),
+        ):
+            reference: libsbml.SpeciesReference
+            for index, reference in enumerate(references):
+                if not reference.isSetId():
+                    name = stoichiometries.get((rid, role, index))
+                    if name is not None:
+                        _add_variable(component, name, None, units)
+                        logger.info(
+                            "'%s' variable for a stoichiometry of '%s'", name, rid
+                        )
+                    continue
+                vid: str = reference.getId()
+                value = (
+                    None
+                    if vid in assigned
+                    else _initial_value(
+                        vid,
+                        _set_value(
+                            reference.isSetStoichiometry(),
+                            reference.getStoichiometry(),
+                        ),
+                    )
                 )
-            )
-            _add_variable(component, vid, value, units)
-            logger.info(
-                "'%s' variable for a stoichiometry of '%s'", vid, reaction.getId()
-            )
+                _add_variable(component, vid, value, units)
+                logger.info("'%s' variable for a stoichiometry of '%s'", vid, rid)
 
 
 def _kinetic_laws(
@@ -1388,7 +1418,9 @@ def _build_model(
         component, model_sbml, compartment_sizes, assigned, formulas.amounts, units
     )
     _add_local_parameters(component, model_sbml, formulas.local_ids, units)
-    _add_species_references(component, model_sbml, assigned, units)
+    _add_species_references(
+        component, model_sbml, assigned, units, formulas.stoichiometries
+    )
     for rid in reaction_ids:
         _add_variable(component, rid, None, units)
     for event in formulas.events:
@@ -1980,14 +2012,89 @@ def _replace_rate_of(
     return node
 
 
+def _stoichiometry_math(
+    reference: libsbml.SpeciesReference,
+) -> libsbml.ASTNode | None:
+    """The formula of the `<stoichiometryMath>` of a species reference.
+
+    Returns:
+        The formula, `None` for a reference of level 3 and for one whose
+        element has no mathematics.
+    """
+    if not reference.isSetStoichiometryMath():
+        return None
+    math: libsbml.ASTNode | None = reference.getStoichiometryMath().getMath()
+    return math
+
+
+def _stoichiometries(
+    model_sbml: libsbml.Model, used: set[str]
+) -> tuple[dict[str, libsbml.ASTNode], dict[tuple[str, str, int], str]]:
+    """The stoichiometries which a `<stoichiometryMath>` computes.
+
+    Level 1 and 2 state a stoichiometry which changes in time as the
+    `<stoichiometryMath>` of the species reference, where level 3 has an
+    assignment rule of the id of the reference. Such a reference becomes a
+    variable with the formula as its equation, named after the reference
+    when it has an id and `__stoichiometry_<reaction>_<role>_<index>`
+    otherwise, as the reader of SBML of sbmlsim-core names it. A formula
+    which is a number is the stoichiometry itself and needs no variable.
+
+    Args:
+        model_sbml: the SBML model.
+        used: ids which are taken, extended by the names of the variables.
+
+    Returns:
+        The formula by the name of its variable, and the name by the
+        reaction, the role and the index of the species reference.
+    """
+    formulas: dict[str, libsbml.ASTNode] = {}
+    names: dict[tuple[str, str, int], str] = {}
+    reaction: libsbml.Reaction
+    for reaction in model_sbml.getListOfReactions():
+        rid: str = reaction.getId()
+        for role, references in (
+            ("reactant", reaction.getListOfReactants()),
+            ("product", reaction.getListOfProducts()),
+        ):
+            reference: libsbml.SpeciesReference
+            for index, reference in enumerate(references):
+                math = _stoichiometry_math(reference)
+                if math is None or math.isNumber():
+                    continue
+                name = (
+                    reference.getId()
+                    if reference.isSetId()
+                    else unique_sid(f"__stoichiometry_{rid}_{role}_{index}", used)
+                )
+                used.add(name)
+                formulas[name] = math.deepCopy()
+                names[rid, role, index] = name
+                logger.info(
+                    "'%s' variable for the stoichiometryMath of '%s' in '%s'",
+                    name,
+                    reference.getSpecies(),
+                    rid,
+                )
+    return formulas, names
+
+
 def _stoichiometry_factor(
-    reaction_id: str, reference: libsbml.SpeciesReference
+    reaction_id: str, reference: libsbml.SpeciesReference, name: str | None
 ) -> libsbml.ASTNode | None:
     """Factor of the kinetic law for a species reference, `None` for 1.
 
     A stoichiometry which is not set is 1 in SBML level 1 and 2 and unknown
-    in level 3, where 1.0 is used with a warning.
+    in level 3, where 1.0 is used with a warning. `name` is the variable of
+    a stoichiometry which a `<stoichiometryMath>` computes (`_stoichiometries`).
     """
+    if name is not None:
+        return astnodes.name(name)
+    math = _stoichiometry_math(reference)
+    if math is not None and math.isNumber():
+        # the number of the formula is the stoichiometry itself
+        value: float = math.getValue()
+        return None if value == 1.0 else astnodes.number(value)
     if reference.isSetId():
         return astnodes.name(reference.getId())
     if not reference.isSetStoichiometry() and reference.getLevel() >= 3:
@@ -2005,12 +2112,14 @@ def _collect_reaction_terms(
     model_sbml: libsbml.Model,
     rates: dict[str, libsbml.ASTNode],
     amounts: dict[str, _Amount],
+    stoichiometries: dict[tuple[str, str, int], str],
 ) -> dict[str, libsbml.ASTNode]:
     """Collect the rate of change of every species from the rates of its reactions.
 
     The rate of a reaction (the variable of a reaction with a kinetic law,
     `rates`) is in amount per time. Multiplied with
-    the stoichiometry (the variable of a species reference with an id), it
+    the stoichiometry (the variable of a species reference with an id or
+    with a `<stoichiometryMath>`), it
     is subtracted for every reactant and added for every product which is not
     a boundary species (reactions do not change those). The sum is multiplied
     with the conversion factor of the species or else of the model, and for a
@@ -2029,15 +2138,17 @@ def _collect_reaction_terms(
         if rid not in rates:
             continue
         reference: libsbml.SpeciesReference
-        for sign, references in (
-            (libsbml.AST_MINUS, reaction.getListOfReactants()),
-            (libsbml.AST_PLUS, reaction.getListOfProducts()),
+        for sign, role, references in (
+            (libsbml.AST_MINUS, "reactant", reaction.getListOfReactants()),
+            (libsbml.AST_PLUS, "product", reaction.getListOfProducts()),
         ):
-            for reference in references:
+            for index, reference in enumerate(references):
                 sid: str = reference.getSpecies()
                 if model_sbml.getSpecies(sid).getBoundaryCondition():
                     continue
-                factor = _stoichiometry_factor(rid, reference)
+                factor = _stoichiometry_factor(
+                    rid, reference, stoichiometries.get((rid, role, index))
+                )
                 rate = astnodes.name(rid)
                 term = (
                     rate
@@ -2103,12 +2214,16 @@ def _metadata_elements(
             elements[rid] = reaction
         for pid, vid in formulas.local_ids.get(rid, {}).items():
             elements[vid] = reaction.getKineticLaw().getParameter(pid)
-        for reference in [
-            *reaction.getListOfReactants(),
-            *reaction.getListOfProducts(),
-        ]:
-            if reference.isSetId():
-                elements[reference.getId()] = reference
+        for role, references in (
+            ("reactant", reaction.getListOfReactants()),
+            ("product", reaction.getListOfProducts()),
+        ):
+            for index, reference in enumerate(references):
+                name = formulas.stoichiometries.get((rid, role, index))
+                if reference.isSetId():
+                    elements[reference.getId()] = reference
+                elif name is not None:
+                    elements[name] = reference
     definition: libsbml.UnitDefinition
     for definition in model_sbml.getListOfUnitDefinitions():
         units: libcellml.Units | None = model.units(

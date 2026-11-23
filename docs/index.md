@@ -106,6 +106,7 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | reaction | variable of its rate with the kinetic law as equation; the rate times the stoichiometry is added to the differential equation of every reactant and product which is not a boundary species, divided by the size of the compartment for a species in concentration |
 | conversion factor of a species or the model | factor of the reaction terms of the species |
 | species reference with an id | variable of its stoichiometry, which rules may set |
+| `<stoichiometryMath>` of a species reference (level 1 and 2) | variable `__stoichiometry_<reaction>_<role>_<index>` with the formula as its equation, the number itself when the formula is one |
 | reaction id in a formula | the variable of the rate of the reaction |
 | unit definition | units of the same name; the scale becomes the prefix, the multiplier `m` of a unit with the exponent `e` becomes `m^e` (CellML applies the exponent to the prefix only) |
 | unit kinds `item` and `avogadro` | new base units `item`, dimensionless units `avogadro` with the multiplier 6.02214179e23; every other unit kind is a standard unit of CellML |
@@ -125,7 +126,7 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | algebraic rule | implicit equation `0 = formula` for the variable the rule determines, which starts from the solution at the start time; the constants of the rule become equations `y = value` |
 | `plus`, `times`, `and`, `or`, `xor` with less than two arguments | their value (the argument or the identity element) |
 | relation of more than two arguments (`a < b < c`) | the conjunction of its pairs, `and(a < b, b < c)` |
-| `quotient`, `implies` | `floor(a / b)`, `not a or b`: CellML has neither operator |
+| `quotient`, `implies` | `piecewise(ceiling(a / b), a / b < 0, floor(a / b))`, the integer division which truncates towards zero, and `not a or b`: CellML has neither operator |
 | `factorial` | not converted, CellML has no counterpart; an event which uses it is skipped |
 
 The reverse direction, [CellML to SBML](conversion.md#cellml-to-sbml), maps every variable to a parameter with rules and converts units and resets.

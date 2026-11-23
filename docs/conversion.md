@@ -58,7 +58,7 @@ The conversion runs in rust: the crates of [`crates/`](development.md#rust) read
 
 | engine | what it converts |
 | --- | --- |
-| `auto` (the default) | the rust engine, and the python engine for a model whose metadata is written next to the CellML file (`<stem>.rdf`) and for a model the rust converter refuses |
+| `auto` (the default) | the rust engine, and the python engine for a model the rust converter refuses |
 | `rust` | the rust engine only; a model it refuses raises `SBML2CellMLConversionError` |
 | `python` | libsbml, libcellml and the code of `sbml2cellml.sbml2cellml` |
 
@@ -66,7 +66,7 @@ The conversion runs in rust: the crates of [`crates/`](development.md#rust) read
 model = convert_sbml2cellml(Path("model.xml"), engine="python")
 ```
 
-The rust converter writes no `id`, which the metadata of a model points at, so a model with a name, notes, an SBO term, annotations or a history is converted by the python engine unless `metadata=False` or `--no-metadata` says that no metadata is written. A hierarchical model is flattened with libsbml before the rust converter reads it, since the crates know no package; what the rust converter refuses is a formula with a `delay`, which CellML cannot express anyway, and `auto` converts such a model with the python engine.
+The rust conversion also gives the SBML element of every element of the CellML model which stands for one, so both engines write the same metadata next to the same ids. A hierarchical model is flattened with libsbml before the rust converter reads it, since the crates know no package; what the rust converter refuses is a formula with a `delay`, which CellML cannot express anyway, and `auto` converts such a model with the python engine.
 
 Of the 1692 cases of the SBML test suite, 1528 are converted by both engines and 1526 of them give the same CellML model; of the 1075 models of the BioModels check, 1063 are converted by both and 1061 give the same model (`scripts/sbml2cellml_parity.py`, see [development](development.md#rust)).
 
@@ -144,13 +144,15 @@ The conversion runs in rust: the crates of [`crates/`](development.md#rust) read
 
 | engine | what it converts |
 | --- | --- |
-| `auto` (the default) | the rust engine, and the python engine for a model with the metadata of a conversion next to it (`<stem>.rdf`), for the hierarchical conversion and for a model the rust converter refuses |
+| `auto` (the default) | the rust engine, and the python engine for the hierarchical conversion and for a model the rust converter refuses |
 | `rust` | the rust engine only; a model it refuses raises `CellML2SBMLConversionError` |
 | `python` | libcellml and the code of `sbml2cellml.cellml2sbml` |
 
 ```python
 doc = convert_cellml2sbml(Path("model.cellml"), engine="python")
 ```
+
+The metadata of a conversion next to the CellML file (`<stem>.rdf`) is applied by both engines: the rust conversion gives the SBML element of every CellML element with an id, which the record of that id is applied to.
 
 The rust engine converts a model about 48 times faster than the python engine (the median over the models of the [Physiome](physiome.md) selection; the conversion alone, without the libsbml document the python API returns, 288 times), and it converts models the analyser of libcellml refuses, 24 of the 101 models of that selection. A document whose components are imported is flattened with libcellml before the rust converter reads it, since the crates resolve no import and read no file.
 

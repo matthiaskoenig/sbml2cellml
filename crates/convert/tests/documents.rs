@@ -645,3 +645,77 @@ fn an_n_ary_operator_of_one_argument_is_written_as_its_argument() {
     // the sum of the formula is the only operator left
     assert_eq!(xml.matches("<plus/>").count(), 1, "{xml}");
 }
+
+#[test]
+fn the_conversion_gives_the_sbml_element_of_every_element_with_an_id() {
+    // the ids are the ones the conversion of an SBML model writes, which
+    // the metadata of the document points at
+    let text = r#"<model xmlns="http://www.cellml.org/cellml/2.0#" name="decay" id="model_id">
+           <units name="mole_per_second" id="units_id">
+             <unit units="mole"/>
+             <unit units="second" exponent="-1"/>
+           </units>
+           <component name="c">
+             <variable name="t" units="second" interface="none" id="time_id"/>
+             <variable name="x" units="mole" initial_value="10" id="x_id"/>
+             <variable name="k" units="mole_per_second" initial_value="1"/>
+             <math xmlns="http://www.w3.org/1998/Math/MathML">
+               <apply><eq/>
+                 <apply><diff/><bvar><ci>t</ci></bvar><ci>x</ci></apply>
+                 <ci>k</ci>
+               </apply>
+             </math>
+           </component>
+         </model>"#;
+    let document = cellml::read(text).unwrap();
+    let conversion = convert(&document.model).unwrap();
+    let mappings: Vec<(&str, &str, &str)> = conversion
+        .mappings
+        .iter()
+        .map(|mapping| {
+            (
+                mapping.id.as_str(),
+                mapping.kind.name(),
+                mapping.sbml.as_str(),
+            )
+        })
+        .collect();
+    // the variable of integration is the time of SBML and no parameter,
+    // and a variable without an id is no subject of the metadata
+    assert_eq!(
+        mappings,
+        vec![
+            ("model_id", "model", "decay"),
+            ("units_id", "units", "mole_per_second"),
+            ("x_id", "parameter", "x"),
+        ]
+    );
+}
+
+#[test]
+fn a_document_of_cellml_1_0_gives_the_cmeta_id_of_an_element() {
+    let text = r#"<model xmlns="http://www.cellml.org/cellml/1.0#"
+            xmlns:cmeta="http://www.cellml.org/metadata/1.0#"
+            name="decay" cmeta:id="model_id">
+           <component name="c">
+             <variable name="t" units="second"/>
+             <variable name="x" units="mole" initial_value="10" cmeta:id="x_id"/>
+             <math xmlns="http://www.w3.org/1998/Math/MathML">
+               <apply><eq/>
+                 <apply><diff/><bvar><ci>t</ci></bvar><ci>x</ci></apply>
+                 <cn cellml:units="mole"
+                     xmlns:cellml="http://www.cellml.org/cellml/1.0#">-1</cn>
+               </apply>
+             </math>
+           </component>
+         </model>"#;
+    let document = cellml::read(text).unwrap();
+    assert_eq!(document.model.id.as_deref(), Some("model_id"));
+    let conversion = convert(&document.model).unwrap();
+    let ids: Vec<&str> = conversion
+        .mappings
+        .iter()
+        .map(|mapping| mapping.id.as_str())
+        .collect();
+    assert_eq!(ids, vec!["model_id", "x_id"]);
+}

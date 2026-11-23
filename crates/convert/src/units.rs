@@ -106,6 +106,12 @@ impl UnitIds {
             .or_else(|| UnitKind::is_kind(name).then(|| name.to_string()))
     }
 
+    /// The id of the unit definition of a name of units, `None` for units
+    /// of CellML which are the base units of SBML and need no definition.
+    pub fn definition(&self, name: &str) -> Option<&str> {
+        self.ids.get(name).map(String::as_str)
+    }
+
     /// The SBML id of a name of units, the name itself for one the model
     /// does not define, for the message of a warning.
     pub fn id(&self, name: &str) -> String {
