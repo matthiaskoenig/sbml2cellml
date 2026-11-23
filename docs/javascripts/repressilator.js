@@ -8,12 +8,13 @@
  * it opens, so the simulation is the first thing the page shows; a load
  * which fails says so and offers to try again.
  *
- * libopencor reads the CellML document itself. sbmlsim-core takes a model
- * which is compiled ahead of time, so `scripts/build_simulation.py` compiles
- * the SBML model into `simulation/` next to the page and writes the engine
- * and the math library of the simulator and the versions of the two
- * packages, which the JavaScript hosts are loaded for: the browser runs the
- * simulators of the checks of the repository.
+ * libopencor reads the CellML document itself and sbmlsim-core compiles the
+ * SBML document here, with the compiler of its command line as WebAssembly
+ * (`compiler.wasm`): both models of the page are the files the page shows.
+ * `scripts/build_simulation.py` writes the compiler, the engine and the math
+ * library of the simulator into `simulation/` next to the page, with the
+ * versions of the two packages which the JavaScript hosts are loaded for, so
+ * the browser runs the simulators of the checks of the repository.
  */
 
 (() => {
@@ -227,25 +228,34 @@
     }
 
     /**
-     * Load sbmlsim-core and instantiate the compiled model.
+     * Load sbmlsim-core, compile the SBML model of the page and instantiate
+     * it.
+     *
+     * The compiler of sbmlsim-core is a WebAssembly module as its engine is,
+     * so the page compiles the model it shows instead of carrying one which
+     * was compiled for it: what the browser runs is the document of the
+     * [roundtrip example](../roundtrip.md), whatever level of SBML it is.
      *
      * @param {string} version The version of sbmlsim-core.
-     * @param {Object<string, string>} urls The URLs of the model, the
-     *   description, the engine and the math library.
+     * @param {Object<string, string>} urls The URLs of the SBML model, the
+     *   compiler, the engine and the math library.
      * @returns {Promise<Sbml>} The simulation.
      */
     static async load(version, urls) {
-      const { createRuntime } = await import(
-        `${CDN}/sbmlsim-core@${version}/loader.mjs`
-      );
-      const [engine, mathlib, model, description] = await Promise.all([
+      const [{ createCompiler }, { createRuntime }] = await Promise.all([
+        import(`${CDN}/sbmlsim-core@${version}/compile.mjs`),
+        import(`${CDN}/sbmlsim-core@${version}/loader.mjs`),
+      ]);
+      const [compilerWasm, engine, mathlib, sbml] = await Promise.all([
+        fetchBytes(urls.compiler),
         fetchBytes(urls.engine),
         fetchBytes(urls.mathlib),
-        fetchBytes(urls.model),
-        fetchText(urls.description),
+        fetchText(urls.sbml),
       ]);
+      const compiler = await createCompiler({ compiler: compilerWasm });
+      const { wasm, description } = compiler.compile(sbml);
       const runtime = await createRuntime({ engine, mathlib });
-      return new Sbml(await runtime.instantiate(model, description));
+      return new Sbml(await runtime.instantiate(wasm, description));
     }
 
     /**
@@ -303,8 +313,8 @@
       this.root = root;
       this.urls = {
         cellml: root.dataset.cellml,
-        model: root.dataset.model,
-        description: root.dataset.description,
+        sbml: root.dataset.sbml,
+        compiler: root.dataset.compiler,
         engine: root.dataset.engine,
         mathlib: root.dataset.mathlib,
         versions: root.dataset.versions,

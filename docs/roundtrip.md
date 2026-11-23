@@ -8,8 +8,8 @@ The sliders set the parameters of both models, libopencor simulates the CellML m
 
 <div class="simulation" data-simulation
   data-cellml="repressilator.cellml"
-  data-model="simulation/repressilator.wasm"
-  data-description="simulation/repressilator.json"
+  data-sbml="repressilator.xml"
+  data-compiler="simulation/compiler.wasm"
   data-engine="simulation/engine.wasm"
   data-mathlib="simulation/mathlib.wasm"
   data-versions="simulation/versions.json">
