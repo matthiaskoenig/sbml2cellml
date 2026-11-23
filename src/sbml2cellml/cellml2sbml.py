@@ -55,10 +55,10 @@ from sbml2cellml.variables import (
 
 logger = logging.getLogger(__name__)
 
-AstType = libcellml.AnalyserEquationAst.Type  # ty: ignore[unresolved-attribute]
-EquationType = libcellml.AnalyserEquation.Type  # ty: ignore[unresolved-attribute]
-VariableType = libcellml.AnalyserVariable.Type  # ty: ignore[unresolved-attribute]
-ModelType = libcellml.AnalyserModel.Type  # ty: ignore[unresolved-attribute]
+AstType = libcellml.AnalyserEquationAst.Type  # ty: ignore[missing-attribute]
+EquationType = libcellml.AnalyserEquation.Type  # ty: ignore[missing-attribute]
+VariableType = libcellml.AnalyserVariable.Type  # ty: ignore[missing-attribute]
+ModelType = libcellml.AnalyserModel.Type  # ty: ignore[missing-attribute]
 #: model types which can be converted; an implicit (NLA) equation becomes an
 #: algebraic rule
 SUPPORTED_MODEL_TYPES = (
