@@ -178,11 +178,12 @@ impl Units {
             ..Self::default()
         };
         for definition in &model.unit_definitions {
-            // the reader defines the built in units of level 1 and 2 for every
-            // such model; they are the references `substance`, `volume`,
-            // `area`, `length` and `time`, which `name` resolves to the kind
-            // itself, so no unit definition of the CellML model is needed
-            if level < 3 && is_built_in(definition) {
+            // the reader defines the units every level before 3 has built in
+            // for every such model; they are the references `substance`,
+            // `volume`, `area`, `length` and `time`, which `name` resolves to
+            // the kind itself, so the CellML model needs no definition of
+            // them, where a model which states them itself gets its own
+            if definition.built_in {
                 continue;
             }
             units.add_definition(definition);
@@ -538,23 +539,16 @@ impl Units {
     }
 }
 
-/// Whether a unit definition is one of the built in units of SBML level 1 and
-/// 2 as the reader defines them, which the model itself does not state.
-fn is_built_in(definition: &UnitDefinition) -> bool {
-    BUILTIN_UNITS.iter().any(|(name, kind, exponent)| {
-        *name == definition.id
-            && definition.units
-                == [Unit {
-                    kind: (*kind).to_string(),
-                    exponent: *exponent,
-                    scale: 0,
-                    multiplier: 1.0,
-                }]
-    })
-}
-
-/// Whether two lists of SBML units stand for the same units: the same
-/// exponent per kind and the same factor.
+/// Whether two lists of SBML units mean the same units: the same exponent
+/// per unit kind and the same factor.
+///
+/// The python converter asks libsbml (`UnitDefinition::areIdentical`),
+/// which compares the scale and the multiplier of every unit as the
+/// document states them, so it does not take a definition which means the
+/// same units and writes them differently (a scale of `-3` against a
+/// multiplier of `0.001`); this comparison does, and the two converters
+/// name such units differently. The units are the same either way, which
+/// `scripts/sbml2cellml_parity.py` compares.
 fn identical(one: &[Unit], other: &[Unit]) -> bool {
     let normalize = |units: &[Unit]| {
         let mut exponents: HashMap<String, f64> = HashMap::new();
@@ -589,7 +583,10 @@ pub fn is_annotated(model: &Model, level: u32) -> bool {
         ]
         .iter()
         .any(|units| units.is_some());
-    model.unit_definitions.iter().any(|d| !is_built_in(d))
+    model
+        .unit_definitions
+        .iter()
+        .any(|definition| !definition.built_in)
         || model_units
         || model.compartments.iter().any(|c| c.units.is_some())
         || model.parameters.iter().any(|p| p.units.is_some())

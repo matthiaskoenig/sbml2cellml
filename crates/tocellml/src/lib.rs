@@ -14,7 +14,9 @@
 
 pub mod ids;
 pub mod math;
+pub mod model;
 pub mod units;
 
 pub use math::{Functions, MathError, Names, expression};
+pub use model::{COMPONENT, Conversion, ConvertError, convert};
 pub use units::{DIMENSIONLESS, Units, is_annotated};

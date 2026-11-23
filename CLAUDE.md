@@ -63,7 +63,7 @@ uv run sbml2cellml-overview             # render docs/models.md, docs/benchmarks
 cargo test                              # the tests of crates/cellml over the CellML fixtures
 cargo clippy --all-targets              # lints, denied in the workspace
 cargo fmt --check
-cargo build --release                   # target/release/cellml-info, cellml-convert, cellml-write
+cargo build --release                   # target/release/cellml-info, cellml-convert, cellml-write, sbml-convert
 cargo clippy -p sbml2cellml-python       # the module is no default member of the workspace
 cargo build --target wasm32-unknown-unknown -p sbml2cellml-cellml
 cargo build --profile wasm --target wasm32-unknown-unknown -p sbml2cellml-wasm   # the module of the online converter
@@ -72,6 +72,7 @@ cargo build --profile wasm --target wasm32-unknown-unknown -p sbml2cellml-wasm  
 uv run python scripts/cellml_parity.py       # the rust reader against libcellml over the corpus
 uv run python scripts/cellml_write_parity.py # the rust writer against libcellml over the corpus
 uv run python scripts/cellml2sbml_parity.py  # the rust converter against the python converter
+uv run python scripts/sbml2cellml_parity.py  # the rust forward converter against the python converter (--corpus models|suite|biomodels|all)
 uv run python scripts/convert_benchmark.py   # the two engines over the corpus, writes docs/images/convert_benchmark*.svg
 ```
 
@@ -357,8 +358,28 @@ uv run python scripts/convert_benchmark.py   # the two engines over the corpus, 
   of level 1 and 2, which the reader defines for every such model, are the
   kinds they stand for and no units of the CellML model, and `is_annotated`
   does not count them, so a model without units of its own is no incomplete
-  annotation), `ids.rs` the names of CellML (`sanitize_name`,
-  `unique_name`).
+  annotation; a quotient takes a unit definition of the model which means
+  the same units, where the python converter asks libsbml for a definition
+  which also writes them the same way, so the two name such units
+  differently and `identical` says why), `ids.rs` the names of CellML
+  (`sanitize_name`, `unique_name`). `model.rs` is the model the conversion
+  builds, the port of the structure of `sbml2cellml.py`: one component
+  `sbml` with one variable per compartment, parameter and species, the
+  local parameters of a kinetic law as `<reaction>_<parameter>`, a variable
+  per reaction with its rate and per species reference with an id, the
+  assignment rules as equations and the rate rules and the reaction terms
+  of a species as differential equations, a concentration species in a
+  compartment which changes in time with its `<species>_amount`, `time` as
+  the variable of integration (`time_state` for a model which uses time
+  without a differential equation, no `time` at all for an algebraic
+  model), `Formulas` with the formulas of the model and the expansion of
+  `rateOf`, and `variable_units` which gives the variables their units
+  when the annotation of the model is complete. An algebraic rule, an
+  event, an initial assignment the conversion would have to evaluate and
+  a model which needs a package are refused (`ConvertError`), which the
+  later stages of issue #82 convert; `scripts/sbml2cellml_parity.py`
+  compares what both converters write over the examples, the SBML test
+  suite and the BioModels cache (local only, as the other corpus checks).
   `crates/python` is the module `sbml2cellml._rust` (pyo3, `abi3-py314`,
   no default member of the workspace: a test binary would have to link
   libpython). `crates/cellml` is the reader of CellML 2.0,
@@ -384,8 +405,9 @@ uv run python scripts/convert_benchmark.py   # the two engines over the corpus, 
   and the metadata of the document (`cmeta:id`, RDF) is not written, as
   CellML 2.0 has no place for it. `crates/cli` is `cellml-info`,
   which prints what the reader reads as JSON,
-  `cellml-convert`, which writes the SBML of a document, and
-  `cellml-write`, which writes the document again as CellML 2.0;
+  `cellml-convert`, which writes the SBML of a document,
+  `cellml-write`, which writes the document again as CellML 2.0, and
+  `sbml-convert`, which writes the CellML of an SBML model;
   `scripts/cellml_parity.py` compares what the reader reads with
   libcellml over the models of the Physiome selection and
   `scripts/cellml_write_parity.py` validates what the writer writes with

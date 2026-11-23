@@ -20,9 +20,15 @@ path = "src/convert.rs"
 name = "cellml-write"
 path = "src/write.rs"
 
+[[bin]]
+name = "sbml-convert"
+path = "src/tocellml.rs"
+
 [dependencies]
 cellml = { package = "sbml2cellml-cellml", path = "../cellml" }
 convert = { package = "sbml2cellml-convert", path = "../convert" }
+tocellml = { package = "sbml2cellml-tocellml", path = "../tocellml" }
+sbml = { package = "sbmlsim-sbml", git = "https://github.com/matthiaskoenig/sbmlsim-core", rev = "f8609ef" }
 
 [lints]
 workspace = true
