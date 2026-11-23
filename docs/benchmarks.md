@@ -9,35 +9,53 @@ Wall time of the two simulators of the project over the models of every check: [
 
 Only the models whose converted model reproduces the simulation of the source model are compared: the two simulators integrate the same dynamics there, which a model with a conversion gap does not. Both simulators integrate with CVODE with tight tolerances (relative/absolute `1e-9`/`1e-12`) and up to 100000 internal steps between two time points, so the comparison measures the conversion and not the integrator; only when CVODE gives up with these tolerances the simulation is repeated with `1e-8`/`1e-10` and `1e-7`/`1e-9`. Both simulations scale the absolute tolerance with the smallest initial value of a state of their own model when it is below one: the states of the SBML side are amounts, which are small for a model with a small compartment, and the states of the CellML side the variables of its components.
 
-Every wall time is measured inside the simulator wrapper in the worker process of the harness, so it holds no overhead of the harness. The **setup** is everything a simulator does with the model before it integrates: reading and converting the file, generating and compiling the code of the model and building the instance. The **integration** is the run of the solver over the output grid. Both simulators cache what they compiled, so a model simulated again in the same process needs no setup; every model here is set up once, and both simulators run the model once before the run of the result, so that the generation of the code of a model, which libopencor does when it runs a model the first time, is part of its setup.
+Every wall time is measured inside the simulator wrapper in the worker process of the harness, so it holds no overhead of the harness. Both simulators run a model once before the run of the result, so that the generation of the code of a model, which libopencor does when it runs a model the first time, is part of its setup.
 
-The numbers are the committed runs of the checks on one machine: they compare the two simulators with each other over the same models, they are no absolute performance figures.
+The numbers are the committed runs of the checks on one machine: they compare the two simulators with each other over the same models, they are no absolute performance figures. In every table the ratio is the median of the time of libopencor divided by the time of sbmlsim-core per model, so a ratio below one means libopencor is faster for the median model, and the sum is the wall time of all models of the check.
+
+## Summary
+
+![Median setup, integration and total time per check](images/benchmarks_medians.svg#only-light)
+![Median setup, integration and total time per check](images/benchmarks_medians_dark.svg#only-dark)
+
+## Setup
+
+![Setup time of libopencor against sbmlsim-core](images/benchmarks_setup.svg#only-light)
+![Setup time of libopencor against sbmlsim-core](images/benchmarks_setup_dark.svg#only-dark)
+
+The setup is everything a simulator does with a model before it integrates: reading and converting the file, generating and compiling the code of the model and building the instance. It takes longer than the integration for the median model of every check.
+
+| check | models | sbmlsim-core | libopencor | ratio | libopencor faster | sbmlsim-core sum | libopencor sum |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| [SBML test suite](testsuite.md) | 1153 | 0.92 ms | 4.5 ms | 5.10 | 88 of 1153 | 1.4 s | 5.4 s |
+| [BioModels](biomodels.md) | 939 | 23 ms | 15 ms | 0.64 | 824 of 939 | 1.9 min | 54.3 s |
+| [Physiome Model Repository](physiome.md) | 58 | 4.2 ms | 21 ms | 3.88 | 2 of 58 | 1.9 s | 3.5 s |
 
 ## Integration
 
 ![Integration time of libopencor against sbmlsim-core](images/benchmarks.svg#only-light)
 ![Integration time of libopencor against sbmlsim-core](images/benchmarks_dark.svg#only-dark)
 
-The ratio is the median of the integration time of libopencor divided by the integration time of sbmlsim-core per model, so a ratio below one means libopencor integrates the median model faster.
+The integration is the run of the solver over the output grid, the same grid and the same tolerances for both simulators.
 
-| check | models | sbmlsim-core | libopencor | ratio | libopencor faster | sbmlsim-core total | libopencor total |
+| check | models | sbmlsim-core | libopencor | ratio | libopencor faster | sbmlsim-core sum | libopencor sum |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | [SBML test suite](testsuite.md) | 1153 | 0.07 ms | 0.06 ms | 0.91 | 818 of 1153 | 71 ms | 64 ms |
 | [BioModels](biomodels.md) | 939 | 0.41 ms | 0.37 ms | 0.88 | 661 of 939 | 1.6 s | 2.6 s |
 | [Physiome Model Repository](physiome.md) | 58 | 0.89 ms | 0.75 ms | 0.78 | 50 of 58 | 1.3 s | 1.3 s |
 
-## Setup
+## Total
 
-![Median setup and integration time per check](images/benchmarks_medians.svg#only-light)
-![Median setup and integration time per check](images/benchmarks_medians_dark.svg#only-dark)
+![Total time of libopencor against sbmlsim-core](images/benchmarks_total.svg#only-light)
+![Total time of libopencor against sbmlsim-core](images/benchmarks_total_dark.svg#only-dark)
 
-The setup holds the conversion of the file and the compilation of the model, which takes longer than the integration for the median model of every check. The ratio is the median of the setup of libopencor divided by the setup of sbmlsim-core per model.
+The setup and the integration of a model together, what a simulator costs for a model which is simulated once; a model simulated again in the same process needs no setup, since both simulators cache what they compiled.
 
-| check | models | sbmlsim-core | libopencor | ratio |
-| --- | --- | --- | --- | --- |
-| [SBML test suite](testsuite.md) | 1153 | 0.92 ms | 4.5 ms | 5.10 |
-| [BioModels](biomodels.md) | 939 | 23 ms | 15 ms | 0.64 |
-| [Physiome Model Repository](physiome.md) | 58 | 4.2 ms | 21 ms | 3.88 |
+| check | models | sbmlsim-core | libopencor | ratio | libopencor faster | sbmlsim-core sum | libopencor sum |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| [SBML test suite](testsuite.md) | 1153 | 1.0 ms | 4.5 ms | 4.80 | 88 of 1153 | 1.5 s | 5.4 s |
+| [BioModels](biomodels.md) | 939 | 24 ms | 15 ms | 0.65 | 822 of 939 | 1.9 min | 56.9 s |
+| [Physiome Model Repository](physiome.md) | 58 | 5.6 ms | 21 ms | 3.40 | 1 of 58 | 3.2 s | 4.8 s |
 
 ## Slowest models
 

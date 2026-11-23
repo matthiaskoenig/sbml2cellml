@@ -352,11 +352,12 @@ uv run sbml2cellml-overview             # render docs/models.md, docs/benchmarks
   `works` whether every stage of a case passes; `ROLES` names what the
   stages do, which is the same for a check whose source is the SBML model
   and one whose source is the CellML model. `figure.py` renders the
-  integration time of libopencor against the one of sbmlsim-core over every
-  check (one color and one marker per check) and the median setup and
-  integration time per check; `report.py` renders `docs/benchmarks.md` (the
-  wall times, from `timing_pairs` and `setup_pairs` of the test suite
-  figures) and `docs/models.md` (every model of BioModels and of the
+  wall time of libopencor against the one of sbmlsim-core over every check
+  (one color and one marker per check) for every phase of `PHASES` (the
+  setup of the simulator, the integration, the two together) and the
+  median of the three phases per check; `report.py` renders
+  `docs/benchmarks.md` (one section per phase, from `setup_pairs`,
+  `timing_pairs` and `total_pairs` of the test suite figures) and `docs/models.md` (every model of BioModels and of the
   Physiome Model Repository with the status of its stages and whether it
   works, and the models which do not run with their reason); `cli.py` is
   the `sbml2cellml-overview` entry point. `tests/test_overview.py` renders

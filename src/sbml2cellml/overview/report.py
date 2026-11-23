@@ -10,21 +10,47 @@ from pathlib import Path, PurePosixPath
 from statistics import median
 
 from sbml2cellml.overview.checks import ROLES, Run, works
-from sbml2cellml.overview.figure import write_median_figures, write_scatter_figures
-from sbml2cellml.testsuite.figure import (
-    dark_path,
-    duration_text,
-    setup_pairs,
-    timing_pairs,
+from sbml2cellml.overview.figure import (
+    PHASES,
+    write_median_figures,
+    write_scatter_figures,
 )
+from sbml2cellml.testsuite.figure import dark_path, duration_text, timing_pairs
 from sbml2cellml.testsuite.report import cell, solver_text
 
 #: command which writes the two pages
 COMMAND = "sbml2cellml-overview"
-#: the scatter of the integration times, relative to the benchmark page
-SCATTER_FIGURE = "images/benchmarks.svg"
-#: the median wall times, relative to the benchmark page
+#: the scatter of a phase, relative to the benchmark page; the integration
+#: is `images/benchmarks.svg`, the figure `README.md` shows as well
+FIGURES = {
+    "setup": "images/benchmarks_setup.svg",
+    "integration": "images/benchmarks.svg",
+    "total": "images/benchmarks_total.svg",
+}
+#: the median wall times of every phase, relative to the benchmark page
 MEDIANS_FIGURE = "images/benchmarks_medians.svg"
+#: heading of the section of a phase
+HEADINGS = {"setup": "Setup", "integration": "Integration", "total": "Total"}
+#: what a phase measures, the first sentence of its section
+PHASE_TEXT = {
+    "setup": (
+        "The setup is everything a simulator does with a model before it "
+        "integrates: reading and converting the file, generating and "
+        "compiling the code of the model and building the instance. It "
+        "takes longer than the integration for the median model of every "
+        "check."
+    ),
+    "integration": (
+        "The integration is the run of the solver over the output grid, "
+        "the same grid and the same tolerances for both simulators."
+    ),
+    "total": (
+        "The setup and the integration of a model together, what a "
+        "simulator costs for a model which is simulated once; a model "
+        "simulated again in the same process needs no setup, since both "
+        "simulators cache what they compiled."
+    ),
+}
 #: number of the slowest models of a check in the benchmark page
 SLOWEST = 5
 
@@ -66,22 +92,65 @@ def _checks_lines(runs: list[Run]) -> list[str]:
     return [*lines, ""]
 
 
+def _phase_section(runs: list[Run], phase: str, figure: str) -> list[str]:
+    """The section of one phase: its figure, what it measures and its table.
+
+    Args:
+        runs: the runs of the checks.
+        phase: the phase of a simulation, a key of
+            `sbml2cellml.overview.figure.PHASES`.
+        figure: path of the scatter of the phase, relative to the page.
+
+    Returns:
+        The markdown lines, one row per check with a timed model.
+    """
+    seconds, _ = PHASES[phase]
+    heading = HEADINGS[phase]
+    lines = [
+        f"## {heading}",
+        "",
+        *_figure(figure, f"{heading} time of libopencor against sbmlsim-core"),
+        PHASE_TEXT[phase],
+        "",
+        "| check | models | sbmlsim-core | libopencor | ratio | "
+        "libopencor faster | sbmlsim-core sum | libopencor sum |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    for run in runs:
+        pairs = seconds(run.result)
+        if not pairs:
+            continue
+        sbmlsim = [pair[0] for pair in pairs.values()]
+        libopencor = [pair[1] for pair in pairs.values()]
+        ratios = [pair[1] / pair[0] for pair in pairs.values()]
+        faster = sum(1 for pair in pairs.values() if pair[1] <= pair[0])
+        lines.append(
+            f"| [{run.check.title}]({run.check.page}) | {len(pairs)} | "
+            f"{duration_text(median(sbmlsim))} | "
+            f"{duration_text(median(libopencor))} | {median(ratios):.2f} | "
+            f"{faster} of {len(pairs)} | {duration_text(sum(sbmlsim))} | "
+            f"{duration_text(sum(libopencor))} |"
+        )
+    return [*lines, ""]
+
+
 def render_benchmarks(
     runs: list[Run],
-    scatter: str = SCATTER_FIGURE,
+    figures: dict[str, str] | None = None,
     medians: str = MEDIANS_FIGURE,
 ) -> str:
     """Render the benchmark page.
 
     Args:
         runs: the runs of the checks.
-        scatter: path of the scatter of the integration times, relative to
-            the page; written by `write_benchmarks`.
+        figures: path of the scatter of every phase, relative to the page,
+            `FIGURES` when `None`; written by `write_benchmarks`.
         medians: path of the median wall times, relative to the page.
 
     Returns:
         The markdown page.
     """
+    scatters = figures or FIGURES
     lines = [
         *_header("Benchmarks"),
         "Wall time of the two simulators of the project over the models of "
@@ -101,76 +170,27 @@ def render_benchmarks(
         "",
         "Every wall time is measured inside the simulator wrapper in the "
         "worker process of the harness, so it holds no overhead of the "
-        "harness. The **setup** is everything a simulator does with the "
-        "model before it integrates: reading and converting the file, "
-        "generating and compiling the code of the model and building the "
-        "instance. The **integration** is the run of the solver over the "
-        "output grid. Both simulators cache what they compiled, so a model "
-        "simulated again in the same process needs no setup; every model "
-        "here is set up once, and both simulators run the model once before "
-        "the run of the result, so that the generation of the code of a "
-        "model, which libopencor does when it runs a model the first time, "
-        "is part of its setup.",
+        "harness. Both simulators run a model once before the run of the "
+        "result, so that the generation of the code of a model, which "
+        "libopencor does when it runs a model the first time, is part of "
+        "its setup.",
         "",
         "The numbers are the committed runs of the checks on one machine: "
         "they compare the two simulators with each other over the same "
-        "models, they are no absolute performance figures.",
+        "models, they are no absolute performance figures. In every table "
+        "the ratio is the median of the time of libopencor divided by the "
+        "time of sbmlsim-core per model, so a ratio below one means "
+        "libopencor is faster for the median model, and the sum is the "
+        "wall time of all models of the check.",
         "",
-        "## Integration",
+        "## Summary",
         "",
-        *_figure(scatter, "Integration time of libopencor against sbmlsim-core"),
-        "The ratio is the median of the integration time of libopencor "
-        "divided by the integration time of sbmlsim-core per model, so a "
-        "ratio below one means libopencor integrates the median model "
-        "faster.",
-        "",
-        "| check | models | sbmlsim-core | libopencor | ratio | "
-        "libopencor faster | sbmlsim-core total | libopencor total |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+        *_figure(medians, "Median setup, integration and total time per check"),
     ]
-    for run in runs:
-        pairs = timing_pairs(run.result)
-        if not pairs:
-            continue
-        sbmlsim = [pair[0] for pair in pairs.values()]
-        libopencor = [pair[1] for pair in pairs.values()]
-        ratios = [pair[1] / pair[0] for pair in pairs.values()]
-        faster = sum(1 for pair in pairs.values() if pair[1] <= pair[0])
-        lines.append(
-            f"| [{run.check.title}]({run.check.page}) | {len(pairs)} | "
-            f"{duration_text(median(sbmlsim))} | "
-            f"{duration_text(median(libopencor))} | {median(ratios):.2f} | "
-            f"{faster} of {len(pairs)} | {duration_text(sum(sbmlsim))} | "
-            f"{duration_text(sum(libopencor))} |"
-        )
+    for phase in PHASES:
+        lines += _phase_section(runs, phase, scatters[phase])
 
     lines += [
-        "",
-        "## Setup",
-        "",
-        *_figure(medians, "Median setup and integration time per check"),
-        "The setup holds the conversion of the file and the compilation of "
-        "the model, which takes longer than the integration for the median "
-        "model of every check. The ratio is the median of the setup of "
-        "libopencor divided by the setup of sbmlsim-core per model.",
-        "",
-        "| check | models | sbmlsim-core | libopencor | ratio |",
-        "| --- | --- | --- | --- | --- |",
-    ]
-    for run in runs:
-        pairs = setup_pairs(run.result)
-        if not pairs:
-            continue
-        ratios = [pair[1] / pair[0] for pair in pairs.values()]
-        lines.append(
-            f"| [{run.check.title}]({run.check.page}) | {len(pairs)} | "
-            f"{duration_text(median([pair[0] for pair in pairs.values()]))} | "
-            f"{duration_text(median([pair[1] for pair in pairs.values()]))} | "
-            f"{median(ratios):.2f} |"
-        )
-
-    lines += [
-        "",
         "## Slowest models",
         "",
         f"The {SLOWEST} models of every check with the longest "
@@ -309,24 +329,26 @@ def render_models(runs: list[Run]) -> str:
 def write_benchmarks(
     runs: list[Run],
     path: Path,
-    scatter: str = SCATTER_FIGURE,
+    figures: dict[str, str] | None = None,
     medians: str = MEDIANS_FIGURE,
 ) -> None:
-    """Write the benchmark page and its two figures.
+    """Write the benchmark page, the scatter of every phase and the medians.
 
     Args:
         runs: the runs of the checks.
         path: markdown file, overwritten.
-        scatter: path of the scatter of the integration times, relative to
-            the page.
+        figures: path of the scatter of every phase, relative to the page,
+            `FIGURES` when `None`.
         medians: path of the median wall times, relative to the page.
     """
     path = Path(path)
+    scatters = figures or FIGURES
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        render_benchmarks(runs, scatter=scatter, medians=medians), encoding="utf-8"
+        render_benchmarks(runs, figures=scatters, medians=medians), encoding="utf-8"
     )
-    write_scatter_figures(runs, path.parent / scatter)
+    for phase, figure in scatters.items():
+        write_scatter_figures(runs, path.parent / figure, phase=phase)
     write_median_figures(runs, path.parent / medians)
 
 
