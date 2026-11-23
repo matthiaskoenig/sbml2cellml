@@ -18,8 +18,10 @@ from tests.conftest import MODELS_DIR, TEST_MODEL_PATH
 from tests.sbml_models import (
     analytic_time_model,
     growing_compartment_model,
+    quotient_model,
     simple_model,
     small_state_model,
+    stoichiometry_math_model,
     symbol_ids_model,
     write_sbml,
 )
@@ -90,6 +92,41 @@ def test_run_timecourse_applies_stoichiometry(tmp_path: Path) -> None:
     )
     expected = 10.0 * np.exp(-2 * 0.5 / 2.0 * df["time"])
     assert np.allclose(df["S1"], expected, rtol=1e-6)
+
+
+def test_run_timecourse_applies_a_stoichiometry_math(tmp_path: Path) -> None:
+    """The product of `S1 -> n S2` with the `<stoichiometryMath>` `n = 2 f`.
+
+    `d[S2]/dt = 6 k1 [S1]` with `f = 3`, so `[S2]` grows by six times what
+    `[S1]` loses.
+    """
+    sbml_path = write_sbml(tmp_path / "stoichiometry.xml", stoichiometry_math_model())
+    cellml_path = tmp_path / "stoichiometry.cellml"
+    convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
+    df, _ = run_timecourse(
+        cellml_path,
+        end=4.0,
+        steps=8,
+        relative_tolerance=1e-10,
+        absolute_tolerance=1e-12,
+    )
+    s1 = 10.0 * np.exp(-0.5 * df["time"])
+    assert np.allclose(df["S1"], s1, rtol=1e-6)
+    assert np.allclose(df["S2"], 6.0 * (10.0 - s1), rtol=1e-6)
+
+
+def test_run_timecourse_truncates_an_integer_division(tmp_path: Path) -> None:
+    """`quotient(-7, 3)` is -2 in the CellML model, the truncation of MathML.
+
+    The floored division of libsbml would give -3; libopencor computes the
+    `piecewise` of the ceiling and the floor which the conversion writes.
+    """
+    sbml_path = write_sbml(tmp_path / "quotient.xml", quotient_model())
+    cellml_path = tmp_path / "quotient.cellml"
+    convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
+    df, _ = run_timecourse(cellml_path, end=1.0, steps=1)
+    assert df["negative"].tolist() == [-2.0, -2.0]
+    assert df["positive"].tolist() == [2.0, 2.0]
 
 
 def test_run_timecourse_algebraic_model(tmp_path: Path) -> None:

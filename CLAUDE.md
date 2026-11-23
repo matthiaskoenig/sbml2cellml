@@ -86,14 +86,15 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   `cellml2sbml` (`rust.Engine`/`rust.ENGINES`, `--engine` of both commands):
   `"rust"` converts with `sbml2cellml.rust` (`_convert_with_rust`: the text
   of the file, or the document libsbml wrote when it flattened a
-  hierarchical model, and the CellML text parsed back with libcellml),
+  hierarchical model, the CellML text parsed back with libcellml, `_set_ids`
+  for the ids the metadata points at and `_rust_elements` for the SBML
+  element of every CellML element, which the rust conversion gives as its
+  `origins`),
   `"python"` with libsbml, libcellml and this module
   (`_convert_with_python`, which also gives the SBML element of every CellML
-  element for the metadata), and `"auto"`, the default, takes rust unless
-  `_without_rust` names what it does not do (the metadata of a model which
-  has any, `_has_metadata`: the rust converter writes no `id` for the RDF to
-  point at) and converts with python when the rust converter refuses the
-  model (a formula with a delay).
+  element for the metadata), and `"auto"`, the default, takes rust and
+  converts with python when the rust converter refuses the model (a formula
+  with a delay).
   A hierarchical model is flattened first (`sbml.flatten_comp`, with the
   directory of the file as the base path of an external model definition),
   so the submodels become part of the CellML model.
@@ -132,7 +133,11 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   Kinetic laws are multiplied with the stoichiometry (no factor for 1) and do
   not change boundary species, the sum is multiplied with the conversion
   factor of the species or model; a
-  species reference with an id is a variable of its stoichiometry, every
+  species reference with an id is a variable of its stoichiometry, the
+  `<stoichiometryMath>` of a reference of level 1 or 2 the variable
+  `__stoichiometry_<reaction>_<role>_<index>` with the formula as its
+  equation (`_stoichiometries`, the name of the reader of sbmlsim-core; a
+  formula which is a number is the stoichiometry itself), every
   reaction with a kinetic law a variable of its rate (`<reaction id> =
   kinetic law`), which the equations of its species use. A model without rate rules,
   reactions and uses of time gets no `time` variable (CellML knows the
@@ -179,7 +184,9 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   replace the time symbol by the variable of integration (`time_id`, `time`
   by default) and avogadro by its value (`normalize_math`), replace the
   operators CellML does not have (`simplify_operators`: an n-ary relation by
-  the conjunction of its pairs, `quotient` by the floor of the division,
+  the conjunction of its pairs, `quotient` by the truncation of the division
+  towards zero (`piecewise(ceiling(a / b), a / b < 0, floor(a / b))`, the
+  integer division of the OpenMath dictionary the MathML of SBML follows),
   `implies` by `not a or b`, an n-ary operator with less than two arguments
   by its value) and wrap the equations into the component math. The
   formulas are written as the SBML model has them, negations included:
@@ -255,11 +262,14 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   `Engine`/`ENGINES` are the engines of the conversion (`--engine` of the
   CLI): `"rust"` converts with `sbml2cellml.rust` (`_convert_with_rust`:
   the document text, flattened with libcellml first when
-  `rust.has_imports`, and the SBML text read back with libsbml),
+  `rust.has_imports`, the SBML text read back with libsbml and
+  `_apply_records` for the metadata of the elements (issue #102), which
+  the conversion gives the SBML element of every CellML element with an id
+  for, as the python engine's `_add_metadata` finds them),
   `"python"` with libcellml and this module (`_convert_with_python`), and
-  `"auto"`, the default, takes rust unless `_without_rust` names what it
-  does not do (the metadata of the elements, the hierarchical conversion)
-  and converts with python when the rust converter refuses the model. The
+  `"auto"`, the default, takes rust and converts with python for the
+  hierarchical conversion, which rust does not write, and for a model it
+  refuses. The
   python engine is
   analyser driven: parameters by variable type, rules by equation type, initial
   assignments for computed constants and variable-referenced initial values,
@@ -284,7 +294,9 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   model, which `tests/test_hierarchical.py` asserts.
 - `rust.py`: the wrapper of the module `sbml2cellml._rust`
   (`crates/python`, built by maturin into the package):
-  `convert_cellml_to_sbml` (the SBML text and the warnings),
+  `convert_cellml_to_sbml` (the SBML text, the warnings and the SBML
+  element of every CellML element with an id, which the conversion gives as
+  its `mappings`),
   `convert_sbml_to_cellml` (the CellML text and the warnings, with the name
   of the model for a document whose model has no id), `cellml_version`,
   `has_imports`, `RustError` for a document the reader or the converter
@@ -320,7 +332,11 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   document the conversion writes (unit definitions, parameters, initial
   assignments, rules; a CellML model has no reactions) and its XML, which
   it writes itself: no libsbml in the workspace. `crates/convert` is the
-  conversion of a CellML model: `Ids` is one parameter per equivalence set
+  conversion of a CellML model (`mappings` of a conversion is the SBML
+  element of every CellML element with an id, `Mapping`/`Kind`: the model,
+  a unit definition or the parameter of the equivalence set of a variable,
+  which the python package applies the metadata of the document to):
+  `Ids` is one parameter per equivalence set
   (`assign`, after the analysis: the name of the variable the equation of
   the quantity is written next to, else one with an initial value, else
   the first, which is the variable the analyser of libcellml takes, so
@@ -359,7 +375,8 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   its units and `dimensionless` when it has none, an infinity and a NaN
   become the elements of MathML, the time symbol becomes the variable of
   integration and avogadro the number SBML defines for it, `quotient(a, b)`
-  becomes `floor(a / b)` and `implies(a, b)` `not a or b`, a relation of
+  becomes the truncation of `a / b` towards zero and `implies(a, b)`
+  `not a or b`, a relation of
   more than two arguments the conjunction of its pairs and an n-ary
   operator of less than two arguments its value; `Functions` expands the
   calls of the function definitions (a definition in a cycle of calls, a
@@ -433,10 +450,17 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   `scripts/sbml2cellml_parity.py`
   compares what both converters write over the examples, the SBML test
   suite and the BioModels cache (local only, as the other corpus checks).
+  `origins` of a conversion is the SBML element of every element of the
+  CellML model which stands for one (`Origin`, `Kind`: the model, a
+  compartment, a species, a parameter, a reaction, a species reference, a
+  local parameter or a unit definition, in the order the python converter
+  collects them), which the python package turns into the metadata of the
+  conversion.
   `crates/python` is the module `sbml2cellml._rust` (pyo3, `abi3-py314`,
   no default member of the workspace: a test binary would have to link
-  libpython) with both conversions, `convert_cellml_to_sbml` and
-  `convert_sbml_to_cellml`. `crates/cellml` is the reader of CellML 2.0,
+  libpython) with both conversions, `convert_cellml_to_sbml` (with the
+  mappings of the conversion) and `convert_sbml_to_cellml` (with its
+  origins). `crates/cellml` is the reader of CellML 2.0,
   1.1 and 1.0 (`read` gives a `Document` with the version and the `Model`:
   unit definitions, components with their variables and their MathML
   (`math::Node`), connections, encapsulation and imports; a document of

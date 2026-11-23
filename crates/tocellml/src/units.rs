@@ -219,6 +219,7 @@ impl Units {
         let name = self.unique(name);
         self.definitions.push(CellMLUnits {
             name: name.clone(),
+            id: None,
             base_units: false,
             units,
             import: None,

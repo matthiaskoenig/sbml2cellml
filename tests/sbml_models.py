@@ -289,3 +289,74 @@ def with_history(model: libsbml.Model) -> None:
             libsbml.BQM_IS_DESCRIBED_BY, "https://doi.org/10.1038/35002125", model=True
         )
     )
+
+
+def stoichiometry_math_model(mid: str = "stoichiometry_math") -> libsbml.Model:
+    """SBML L2V4 model whose product has a `<stoichiometryMath>`.
+
+    `S1 -> n S2` with `k1 * S1`, where the stoichiometry of the product is
+    the formula `2 * f` of the parameters of the model. The reference has
+    no id, as a reference of level 2 usually has none.
+    """
+    doc = libsbml.SBMLDocument(2, 4)
+    model: libsbml.Model = doc.createModel()
+    model.setId(mid)
+    c: libsbml.Compartment = model.createCompartment()
+    c.setId("cell")
+    c.setSize(1.0)
+    c.setConstant(True)
+    for pid, value in (("k1", 0.5), ("f", 3.0)):
+        p: libsbml.Parameter = model.createParameter()
+        p.setId(pid)
+        p.setValue(value)
+        p.setConstant(True)
+    for sid, value in (("S1", 10.0), ("S2", 0.0)):
+        s: libsbml.Species = model.createSpecies()
+        s.setId(sid)
+        s.setCompartment("cell")
+        s.setInitialConcentration(value)
+        s.setHasOnlySubstanceUnits(False)
+        s.setBoundaryCondition(False)
+        s.setConstant(False)
+    r: libsbml.Reaction = model.createReaction()
+    r.setId("r1")
+    r.setReversible(False)
+    reactant: libsbml.SpeciesReference = r.createReactant()
+    reactant.setSpecies("S1")
+    reactant.setStoichiometry(1.0)
+    product: libsbml.SpeciesReference = r.createProduct()
+    product.setSpecies("S2")
+    math: libsbml.StoichiometryMath = product.createStoichiometryMath()
+    math.setMath(libsbml.parseL3Formula("2 * f"))
+    klaw: libsbml.KineticLaw = r.createKineticLaw()
+    klaw.setMath(libsbml.parseL3Formula("k1 * S1"))
+    _SBML_DOCUMENTS.append(doc)
+    return model
+
+
+def quotient_model(mid: str = "quotient") -> libsbml.Model:
+    """SBML L3V2 model whose parameters hold `quotient(-7, 3)` and `quotient(7, 3)`.
+
+    The integer division of the MathML of SBML truncates towards zero, so
+    the values are -2 and 2, where the floor of the division gives -3 and 2.
+    """
+    doc = libsbml.SBMLDocument(3, 2)
+    model: libsbml.Model = doc.createModel()
+    model.setId(mid)
+    for pid, value in (("a", -7.0), ("b", 3.0)):
+        p: libsbml.Parameter = model.createParameter()
+        p.setId(pid)
+        p.setValue(value)
+        p.setConstant(True)
+    for pid, formula in (
+        ("negative", "quotient(a, b)"),
+        ("positive", "quotient(-a, b)"),
+    ):
+        p = model.createParameter()
+        p.setId(pid)
+        p.setConstant(False)
+        rule: libsbml.AssignmentRule = model.createAssignmentRule()
+        rule.setVariable(pid)
+        rule.setMath(libsbml.parseL3Formula(formula))
+    _SBML_DOCUMENTS.append(doc)
+    return model

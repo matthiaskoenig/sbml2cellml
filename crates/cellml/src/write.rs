@@ -14,6 +14,9 @@
 //! - `base_units="yes"` becomes a `<units>` element without a `<unit>` child,
 //!   which is how CellML 2.0 declares new base units
 //! - the `offset` of a unit is dropped, CellML 2.0 has none
+//! - the `cmeta:id` of the model, a unit definition and a variable becomes
+//!   the attribute `id`, which is how CellML 2.0 writes it; the RDF of a
+//!   document is not written, CellML 2.0 has no place for it
 //!
 //! An element which the reader does not model ([`Node::Other`]) is written as
 //! the empty element of its name: the reader keeps the name of such an element
@@ -53,7 +56,11 @@ impl Model {
         if !self.imports.is_empty() {
             let _ = write!(out, " xmlns:xlink=\"{XLINK_NS}\"");
         }
-        let _ = writeln!(out, " name=\"{}\">", escape(&self.name));
+        let _ = write!(out, " name=\"{}\"", escape(&self.name));
+        if let Some(id) = &self.id {
+            let _ = write!(out, " id=\"{}\"", escape(id));
+        }
+        out.push_str(">\n");
         for import in &self.imports {
             indent(&mut out, 1);
             let _ = writeln!(out, "<import xlink:href=\"{}\">", escape(&import.href));
@@ -185,6 +192,9 @@ fn write_number(out: &mut String, value: f64, units: &str, depth: usize) {
 fn write_units(out: &mut String, units: &Units, depth: usize) {
     indent(out, depth);
     let _ = write!(out, "<units name=\"{}\"", escape(&units.name));
+    if let Some(id) = &units.id {
+        let _ = write!(out, " id=\"{}\"", escape(id));
+    }
     // new base units are a definition without a unit of its own
     if units.units.is_empty() {
         out.push_str("/>\n");
@@ -249,6 +259,9 @@ fn write_variable(out: &mut String, variable: &Variable, depth: usize) {
         escape(&variable.name),
         escape(&variable.units)
     );
+    if let Some(id) = &variable.id {
+        let _ = write!(out, " id=\"{}\"", escape(id));
+    }
     if let Some(initial) = &variable.initial_value {
         let _ = write!(out, " initial_value=\"{}\"", escape(initial));
     }

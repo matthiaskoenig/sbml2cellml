@@ -778,3 +778,67 @@ fn the_equations_use_the_constants_of_mathml() {
         }
     );
 }
+
+#[test]
+fn the_conversion_gives_the_sbml_element_of_every_cellml_element() {
+    // the metadata of an SBML element is written next to the CellML file
+    // and points at the CellML element, so the caller needs the map
+    let conversion = conversion(&common::level3(
+        r#"
+    <listOfUnitDefinitions>
+      <unitDefinition id="per_second">
+        <listOfUnits><unit kind="second" exponent="-1" scale="0" multiplier="1"/></listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment id="cell" size="1" constant="true"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="S1" compartment="cell" initialConcentration="1"
+               hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter id="k" value="1" constant="true"/>
+    </listOfParameters>
+    <listOfReactions>
+      <reaction id="r1" reversible="false">
+        <listOfReactants>
+          <speciesReference id="ref" species="S1" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply><times/><ci>local</ci><ci>S1</ci></apply>
+          </math>
+          <listOfLocalParameters>
+            <localParameter id="local" value="2"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>"#,
+    ));
+    let origins: Vec<(&str, &str, &str, &str)> = conversion
+        .origins
+        .iter()
+        .map(|origin| {
+            (
+                origin.name.as_str(),
+                origin.kind.name(),
+                origin.id.as_str(),
+                origin.parameter.as_str(),
+            )
+        })
+        .collect();
+    assert_eq!(
+        origins,
+        vec![
+            ("m", "model", "", ""),
+            ("cell", "compartment", "cell", ""),
+            ("S1", "species", "S1", ""),
+            ("k", "parameter", "k", ""),
+            ("r1", "reaction", "r1", ""),
+            ("r1_local", "local_parameter", "r1", "local"),
+            ("ref", "species_reference", "ref", ""),
+            ("per_second", "units", "per_second", ""),
+        ]
+    );
+}

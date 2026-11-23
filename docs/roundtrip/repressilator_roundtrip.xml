@@ -293,8 +293,158 @@
           <unit kind="second" exponent="-1" scale="0" multiplier="60"/>
         </listOfUnits>
       </unitDefinition>
+      <unitDefinition id="area">
+        <listOfUnits>
+          <unit kind="metre" exponent="2" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
     </listOfUnitDefinitions>
     <listOfParameters>
+      <parameter metaid="cell" sboTerm="SBO:0000290" id="cell" value="1" units="dimensionless" constant="true">
+        <annotation>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#cell">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="http://identifiers.org/go/GO:0005623"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </parameter>
+      <parameter id="beta" units="dimensionless" constant="true">
+        <notes>
+          <p xmlns="http://www.w3.org/1999/xhtml">
+        ratio of protein to mRNA decay rates</p>
+        </notes>
+      </parameter>
+      <parameter sboTerm="SBO:0000485" id="alpha0" units="dimensionless" constant="true">
+        <notes>
+          <p xmlns="http://www.w3.org/1999/xhtml">
+        Leakiness in protein copies per promoter and cell</p>
+        </notes>
+      </parameter>
+      <parameter sboTerm="SBO:0000186" id="alpha" units="dimensionless" constant="true">
+        <notes>
+          <p xmlns="http://www.w3.org/1999/xhtml">
+        Protein copies per promoter and cell</p>
+        </notes>
+      </parameter>
+      <parameter id="eff" name="translation efficiency" value="20" units="dimensionless" constant="true">
+        <notes>
+          <p xmlns="http://www.w3.org/1999/xhtml">
+        Average number of proteins per transcript</p>
+        </notes>
+      </parameter>
+      <parameter sboTerm="SBO:0000190" id="n" value="2" units="dimensionless" constant="true">
+        <notes>
+          <p xmlns="http://www.w3.org/1999/xhtml">
+        Hill coefficient</p>
+        </notes>
+      </parameter>
+      <parameter sboTerm="SBO:0000288" id="KM" value="40" units="dimensionless" constant="true">
+        <notes>
+          <p xmlns="http://www.w3.org/1999/xhtml">
+        Number of repressor molecules per cell giving half maximal repression, in monomers per cell</p>
+        </notes>
+      </parameter>
+      <parameter sboTerm="SBO:0000332" id="tau_mRNA" name="mRNA half life" value="2" units="dimensionless" constant="true"/>
+      <parameter sboTerm="SBO:0000332" id="tau_prot" name="protein half life" value="10" units="dimensionless" constant="true"/>
+      <parameter sboTerm="SBO:0000348" id="t_ave" name="average mRNA life time" units="dimensionless" constant="true"/>
+      <parameter sboTerm="SBO:0000356" id="kd_mRNA" units="dimensionless" constant="true">
+        <notes>
+          <p xmlns="http://www.w3.org/1999/xhtml">
+        mRNA decay rate constant</p>
+        </notes>
+      </parameter>
+      <parameter sboTerm="SBO:0000356" id="kd_prot" units="dimensionless" constant="true">
+        <notes>
+          <p xmlns="http://www.w3.org/1999/xhtml">
+        Protein decay rate costant</p>
+        </notes>
+      </parameter>
+      <parameter sboTerm="SBO:0000016" id="k_tl" units="dimensionless" constant="true">
+        <notes>
+          <p xmlns="http://www.w3.org/1999/xhtml">
+        Translation rate constant</p>
+        </notes>
+      </parameter>
+      <parameter sboTerm="SBO:0000186" id="a_tr" units="dimensionless" constant="true">
+        <notes>
+          <p xmlns="http://www.w3.org/1999/xhtml">
+        Transcription rate from free promotor minus a0_tr</p>
+        </notes>
+      </parameter>
+      <parameter sboTerm="SBO:0000186" id="ps_a" name="tps_active" value="0.5" units="dimensionless" constant="true">
+        <notes>
+          <p xmlns="http://www.w3.org/1999/xhtml">
+        Transcrition from free promotor in transcripts per second and promotor</p>
+        </notes>
+      </parameter>
+      <parameter sboTerm="SBO:0000485" id="ps_0" name="tps_repr" value="0.0005" units="dimensionless" constant="true">
+        <notes>
+          <p xmlns="http://www.w3.org/1999/xhtml">
+        Transcrition from fully repressed promotor in transcripts per second and promotor</p>
+        </notes>
+      </parameter>
+      <parameter sboTerm="SBO:0000485" id="a0_tr" units="dimensionless" constant="true">
+        <notes>
+          <p xmlns="http://www.w3.org/1999/xhtml">
+        Transcription rate from fully repressed promotor</p>
+        </notes>
+      </parameter>
+      <parameter metaid="PX" sboTerm="SBO:0000252" id="PX" name="LacI protein" value="0" units="dimensionless" constant="false">
+        <notes>
+          <p xmlns="http://www.w3.org/1999/xhtml">
+        lacI inhibitor</p>
+        </notes>
+        <annotation>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#PX">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="http://identifiers.org/uniprot/P03023"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </parameter>
+      <parameter metaid="PY" sboTerm="SBO:0000252" id="PY" name="TetR protein" value="0" units="dimensionless" constant="false">
+        <notes>
+          <p xmlns="http://www.w3.org/1999/xhtml">
+        Tet repressor protein</p>
+        </notes>
+        <annotation>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#PY">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="http://identifiers.org/uniprot/P04483"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </parameter>
+      <parameter metaid="PZ" sboTerm="SBO:0000252" id="PZ" name="cI protein" value="0" units="dimensionless" constant="false">
+        <notes>
+          <p xmlns="http://www.w3.org/1999/xhtml">
+        lambda repressor</p>
+        </notes>
+        <annotation>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#PZ">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="http://identifiers.org/uniprot/P03034"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </parameter>
       <parameter metaid="X" sboTerm="SBO:0000250" id="X" name="LacI mRNA" value="0" units="dimensionless" constant="false">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
@@ -352,164 +502,6 @@
           </rdf:RDF>
         </annotation>
       </parameter>
-      <parameter metaid="PX" sboTerm="SBO:0000252" id="PX" name="LacI protein" value="0" units="dimensionless" constant="false">
-        <notes>
-          <p xmlns="http://www.w3.org/1999/xhtml">
-        lacI inhibitor</p>
-        </notes>
-        <annotation>
-          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#PX">
-              <bqbiol:is>
-                <rdf:Bag>
-                  <rdf:li rdf:resource="http://identifiers.org/uniprot/P03023"/>
-                </rdf:Bag>
-              </bqbiol:is>
-            </rdf:Description>
-          </rdf:RDF>
-        </annotation>
-      </parameter>
-      <parameter metaid="PY" sboTerm="SBO:0000252" id="PY" name="TetR protein" value="0" units="dimensionless" constant="false">
-        <notes>
-          <p xmlns="http://www.w3.org/1999/xhtml">
-        Tet repressor protein</p>
-        </notes>
-        <annotation>
-          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#PY">
-              <bqbiol:is>
-                <rdf:Bag>
-                  <rdf:li rdf:resource="http://identifiers.org/uniprot/P04483"/>
-                </rdf:Bag>
-              </bqbiol:is>
-            </rdf:Description>
-          </rdf:RDF>
-        </annotation>
-      </parameter>
-      <parameter metaid="PZ" sboTerm="SBO:0000252" id="PZ" name="cI protein" value="0" units="dimensionless" constant="false">
-        <notes>
-          <p xmlns="http://www.w3.org/1999/xhtml">
-        lambda repressor</p>
-        </notes>
-        <annotation>
-          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#PZ">
-              <bqbiol:is>
-                <rdf:Bag>
-                  <rdf:li rdf:resource="http://identifiers.org/uniprot/P03034"/>
-                </rdf:Bag>
-              </bqbiol:is>
-            </rdf:Description>
-          </rdf:RDF>
-        </annotation>
-      </parameter>
-      <parameter sboTerm="SBO:0000332" id="tau_mRNA" name="mRNA half life" value="2" units="dimensionless" constant="true"/>
-      <parameter sboTerm="SBO:0000332" id="tau_prot" name="protein half life" value="10" units="dimensionless" constant="true"/>
-      <parameter id="eff" name="translation efficiency" value="20" units="dimensionless" constant="true">
-        <notes>
-          <p xmlns="http://www.w3.org/1999/xhtml">
-        Average number of proteins per transcript</p>
-        </notes>
-      </parameter>
-      <parameter sboTerm="SBO:0000485" id="ps_0" name="tps_repr" value="0.0005" units="dimensionless" constant="true">
-        <notes>
-          <p xmlns="http://www.w3.org/1999/xhtml">
-        Transcrition from fully repressed promotor in transcripts per second and promotor</p>
-        </notes>
-      </parameter>
-      <parameter sboTerm="SBO:0000186" id="ps_a" name="tps_active" value="0.5" units="dimensionless" constant="true">
-        <notes>
-          <p xmlns="http://www.w3.org/1999/xhtml">
-        Transcrition from free promotor in transcripts per second and promotor</p>
-        </notes>
-      </parameter>
-      <parameter sboTerm="SBO:0000288" id="KM" value="40" units="dimensionless" constant="true">
-        <notes>
-          <p xmlns="http://www.w3.org/1999/xhtml">
-        Number of repressor molecules per cell giving half maximal repression, in monomers per cell</p>
-        </notes>
-      </parameter>
-      <parameter sboTerm="SBO:0000190" id="n" value="2" units="dimensionless" constant="true">
-        <notes>
-          <p xmlns="http://www.w3.org/1999/xhtml">
-        Hill coefficient</p>
-        </notes>
-      </parameter>
-      <parameter metaid="cell" sboTerm="SBO:0000290" id="cell" value="1" units="dimensionless" constant="true">
-        <annotation>
-          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#cell">
-              <bqbiol:is>
-                <rdf:Bag>
-                  <rdf:li rdf:resource="http://identifiers.org/go/GO:0005623"/>
-                </rdf:Bag>
-              </bqbiol:is>
-            </rdf:Description>
-          </rdf:RDF>
-        </annotation>
-      </parameter>
-      <parameter sboTerm="SBO:0000348" id="t_ave" name="average mRNA life time" units="dimensionless" constant="true"/>
-      <parameter id="beta" units="dimensionless" constant="true">
-        <notes>
-          <p xmlns="http://www.w3.org/1999/xhtml">
-        ratio of protein to mRNA decay rates</p>
-        </notes>
-      </parameter>
-      <parameter sboTerm="SBO:0000016" id="k_tl" units="dimensionless" constant="true">
-        <notes>
-          <p xmlns="http://www.w3.org/1999/xhtml">
-        Translation rate constant</p>
-        </notes>
-      </parameter>
-      <parameter sboTerm="SBO:0000186" id="a_tr" units="dimensionless" constant="true">
-        <notes>
-          <p xmlns="http://www.w3.org/1999/xhtml">
-        Transcription rate from free promotor minus a0_tr</p>
-        </notes>
-      </parameter>
-      <parameter sboTerm="SBO:0000485" id="a0_tr" units="dimensionless" constant="true">
-        <notes>
-          <p xmlns="http://www.w3.org/1999/xhtml">
-        Transcription rate from fully repressed promotor</p>
-        </notes>
-      </parameter>
-      <parameter sboTerm="SBO:0000356" id="kd_prot" units="dimensionless" constant="true">
-        <notes>
-          <p xmlns="http://www.w3.org/1999/xhtml">
-        Protein decay rate costant</p>
-        </notes>
-      </parameter>
-      <parameter sboTerm="SBO:0000356" id="kd_mRNA" units="dimensionless" constant="true">
-        <notes>
-          <p xmlns="http://www.w3.org/1999/xhtml">
-        mRNA decay rate constant</p>
-        </notes>
-      </parameter>
-      <parameter sboTerm="SBO:0000186" id="alpha" units="dimensionless" constant="true">
-        <notes>
-          <p xmlns="http://www.w3.org/1999/xhtml">
-        Protein copies per promoter and cell</p>
-        </notes>
-      </parameter>
-      <parameter sboTerm="SBO:0000485" id="alpha0" units="dimensionless" constant="true">
-        <notes>
-          <p xmlns="http://www.w3.org/1999/xhtml">
-        Leakiness in protein copies per promoter and cell</p>
-        </notes>
-      </parameter>
-      <parameter metaid="Reaction10" sboTerm="SBO:0000183" id="Reaction10" name="transcription of LacI" units="dimensionless" constant="false">
-        <annotation>
-          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#Reaction10">
-              <bqbiol:isVersionOf>
-                <rdf:Bag>
-                  <rdf:li rdf:resource="http://identifiers.org/go/GO:0006351"/>
-                </rdf:Bag>
-              </bqbiol:isVersionOf>
-            </rdf:Description>
-          </rdf:RDF>
-        </annotation>
-      </parameter>
       <parameter metaid="Reaction1" sboTerm="SBO:0000179" id="Reaction1" name="degradation of LacI transcripts" units="dimensionless" constant="false">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
@@ -517,19 +509,6 @@
               <bqbiol:isVersionOf>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/go/GO:0006402"/>
-                </rdf:Bag>
-              </bqbiol:isVersionOf>
-            </rdf:Description>
-          </rdf:RDF>
-        </annotation>
-      </parameter>
-      <parameter metaid="Reaction11" sboTerm="SBO:0000183" id="Reaction11" name="transcription of TetR" units="dimensionless" constant="false">
-        <annotation>
-          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#Reaction11">
-              <bqbiol:isVersionOf>
-                <rdf:Bag>
-                  <rdf:li rdf:resource="http://identifiers.org/go/GO:0006351"/>
                 </rdf:Bag>
               </bqbiol:isVersionOf>
             </rdf:Description>
@@ -549,19 +528,6 @@
           </rdf:RDF>
         </annotation>
       </parameter>
-      <parameter metaid="Reaction12" sboTerm="SBO:0000183" id="Reaction12" name="transcription of CI" units="dimensionless" constant="false">
-        <annotation>
-          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#Reaction12">
-              <bqbiol:isVersionOf>
-                <rdf:Bag>
-                  <rdf:li rdf:resource="http://identifiers.org/go/GO:0006351"/>
-                </rdf:Bag>
-              </bqbiol:isVersionOf>
-            </rdf:Description>
-          </rdf:RDF>
-        </annotation>
-      </parameter>
       <parameter metaid="Reaction3" sboTerm="SBO:0000179" id="Reaction3" name="degradation of CI transcripts" units="dimensionless" constant="false">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
@@ -569,19 +535,6 @@
               <bqbiol:isVersionOf>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/go/GO:0006402"/>
-                </rdf:Bag>
-              </bqbiol:isVersionOf>
-            </rdf:Description>
-          </rdf:RDF>
-        </annotation>
-      </parameter>
-      <parameter metaid="Reaction7" sboTerm="SBO:0000179" id="Reaction7" name="degradation of LacI" units="dimensionless" constant="false">
-        <annotation>
-          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#Reaction7">
-              <bqbiol:isVersionOf>
-                <rdf:Bag>
-                  <rdf:li rdf:resource="http://identifiers.org/go/GO:0030163"/>
                 </rdf:Bag>
               </bqbiol:isVersionOf>
             </rdf:Description>
@@ -601,10 +554,36 @@
           </rdf:RDF>
         </annotation>
       </parameter>
-      <parameter metaid="Reaction8" sboTerm="SBO:0000179" id="Reaction8" name="degradation of TetR" units="dimensionless" constant="false">
+      <parameter metaid="Reaction5" sboTerm="SBO:0000184" id="Reaction5" name="translation of TetR" units="dimensionless" constant="false">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#Reaction8">
+            <rdf:Description rdf:about="#Reaction5">
+              <bqbiol:isVersionOf>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="http://identifiers.org/go/GO:0006412"/>
+                </rdf:Bag>
+              </bqbiol:isVersionOf>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </parameter>
+      <parameter metaid="Reaction6" sboTerm="SBO:0000184" id="Reaction6" name="translation of CI" units="dimensionless" constant="false">
+        <annotation>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#Reaction6">
+              <bqbiol:isVersionOf>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="http://identifiers.org/go/GO:0006412"/>
+                </rdf:Bag>
+              </bqbiol:isVersionOf>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </parameter>
+      <parameter metaid="Reaction7" sboTerm="SBO:0000179" id="Reaction7" name="degradation of LacI" units="dimensionless" constant="false">
+        <annotation>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#Reaction7">
               <bqbiol:isVersionOf>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/go/GO:0030163"/>
@@ -614,13 +593,13 @@
           </rdf:RDF>
         </annotation>
       </parameter>
-      <parameter metaid="Reaction5" sboTerm="SBO:0000184" id="Reaction5" name="translation of TetR" units="dimensionless" constant="false">
+      <parameter metaid="Reaction8" sboTerm="SBO:0000179" id="Reaction8" name="degradation of TetR" units="dimensionless" constant="false">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#Reaction5">
+            <rdf:Description rdf:about="#Reaction8">
               <bqbiol:isVersionOf>
                 <rdf:Bag>
-                  <rdf:li rdf:resource="http://identifiers.org/go/GO:0006412"/>
+                  <rdf:li rdf:resource="http://identifiers.org/go/GO:0030163"/>
                 </rdf:Bag>
               </bqbiol:isVersionOf>
             </rdf:Description>
@@ -640,13 +619,39 @@
           </rdf:RDF>
         </annotation>
       </parameter>
-      <parameter metaid="Reaction6" sboTerm="SBO:0000184" id="Reaction6" name="translation of CI" units="dimensionless" constant="false">
+      <parameter metaid="Reaction10" sboTerm="SBO:0000183" id="Reaction10" name="transcription of LacI" units="dimensionless" constant="false">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#Reaction6">
+            <rdf:Description rdf:about="#Reaction10">
               <bqbiol:isVersionOf>
                 <rdf:Bag>
-                  <rdf:li rdf:resource="http://identifiers.org/go/GO:0006412"/>
+                  <rdf:li rdf:resource="http://identifiers.org/go/GO:0006351"/>
+                </rdf:Bag>
+              </bqbiol:isVersionOf>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </parameter>
+      <parameter metaid="Reaction11" sboTerm="SBO:0000183" id="Reaction11" name="transcription of TetR" units="dimensionless" constant="false">
+        <annotation>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#Reaction11">
+              <bqbiol:isVersionOf>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="http://identifiers.org/go/GO:0006351"/>
+                </rdf:Bag>
+              </bqbiol:isVersionOf>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </parameter>
+      <parameter metaid="Reaction12" sboTerm="SBO:0000183" id="Reaction12" name="transcription of CI" units="dimensionless" constant="false">
+        <annotation>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#Reaction12">
+              <bqbiol:isVersionOf>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="http://identifiers.org/go/GO:0006351"/>
                 </rdf:Bag>
               </bqbiol:isVersionOf>
             </rdf:Description>

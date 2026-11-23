@@ -72,7 +72,8 @@ def test_verbose_logs(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> Non
     out = tmp_path / "liver.cellml"
     assert main([str(MODELS_DIR / "glimepiride_liver.xml"), "-o", str(out), "-v"]) == 0
     captured = capsys.readouterr()
-    assert "variable for species" in captured.out + captured.err
+    # a line of the conversion itself, whichever engine converts the model
+    assert "Converting SBML model" in captured.out + captured.err
 
 
 def test_version(capsys: pytest.CaptureFixture[str]) -> None:

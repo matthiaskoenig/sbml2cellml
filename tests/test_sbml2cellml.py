@@ -19,6 +19,7 @@ from tests.sbml_models import (
     event_model,
     growing_compartment_model,
     simple_model,
+    stoichiometry_math_model,
     symbol_ids_model,
     time_id_model,
     write_sbml,
@@ -1044,3 +1045,37 @@ def test_events_are_ordered_by_their_priority(tmp_path: Path) -> None:
     assert component.resetCount() == 2
     assert component.reset(0).testVariable().name() == "e2_trigger"
     assert component.reset(1).testVariable().name() == "e1_trigger"
+
+
+def test_stoichiometry_math_becomes_a_variable(tmp_path: Path) -> None:
+    """The formula of a `<stoichiometryMath>` is the equation of a variable."""
+    sbml_path = write_sbml(tmp_path / "stoichiometry.xml", stoichiometry_math_model())
+    model = convert_sbml2cellml(
+        sbml_path, cellml_path=tmp_path / "stoichiometry.cellml", engine="python"
+    )
+    component = model.component(0)
+    name = "__stoichiometry_r1_product_0"
+    variable = component.variable(name)
+    assert variable is not None
+    # an equation computes it, so it has no initial value
+    assert variable.initialValue() == ""
+    assert variable.units().name() == "dimensionless"
+    # the equation of the stoichiometry and the term of the species which uses it
+    assert component.math().count(name) == 2
+    assert not errors(validate_model(model))
+
+
+def test_stoichiometry_math_of_a_number_is_the_stoichiometry(tmp_path: Path) -> None:
+    """A `<stoichiometryMath>` which is a number needs no variable of its own."""
+    model_sbml = stoichiometry_math_model("number")
+    math: libsbml.StoichiometryMath = (
+        model_sbml.getReaction("r1").getProduct(0).getStoichiometryMath()
+    )
+    math.setMath(libsbml.parseL3Formula("3"))
+    sbml_path = write_sbml(tmp_path / "number.xml", model_sbml)
+    model = convert_sbml2cellml(
+        sbml_path, cellml_path=tmp_path / "number.cellml", engine="python"
+    )
+    component = model.component(0)
+    assert component.variable("__stoichiometry_r1_product_0") is None
+    assert '<cn cellml:units="dimensionless"> 3 </cn>' in component.math()

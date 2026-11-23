@@ -68,6 +68,67 @@ pub struct Conversion {
     pub model: cellml::Model,
     /// The warnings of the conversion, in the order they were made.
     pub warnings: Vec<String>,
+    /// The SBML element of every element of the CellML model which stands
+    /// for one, for the metadata of the conversion.
+    pub origins: Vec<Origin>,
+}
+
+/// The SBML element an element of the CellML model stands for.
+///
+/// The metadata of an SBML element is written next to the CellML file and
+/// points at the CellML element with its id, so the caller of the
+/// conversion needs to know which element of the model is which element of
+/// the document ([`crate::convert`] of the other direction needs no such
+/// map, since SBML holds its metadata itself).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Origin {
+    /// The name of the CellML element: a variable of the component, a unit
+    /// definition of the model, or the model itself.
+    pub name: String,
+    /// What the SBML element is.
+    pub kind: Kind,
+    /// The id of the SBML element, of the reaction of a local parameter
+    /// and of the unit definition of units; empty for the model.
+    pub id: String,
+    /// The id of a local parameter, empty for every other kind.
+    pub parameter: String,
+}
+
+/// The kind of the SBML element an element of the CellML model stands for.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Kind {
+    /// The model.
+    Model,
+    /// A compartment.
+    Compartment,
+    /// A species.
+    Species,
+    /// A parameter.
+    Parameter,
+    /// A reaction, the variable of its rate.
+    Reaction,
+    /// A species reference with an id, the variable of its stoichiometry.
+    SpeciesReference,
+    /// A local parameter of a kinetic law.
+    LocalParameter,
+    /// A unit definition.
+    Units,
+}
+
+impl Kind {
+    /// The name of the kind, as the module of python names it.
+    pub fn name(self) -> &'static str {
+        match self {
+            Kind::Model => "model",
+            Kind::Compartment => "compartment",
+            Kind::Species => "species",
+            Kind::Parameter => "parameter",
+            Kind::Reaction => "reaction",
+            Kind::SpeciesReference => "species_reference",
+            Kind::LocalParameter => "local_parameter",
+            Kind::Units => "units",
+        }
+    }
 }
 
 /// The variable of the amount of a species in concentration.
@@ -1123,10 +1184,16 @@ fn build(
         .collect();
     add_non_finite_equations(&mut component, &states, warnings);
 
+    let model_name = model.id.clone().unwrap_or_else(|| name.to_string());
+    let origins = origins(model, formulas, &mut units, &model_name);
+
     warnings.extend(units.warnings().iter().cloned());
     Ok(Conversion {
         model: cellml::Model {
-            name: model.id.clone().unwrap_or_else(|| name.to_string()),
+            name: model_name,
+            // the ids of the elements are set by the python package, which
+            // writes the metadata of the conversion
+            id: None,
             units: units.definitions().to_vec(),
             components: vec![component],
             connections: Vec::new(),
@@ -1134,6 +1201,7 @@ fn build(
             imports: Vec::new(),
         },
         warnings: std::mem::take(warnings),
+        origins,
     })
 }
 
@@ -1284,6 +1352,61 @@ fn add_resets(
     Ok(())
 }
 
+/// The SBML element of every element of the CellML model which stands for
+/// one, in the order the python converter collects them, so that both
+/// engines write the metadata of a model in the same order.
+fn origins(model: &Model, formulas: &Formulas, units: &mut Units, name: &str) -> Vec<Origin> {
+    let mut origins = vec![Origin {
+        name: name.to_string(),
+        kind: Kind::Model,
+        id: String::new(),
+        parameter: String::new(),
+    }];
+    let mut push = |name: &str, kind: Kind, id: &str, parameter: &str| {
+        origins.push(Origin {
+            name: name.to_string(),
+            kind,
+            id: id.to_string(),
+            parameter: parameter.to_string(),
+        });
+    };
+    for compartment in &model.compartments {
+        push(&compartment.id, Kind::Compartment, &compartment.id, "");
+    }
+    for species in &model.species {
+        push(&species.id, Kind::Species, &species.id, "");
+    }
+    for parameter in &model.parameters {
+        push(&parameter.id, Kind::Parameter, &parameter.id, "");
+    }
+    for reaction in &model.reactions {
+        if formulas.rates.iter().any(|(id, _)| id == &reaction.id) {
+            push(&reaction.id, Kind::Reaction, &reaction.id, "");
+        }
+        if let (Some(ids), Some(law)) = (
+            formulas.local_ids.get(&reaction.id),
+            reaction.kinetic_law.as_ref(),
+        ) {
+            for parameter in &law.local_parameters {
+                if let Some(variable) = ids.get(&parameter.id) {
+                    push(variable, Kind::LocalParameter, &reaction.id, &parameter.id);
+                }
+            }
+        }
+        for reference in references(reaction) {
+            if let Some(id) = &reference.id {
+                push(id, Kind::SpeciesReference, id, "");
+            }
+        }
+    }
+    for definition in &model.unit_definitions {
+        if let Some(name) = units.name(&definition.id) {
+            push(&name, Kind::Units, &definition.id, "");
+        }
+    }
+    origins
+}
+
 /// Adds a variable to the component, with its units and its initial value;
 /// a variable an equation computes has none.
 fn add(component: &mut Component, name: &str, value: Option<f64>, of: &HashMap<String, String>) {
@@ -1291,6 +1414,7 @@ fn add(component: &mut Component, name: &str, value: Option<f64>, of: &HashMap<S
     let value = value.map(|value| if value == 0.0 { 0.0 } else { value });
     component.variables.push(Variable {
         name: name.to_string(),
+        id: None,
         units: of
             .get(name)
             .cloned()

@@ -68,8 +68,11 @@ def simplify_operators(node: libsbml.ASTNode) -> libsbml.ASTNode:
     (the argument) and without any (the identity element), CellML requires
     two. A relation of more than two arguments, `a < b < c`, becomes the
     conjunction of its pairs, `and(a < b, b < c)`, which CellML has.
-    `quotient(a, b)` becomes `floor(a / b)` and `implies(a, b)` becomes
-    `not a or b`: CellML has neither of the two operators.
+    `quotient(a, b)` becomes the truncation of `a / b` towards zero, the
+    integer division of the OpenMath dictionary the MathML of SBML follows
+    (`piecewise(ceiling(a / b), a / b < 0, floor(a / b))`), and
+    `implies(a, b)` becomes `not a or b`: CellML has neither of the two
+    operators.
 
     Args:
         node: root of the libsbml AST of the formula, changed in place.
@@ -78,12 +81,33 @@ def simplify_operators(node: libsbml.ASTNode) -> libsbml.ASTNode:
         The root, which is another node when the root itself was replaced.
     """
     if node.getType() == libsbml.AST_FUNCTION_QUOTIENT and node.getNumChildren() == 2:
-        # CellML has no quotient: it is the floor of the division
-        division = libsbml.ASTNode(libsbml.AST_DIVIDE)
-        division.addChild(node.getChild(0).deepCopy())
-        division.addChild(node.getChild(1).deepCopy())
-        node = libsbml.ASTNode(libsbml.AST_FUNCTION_FLOOR)
-        node.addChild(division)
+        # CellML has no quotient: the integer division of the MathML of SBML
+        # truncates towards zero (the OpenMath dictionary integer1), which is
+        # the floor of the division of a positive quotient and its ceiling of
+        # a negative one
+        numerator = node.getChild(0).deepCopy()
+        denominator = node.getChild(1).deepCopy()
+
+        def division() -> libsbml.ASTNode:
+            quotient = libsbml.ASTNode(libsbml.AST_DIVIDE)
+            quotient.addChild(numerator.deepCopy())
+            quotient.addChild(denominator.deepCopy())
+            return quotient
+
+        def rounded(kind: int) -> libsbml.ASTNode:
+            value = libsbml.ASTNode(kind)
+            value.addChild(division())
+            return value
+
+        zero = libsbml.ASTNode(libsbml.AST_REAL)
+        zero.setValue(0.0)
+        negative = libsbml.ASTNode(libsbml.AST_RELATIONAL_LT)
+        negative.addChild(division())
+        negative.addChild(zero)
+        node = libsbml.ASTNode(libsbml.AST_FUNCTION_PIECEWISE)
+        node.addChild(rounded(libsbml.AST_FUNCTION_CEILING))
+        node.addChild(negative)
+        node.addChild(rounded(libsbml.AST_FUNCTION_FLOOR))
     elif node.getType() == libsbml.AST_LOGICAL_IMPLIES and node.getNumChildren() == 2:
         # CellML has no implies: `a implies b` is `not a or b`
         negation = libsbml.ASTNode(libsbml.AST_LOGICAL_NOT)

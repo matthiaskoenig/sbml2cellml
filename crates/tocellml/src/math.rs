@@ -9,7 +9,8 @@
 //!   element of MathML, which has no units
 //! - the time symbol becomes the variable of integration and the avogadro
 //!   symbol the number SBML defines for it
-//! - `quotient(a, b)` becomes `floor(a / b)` and `implies(a, b)` becomes
+//! - `quotient(a, b)` becomes the truncation of `a / b` towards zero and
+//!   `implies(a, b)` becomes
 //!   `not a or b`, the two operators CellML does not have; a relation of
 //!   more than two arguments becomes the conjunction of its pairs
 //!   (`a < b < c` is `and(a < b, b < c)`), and an n-ary operator of less
@@ -398,14 +399,28 @@ fn apply(op: &Op, args: &[Sbml], names: &Names, units: &mut Units) -> Result<Nod
         });
     }
     match op {
-        // CellML has no quotient: it is the floor of the division
-        Op::Quotient if arguments.len() == 2 => Ok(Node::Apply {
-            operator: Operator::Other("floor".to_string()),
-            arguments: vec![Node::Apply {
+        // CellML has no quotient: the integer division of the MathML of
+        // SBML truncates towards zero (the OpenMath dictionary integer1),
+        // which is the floor of the division of a positive quotient and
+        // its ceiling of a negative one
+        Op::Quotient if arguments.len() == 2 => {
+            let division = || Node::Apply {
                 operator: Operator::Other("divide".to_string()),
-                arguments,
-            }],
-        }),
+                arguments: arguments.clone(),
+            };
+            let of = |name: &str| Node::Apply {
+                operator: Operator::Other(name.to_string()),
+                arguments: vec![division()],
+            };
+            let negative = Node::Apply {
+                operator: Operator::Other("lt".to_string()),
+                arguments: vec![division(), dimensionless(0.0)],
+            };
+            Ok(Node::Piecewise {
+                pieces: vec![(of("ceiling"), negative)],
+                otherwise: Some(Box::new(of("floor"))),
+            })
+        }
         // CellML has no implies: `a implies b` is `not a or b`
         Op::Implies if arguments.len() == 2 => {
             let consequence = arguments.pop().unwrap_or_else(|| dimensionless(0.0));
