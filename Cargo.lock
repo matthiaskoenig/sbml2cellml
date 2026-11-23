@@ -170,8 +170,9 @@ dependencies = [
 
 [[package]]
 name = "sbmlsim-sbml"
-version = "0.21.0"
-source = "git+https://github.com/matthiaskoenig/sbmlsim-core?rev=f8609ef#f8609ef578292b079502608e5267f79a5578c440"
+version = "0.22.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3c7e08bddddeccbc193c6c9214599d5edaeab2c540768bf0b9367a0d09c3e754"
 dependencies = [
  "roxmltree",
  "thiserror",
