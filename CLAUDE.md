@@ -349,8 +349,9 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   order, a variable which only a reset writes is no constant).
   `crates/tocellml` is the conversion of an SBML model to CellML, the
   counterpart of `crates/convert` (issue #82, the stages of its plan): the
-  SBML document is read by `sbmlsim-sbml` of sbmlsim-core, a git dependency
-  which reads every level and version of SBML core into the model of level 3,
+  SBML document is read by `sbmlsim-sbml` of sbmlsim-core, the crate of
+  crates.io which reads every level and version of SBML core into the model
+  of level 3,
   so the conversion never sees a level, and the CellML model it builds is
   written by `crates/cellml`. `math.rs` writes a
   formula of SBML as the mathematics of CellML (both are content MathML, so
