@@ -4,6 +4,7 @@ The releases of `sbml2cellml`, newest first. Every release is available from [py
 
 | version | date | content |
 | --- | --- | --- |
+| [0.6.0](0.6.0.md) | 2026-11-24 | both conversions in rust and in the browser, the online converter and the online simulator of the documentation, events through the roundtrip, hierarchical models, the Physiome check and the model overview |
 | [0.5.0](0.5.0.md) | 2026-11-22 | the SBML models are simulated with sbmlsim-core instead of roadrunner, the cases from a pinned commit of the test suite, timing benchmarks of both simulators, libcellml 0.7.2 with Windows support, python 3.14 |
 | [0.4.3](0.4.3.md) | 2026-10-22 | certifi 2026.10.19 and uv 0.13.4 in the lock (GHSA-6q48-6c7w-9gw2, GHSA-hq85-5cpj-mr62), logo and favicon |
 | [0.4.2](0.4.2.md) | 2026-09-28 | libopencor from PyPI in the `simulate` extra |
