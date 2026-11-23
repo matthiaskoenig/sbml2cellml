@@ -28,7 +28,7 @@ The setup is everything a simulator does with a model before it integrates: read
 | check | models | sbmlsim-core | libopencor | ratio | libopencor faster | sbmlsim-core sum | libopencor sum |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | [SBML test suite](testsuite.md) | 1154 | 0.95 ms | 4.6 ms | 5.10 | 88 of 1154 | 1.5 s | 5.6 s |
-| [BioModels](biomodels.md) | 939 | 29 ms | 18 ms | 0.63 | 838 of 939 | 1.6 min | 55.4 s |
+| [BioModels](biomodels.md) | 939 | 29 ms | 18 ms | 0.62 | 820 of 939 | 1.6 min | 52.1 s |
 | [Physiome Model Repository](physiome.md) | 57 | 6.0 ms | 20 ms | 3.57 | 2 of 57 | 1.6 s | 3.2 s |
 
 ## Integration
@@ -41,7 +41,7 @@ The integration is the run of the solver over the output grid, the same grid and
 | check | models | sbmlsim-core | libopencor | ratio | libopencor faster | sbmlsim-core sum | libopencor sum |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | [SBML test suite](testsuite.md) | 1154 | 0.07 ms | 0.06 ms | 0.91 | 813 of 1154 | 74 ms | 66 ms |
-| [BioModels](biomodels.md) | 939 | 0.48 ms | 0.43 ms | 0.88 | 651 of 939 | 1.8 s | 3.2 s |
+| [BioModels](biomodels.md) | 939 | 0.46 ms | 0.41 ms | 0.90 | 649 of 939 | 1.9 s | 2.7 s |
 | [Physiome Model Repository](physiome.md) | 57 | 0.89 ms | 0.59 ms | 0.77 | 51 of 57 | 1.1 s | 983 ms |
 
 ## Total
@@ -54,7 +54,7 @@ The setup and the integration of a model together, what a simulator costs for a 
 | check | models | sbmlsim-core | libopencor | ratio | libopencor faster | sbmlsim-core sum | libopencor sum |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | [SBML test suite](testsuite.md) | 1154 | 1.0 ms | 4.7 ms | 4.80 | 88 of 1154 | 1.6 s | 5.7 s |
-| [BioModels](biomodels.md) | 939 | 29 ms | 18 ms | 0.64 | 839 of 939 | 1.6 min | 58.6 s |
+| [BioModels](biomodels.md) | 939 | 30 ms | 18 ms | 0.63 | 816 of 939 | 1.7 min | 54.8 s |
 | [Physiome Model Repository](physiome.md) | 57 | 6.5 ms | 21 ms | 3.15 | 2 of 57 | 2.7 s | 4.2 s |
 
 ## Slowest models
@@ -75,11 +75,11 @@ The 5 models of every check with the longest integration, by the longer of the t
 
 | model | name | sbmlsim-core | libopencor | ratio |
 | --- | --- | --- | --- | --- |
-| [BIOMD0000001099](https://www.ebi.ac.uk/biomodels/BIOMD0000001099) | Richards2016 - Genome-scale metabolic reconstruction of Methanococcus maripaludis (iMR539) | 1.4 ms | 809 ms | 582.01 |
-| [BIOMD0000000206](https://www.ebi.ac.uk/biomodels/BIOMD0000000206) | Wolf2000_Glycolytic_Oscillations | 154 ms | 121 ms | 0.79 |
-| [BIOMD0000000469](https://www.ebi.ac.uk/biomodels/BIOMD0000000469) | Smallbone2013 - E.coli metabolic model with linlog rate law | 2.4 ms | 116 ms | 47.54 |
-| [BIOMD0000000470](https://www.ebi.ac.uk/biomodels/BIOMD0000000470) | Smallbone2013 - E.coli metabolic model with modular rate law | 2.6 ms | 113 ms | 43.80 |
-| [BIOMD0000000497](https://www.ebi.ac.uk/biomodels/BIOMD0000000497) | Stanford2013 - Kinetic model of yeast metabolic network (regulation) | 14 ms | 106 ms | 7.31 |
+| [BIOMD0000001099](https://www.ebi.ac.uk/biomodels/BIOMD0000001099) | Richards2016 - Genome-scale metabolic reconstruction of Methanococcus maripaludis (iMR539) | 0.42 ms | 192 ms | 460.43 |
+| [BIOMD0000000206](https://www.ebi.ac.uk/biomodels/BIOMD0000000206) | Wolf2000_Glycolytic_Oscillations | 187 ms | 146 ms | 0.78 |
+| [BIOMD0000000497](https://www.ebi.ac.uk/biomodels/BIOMD0000000497) | Stanford2013 - Kinetic model of yeast metabolic network (regulation) | 15 ms | 112 ms | 7.47 |
+| [BIOMD0000000205](https://www.ebi.ac.uk/biomodels/BIOMD0000000205) | Ung2008_EGFR_Endocytosis | 12 ms | 98 ms | 8.22 |
+| [BIOMD0000000470](https://www.ebi.ac.uk/biomodels/BIOMD0000000470) | Smallbone2013 - E.coli metabolic model with modular rate law | 2.5 ms | 96 ms | 38.25 |
 
 ### Physiome Model Repository
 
