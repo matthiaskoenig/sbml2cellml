@@ -725,7 +725,9 @@ def _add_variable(
     variable = libcellml.Variable(sid)
     variable.setUnits(units.get(sid, UNITS_ID))
     if value is not None:
-        variable.setInitialValue(value)
+        # a value of -0.0, which an evaluation of libsbml gives, is the zero
+        # of the model
+        variable.setInitialValue(value + 0.0)
     component.addVariable(variable)
 
 

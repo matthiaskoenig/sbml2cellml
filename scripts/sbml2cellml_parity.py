@@ -25,14 +25,22 @@ with it the python converter do not take for each other). An initial value
 is compared to twelve significant digits, since libcellml writes fifteen of
 them and the rust writer every digit of the double.
 
-Of the 1692 cases of the SBML test suite, 747 are converted by both and
-every one of them gives the same CellML model; 820 are refused by the rust
-converter and 125 need `comp`. Of the 1075 models of BioModels, 768 are
-converted by both and 767 of them give the same model: `BIOMD0000000040`
-differs because the rust path converts the `<stoichiometryMath>` of a
-species reference, which the reader of SBML writes as an assignment rule of
-the id it gives the reference, where the python converter takes the
-stoichiometry as it stands.
+Of the 1692 cases of the SBML test suite, 998 are converted by both
+converters and 997 of them give the same CellML model; 569 are refused by
+the rust converter and 125 need `comp`. Of the 1075 models of BioModels, 896
+are converted by both and 895 of them give the same model.
+
+The two models which differ differ because the rust converter is right and
+the python converter follows libsbml:
+
+- case `01282` of the test suite: libsbml evaluates a number as a condition
+  of a `piecewise` as true only when it is 1, where every simulator and the
+  rust converter take a value which is not zero as true. The expected result
+  of the case is the value of the rust converter.
+- `BIOMD0000000040` of BioModels: the rust path converts the
+  `<stoichiometryMath>` of a species reference, which the reader of SBML
+  writes as an assignment rule of the id it gives the reference, where the
+  python converter takes the stoichiometry as it stands (issue #86).
 
 The script is run locally, like the checks of BioModels and of the Physiome
 repository, and needs the command line of the rust workspace:
@@ -46,6 +54,7 @@ uv run python scripts/sbml2cellml_parity.py --corpus suite --count 200
 """
 
 import argparse
+import math
 import subprocess
 import sys
 import tempfile
@@ -68,10 +77,14 @@ MODELS = sorted((REPO / "examples" / "models").glob("*.xml"))
 MATHML = "{http://www.w3.org/1998/Math/MathML}"
 #: the attribute of the units of a number
 UNITS = "{http://www.cellml.org/cellml/2.0#}units"
-#: significant digits of a value, so that the notation of a number is no
-#: difference: libcellml writes an initial value with 15 of them and the
+#: significant digits of a number of a formula, so that the notation of a
+#: value is no difference: libcellml writes a number with 16 of them and the
 #: rust writer every digit of the double
 DIGITS = 12
+
+#: the relative tolerance of the comparison of two initial values, which the
+#: notation of libcellml rounds
+TOLERANCE = 1e-9
 
 
 def corpus(which: str, count: int | None) -> list[Path]:
@@ -411,10 +424,32 @@ def differences(rust: dict[str, Any], reference: dict[str, Any]) -> list[str]:
         if extra:
             found.append(f"{key} only in rust: {extra[:3]}")
         for name in sorted(set(mine) & set(theirs)):
-            if mine[name] != theirs[name]:
+            if not _same(mine[name], theirs[name]):
                 found.append(f"{key} of {name}: {mine[name]} != {theirs[name]}")
                 break
     return found
+
+
+def _same(mine: Any, theirs: Any) -> bool:
+    """Whether a variable or an equation of the two models is the same.
+
+    A value is compared with a relative tolerance: libcellml writes an
+    initial value with 16 digits and the rust writer every digit of the
+    double, so the same value is written differently.
+    """
+    if isinstance(mine, tuple) and isinstance(theirs, tuple):
+        units, value = mine
+        their_units, their_value = theirs
+        return units == their_units and _close(value, their_value)
+    return bool(mine == theirs)
+
+
+def _close(mine: str, theirs: str) -> bool:
+    """Whether two values are the same number, or the same text."""
+    try:
+        return math.isclose(float(mine), float(theirs), rel_tol=TOLERANCE, abs_tol=0.0)
+    except ValueError:
+        return mine == theirs
 
 
 def check(path: Path, verbose: bool) -> str:

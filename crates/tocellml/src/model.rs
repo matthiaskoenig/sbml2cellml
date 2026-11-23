@@ -35,6 +35,7 @@
 //! takes the model instead of a conversion writing something else: an
 //! algebraic rule, an event and an initial assignment.
 
+use crate::eval::Start;
 use crate::math::{self, Functions, MathError, Names};
 use crate::units::{DIMENSIONLESS, Units, is_annotated};
 use cellml::{Component, Interface, Node, Operator, Variable};
@@ -63,9 +64,6 @@ pub enum ConvertError {
     /// An event, which becomes the resets of the model.
     #[error("the event '{0}' is not converted")]
     Event(String),
-    /// An initial assignment, which has to be evaluated to a value.
-    #[error("the initial assignment of '{0}' is not converted")]
-    InitialAssignment(String),
 }
 
 /// A converted model and what the conversion has to say about it.
@@ -93,6 +91,8 @@ struct Formulas {
     /// The right-hand side by the target of an assignment rule, in the order
     /// of the document.
     assignment_rules: Vec<(String, Sbml)>,
+    /// The formula of every initial assignment, by the symbol it computes.
+    initial_assignments: Vec<(String, Sbml)>,
     /// The right-hand side of `d x / d time` by the target of a rate rule.
     rate_rules: Vec<(String, Sbml)>,
     /// The right-hand side of `d x / d time` from the reactions, by species
@@ -156,6 +156,84 @@ impl Formulas {
     }
 }
 
+/// The values of an SBML model at the start, which CellML needs as numbers.
+#[derive(Debug, Default)]
+struct Values {
+    /// The value of every quantity an initial assignment computes.
+    initial: HashMap<String, f64>,
+    /// The size of every compartment at the start, which converts the
+    /// initial value of a species; `None` when the model does not determine
+    /// it.
+    sizes: HashMap<String, Option<f64>>,
+}
+
+/// Evaluates what the SBML model computes at the start.
+///
+/// CellML has no initial assignment, so the conversion evaluates every one
+/// of them to the value of its quantity; one which cannot be evaluated (a
+/// delay, a value which needs itself, a symbol which is no quantity) is not
+/// converted, with a warning, as in the python converter. The size of a
+/// compartment at the start is the value of its assignment rule when a rule
+/// gives it, since the initial values of its species are converted with it.
+fn evaluate(
+    model: &Model,
+    formulas: &Formulas,
+    assigned: &HashSet<&str>,
+    warnings: &mut Vec<String>,
+) -> Values {
+    let mut start = Start::new(
+        model,
+        &formulas.initial_assignments,
+        &formulas.assignment_rules,
+        &formulas.rates,
+        local_values(model, formulas),
+    );
+    let mut values = Values::default();
+    for (symbol, _) in &formulas.initial_assignments {
+        match start.value(symbol) {
+            Ok(value) => {
+                values.initial.insert(symbol.clone(), value);
+            }
+            Err(error) => warnings.push(format!(
+                "the initial assignment of '{symbol}' is not converted: {error}"
+            )),
+        }
+    }
+    for compartment in &model.compartments {
+        let size = if assigned.contains(compartment.id.as_str()) {
+            start.value(&compartment.id).ok()
+        } else {
+            values
+                .initial
+                .get(&compartment.id)
+                .copied()
+                .or(compartment.size)
+        };
+        values.sizes.insert(compartment.id.clone(), size);
+    }
+    values
+}
+
+/// The value of the variable of every local parameter of a kinetic law,
+/// which the formula of the rate of a reaction reads.
+fn local_values(model: &Model, formulas: &Formulas) -> HashMap<String, f64> {
+    let mut values = HashMap::new();
+    for reaction in &model.reactions {
+        let Some(law) = &reaction.kinetic_law else {
+            continue;
+        };
+        let Some(ids) = formulas.local_ids.get(&reaction.id) else {
+            continue;
+        };
+        for parameter in &law.local_parameters {
+            if let Some(variable) = ids.get(&parameter.id) {
+                values.insert(variable.clone(), parameter.value.unwrap_or(1.0));
+            }
+        }
+    }
+    values
+}
+
 /// An operator applied to its arguments, as an SBML formula.
 fn apply(op: Op, args: Vec<Sbml>) -> Sbml {
     Sbml::Apply { op, args }
@@ -187,9 +265,6 @@ fn refuse_what_is_not_converted(model: &Model) -> Result<(), ConvertError> {
         return Err(ConvertError::Event(
             event.id.clone().unwrap_or_else(|| "0".to_string()),
         ));
-    }
-    if let Some(assignment) = model.initial_assignments.first() {
-        return Err(ConvertError::InitialAssignment(assignment.symbol.clone()));
     }
     Ok(())
 }
@@ -231,6 +306,18 @@ fn collect(model: &Model, warnings: &mut Vec<String>) -> Result<Formulas, Conver
                 }
             }
             Rule::Algebraic { .. } => return Err(ConvertError::AlgebraicRule),
+        }
+    }
+    for assignment in &model.initial_assignments {
+        if let Some(math) = &assignment.math {
+            formulas
+                .initial_assignments
+                .push((assignment.symbol.clone(), functions.expand(math)?));
+        } else {
+            warnings.push(format!(
+                "the initial assignment of '{}' has no mathematics and is ignored",
+                assignment.symbol
+            ));
         }
     }
 
@@ -312,6 +399,7 @@ fn collect(model: &Model, warnings: &mut Vec<String>) -> Result<Formulas, Conver
         .chain(formulas.rate_rules.iter_mut())
         .chain(formulas.reaction_terms.iter_mut())
         .chain(formulas.rates.iter_mut())
+        .chain(formulas.initial_assignments.iter_mut())
     {
         formula.1 = expand_rate_of(&formula.1, &derivatives, &assigned, &[], warnings);
     }
@@ -881,6 +969,7 @@ fn build(
         resets: Vec::new(),
     };
     let assigned = formulas.assigned();
+    let values = evaluate(model, formulas, &assigned, warnings);
     let names = Names {
         variable: &|id: &str| id.to_string(),
         time: &formulas.time_id,
@@ -892,21 +981,26 @@ fn build(
     if let Some(state) = &formulas.time_state {
         add(&mut component, state, Some(0.0), &of);
     }
-    let sizes = add_compartments(&mut component, model, &assigned, &of, warnings);
+    add_compartments(&mut component, model, &assigned, &values, &of, warnings);
     for parameter in &model.parameters {
         let value = if assigned.contains(parameter.id.as_str()) {
             None
         } else {
-            Some(initial_value(&parameter.id, parameter.value, 1.0, warnings))
+            let stated = values
+                .initial
+                .get(&parameter.id)
+                .copied()
+                .or(parameter.value);
+            Some(initial_value(&parameter.id, stated, 1.0, warnings))
         };
         add(&mut component, &parameter.id, value, &of);
     }
     add_species(
         &mut component,
         model,
-        &sizes,
         &assigned,
         formulas,
+        &values,
         &of,
         warnings,
     );
@@ -933,7 +1027,8 @@ fn build(
             let value = if assigned.contains(id.as_str()) {
                 None
             } else {
-                Some(initial_value(id, reference.stoichiometry, 1.0, warnings))
+                let stated = values.initial.get(id).copied().or(reference.stoichiometry);
+                Some(initial_value(id, stated, 1.0, warnings))
             };
             add(&mut component, id, value, &of);
         }
@@ -1002,6 +1097,8 @@ fn build(
 /// Adds a variable to the component, with its units and its initial value;
 /// a variable an equation computes has none.
 fn add(component: &mut Component, name: &str, value: Option<f64>, of: &HashMap<String, String>) {
+    // a value of `-0` is the zero of the model
+    let value = value.map(|value| if value == 0.0 { 0.0 } else { value });
     component.variables.push(Variable {
         name: name.to_string(),
         units: of
@@ -1021,23 +1118,26 @@ fn add_compartments(
     component: &mut Component,
     model: &Model,
     assigned: &HashSet<&str>,
+    values: &Values,
     of: &HashMap<String, String>,
     warnings: &mut Vec<String>,
-) -> HashMap<String, f64> {
-    let mut sizes = HashMap::new();
+) {
     for compartment in &model.compartments {
+        let size = values
+            .sizes
+            .get(&compartment.id)
+            .copied()
+            .unwrap_or_default();
         if assigned.contains(compartment.id.as_str()) {
-            // the size at the start is the value of the assignment rule,
-            // which the evaluation of the initial values gives
-            sizes.insert(compartment.id.clone(), f64::NAN);
+            // an equation computes the size, which must have no initial
+            // value; the size at the start converts the initial values of
+            // the species of the compartment
             add(component, &compartment.id, None, of);
         } else {
-            let size = initial_value(&compartment.id, compartment.size, 1.0, warnings);
-            sizes.insert(compartment.id.clone(), size);
-            add(component, &compartment.id, Some(size), of);
+            let value = initial_value(&compartment.id, size, 1.0, warnings);
+            add(component, &compartment.id, Some(value), of);
         }
     }
-    sizes
 }
 
 /// Adds the species as variables.
@@ -1050,9 +1150,9 @@ fn add_compartments(
 fn add_species(
     component: &mut Component,
     model: &Model,
-    sizes: &HashMap<String, f64>,
     assigned: &HashSet<&str>,
     formulas: &Formulas,
+    values: &Values,
     of: &HashMap<String, String>,
     warnings: &mut Vec<String>,
 ) {
@@ -1065,15 +1165,23 @@ fn add_species(
         let in_amount = species.has_only_substance_units || amount.is_some();
         let initial = if assigned.contains(species.id.as_str()) {
             None
+        } else if let Some(value) = values.initial.get(&species.id).copied() {
+            // the initial assignment gives the quantity of the species,
+            // which is its concentration unless it has only substance units
+            Some(if in_amount && !species.has_only_substance_units {
+                value * size(species, &values.sizes, warnings)
+            } else {
+                value
+            })
         } else if let Some(value) = species.initial_amount {
             Some(if in_amount {
                 value
             } else {
-                value / size(species, sizes, warnings)
+                value / size(species, &values.sizes, warnings)
             })
         } else if let Some(value) = species.initial_concentration {
             Some(if in_amount {
-                value * size(species, sizes, warnings)
+                value * size(species, &values.sizes, warnings)
             } else {
                 value
             })
@@ -1094,9 +1202,13 @@ fn add_species(
 
 /// The size of the compartment of a species, for the conversion of its
 /// initial value; 1 when the size is not known, with a warning.
-fn size(species: &Species, sizes: &HashMap<String, f64>, warnings: &mut Vec<String>) -> f64 {
+fn size(
+    species: &Species,
+    sizes: &HashMap<String, Option<f64>>,
+    warnings: &mut Vec<String>,
+) -> f64 {
     match sizes.get(&species.compartment) {
-        Some(size) if size.is_finite() => *size,
+        Some(Some(size)) if size.is_finite() => *size,
         _ => {
             warnings.push(format!(
                 "the size of the compartment '{}' is not set, using 1 to convert the initial value of '{}'",
