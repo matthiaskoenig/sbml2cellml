@@ -6,7 +6,7 @@
 
 ### Python
 
-[`convert_sbml2cellml`](api/sbml2cellml.md) reads an SBML file, builds the CellML model with libcellml and returns it. With `cellml_path` the CellML is written as well:
+[`convert_sbml2cellml`](api/sbml2cellml.md) reads an SBML file, converts it with the engine of the call (see [Engines](#engines)) and returns the CellML model of libcellml. With `cellml_path` the CellML is written as well:
 
 ```python
 from pathlib import Path
@@ -161,7 +161,7 @@ The rust engine converts a model about 48 times faster than the python engine (t
 
 ### Mapping
 
-CellML has no species, compartments or reactions: every variable becomes a parameter, the equations become rules. The libcellml analyser decides the kind of every variable and equation and merges the variables which are connected across components.
+CellML has no species, compartments or reactions: every variable becomes a parameter, the equations become rules. The analysis decides the kind of every variable and equation and merges the variables which are connected across components: the analyser of libcellml in the python engine, `crates/convert` itself in the rust engine.
 
 | CellML | SBML |
 | --- | --- |
@@ -213,6 +213,6 @@ The other direction, an SBML model with `comp` submodels, is flattened before it
 ### Limitations
 
 - A system of coupled implicit equations (`x + y = 4`, `x - y = 2`) becomes two algebraic rules with the rust engine, which needs no guess; libcellml cannot analyse such a model, so the python engine raises `CellML2SBMLConversionError`, as it does for an external variable.
-- The rust engine writes no metadata and no hierarchical model, and it refuses an operator SBML does not have, units the model does not define and rate equations which give each other's rate; `auto` converts such a model with the python engine.
+- The rust engine writes no hierarchical model, and it refuses an operator SBML does not have, units the model does not define, an imported component and rate equations which give each other's rate; `auto` converts such a model with the python engine.
 - New base units other than `item` have no SBML counterpart and are `dimensionless`, with a warning.
 - A reset triggers on the equality of the test variable and the test value. A continuous simulator detects the equality only when the test variable crosses the test value at an integrator step, so a reset may not fire in SBML simulators; the roundtrip harness reports this per model. libopencor 1.20261113.0 applies no reset at all, so the CellML side of such a model integrates as if it had none.

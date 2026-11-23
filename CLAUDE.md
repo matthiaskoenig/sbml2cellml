@@ -222,7 +222,18 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   strict=True)` parses a 1.0 or 1.1 document with `strict=False`, the
   permissive mode which maps it to the CellML 2.0 structures.
 - `simulate.py`: libopencor timecourse; the library is imported inside
-  `run_timecourse` so the package works without it. The settings are applied
+  `run_timecourse` so the package works without it. Both simulators take the
+  same call (`tests/test_roundtrip.py` asserts the signatures):
+  `run_timecourse(model, selections=None, start=0.0, end=1.0, steps=100,
+  relative_tolerance=None, absolute_tolerance=None,
+  maximum_number_of_steps=None, scale_tolerance=True, warmup=False,
+  units=None, timings=None)` gives a frame with the variable of integration
+  in the first column and the selections after it (every variable of the
+  model without them), never a selection of its own, with the units of the
+  columns in `units` and the wall time in `timings` when a dictionary is
+  given; the model is a file or the document as text (libopencor reads a
+  document from memory, `MODEL_URL`), and `plot_timecourse(df, units=None)`
+  plots the frame of either simulator. The settings are applied
   to `document.simulations[0]`, with `MAXIMUM_NUMBER_OF_STEPS` (100000) internal
   solver steps between two time points instead of the 500 of libopencor.
   The absolute tolerance is scaled with the smallest initial value of a
@@ -236,7 +247,11 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   of many components keeps its variables apart. Issues raise
   `SimulationError`.
 - `sbmlsim.py`: sbmlsim-core timecourse of an SBML model (path or text), the
-  library is imported inside `run_timecourse` as well. `compilable_sbml`
+  library is imported inside `run_timecourse` as well, whose call is the one
+  of `simulate.py` (`_column_units` gives the units of the columns: the
+  `timeUnits` of the model, the substance units of an amount, substance over
+  size for a concentration and the extent over the time for the rate of a
+  reaction). `compilable_sbml`
   gives the compiler what it reads: level 1 and 2 are converted to L3V2
   (strictly, else without the strict check and with a warning: libsbml
   refuses a strict conversion over issues without mathematics, e.g. the
@@ -517,7 +532,9 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   Without the module the converter says that
   it is not available and the rest of the page works.
   `docs/javascripts/repressilator.js` is the interactive simulation of the
-  roundtrip page (issue #101): the sliders of five parameters of the
+  roundtrip page (issue #101), which is its first section and loads the two
+  simulators when the page opens (`Simulation.load`, a `Try again` button
+  when the load fails): the sliders of five parameters of the
   repressilator (`PARAMETERS`, the values of the published model, which
   `tests/test_package.py` checks against `docs/roundtrip/repressilator.xml`)
   drive both simulations, `Cellml` simulates the CellML model of the page

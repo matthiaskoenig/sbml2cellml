@@ -31,7 +31,8 @@ matplotlib.use("Agg")
 
 
 def test_run_timecourse_test_model() -> None:
-    df, units = run_timecourse(TEST_MODEL_PATH, start=0.0, end=50.0, steps=10)
+    units: dict[str, str] = {}
+    df = run_timecourse(TEST_MODEL_PATH, start=0.0, end=50.0, steps=10, units=units)
     assert list(df.columns) == ["t", "m", "alpha"]
     assert len(df) == 11
     assert df["t"].iloc[0] == 0.0
@@ -45,7 +46,8 @@ def test_run_timecourse_test_model() -> None:
 def test_run_timecourse_liver(tmp_path: Path) -> None:
     cellml_path = tmp_path / "liver.cellml"
     convert_sbml2cellml(MODELS_DIR / "glimepiride_liver.xml", cellml_path=cellml_path)
-    df, units = run_timecourse(cellml_path, end=10.0, steps=10)
+    units: dict[str, str] = {}
+    df = run_timecourse(cellml_path, end=10.0, steps=10, units=units)
     assert df.columns[0] == "time"
     assert len(df) == 11
     # every species is a state or an algebraic variable of the CellML model
@@ -71,7 +73,7 @@ def test_run_timecourse_kidney_assignment_rules(tmp_path: Path) -> None:
     """The targets of the assignment rules follow their rules at every time."""
     cellml_path = tmp_path / "kidney.cellml"
     convert_sbml2cellml(MODELS_DIR / "glimepiride_kidney.xml", cellml_path=cellml_path)
-    df, _ = run_timecourse(cellml_path, end=100.0, steps=10)
+    df = run_timecourse(cellml_path, end=100.0, steps=10)
     assert np.allclose(df["egfr"], df["f_renal_function"] * df["egfr_healthy"])
     assert np.allclose(df["crcl"], df["egfr"] * df["BSA"] / 1.73 * 1.1)
 
@@ -83,7 +85,7 @@ def test_run_timecourse_applies_stoichiometry(tmp_path: Path) -> None:
     sbml_path = write_sbml(tmp_path / "stoichiometry.xml", model_sbml)
     cellml_path = tmp_path / "stoichiometry.cellml"
     convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
-    df, _ = run_timecourse(
+    df = run_timecourse(
         cellml_path,
         end=4.0,
         steps=8,
@@ -103,7 +105,7 @@ def test_run_timecourse_applies_a_stoichiometry_math(tmp_path: Path) -> None:
     sbml_path = write_sbml(tmp_path / "stoichiometry.xml", stoichiometry_math_model())
     cellml_path = tmp_path / "stoichiometry.cellml"
     convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
-    df, _ = run_timecourse(
+    df = run_timecourse(
         cellml_path,
         end=4.0,
         steps=8,
@@ -124,7 +126,7 @@ def test_run_timecourse_truncates_an_integer_division(tmp_path: Path) -> None:
     sbml_path = write_sbml(tmp_path / "quotient.xml", quotient_model())
     cellml_path = tmp_path / "quotient.cellml"
     convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
-    df, _ = run_timecourse(cellml_path, end=1.0, steps=1)
+    df = run_timecourse(cellml_path, end=1.0, steps=1)
     assert df["negative"].tolist() == [-2.0, -2.0]
     assert df["positive"].tolist() == [2.0, 2.0]
 
@@ -133,7 +135,8 @@ def test_run_timecourse_algebraic_model(tmp_path: Path) -> None:
     """Without a variable of integration the values are the same at all times."""
     cellml_path = tmp_path / "algebraic.cellml"
     write_model(algebraic_model(), cellml_path)
-    df, units = run_timecourse(cellml_path, start=0.0, end=10.0, steps=5)
+    units: dict[str, str] = {}
+    df = run_timecourse(cellml_path, start=0.0, end=10.0, steps=5, units=units)
     assert df["time"].tolist() == [0.0, 2.0, 4.0, 6.0, 8.0, 10.0]
     assert df["a"].tolist() == [2.0] * 6
     assert df["b"].tolist() == [4.0] * 6
@@ -151,7 +154,7 @@ def test_run_timecourse_keeps_the_component_of_a_clashing_name(
     )
     cellml_path = tmp_path / "time.cellml"
     write_model(model, cellml_path)
-    df, _ = run_timecourse(cellml_path, start=0.0, end=10.0, steps=5)
+    df = run_timecourse(cellml_path, start=0.0, end=10.0, steps=5)
     # the time points stay `time`, the variable of the component keeps it
     assert df["time"].tolist() == [0.0, 2.0, 4.0, 6.0, 8.0, 10.0]
     assert df["main/time"].tolist() == [2.0] * 6
@@ -166,7 +169,7 @@ def test_run_timecourse_boundary_species_is_not_changed_by_reactions(
     sbml_path = write_sbml(tmp_path / "boundary.xml", model_sbml)
     cellml_path = tmp_path / "boundary.cellml"
     convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
-    df, _ = run_timecourse(cellml_path, end=4.0, steps=4)
+    df = run_timecourse(cellml_path, end=4.0, steps=4)
     assert np.allclose(df["S1"], 10.0)
     assert np.allclose(df["S2"], 4.0 + 5.0 * df["time"])
 
@@ -181,7 +184,7 @@ def test_run_timecourse_changing_compartment_keeps_the_amount(tmp_path: Path) ->
     sbml_path = write_sbml(tmp_path / "growing.xml", growing_compartment_model())
     cellml_path = tmp_path / "growing.cellml"
     convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
-    df, _ = run_timecourse(
+    df = run_timecourse(
         cellml_path,
         end=4.0,
         steps=8,
@@ -208,7 +211,7 @@ def test_run_timecourse_rate_of_in_a_changing_compartment(tmp_path: Path) -> Non
     sbml_path = write_sbml(tmp_path / "growing_rate_of.xml", model_sbml)
     cellml_path = tmp_path / "growing_rate_of.cellml"
     convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
-    df, _ = run_timecourse(cellml_path, end=4.0, steps=8)
+    df = run_timecourse(cellml_path, end=4.0, steps=8)
     # dA1/dt = -k1 [S1], dcell/dt = 0.5 cell
     rate = (-0.5 * df["S1"] - df["S1"] * 0.5 * df["cell"]) / df["cell"]
     assert np.allclose(df["rate_s1"], rate, rtol=1e-6)
@@ -219,7 +222,7 @@ def test_run_timecourse_ids_which_are_symbols(tmp_path: Path) -> None:
     sbml_path = write_sbml(tmp_path / "symbol_ids.xml", symbol_ids_model())
     cellml_path = tmp_path / "symbol_ids.cellml"
     convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
-    df, _ = run_timecourse(cellml_path, end=4.0, steps=8)
+    df = run_timecourse(cellml_path, end=4.0, steps=8)
     assert np.allclose(df["NaN"], 10.0 * np.exp(-0.5 * df["time"]), rtol=1e-5)
 
 
@@ -231,7 +234,7 @@ def test_run_timecourse_negative_number_as_kinetic_law(tmp_path: Path) -> None:
     sbml_path = write_sbml(tmp_path / "negative_rate.xml", model_sbml)
     cellml_path = tmp_path / "negative_rate.cellml"
     convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
-    df, _ = run_timecourse(cellml_path, end=4.0, steps=4)
+    df = run_timecourse(cellml_path, end=4.0, steps=4)
     assert np.allclose(df["S1"], 10.0 + 0.5 * df["time"])
     assert np.allclose(df["S2"], 4.0 - df["time"])
 
@@ -243,7 +246,7 @@ def test_run_timecourse_negative_stoichiometry(tmp_path: Path) -> None:
     sbml_path = write_sbml(tmp_path / "negative_stoichiometry.xml", model_sbml)
     cellml_path = tmp_path / "negative_stoichiometry.cellml"
     convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
-    df, _ = run_timecourse(cellml_path, end=2.0, steps=4)
+    df = run_timecourse(cellml_path, end=2.0, steps=4)
     assert np.allclose(df["S1"], 10.0 * np.exp(0.5 * df["time"]), rtol=1e-5)
 
 
@@ -264,7 +267,7 @@ def test_run_timecourse_applies_conversion_factors(tmp_path: Path) -> None:
     sbml_path = write_sbml(tmp_path / "factors.xml", model_sbml)
     cellml_path = tmp_path / "factors.cellml"
     convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
-    df, _ = run_timecourse(
+    df = run_timecourse(
         cellml_path,
         end=4.0,
         steps=8,
@@ -295,7 +298,7 @@ def test_run_timecourse_rate_of(tmp_path: Path) -> None:
     sbml_path = write_sbml(tmp_path / "rate_of.xml", model_sbml)
     cellml_path = tmp_path / "rate_of.cellml"
     convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
-    df, _ = run_timecourse(
+    df = run_timecourse(
         cellml_path,
         end=4.0,
         steps=8,
@@ -321,7 +324,7 @@ def test_run_timecourse_algebraic_rule(tmp_path: Path) -> None:
     sbml_path = write_sbml(tmp_path / "algebraic_rule.xml", model_sbml)
     cellml_path = tmp_path / "algebraic_rule.cellml"
     convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
-    df, _ = run_timecourse(cellml_path, end=4.0, steps=4)
+    df = run_timecourse(cellml_path, end=4.0, steps=4)
     assert np.allclose(df["x"], 20.0 - df["S1"])
     assert not np.allclose(df["S1"], 10.0)
 
@@ -332,8 +335,8 @@ def test_run_timecourse_missing_file(tmp_path: Path) -> None:
 
 
 def test_run_timecourse_tolerances() -> None:
-    default_df, _ = run_timecourse(TEST_MODEL_PATH, start=0.0, end=50.0, steps=10)
-    tight_df, _ = run_timecourse(
+    default_df = run_timecourse(TEST_MODEL_PATH, start=0.0, end=50.0, steps=10)
+    tight_df = run_timecourse(
         TEST_MODEL_PATH,
         start=0.0,
         end=50.0,
@@ -363,7 +366,7 @@ def _oscillator(tmp_path: Path) -> Path:
 
 def test_run_timecourse_takes_many_steps_between_outputs(tmp_path: Path) -> None:
     """The 500 steps of libopencor between two outputs are not the default."""
-    df, _ = run_timecourse(_oscillator(tmp_path), end=10.0, steps=1)
+    df = run_timecourse(_oscillator(tmp_path), end=10.0, steps=1)
     assert df["x"].iloc[-1] == pytest.approx(np.cos(1000.0), abs=1e-3)
 
 
@@ -375,7 +378,8 @@ def test_run_timecourse_maximum_number_of_steps(tmp_path: Path) -> None:
 
 
 def test_plot_timecourse() -> None:
-    df, units = run_timecourse(TEST_MODEL_PATH, end=10.0, steps=5)
+    units: dict[str, str] = {}
+    df = run_timecourse(TEST_MODEL_PATH, end=10.0, steps=5, units=units)
     fig = plot_timecourse(df, units, show=False)
     ax = fig.axes[0]
     # one line per column other than the variable of integration: m, alpha
@@ -403,8 +407,8 @@ def test_run_timecourse_scales_the_absolute_tolerance(tmp_path: Path) -> None:
     sbml_path = tmp_path / "small.xml"
     write_sbml(sbml_path, model)
     convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
-    scaled, _ = run_timecourse(cellml_path, end=10.0, steps=10, absolute_tolerance=1e-3)
-    unscaled, _ = run_timecourse(
+    scaled = run_timecourse(cellml_path, end=10.0, steps=10, absolute_tolerance=1e-3)
+    unscaled = run_timecourse(
         cellml_path,
         end=10.0,
         steps=10,
@@ -418,8 +422,8 @@ def test_run_timecourse_scales_the_absolute_tolerance(tmp_path: Path) -> None:
 
 def test_run_timecourse_warmup_keeps_the_result() -> None:
     """The discarded run changes nothing but the timings."""
-    warm, _ = run_timecourse(TEST_MODEL_PATH, end=10.0, steps=10, warmup=True)
-    cold, _ = run_timecourse(TEST_MODEL_PATH, end=10.0, steps=10)
+    warm = run_timecourse(TEST_MODEL_PATH, end=10.0, steps=10, warmup=True)
+    cold = run_timecourse(TEST_MODEL_PATH, end=10.0, steps=10)
     assert np.array_equal(warm.to_numpy(), cold.to_numpy())
 
 
@@ -429,6 +433,24 @@ def test_run_timecourse_analytic_model_of_time(tmp_path: Path) -> None:
     cellml_path = tmp_path / "analytic.cellml"
     write_sbml(sbml_path, analytic_time_model())
     convert_sbml2cellml(sbml_path, cellml_path=cellml_path)
-    df, _ = run_timecourse(cellml_path, start=0.0, end=10.0, steps=10)
+    df = run_timecourse(cellml_path, start=0.0, end=10.0, steps=10)
     assert np.allclose(df["A"].to_numpy(), 2.0 * df["time"].to_numpy())
     assert df["time"].iloc[-1] == 10.0
+
+
+def test_selections_of_the_result() -> None:
+    """The call of the SBML side: the selections keep the columns."""
+    df = run_timecourse(TEST_MODEL_PATH, ["m"], end=10.0, steps=5)
+    assert list(df.columns) == ["t", "m"]
+    every = run_timecourse(TEST_MODEL_PATH, end=10.0, steps=5)
+    np.testing.assert_allclose(df["m"], every["m"])
+    with pytest.raises(SimulationError, match="no variable 'missing'"):
+        run_timecourse(TEST_MODEL_PATH, ["missing"], end=10.0, steps=5)
+
+
+def test_the_model_as_a_document() -> None:
+    """A model given as text is simulated as the file of it is."""
+    text = TEST_MODEL_PATH.read_text(encoding="utf-8")
+    df = run_timecourse(text, ["m"], end=10.0, steps=5)
+    from_file = run_timecourse(TEST_MODEL_PATH, ["m"], end=10.0, steps=5)
+    np.testing.assert_allclose(df["m"], from_file["m"])

@@ -4,7 +4,9 @@
  * sliders for the parameters of both simulations: the CellML model of the
  * conversion with libopencor and the SBML model it was converted from with
  * sbmlsim-core. Nothing is uploaded and nothing is converted here, the two
- * models are the files of the page.
+ * models are the files of the page. The page loads the two simulators when
+ * it opens, so the simulation is the first thing the page shows; a load
+ * which fails says so and offers to try again.
  *
  * libopencor reads the CellML document itself. sbmlsim-core takes a model
  * which is compiled ahead of time, so `scripts/build_simulation.py` compiles
@@ -457,7 +459,7 @@
       };
       this.status = root.querySelector('[data-role="status"]');
       this.difference = root.querySelector('[data-role="difference"]');
-      this.start = root.querySelector('[data-action="start"]');
+      this.retry = root.querySelector('[data-action="retry"]');
       this.reset = root.querySelector('[data-action="reset"]');
       this.sliders = new Map();
       this.charts = {
@@ -472,7 +474,7 @@
       this.sbml = null;
       this.pending = null;
       this.buildSliders();
-      this.start.addEventListener("click", () => this.load());
+      this.retry.addEventListener("click", () => this.load());
       this.reset.addEventListener("click", () => this.restore());
       // the canvases follow the palette of the theme
       new MutationObserver(() => {
@@ -550,7 +552,7 @@
 
     /** Load both simulators and simulate the published model. */
     async load() {
-      this.start.disabled = true;
+      this.retry.hidden = true;
       this.say("Loading the two simulators, about 11 MB ...", "info");
       try {
         const versions = JSON.parse(await fetchText(this.urls.versions));
@@ -564,7 +566,6 @@
           input.disabled = false;
         }
         this.reset.disabled = false;
-        this.start.hidden = true;
         this.say(
           `libopencor ${versions.libopencor} and sbmlsim-core ` +
             `${versions["sbmlsim-core"]} run in this browser.`,
@@ -572,10 +573,10 @@
         );
         this.run();
       } catch (err) {
-        this.start.disabled = false;
+        this.retry.hidden = false;
         this.say(
           `The simulation is not available: ${err.message}. The models of ` +
-            "the page can be simulated locally, see the example above.",
+            "the page can be simulated locally, see the example below.",
           "error",
         );
       }
@@ -642,7 +643,7 @@
         continue;
       }
       root.dataset.started = "true";
-      new Simulation(root);
+      new Simulation(root).load();
     }
   }
 

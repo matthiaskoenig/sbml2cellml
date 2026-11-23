@@ -64,6 +64,10 @@ def read_config() -> dict[str, Any]:
 def parse_nav(nav: list[Any], section: str = "Documentation") -> list[Page]:
     """Flatten the nav of the configuration into a list of pages.
 
+    An entry which points into a page instead of to one, such as the
+    `Online converter` of the landing page, is no page of its own and is
+    left out.
+
     Args:
         nav: nav entries, i.e., single element dictionaries mapping a title to
             either a path or a list of nav entries.
@@ -80,7 +84,7 @@ def parse_nav(nav: list[Any], section: str = "Documentation") -> list[Page]:
                 # sections of `llms.txt` are flat
                 sub_section = section if section != "Documentation" else title
                 pages.extend(parse_nav(value, section=sub_section))
-            else:
+            elif value.endswith(".md"):
                 pages.append(Page(section=section, title=title, path=value))
     return pages
 

@@ -214,3 +214,28 @@ def test_run_timecourse_warmup_keeps_the_result(tmp_path: Path) -> None:
     warm = run_timecourse(path, ["S1"], end=1.0, steps=10, warmup=True)
     cold = run_timecourse(path, ["S1"], end=1.0, steps=10)
     assert np.array_equal(warm.to_numpy(), cold.to_numpy())
+
+
+def test_every_variable_without_selections(tmp_path: Path) -> None:
+    """The call of the CellML side: no selections gives every variable."""
+    sbml_path = write_sbml(tmp_path / "simple.xml", simple_model())
+    df = run_timecourse(sbml_path, end=4.0, steps=4)
+    assert df.columns[0] == "time"
+    for name in ("[S1]", "S1", "S2", "k1", "cell"):
+        assert name in df.columns
+    selected = run_timecourse(sbml_path, ["[S1]"], end=4.0, steps=4)
+    assert list(selected.columns) == ["time", "[S1]"]
+    np.testing.assert_allclose(df["[S1]"], selected["[S1]"])
+
+
+def test_the_units_of_the_columns(tmp_path: Path) -> None:
+    """`units` is filled as the libopencor side fills it."""
+    sbml_path = write_sbml(tmp_path / "simple.xml", simple_model())
+    units: dict[str, str] = {}
+    df = run_timecourse(
+        sbml_path, ["[S1]", "S1", "k1", "cell"], end=1.0, steps=1, units=units
+    )
+    assert set(units) == set(df.columns)
+    assert units["time"] == "time"
+    assert units["S1"] == "substance"
+    assert units["[S1]"] == "substance/volume"

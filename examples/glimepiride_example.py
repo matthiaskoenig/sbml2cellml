@@ -56,6 +56,7 @@ if __name__ == "__main__":
     paths = convert_glimepiride_models(RESULTS_DIR)
     for name in SIMULATED_MODELS:
         console.rule(f"simulate {name}", style="white")
-        df, units = run_timecourse(paths[name], start=0.0, end=100.0, steps=100)
+        units: dict[str, str] = {}
+        df = run_timecourse(paths[name], start=0.0, end=100.0, steps=100, units=units)
         console.print(df)
         plot_timecourse(df=df, units=units)
