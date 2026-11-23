@@ -158,7 +158,9 @@ def python_cellml(path: Path, target: Path) -> str | None:
         `None` when the conversion worked, else the message of its failure.
     """
     try:
-        convert_sbml2cellml(path, target, validate=False, metadata=False)
+        convert_sbml2cellml(
+            path, target, validate=False, metadata=False, engine="python"
+        )
     except Exception as err:
         return str(err).splitlines()[0]
     return None
