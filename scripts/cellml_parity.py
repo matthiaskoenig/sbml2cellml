@@ -9,9 +9,10 @@ variables, the encapsulation and the equivalence sets of the connections.
 Of the 101 documents of the corpus, 96 are read identically, 4 are read by
 the rust reader alone, since libcellml refuses them (a non whitespace text
 in a component, a namespace URI which is not absolute), and 1 differs in
-what a variable exposes: libcellml infers the interface of a variable
-which a connection maps onto an encapsulated component, the reader keeps
-what the document declares.
+what a variable exposes: the permissive parser of libcellml reads the
+interface of a variable of CellML 1.0 from the presence of the attributes
+``public_interface`` and ``private_interface`` and not from their values
+(cellml/libcellml#1528), the reader takes the value.
 
 The script is run locally, like the checks of BioModels and of the
 Physiome repository, and needs the command line of the rust workspace:

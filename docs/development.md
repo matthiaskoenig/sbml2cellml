@@ -302,7 +302,11 @@ uv run python scripts/cellml_parity.py        # the corpus
 uv run python scripts/cellml_parity.py --count 10 -v
 ```
 
-Of the 101 documents of the corpus, 96 are read identically (the version, the components with their variables, the units of a variable, its initial value and what it exposes, the encapsulation and the equivalence sets), 4 are read by the rust reader alone, since libcellml refuses them (a non whitespace text in a component, a namespace URI which is not absolute), and 1 differs in what a variable exposes: libcellml infers the interface of a variable which a connection maps onto an encapsulated component, the reader keeps what the document declares.
+Of the 101 documents of the corpus, 96 are read identically (the version, the components with their variables, the units of a variable, its initial value and what it exposes, the encapsulation and the equivalence sets), 4 are read by the rust reader alone, since libcellml refuses them (a non whitespace text in a component, a namespace URI which is not absolute), and 1 differs in what a variable exposes: the permissive parser of libcellml reads the interface of a
+variable of CellML 1.0 from the presence of the attributes `public_interface` and `private_interface`
+and not from their values, so a variable which declares `private_interface="none"` is given a private
+interface ([cellml/libcellml#1528](https://github.com/cellml/libcellml/issues/1528)); the reader takes
+the value, as the specification defines it.
 
 ## Release
 

@@ -160,6 +160,38 @@ fn reads_the_connections_and_the_group_of_a_1_0_model() {
     assert!(model.components[1].variables[1].is_private());
 }
 
+/// A model of CellML 1.0 whose variables declare both interfaces, the style
+/// of the Guyton models of the Physiome Model Repository.
+const DECLARED: &str = r#"<?xml version="1.0"?>
+<model xmlns="http://www.cellml.org/cellml/1.0#" name="declared">
+  <component name="c">
+    <variable name="nothing" units="dimensionless" public_interface="none" private_interface="none"/>
+    <variable name="out" units="dimensionless" public_interface="out" private_interface="none"/>
+    <variable name="down" units="dimensionless" public_interface="none" private_interface="out"/>
+    <variable name="both" units="dimensionless" public_interface="in" private_interface="out"/>
+  </component>
+</model>"#;
+
+#[test]
+fn the_interface_of_a_1_0_variable_is_the_value_of_its_attributes() {
+    // libcellml 0.7.2 reads the presence of the attributes and not their
+    // values, so every one of these variables is public and private to it,
+    // cellml/libcellml#1528.
+    let document = read(DECLARED).unwrap();
+    let variables = &document.model.components[0].variables;
+    let interfaces: Vec<(bool, bool)> = variables
+        .iter()
+        .map(|variable| (variable.is_public(), variable.is_private()))
+        .collect();
+    assert_eq!(
+        interfaces,
+        [(false, false), (true, false), (false, true), (true, true)]
+    );
+    assert_eq!(variables[0].public_interface, Direction::None);
+    assert_eq!(variables[3].public_interface, Direction::In);
+    assert_eq!(variables[3].private_interface, Direction::Out);
+}
+
 #[test]
 fn the_equivalence_sets_are_the_connected_variables() {
     let document = read(GROUPED).unwrap();
