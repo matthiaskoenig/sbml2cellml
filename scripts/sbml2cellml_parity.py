@@ -25,22 +25,24 @@ with it the python converter do not take for each other). An initial value
 is compared to twelve significant digits, since libcellml writes fifteen of
 them and the rust writer every digit of the double.
 
-Of the 1692 cases of the SBML test suite, 998 are converted by both
-converters and 997 of them give the same CellML model; 569 are refused by
-the rust converter and 125 need `comp`. Of the 1075 models of BioModels, 896
-are converted by both and 895 of them give the same model.
+Of the 1692 cases of the SBML test suite, 1427 are converted by both
+converters and 1426 of them give the same CellML model; 140 are refused by
+the rust converter (an algebraic rule, a formula with a delay or a
+factorial) and 125 need `comp`. Of the 1075 models of BioModels, 1063 are
+converted by both and 1061 of them give the same model.
 
-The two models which differ differ because the rust converter is right and
+The three models which differ differ because the rust converter is right and
 the python converter follows libsbml:
 
 - case `01282` of the test suite: libsbml evaluates a number as a condition
   of a `piecewise` as true only when it is 1, where every simulator and the
   rust converter take a value which is not zero as true. The expected result
   of the case is the value of the rust converter.
-- `BIOMD0000000040` of BioModels: the rust path converts the
-  `<stoichiometryMath>` of a species reference, which the reader of SBML
-  writes as an assignment rule of the id it gives the reference, where the
-  python converter takes the stoichiometry as it stands (issue #86).
+- `BIOMD0000000040` and `BIOMD0000000437` of BioModels: the rust path
+  converts the `<stoichiometryMath>` of a species reference, which the
+  reader of SBML writes as an assignment rule of the id it gives the
+  reference or as the number it is, where the python converter takes the
+  stoichiometry as it stands (issue #86).
 
 The script is run locally, like the checks of BioModels and of the Physiome
 repository, and needs the command line of the rust workspace:

@@ -36,9 +36,10 @@
 //! algebraic rule, an event and an initial assignment.
 
 use crate::eval::Start;
+use crate::events::{self, Event};
 use crate::math::{self, Functions, MathError, Names};
 use crate::units::{DIMENSIONLESS, Units, is_annotated};
-use cellml::{Component, Interface, Node, Operator, Variable};
+use cellml::{Component, Interface, Node, Operator, Reset, Variable};
 use sbml::math::{Node as Sbml, Op};
 use sbml::{Document, Model, Rule, Species, SpeciesReference};
 use std::collections::{HashMap, HashSet};
@@ -61,9 +62,6 @@ pub enum ConvertError {
     /// solution at the start.
     #[error("an algebraic rule is not converted")]
     AlgebraicRule,
-    /// An event, which becomes the resets of the model.
-    #[error("the event '{0}' is not converted")]
-    Event(String),
 }
 
 /// A converted model and what the conversion has to say about it.
@@ -109,6 +107,8 @@ struct Formulas {
     /// The state of a model whose formulas use time without a differential
     /// equation, which integrates it.
     time_state: Option<String>,
+    /// The events of the model, which become the resets of the component.
+    events: Vec<Event>,
 }
 
 impl Formulas {
@@ -261,11 +261,6 @@ fn refuse_what_is_not_converted(model: &Model) -> Result<(), ConvertError> {
     {
         return Err(ConvertError::AlgebraicRule);
     }
-    if let Some(event) = model.events.first() {
-        return Err(ConvertError::Event(
-            event.id.clone().unwrap_or_else(|| "0".to_string()),
-        ));
-    }
     Ok(())
 }
 
@@ -308,6 +303,7 @@ fn collect(model: &Model, warnings: &mut Vec<String>) -> Result<Formulas, Conver
             Rule::Algebraic { .. } => return Err(ConvertError::AlgebraicRule),
         }
     }
+    formulas.events = events::collect(model, &functions, &mut used, warnings)?;
     for assignment in &model.initial_assignments {
         if let Some(math) = &assignment.math {
             formulas
@@ -1036,6 +1032,9 @@ fn build(
     for (id, _) in &formulas.rates {
         add(&mut component, id, None, &of);
     }
+    for event in &formulas.events {
+        add(&mut component, &event.trigger, None, &of);
+    }
 
     for (id, formula) in &formulas.assignment_rules {
         let equation = math::expression(formula, &names, &mut units)?;
@@ -1072,6 +1071,12 @@ fn build(
         let equation = math::expression(formula, &names, &mut units)?;
         component.math.push(assignment(id, equation));
     }
+    for event in &formulas.events {
+        let condition = events::trigger_equation(&event.condition);
+        let equation = math::expression(&condition, &names, &mut units)?;
+        component.math.push(assignment(&event.trigger, equation));
+    }
+    add_resets(&mut component, formulas, &names, &mut units, warnings)?;
     let states: HashSet<&str> = formulas
         .rate_rules
         .iter()
@@ -1092,6 +1097,73 @@ fn build(
         },
         warnings: std::mem::take(warnings),
     })
+}
+
+/// Adds the resets of the events of the model.
+///
+/// Every assignment of an event becomes a reset of its variable which fires
+/// when the variable of the trigger of the event reaches 1; SBML fires the
+/// event of the highest priority first and CellML applies the reset of the
+/// lowest order, so the resets are ordered by the priority of their event.
+/// The assignment of a species with a variable of its amount sets the
+/// amount, which is the state of the CellML model.
+fn add_resets(
+    component: &mut Component,
+    formulas: &Formulas,
+    names: &Names,
+    units: &mut Units,
+    warnings: &mut Vec<String>,
+) -> Result<(), ConvertError> {
+    let variables: HashSet<&str> = component
+        .variables
+        .iter()
+        .map(|variable| variable.name.as_str())
+        .collect();
+    let mut events: Vec<&Event> = formulas.events.iter().collect();
+    events.sort_by(|one, other| {
+        other
+            .priority
+            .partial_cmp(&one.priority)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+    let mut order = 0;
+    for event in events {
+        for (id, formula) in &event.assignments {
+            let amount = formulas
+                .amounts
+                .iter()
+                .find(|(species, _)| species == id)
+                .map(|(_, amount)| amount);
+            let (variable, value) = match amount {
+                Some(amount) => (
+                    amount.variable.clone(),
+                    apply(
+                        Op::Times,
+                        vec![formula.clone(), Sbml::Symbol(amount.compartment.clone())],
+                    ),
+                ),
+                None => (id.clone(), formula.clone()),
+            };
+            if !variables.contains(variable.as_str()) {
+                warnings.push(format!(
+                    "the event '{}' assigns '{id}', which is no variable of the model: the assignment is not converted",
+                    event.id
+                ));
+                continue;
+            }
+            let test = math::expression(&Sbml::number(1.0), names, units)?;
+            let reset = math::expression(&value, names, units)?;
+            component.resets.push(Reset {
+                variable: variable.clone(),
+                test_variable: event.trigger.clone(),
+                order,
+                test_value: Some(assignment(&event.trigger, test)),
+                reset_value: Some(assignment(&variable, reset)),
+            });
+            order += 1;
+        }
+    }
+    Ok(())
 }
 
 /// Adds a variable to the component, with its units and its initial value;

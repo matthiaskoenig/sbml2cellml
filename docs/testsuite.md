@@ -20,7 +20,7 @@ An `sbmlsim` failure means sbmlsim-core itself cannot simulate the case, it says
 | sbml2cellml | 1658 | 1610 | 48 | 0 | 97.1% |
 | libopencor | 1658 | 1153 | 457 | 48 | 69.5% |
 | cellml2sbml | 1658 | 1610 | 0 | 48 | 97.1% |
-| roundtrip | 1658 | 1320 | 290 | 48 | 79.6% |
+| roundtrip | 1658 | 1321 | 289 | 48 | 79.7% |
 
 1008 of the 1153 cases with a passing libopencor stage are informative: the expected results move more than the tolerance band for at least one variable.
 
@@ -35,11 +35,11 @@ The two simulators integrate with the same relative tolerance and with an absolu
 
 | stage | simulator | model | simulations | setup median | integration median | integration p95 | integration slowest | integration total |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| sbmlsim | sbmlsim-core | SBML model | 1658 | 2.8 ms | 0.16 ms | 3.3 ms | 814 ms | 2.5 s |
-| libopencor | libopencor | CellML model | 1608 | 11 ms | 0.12 ms | 0.31 ms | 31 ms | 361 ms |
-| roundtrip | sbmlsim-core | roundtrip SBML model | 1609 | 2.9 ms | 0.17 ms | 0.50 ms | 2.2 s | 3.9 s |
+| sbmlsim | sbmlsim-core | SBML model | 1658 | 1.00 ms | 0.07 ms | 0.19 ms | 754 ms | 1.6 s |
+| libopencor | libopencor | CellML model | 1608 | 4.7 ms | 0.06 ms | 0.12 ms | 0.73 ms | 89 ms |
+| roundtrip | sbmlsim-core | roundtrip SBML model | 1609 | 1.1 ms | 0.07 ms | 0.17 ms | 2.1 s | 3.2 s |
 
-The two simulators integrate the same dynamics for 1153 cases, those whose CellML model reproduces the expected results. libopencor is 1.2 times faster than sbmlsim-core for the median of them and faster for 785; over these cases the medians are 0.16 ms for sbmlsim-core and 0.13 ms for libopencor.
+The two simulators integrate the same dynamics for 1153 cases, those whose CellML model reproduces the expected results. libopencor is 1.1 times faster than sbmlsim-core for the median of them and faster for 757; over these cases the medians are 0.07 ms for sbmlsim-core and 0.06 ms for libopencor.
 
 ## Failure reasons
 
@@ -840,9 +840,9 @@ The test tags of the cases with a numerical mismatch:
 
 ### roundtrip
 
-290 of 1658 cases fail.
+289 of 1658 cases fail.
 
-**287 cases, numerical mismatch**
+**286 cases, numerical mismatch**
 
 ```text
 00071: S1 exceeds the tolerance by 0.873; S2 exceeds the tolerance by 0.786
@@ -992,7 +992,6 @@ The test tags of the cases with a numerical mismatch:
 01228: S1 exceeds the tolerance by 4.5
 01229: S1 exceeds the tolerance by 4.5
 01230: S1 exceeds the tolerance by 4.5; k1 exceeds the tolerance by 1
-01241: p exceeds the tolerance by 2
 01260: p2 exceeds the tolerance by 9
 01261: p2 exceeds the tolerance by 5
 01263: p2 exceeds the tolerance by 5
@@ -1273,7 +1272,6 @@ The test tags of the cases with a numerical mismatch:
 | EventUsesTriggerTimeValues, NoMathML, NonConstantParameter | 1 | 01601 |
 | EventUsesTriggerTimeValues, NonConstantParameter, comp:TimeConversionFactor | 1 | 01177 |
 | InitialValueReassigned, NonConstantParameter | 1 | 01261 |
-| NoMathML, NonConstantParameter | 1 | 01241 |
 
 ## Skipped cases
 
@@ -2452,7 +2450,7 @@ The test tags of the cases with a numerical mismatch:
 | 01238 | EventNoDelay, Parameter | pass | pass | pass | pass | pass | no |
 | 01239 | EventNoDelay, Parameter | pass | pass | pass | pass | pass | no |
 | 01240 | CSymbolTime, EventNoDelay, Parameter | pass | pass | pass | pass | pass | no |
-| 01241 | CSymbolTime, EventWithDelay, Parameter | pass | pass | fail | pass | fail | yes |
+| 01241 | CSymbolTime, EventWithDelay, Parameter | pass | pass | fail | pass | pass | yes |
 | 01242 | CSymbolTime, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | pass | yes |
 | 01243 | CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | pass | yes |
 | 01244 | AlgebraicRule, Parameter | pass | pass | pass | pass | pass | no |
