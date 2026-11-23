@@ -142,11 +142,36 @@
    * The name of a variable of libopencor without its component.
    *
    * @param {string} name The name, which is `component/variable`.
-   * @returns {string} The name of the variable, which the plot labels.
+   * @returns {string} The name of the variable.
    */
   function variableName(name) {
     const slash = name.indexOf("/");
     return slash < 0 ? name : name.slice(slash + 1);
+  }
+
+  /**
+   * The labels of the states, as `simulate._result_names` writes them.
+   *
+   * The `component/variable` of libopencor becomes the name of the
+   * variable, which is what a model of one component needs; a name which
+   * more than one state has keeps its component, so the states of a model
+   * of many components stay apart.
+   *
+   * @param {string[]} names The names of the states of the result.
+   * @returns {Object<string, string>} The label of every name.
+   */
+  function labelsOfStates(names) {
+    const count = new Map();
+    for (const name of names) {
+      const short = variableName(name);
+      count.set(short, (count.get(short) ?? 0) + 1);
+    }
+    return Object.fromEntries(
+      names.map((name) => {
+        const short = variableName(name);
+        return [name, count.get(short) === 1 ? short : name];
+      }),
+    );
   }
 
   /**
@@ -158,9 +183,10 @@
    */
   function seriesOf(result) {
     const colors = window.sbml2cellmlChart.COLORS;
+    const labels = labelsOfStates(result.names);
     return result.names.slice(0, SERIES).map((name, index) => ({
       id: name,
-      label: variableName(name),
+      label: labels[name],
       color: colors[index % colors.length],
     }));
   }
@@ -235,6 +261,11 @@
         { x: "time", y: "value" },
       );
       this.text = null;
+      /** The result of the last run, which the legend redraws. */
+      this.result = null;
+      this.timecourse = { end: 1, steps: 1 };
+      this.series = [];
+      this.hidden = new Set();
       this.button.addEventListener("click", () => void this.run());
     }
 
@@ -322,27 +353,64 @@
      * @param {{end: number}} timecourse What was integrated.
      */
     draw(result, timecourse) {
-      const series = seriesOf(result);
-      const range = rangeOf(result, series);
+      this.result = result;
+      this.timecourse = timecourse;
+      this.series = seriesOf(result);
+      this.hidden = new Set();
       this.plot.hidden = false;
-      this.chart.show(result, {
-        series,
-        range: { start: 0, end: timecourse.end },
-        maximum: range.maximum,
-        minimum: range.minimum,
-        labels: labelsOf(result, series),
-      });
       this.legend.replaceChildren(
-        ...series.map((entry) => {
-          const item = document.createElement("span");
+        ...this.series.map((entry) => {
+          // a series of the plot is shown or hidden with its legend, so a
+          // state of a model of many states is read next to its own axis
+          const item = document.createElement("button");
+          item.type = "button";
           item.className = "converter__legend-item";
+          item.setAttribute("aria-pressed", "true");
+          item.title = `Hide ${entry.label}`;
           const swatch = document.createElement("span");
           swatch.className = "converter__swatch";
           swatch.style.background = entry.color;
           item.append(swatch, document.createTextNode(entry.label));
+          item.addEventListener("click", () => this.toggle(entry, item));
           return item;
         }),
       );
+      this.plotSeries();
+    }
+
+    /**
+     * Show or hide a series of the plot.
+     *
+     * @param {{id: string, label: string}} entry The series of the legend.
+     * @param {HTMLButtonElement} item Its item of the legend.
+     */
+    toggle(entry, item) {
+      const hidden = this.hidden.has(entry.id);
+      if (hidden) {
+        this.hidden.delete(entry.id);
+      } else if (this.hidden.size + 1 < this.series.length) {
+        // the last series of the plot stays, so the plot is never empty
+        this.hidden.add(entry.id);
+      } else {
+        return;
+      }
+      const shown = !this.hidden.has(entry.id);
+      item.setAttribute("aria-pressed", String(shown));
+      item.title = `${shown ? "Hide" : "Show"} ${entry.label}`;
+      this.plotSeries();
+    }
+
+    /** Draw the series of the result which are not hidden. */
+    plotSeries() {
+      const series = this.series.filter((entry) => !this.hidden.has(entry.id));
+      const range = rangeOf(this.result, series);
+      this.chart.show(this.result, {
+        series,
+        range: { start: 0, end: this.timecourse.end },
+        maximum: range.maximum,
+        minimum: range.minimum,
+        labels: labelsOf(this.result, series),
+      });
     }
   }
 

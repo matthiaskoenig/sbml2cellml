@@ -577,7 +577,10 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   `docs/roundtrip/simulation/versions.json` which
   `scripts/build_simulation.py` writes, and the states of the result are
   drawn on a canvas (`SERIES`, the first eight, the labels of the axes with
-  the units of the model) with the solver settings of the python package.
+  the units of the model, the name of a state with its component when
+  another state has that name as well) with the solver settings of the
+  python package; an item of the legend shows or hides its series, and the
+  axis follows the series which are shown.
   The SBML side is not simulated there: sbmlsim-core compiles a model ahead
   of time and its compiler is not part of its JavaScript host, so the
   browser runs a model which is compiled for it, as the roundtrip page

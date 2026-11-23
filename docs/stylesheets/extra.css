@@ -368,10 +368,21 @@
   margin-top: 0.4rem;
 }
 
+/* a series is shown or hidden with its item of the legend */
 .md-typeset .converter__legend-item {
   align-items: center;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
   display: flex;
+  font-size: inherit;
   gap: 0.3rem;
+  padding: 0;
+}
+
+.md-typeset .converter__legend-item[aria-pressed="false"] {
+  opacity: 0.4;
 }
 
 .md-typeset .converter__swatch {
