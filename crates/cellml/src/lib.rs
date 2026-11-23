@@ -36,7 +36,7 @@ mod model;
 mod write;
 
 pub use equivalence::{VariableRef, equivalence_sets};
-pub use math::{MathError, Node, Operator};
+pub use math::{Constant, MathError, Node, Operator};
 pub use model::{
     CELLML_NS_1_0, CELLML_NS_1_1, CELLML_NS_2_0, Component, ComponentRef, Connection, Direction,
     Document, Import, ImportRef, ImportedItem, Interface, Model, ReadError, Reset, Unit, Units,

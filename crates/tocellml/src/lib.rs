@@ -13,6 +13,8 @@
 //! `dimensionless`, as in the python converter.
 
 pub mod ids;
+pub mod math;
 pub mod units;
 
+pub use math::{Functions, MathError, Names, expression};
 pub use units::{DIMENSIONLESS, Units, is_annotated};
