@@ -268,6 +268,18 @@ The check is run locally and not in continuous integration: it clones about a hu
 
 `uv run sbml2cellml-physiome update` refreshes the committed selection `physiome/models.json` from the current exposures of the repository: it reads the listing of every exposure, keeps the ones which publish a CellML file (the exposure of a workspace which was published again counts once) and writes the first 100 of them by exposure id, each with the workspace, the commit and the file, so that a run of the check is reproducible. It is run occasionally, not with every check.
 
+## Models and benchmarks { #overview }
+
+`sbml2cellml.overview` renders the two pages across the checks from their committed results, it runs no simulation: [Models](models.md) (`docs/models.md`), which models of the three checks the converters handle, and [Benchmarks](benchmarks.md) (`docs/benchmarks.md`), the wall time of the two simulators over the models both of them run.
+
+```bash
+uv run sbml2cellml-overview
+```
+
+reads `testsuite/results.json`, `biomodels/results.json` and `physiome/results.json` (a missing file is logged and left out) and writes the two pages, the scatter of the integration times `docs/images/benchmarks.svg` (`benchmarks_dark.svg` for dark backgrounds, also shown in `README.md`) and the median wall times `docs/images/benchmarks_medians.svg` (`benchmarks_medians_dark.svg`). The model page gives every check the same five roles, whatever the order of its stages is: the source model is simulated, converted to the other language, the converted model reproduces the simulation of the source model, it is converted back and the roundtrip model reproduces it again; a model works when every one of these stages passes. Every model of BioModels and of the Physiome Model Repository is listed with a link to its page in the repository, the status of its stages and whether it works, and the models which do not run at all with the reason.
+
+The two pages are generated and committed, and they are rendered from the results files alone: `tests/test_overview.py` renders both of them from the committed `results.json` files and fails when they differ from `docs/benchmarks.md` and `docs/models.md`, so a check which ran without the overview being rerun is caught by the unit tests. Rerun the command after any check wrote new results, and commit the pages and the figures with them.
+
 ## Release
 
 A release is made from `develop`. Since `develop` only accepts pull requests,

@@ -17,4 +17,6 @@ uv run sbml2cellml-physiome run
 tox r -e physiome     # the same in the locked environment with python 3.14
 ```
 
+After a run, `uv run sbml2cellml-overview` rerenders the two pages across the checks (`docs/models.md` and `docs/benchmarks.md`) from the results files; the unit tests fail while they are stale.
+
 How the check works and its options are described in [Development](https://matthiaskoenig.github.io/sbml2cellml/development/#physiome).

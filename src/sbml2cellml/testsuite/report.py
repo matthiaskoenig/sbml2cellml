@@ -7,6 +7,7 @@ from statistics import median
 
 from sbml2cellml.testsuite.figure import (
     dark_path,
+    duration_text,
     timing_pairs,
     write_figures,
     write_timing_figures,
@@ -139,26 +140,6 @@ def timings_figure(figure: str) -> str:
     return str(path.with_name(f"{path.stem}_timings{path.suffix}"))
 
 
-def duration_text(seconds: float) -> str:
-    """A wall time as it is written in the reports.
-
-    Args:
-        seconds: a wall time.
-
-    Returns:
-        Milliseconds below one second, with a decimal below ten
-        milliseconds, seconds below a minute and minutes above it, e.g.
-        `1.4 ms`, `18 ms`, `2.4 s`, `3.1 min`.
-    """
-    if seconds < 0.01:
-        return f"{seconds * 1e3:.1f} ms"
-    if seconds < 1.0:
-        return f"{seconds * 1e3:.0f} ms"
-    if seconds < 60.0:
-        return f"{seconds:.1f} s"
-    return f"{seconds / 60.0:.1f} min"
-
-
 def _quantile(values: list[float], fraction: float) -> float:
     """Value at a fraction of the sorted values, the nearest rank.
 
@@ -285,7 +266,7 @@ def without_timings(markdown: str) -> str:
     return markdown[:start] + (markdown[end:] if end >= 0 else "")
 
 
-def _cell(text: str) -> str:
+def cell(text: str) -> str:
     """Escape a text for a markdown table cell.
 
     Args:
@@ -472,7 +453,7 @@ def render_report(
 
     lines += ["## Skipped cases", "", "| reason | cases |", "| --- | --- |"]
     for reason, count in sorted(Counter(result.skipped.values()).items()):
-        lines.append(f"| {_cell(reason)} | {count} |")
+        lines.append(f"| {cell(reason)} | {count} |")
 
     name_header = "name | " if names else ""
     name_sep = "--- | " if names else ""
@@ -489,7 +470,7 @@ def render_report(
     ]
     for cid, case in sorted(result.cases.items()):
         statuses = " | ".join(case.stages[stage].status for stage in result.stages)
-        name_cell = f"{_cell(case.name)} | " if names else ""
+        name_cell = f"{cell(case.name)} | " if names else ""
         if case.informative is None:
             informative_cell = ""
         else:
