@@ -330,6 +330,23 @@ uv run python scripts/convert_benchmark.py   # the two engines over the corpus, 
   condition of a test variable which is `piecewise(1, condition, 0)` as
   the conversion of an SBML event writes it; the priority is the negated
   order, a variable which only a reset writes is no constant).
+  `crates/tocellml` is the conversion of an SBML model to CellML, the
+  counterpart of `crates/convert` (issue #82, the stages of its plan): the
+  SBML document is read by `sbmlsim-sbml` of sbmlsim-core, a git dependency
+  which reads every level and version of SBML core into the model of level 3,
+  so the conversion never sees a level, and the CellML model it builds is
+  written by `crates/cellml`. `units.rs` is the port of `cellmlunits.py`
+  (`Units`: every unit definition as CellML units, a scale and a multiplier
+  which is a power of ten as the prefix, any other multiplier as its power,
+  `item` as new base units and `avogadro` as the dimensionless units of its
+  value; the units of a compartment, a parameter, a species, an amount and
+  the rate of a reaction, with the unit definition of the model which is
+  identical to a quotient instead of new `a_per_b` units; the built in units
+  of level 1 and 2, which the reader defines for every such model, are the
+  kinds they stand for and no units of the CellML model, and `is_annotated`
+  does not count them, so a model without units of its own is no incomplete
+  annotation), `ids.rs` the names of CellML (`sanitize_name`,
+  `unique_name`).
   `crates/python` is the module `sbml2cellml._rust` (pyo3, `abi3-py314`,
   no default member of the workspace: a test binary would have to link
   libpython). `crates/cellml` is the reader of CellML 2.0,

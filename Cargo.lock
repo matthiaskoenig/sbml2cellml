@@ -146,11 +146,28 @@ name = "sbml2cellml-sbml"
 version = "0.0.0"
 
 [[package]]
+name = "sbml2cellml-tocellml"
+version = "0.0.0"
+dependencies = [
+ "sbml2cellml-cellml",
+ "sbmlsim-sbml",
+]
+
+[[package]]
 name = "sbml2cellml-wasm"
 version = "0.0.0"
 dependencies = [
  "sbml2cellml-cellml",
  "sbml2cellml-convert",
+]
+
+[[package]]
+name = "sbmlsim-sbml"
+version = "0.21.0"
+source = "git+https://github.com/matthiaskoenig/sbmlsim-core?rev=37427c9#37427c9846cc29c9ed7717be5a821f34647a78f5"
+dependencies = [
+ "roxmltree",
+ "thiserror",
 ]
 
 [[package]]

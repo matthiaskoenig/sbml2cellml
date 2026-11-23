@@ -4,6 +4,7 @@ members = [
     "crates/cellml",
     "crates/sbml",
     "crates/convert",
+    "crates/tocellml",
     "crates/cli",
     "crates/python",
     "crates/wasm",
@@ -15,6 +16,7 @@ default-members = [
     "crates/cellml",
     "crates/sbml",
     "crates/convert",
+    "crates/tocellml",
     "crates/cli",
     "crates/wasm",
 ]
