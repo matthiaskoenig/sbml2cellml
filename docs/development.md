@@ -220,6 +220,29 @@ checks of the repository run. The page loads them when it opens, about 11 MB,
 which the browser caches; without the assets the page says that the simulation
 is not available and offers to try again.
 
+The [online simulator](index.md#online-simulator) of the landing page
+simulates a published model of BioModels or of the Physiome Model Repository
+and its conversion next to each other, with the module of the converter and
+the two simulators above. It reads its models and everything it needs of them
+from `docs/simulator/`, which the script below writes and which is committed,
+since the caches of the BioModels and of the Physiome check are local:
+
+```bash
+uv run python scripts/build_simulator_models.py
+```
+
+The selection is `CHOICES` of the script, one entry per model with the
+timecourse of its plots; the first one is the model the page opens with. For
+every model the script takes the first six parameters a slider can set and
+the first eight states as the series of the plots, with the id of the SBML
+parameter, the component and the variable of CellML and the selection of
+sbmlsim-core for each of them, so the page needs no analysis of its own. It
+refuses a model which does not pass every stage of its check, which the rust
+converter refuses, whose two simulations differ by more than the tolerance of
+the checks, at the published values and with every slider moved, or whose
+sliders do not change the simulation; `tests/test_simulator_models.py` checks
+the committed selection against the models and both converters.
+
 The API reference is rendered from the docstrings by [mkdocstrings](https://mkdocstrings.github.io/); a page in `docs/api/` only contains the module directive:
 
 ```markdown

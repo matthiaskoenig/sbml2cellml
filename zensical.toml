@@ -13,14 +13,17 @@ extra_css = ["stylesheets/extra.css"]
 # the online converter of the landing page, see `scripts/build_wasm.py`
 extra_javascript = [
   "javascripts/chart.js",
+  "javascripts/wasm.js",
   "javascripts/simulate.js",
   "javascripts/converter.js",
+  "javascripts/simulator.js",
   "javascripts/repressilator.js",
 ]
 
 nav = [
   { "Home" = "index.md" },
   { "Online converter" = "index.html#online-converter" },
+  { "Online simulator" = "index.html#online-simulator" },
   { "User guide" = [
     { "Installation" = "installation.md" },
     { "Roundtrip example" = "roundtrip.md" },

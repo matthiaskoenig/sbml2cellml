@@ -137,7 +137,11 @@ def test_the_panels_of_the_converter_have_a_simulation() -> None:
     the canvas of the CellML plot and of the SBML plot and the line of the
     difference between the two results.
     """
-    page = (ROOT / "docs" / "index.md").read_text(encoding="utf-8")
+    index = (ROOT / "docs" / "index.md").read_text(encoding="utf-8")
+    # the online simulator of the page below the converter has markup of
+    # its own, which this test is not about
+    page, _, simulator = index.partition("## Online simulator")
+    assert simulator, "the page has no online simulator"
     for direction in ("cellml2sbml", "sbml2cellml"):
         assert f'data-panel="{direction}"' in page, f"no panel of {direction}"
     roles = (
