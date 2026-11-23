@@ -199,6 +199,48 @@ fn an_operator_keeps_its_element() {
 }
 
 #[test]
+fn a_sum_of_sums_and_a_product_of_products_are_written_as_one_operator() {
+    // libsbml writes them as one operator of all of their arguments, in
+    // either direction of the nesting, so both converters give an equation
+    // the same mathematics
+    assert_eq!(
+        convert("<apply><plus/><apply><plus/><ci>a</ci><ci>b</ci></apply><ci>c</ci></apply>"),
+        Ok(apply(
+            "plus",
+            vec![variable("a"), variable("b"), variable("c")]
+        ))
+    );
+    assert_eq!(
+        convert("<apply><times/><ci>a</ci><apply><times/><ci>b</ci><ci>c</ci></apply></apply>"),
+        Ok(apply(
+            "times",
+            vec![variable("a"), variable("b"), variable("c")]
+        ))
+    );
+    // a nesting of other operators stays as it is
+    assert_eq!(
+        convert("<apply><minus/><apply><minus/><ci>a</ci><ci>b</ci></apply><ci>c</ci></apply>"),
+        Ok(apply(
+            "minus",
+            vec![
+                apply("minus", vec![variable("a"), variable("b")]),
+                variable("c"),
+            ]
+        ))
+    );
+    assert_eq!(
+        convert("<apply><and/><apply><and/><ci>a</ci><ci>b</ci></apply><ci>c</ci></apply>"),
+        Ok(apply(
+            "and",
+            vec![
+                apply("and", vec![variable("a"), variable("b")]),
+                variable("c"),
+            ]
+        ))
+    );
+}
+
+#[test]
 fn the_quotient_is_the_floor_of_the_division() {
     assert_eq!(
         convert("<apply><quotient/><ci>a</ci><ci>b</ci></apply>"),
@@ -386,7 +428,8 @@ fn a_call_of_a_function_definition_is_expanded() {
         ),
         Ok(apply("times", vec![variable("a"), number(2.0, "per_min")]))
     );
-    // the call of a function inside an argument is expanded as well
+    // the call of a function inside an argument is expanded as well, and
+    // the product of a product is written as one operator
     assert_eq!(
         expanded(
             "<apply><ci>f</ci><apply><ci>f</ci><ci>a</ci><ci>b</ci></apply><ci>c</ci></apply>",
@@ -394,10 +437,7 @@ fn a_call_of_a_function_definition_is_expanded() {
         ),
         Ok(apply(
             "times",
-            vec![
-                apply("times", vec![variable("a"), variable("b")]),
-                variable("c"),
-            ]
+            vec![variable("a"), variable("b"), variable("c")]
         ))
     );
 }
@@ -428,7 +468,8 @@ fn a_call_of_a_function_which_calls_a_function_is_expanded() {
             "times",
             vec![
                 number(2.0, "dimensionless"),
-                apply("times", vec![number(2.0, "dimensionless"), variable("a")]),
+                number(2.0, "dimensionless"),
+                variable("a"),
             ]
         ))
     );

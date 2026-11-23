@@ -365,6 +365,11 @@ fn apply(op: &Op, args: &[Sbml], names: &Names, units: &mut Units) -> Result<Nod
         Op::Function(name) => return Err(MathError::Unknown(name.clone())),
         _ => {}
     }
+    // a sum of sums and a product of products are written as one operator
+    // of all of their arguments, as libsbml writes them, so that both
+    // converters give an equation the same mathematics
+    let spliced = matches!(op, Op::Plus | Op::Times).then(|| splice(op, args));
+    let args = spliced.as_deref().unwrap_or(args);
     // the value of an n-ary operator of less than two arguments
     if let Some(empty) = identity(op)
         && args.len() < 2
@@ -425,6 +430,26 @@ fn apply(op: &Op, args: &[Sbml], names: &Names, units: &mut Units) -> Result<Nod
             arguments,
         }),
     }
+}
+
+/// The arguments of an operator with the arguments of its nested uses of
+/// the same operator in their place, `plus(plus(a, b), c)` as
+/// `plus(a, b, c)`.
+///
+/// A nested use of less than two arguments keeps its place, since it stands
+/// for its value, which is a term of the sum: `plus(1, plus())` is
+/// `plus(1, 0)` and not `plus(1)`.
+fn splice(op: &Op, args: &[Sbml]) -> Vec<Sbml> {
+    let mut spliced = Vec::with_capacity(args.len());
+    for argument in args {
+        match argument {
+            Sbml::Apply { op: nested, args } if nested == op && args.len() > 1 => {
+                spliced.extend(splice(op, args));
+            }
+            other => spliced.push(other.clone()),
+        }
+    }
+    spliced
 }
 
 /// An operator whose first argument is a qualifier, `root` and `log`.
