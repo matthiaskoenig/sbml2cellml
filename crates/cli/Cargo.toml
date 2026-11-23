@@ -16,6 +16,10 @@ path = "src/main.rs"
 name = "cellml-convert"
 path = "src/convert.rs"
 
+[[bin]]
+name = "cellml-write"
+path = "src/write.rs"
+
 [dependencies]
 cellml = { package = "sbml2cellml-cellml", path = "../cellml" }
 convert = { package = "sbml2cellml-convert", path = "../convert" }
