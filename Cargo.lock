@@ -146,6 +146,14 @@ name = "sbml2cellml-sbml"
 version = "0.0.0"
 
 [[package]]
+name = "sbml2cellml-wasm"
+version = "0.0.0"
+dependencies = [
+ "sbml2cellml-cellml",
+ "sbml2cellml-convert",
+]
+
+[[package]]
 name = "syn"
 version = "3.0.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"

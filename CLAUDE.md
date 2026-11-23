@@ -34,6 +34,7 @@ ruff check
 ruff format
 uvx ty check
 
+uv run python scripts/build_wasm.py      # the module of the online converter into docs/converter/
 uv run zensical build --clean --strict   # docs into site/
 uv run python scripts/llms_txt.py
 uv run zensical serve
@@ -65,6 +66,7 @@ cargo fmt --check
 cargo build --release                   # target/release/cellml-info
 cargo clippy -p sbml2cellml-python       # the module is no default member of the workspace
 cargo build --target wasm32-unknown-unknown -p sbml2cellml-cellml
+cargo build --profile wasm --target wasm32-unknown-unknown -p sbml2cellml-wasm   # the module of the online converter
 
 # local only, needs the release build and the physiome cache
 uv run python scripts/cellml_parity.py       # the rust reader against libcellml over the corpus
@@ -344,7 +346,23 @@ uv run python scripts/convert_benchmark.py   # the two engines over the corpus, 
   `cellml-convert`, which writes the SBML of a document;
   `scripts/cellml_parity.py` compares what the reader reads with
   libcellml over the models of the Physiome selection (local only, as the
-  other corpus checks).
+  other corpus checks). `crates/wasm` is the module of the online
+  converter of the landing page, built for `wasm32-unknown-unknown` with
+  the cargo profile `wasm` (small, `panic = "abort"`): the interface is
+  the C ABI of `allocate`, `convert_cellml_to_sbml` and `deallocate`,
+  every string crosses it as the bytes of its UTF-8 in the memory of the
+  module, and a conversion gives the JSON `{"sbml": ..., "warnings":
+  [...]}` or `{"error": ...}` (a document with an import is refused, the
+  module resolves none). `crates/wasm/tests/interface.rs` drives that ABI
+  on the host, as the page does. `scripts/build_wasm.py` builds the
+  module and copies it to the gitignored
+  `docs/converter/sbml2cellml.wasm`, which the `documentation` workflow
+  does before the site is built; `docs/javascripts/converter.js` is the page (the tabs of
+  the two directions, the file, the drop zone, the example, the result
+  with its warnings, the download and the clipboard; `extra_javascript`
+  of `zensical.toml`, the styles in `docs/stylesheets/extra.css`, the
+  markup in `docs/index.md`). Without the module the converter says that
+  it is not available and the rest of the page works.
 - `console.py`, `log.py`: rich console for scripts and the CLI, opt-in rich
   logging. Library code logs with `logging.getLogger(__name__)` and lazy `%s`
   formatting (ruff `G`), it never prints.

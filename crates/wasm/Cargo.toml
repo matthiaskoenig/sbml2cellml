@@ -1,0 +1,19 @@
+[package]
+name = "sbml2cellml-wasm"
+description = "The conversion of CellML to SBML in a browser"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+
+[lib]
+# cdylib for the module of the browser, rlib for the tests of the interface
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+cellml = { package = "sbml2cellml-cellml", path = "../cellml" }
+convert = { package = "sbml2cellml-convert", path = "../convert" }
+
+[lints]
+workspace = true

@@ -6,6 +6,7 @@ members = [
     "crates/convert",
     "crates/cli",
     "crates/python",
+    "crates/wasm",
 ]
 # the python module is built by maturin, which gives it the feature
 # `pyo3/extension-module`; a bare cargo command leaves it out, since a test
@@ -15,6 +16,7 @@ default-members = [
     "crates/sbml",
     "crates/convert",
     "crates/cli",
+    "crates/wasm",
 ]
 
 [workspace.package]
@@ -36,3 +38,13 @@ missing_docs = "deny"
 
 [workspace.lints.clippy]
 all = { level = "deny", priority = -1 }
+
+# the module of the browser: small, since the page downloads it, and
+# without the unwinding of a panic, which a browser cannot catch
+[profile.wasm]
+inherits = "release"
+opt-level = "s"
+lto = true
+panic = "abort"
+strip = true
+codegen-units = 1

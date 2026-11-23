@@ -41,6 +41,19 @@ jobs:
           cache-python: true
       - name: Install dependencies
         run: uv sync --extra dev
+      - name: Cache the registry and the build of the converter
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: wasm-${{ runner.os }}-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml') }}
+          restore-keys: wasm-${{ runner.os }}-
+      - name: Build the module of the online converter
+        # the toolchain and its wasm target come from rust-toolchain.toml,
+        # which rustup reads on the first cargo call
+        run: uv run python scripts/build_wasm.py
       - name: Build the documentation
         # the API reference is rendered from the docstrings by mkdocstrings,
         # so the package has to be importable
