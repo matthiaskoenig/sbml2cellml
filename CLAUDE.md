@@ -387,8 +387,17 @@ uv run python scripts/convert_benchmark.py   # the two engines over the corpus, 
   value of its quantity and every compartment its size at the start, which
   converts the initial values of its species; an initial assignment which
   cannot be evaluated (a delay, a value which needs itself) is not
-  converted, with a warning, as in the python converter. An algebraic rule,
-  an event and
+  converted, with a warning, as in the python converter. `events.rs` converts the events of
+  the model to the resets of the component (`collect`: one `Event` per event
+  which becomes resets, with the variable `<event>_trigger` of the condition
+  and the formula of every assignment; `trigger_equation` is
+  `piecewise(1, condition, 0)`, `add_resets` of `model.rs` one reset per
+  assignment which fires when the trigger variable reaches 1, ordered by the
+  priority of the event, where the assignment of a species with an
+  `_amount` variable sets the amount; an event without a trigger or an
+  assignment, one with a delay which has mathematics and one whose formulas
+  use a factorial, a delay or a `rateOf` is not converted, with a warning,
+  as in the python converter). An algebraic rule and
   a model which needs a package are refused (`ConvertError`), which the
   later stages of issue #82 convert; `scripts/sbml2cellml_parity.py`
   compares what both converters write over the examples, the SBML test

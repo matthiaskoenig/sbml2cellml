@@ -21,7 +21,7 @@ The share of the models which pass a stage, the models which pass every stage an
 
 | check | models | source simulated | converted | reproduces | converted back | roundtrip | works | skipped |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [SBML test suite](testsuite.md) | 1658 | 99.9% | 97.1% | 69.5% | 97.1% | 79.6% | 1153 (69.5%) | 165 |
+| [SBML test suite](testsuite.md) | 1658 | 99.9% | 97.1% | 69.5% | 97.1% | 79.7% | 1153 (69.5%) | 165 |
 | [BioModels](biomodels.md) | 1060 | 99.3% | 99.3% | 88.6% | 99.3% | 94.6% | 939 (88.6%) | 15 |
 | [Physiome Model Repository](physiome.md) | 66 | 93.9% | 93.9% | 86.4% | 93.9% | 90.9% | 56 (84.8%) | 34 |
 

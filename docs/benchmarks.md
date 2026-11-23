@@ -27,7 +27,7 @@ The setup is everything a simulator does with a model before it integrates: read
 
 | check | models | sbmlsim-core | libopencor | ratio | libopencor faster | sbmlsim-core sum | libopencor sum |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [SBML test suite](testsuite.md) | 1153 | 2.7 ms | 11 ms | 5.00 | 91 of 1153 | 3.8 s | 16.8 s |
+| [SBML test suite](testsuite.md) | 1153 | 0.97 ms | 4.7 ms | 5.05 | 86 of 1153 | 1.6 s | 5.6 s |
 | [BioModels](biomodels.md) | 939 | 29 ms | 18 ms | 0.63 | 838 of 939 | 1.6 min | 55.4 s |
 | [Physiome Model Repository](physiome.md) | 57 | 5.7 ms | 21 ms | 3.69 | 2 of 57 | 1.6 s | 3.2 s |
 
@@ -40,7 +40,7 @@ The integration is the run of the solver over the output grid, the same grid and
 
 | check | models | sbmlsim-core | libopencor | ratio | libopencor faster | sbmlsim-core sum | libopencor sum |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [SBML test suite](testsuite.md) | 1153 | 0.16 ms | 0.13 ms | 0.85 | 788 of 1153 | 513 ms | 275 ms |
+| [SBML test suite](testsuite.md) | 1153 | 0.07 ms | 0.06 ms | 0.92 | 760 of 1153 | 73 ms | 66 ms |
 | [BioModels](biomodels.md) | 939 | 0.48 ms | 0.43 ms | 0.88 | 651 of 939 | 1.8 s | 3.2 s |
 | [Physiome Model Repository](physiome.md) | 57 | 0.92 ms | 0.61 ms | 0.77 | 47 of 57 | 1.1 s | 1.0 s |
 
@@ -53,7 +53,7 @@ The setup and the integration of a model together, what a simulator costs for a 
 
 | check | models | sbmlsim-core | libopencor | ratio | libopencor faster | sbmlsim-core sum | libopencor sum |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [SBML test suite](testsuite.md) | 1153 | 3.0 ms | 12 ms | 4.59 | 95 of 1153 | 4.3 s | 17.1 s |
+| [SBML test suite](testsuite.md) | 1153 | 1.0 ms | 4.7 ms | 4.75 | 86 of 1153 | 1.7 s | 5.7 s |
 | [BioModels](biomodels.md) | 939 | 29 ms | 18 ms | 0.64 | 839 of 939 | 1.6 min | 58.6 s |
 | [Physiome Model Repository](physiome.md) | 57 | 6.4 ms | 21 ms | 3.21 | 2 of 57 | 2.6 s | 4.2 s |
 
@@ -65,11 +65,11 @@ The 5 models of every check with the longest integration, by the longer of the t
 
 | model | sbmlsim-core | libopencor | ratio |
 | --- | --- | --- | --- |
-| 00136 | 0.20 ms | 31 ms | 154.77 |
-| 00340 | 28 ms | 0.22 ms | 0.01 |
-| 00258 | 28 ms | 6.4 ms | 0.23 |
-| 00266 | 13 ms | 0.19 ms | 0.01 |
-| 00581 | 13 ms | 0.14 ms | 0.01 |
+| 01395 | 0.63 ms | 0.64 ms | 1.02 |
+| 01369 | 0.01 ms | 0.62 ms | 45.66 |
+| 01563 | 0.09 ms | 0.54 ms | 6.35 |
+| 00185 | 0.26 ms | 0.13 ms | 0.49 |
+| 01099 | 0.21 ms | 0.11 ms | 0.52 |
 
 ### BioModels
 

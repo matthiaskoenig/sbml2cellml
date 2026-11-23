@@ -1427,7 +1427,8 @@ def _collect_events(model_sbml: libsbml.Model, used: set[str]) -> list[_Event]:
         if trigger is None or not trigger.isSetMath():
             logger.warning("Event '%s' has no trigger, it is not converted.", sid)
             continue
-        if event.isSetDelay():
+        delay: libsbml.Delay = event.getDelay()
+        if delay is not None and delay.isSetMath():
             logger.warning(
                 "Event '%s' has a delay, CellML has no counterpart for it: the "
                 "event is not converted.",
