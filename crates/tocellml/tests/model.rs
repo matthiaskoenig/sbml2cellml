@@ -779,20 +779,55 @@ fn what_this_stage_does_not_convert_is_refused() {
         convert(&event, "m").err(),
         Some(ConvertError::Event("e".to_string()))
     );
-    let assignment = sbml::read(&level3(
+}
+
+#[test]
+fn an_initial_assignment_becomes_the_initial_value() {
+    let found = conversion(&level3(
+        r#"<listOfParameters>
+             <parameter id="x" value="1" constant="true"/>
+             <parameter id="y" constant="true"/>
+           </listOfParameters>
+           <listOfInitialAssignments>
+             <initialAssignment symbol="y">
+               <math xmlns="http://www.w3.org/1998/Math/MathML">
+                 <apply><times/><ci>x</ci><cn>4</cn></apply>
+               </math>
+             </initialAssignment>
+           </listOfInitialAssignments>"#,
+    ));
+    assert_eq!(
+        variables(&found),
+        vec!["x = 1 [dimensionless]", "y = 4 [dimensionless]"]
+    );
+    assert!(equations(&found).is_empty(), "the value is no equation");
+}
+
+#[test]
+fn an_initial_assignment_which_cannot_be_evaluated_is_not_converted() {
+    let found = conversion(&level3(
         r#"<listOfParameters>
              <parameter id="x" value="1" constant="true"/>
            </listOfParameters>
            <listOfInitialAssignments>
              <initialAssignment symbol="x">
-               <math xmlns="http://www.w3.org/1998/Math/MathML"><cn>2</cn></math>
+               <math xmlns="http://www.w3.org/1998/Math/MathML">
+                 <apply>
+                   <csymbol encoding="text" definitionURL="http://www.sbml.org/sbml/symbols/delay"> delay </csymbol>
+                   <ci>x</ci><cn>1</cn>
+                 </apply>
+               </math>
              </initialAssignment>
            </listOfInitialAssignments>"#,
-    ))
-    .expect("the document is read");
-    assert_eq!(
-        convert(&assignment, "m").err(),
-        Some(ConvertError::InitialAssignment("x".to_string()))
+    ));
+    assert_eq!(variables(&found), vec!["x = 1 [dimensionless]"]);
+    assert!(
+        found
+            .warnings
+            .iter()
+            .any(|warning| warning.contains("the initial assignment of 'x' is not converted")),
+        "the warning says so: {:?}",
+        found.warnings
     );
 }
 

@@ -374,8 +374,21 @@ uv run python scripts/convert_benchmark.py   # the two engines over the corpus, 
   without a differential equation, no `time` at all for an algebraic
   model), `Formulas` with the formulas of the model and the expansion of
   `rateOf`, and `variable_units` which gives the variables their units
-  when the annotation of the model is complete. An algebraic rule, an
-  event, an initial assignment the conversion would have to evaluate and
+  when the annotation of the model is complete. `eval.rs` is the evaluation of the
+  formulas at the start, which CellML needs as numbers (`Start`: the value
+  of a quantity is the value of its initial assignment, else of its
+  assignment rule, else the value the model states, where a reaction is its
+  rate and a species the quantity a formula means, the concentration unless
+  it has only substance units; the evaluation is the one of the simulator of
+  SBML, a value which is no boolean is true when it is not zero and the
+  integer division truncates towards zero as the OpenMath dictionary of the
+  MathML of SBML defines it, where libsbml takes only 1 as true and divides
+  with a floor). `evaluate` of `model.rs` gives every initial assignment the
+  value of its quantity and every compartment its size at the start, which
+  converts the initial values of its species; an initial assignment which
+  cannot be evaluated (a delay, a value which needs itself) is not
+  converted, with a warning, as in the python converter. An algebraic rule,
+  an event and
   a model which needs a package are refused (`ConvertError`), which the
   later stages of issue #82 convert; `scripts/sbml2cellml_parity.py`
   compares what both converters write over the examples, the SBML test
