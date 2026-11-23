@@ -10,6 +10,8 @@ repo_url = "https://github.com/matthiaskoenig/sbml2cellml"
 repo_name = "matthiaskoenig/sbml2cellml"
 edit_uri = "edit/develop/docs/"
 extra_css = ["stylesheets/extra.css"]
+# the online converter of the landing page, see `scripts/build_wasm.py`
+extra_javascript = ["javascripts/converter.js"]
 
 nav = [
   { "Home" = "index.md" },

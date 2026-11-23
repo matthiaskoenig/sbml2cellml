@@ -18,3 +18,146 @@
   max-height: 32rem;
   overflow-y: auto;
 }
+
+/* The online converter of the landing page, which
+   `docs/javascripts/converter.js` drives: the tabs of the two directions, the
+   drop zone of the file, the buttons and the result. Every color is a color of
+   the theme, so the block follows the light and the dark palette. */
+.md-typeset .converter {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.2rem;
+  margin: 1em 0;
+}
+
+/* the theme gives `details` and the panels a `display`, which hides the
+   `hidden` attribute of the result, the warnings and the panel of the
+   direction which is not selected */
+.md-typeset .converter [hidden] {
+  display: none;
+}
+
+.md-typeset .converter__tabs {
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.4rem 0.4rem 0;
+}
+
+.md-typeset .converter__tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--md-default-fg-color--light);
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.4rem 0.6rem;
+}
+
+.md-typeset .converter__tab:hover {
+  color: var(--md-accent-fg-color);
+}
+
+.md-typeset .converter__tab--active {
+  border-bottom-color: var(--md-primary-fg-color);
+  color: var(--md-primary-fg-color);
+}
+
+.md-typeset .converter__panel {
+  padding: 0.8rem;
+}
+
+.md-typeset .converter__drop {
+  align-items: center;
+  border: 2px dashed var(--md-default-fg-color--lighter);
+  border-radius: 0.2rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1.2rem 0.8rem;
+  text-align: center;
+  transition:
+    border-color 125ms,
+    background-color 125ms;
+}
+
+.md-typeset .converter__drop:hover,
+.md-typeset .converter__drop--over {
+  background-color: var(--md-code-bg-color);
+  border-color: var(--md-primary-fg-color);
+}
+
+.md-typeset .converter__prompt {
+  font-size: 0.8rem;
+}
+
+.md-typeset .converter__hint,
+.md-typeset .converter__prose {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.7rem;
+}
+
+.md-typeset .converter__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+}
+
+.md-typeset .converter__button {
+  background-color: var(--md-primary-fg-color);
+  border: none;
+  border-radius: 0.2rem;
+  color: var(--md-primary-bg-color);
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.4rem 0.8rem;
+}
+
+.md-typeset .converter__button:hover:not(:disabled) {
+  background-color: var(--md-accent-fg-color);
+}
+
+.md-typeset .converter__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* the message of the converter; the height is kept, so the block below it
+   does not move when the message appears */
+.md-typeset .converter__status {
+  font-size: 0.75rem;
+  margin: 0.8rem 0 0;
+  min-height: 1.2em;
+}
+
+.md-typeset .converter__status[data-kind="error"] {
+  color: #c62828;
+}
+
+.md-typeset .converter__status[data-kind="success"] {
+  color: #2e7d32;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .converter__status[data-kind="error"] {
+  color: #ef9a9a;
+}
+
+[data-md-color-scheme="slate"]
+  .md-typeset
+  .converter__status[data-kind="success"] {
+  color: #a5d6a7;
+}
+
+.md-typeset .converter__warnings {
+  font-size: 0.7rem;
+  margin-top: 0.8rem;
+}
+
+/* the result is a window of fixed height which scrolls, as a model of a page */
+.md-typeset .converter__code > code {
+  max-height: 24rem;
+  overflow-y: auto;
+}

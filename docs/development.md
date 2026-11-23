@@ -187,6 +187,18 @@ For writing, the preview rebuilds on save:
 uv run zensical serve
 ```
 
+The [online converter](index.md#online-converter) of the landing page needs the
+WebAssembly module of the crate `crates/wasm`, which is not committed. The
+script builds it with cargo and copies it to `docs/converter/`, where the site
+build picks it up; the `documentation` workflow runs it before the build:
+
+```bash
+uv run python scripts/build_wasm.py
+```
+
+Without the module every other part of the page works and the converter says
+that it is not available.
+
 The API reference is rendered from the docstrings by [mkdocstrings](https://mkdocstrings.github.io/); a page in `docs/api/` only contains the module directive:
 
 ```markdown
