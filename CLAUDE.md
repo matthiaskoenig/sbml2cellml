@@ -50,6 +50,8 @@ tox r -e physiome                       # the run below in the locked environmen
 uv run sbml2cellml-physiome run         # curated Physiome selection, writes physiome/results.json, docs/physiome.md and docs/images/physiome*.svg
 uv run sbml2cellml-physiome update      # refresh the committed selection physiome/models.json
 uv run sbml2cellml-physiome report      # rerender docs/physiome.md and the figures from the results file
+
+uv run sbml2cellml-overview             # render docs/models.md, docs/benchmarks.md and docs/images/benchmarks*.svg from the three results files, rerun after any check
 ```
 
 `develop` is the default branch and takes every change through a pull request; the rulesets in `.github/rulesets/` (applied with `apply.sh`) require the `tests`, `ruff`, `ty` and `docs` checks. Continuous integration is kept minimal: `tests` runs `py3.14` on linux, macos and windows, every workflow cancels a superseded run (`cancel-in-progress: true`), uv caches packages and interpreters, dependabot runs monthly. `main` tracks the latest release and is fast-forwarded by the `sync-main` job of the release workflow. Release steps are in `docs/development.md`: release branch, `uvx bump-my-version bump [major|minor|patch]` (updates `__init__.py` and `CITATION.cff`, no tag), release notes in `docs/release-notes/`, pull request, tag on `develop` after the merge.
@@ -342,6 +344,25 @@ uv run sbml2cellml-physiome report      # rerender docs/physiome.md and the figu
   `run_case` compares the SBML side against the renamed libopencor result);
   `cli.py` is the `sbml2cellml-physiome` entry point, which renders
   `docs/physiome.md` with the report and figure code of the test suite.
+- `overview/` (no simulation, rendered from the committed results of the
+  three checks): `sbml2cellml-overview` writes the two pages across them.
+  `checks.py` holds the `Check` of every check (its title, its page, its
+  results file, what a case of it is and the url of a model), `load_runs`
+  reads the results files (a missing one is logged and left out) and
+  `works` whether every stage of a case passes; `ROLES` names what the
+  stages do, which is the same for a check whose source is the SBML model
+  and one whose source is the CellML model. `figure.py` renders the
+  integration time of libopencor against the one of sbmlsim-core over every
+  check (one color and one marker per check) and the median setup and
+  integration time per check; `report.py` renders `docs/benchmarks.md` (the
+  wall times, from `timing_pairs` and `setup_pairs` of the test suite
+  figures) and `docs/models.md` (every model of BioModels and of the
+  Physiome Model Repository with the status of its stages and whether it
+  works, and the models which do not run with their reason); `cli.py` is
+  the `sbml2cellml-overview` entry point. `tests/test_overview.py` renders
+  both pages from the committed results files and fails when they differ
+  from the committed pages, so a check which ran without the overview being
+  rerun is caught by the unit tests.
 
 ## Conventions
 
@@ -393,3 +414,7 @@ uv run sbml2cellml-physiome report      # rerender docs/physiome.md and the figu
   prints and commit the regenerated files. The same holds for
   `physiome/models.json`, `physiome/results.json`, `docs/physiome.md` and
   `docs/images/physiome*.svg`.
+- `docs/models.md`, `docs/benchmarks.md` and `docs/images/benchmarks*.svg`
+  are rendered from the three results files by `sbml2cellml-overview` and
+  committed; rerun the command whenever a check wrote new results, the unit
+  tests fail while they are stale.

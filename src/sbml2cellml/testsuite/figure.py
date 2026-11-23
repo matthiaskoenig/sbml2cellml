@@ -29,11 +29,15 @@ _LABEL_FRACTION = 0.04
 
 
 @dataclass(frozen=True)
-class _Theme:
+class Theme:
     """Colors of the figure for one background."""
 
     #: fill of the pass, fail and skip segments
     fills: tuple[str, str, str]
+    #: fill of a series of a figure of several checks, one per check
+    #: (`sbml2cellml.overview.figure`), which the marker of the series
+    #: distinguishes as well, so the figure is readable without the colors
+    series: tuple[str, str, str]
     #: ink of the labels inside the pass, fail and skip segments
     inks: tuple[str, str, str]
     #: title, tick labels and pass rates
@@ -46,20 +50,45 @@ class _Theme:
 
 # blue and orange stay apart for every color vision deficiency, the skipped
 # cases recede in a neutral gray
-_LIGHT = _Theme(
+LIGHT = Theme(
     fills=("#2a78d6", "#eb6834", "#a3a29b"),
+    series=("#2a78d6", "#eb6834", "#7a4fa3"),
     inks=("#ffffff", "#0b0b0b", "#0b0b0b"),
     text="#0b0b0b",
     text_secondary="#52514e",
     grid="#d9d8d3",
 )
-_DARK = _Theme(
+DARK = Theme(
     fills=("#3987e5", "#d95926", "#6b6a65"),
+    series=("#3987e5", "#d95926", "#a279d1"),
     inks=("#ffffff", "#ffffff", "#ffffff"),
     text="#ffffff",
     text_secondary="#c3c2b7",
     grid="#4a4a47",
 )
+
+
+def duration_text(seconds: float) -> str:
+    """A wall time as it is written in the reports and the figures.
+
+    Args:
+        seconds: a wall time.
+
+    Returns:
+        Milliseconds below one second, with two decimals below one
+        millisecond and one decimal below ten milliseconds, seconds below a
+        minute and minutes above it, e.g. `0.11 ms`, `1.4 ms`, `18 ms`,
+        `2.4 s`, `3.1 min`.
+    """
+    if seconds < 0.001:
+        return f"{seconds * 1e3:.2f} ms"
+    if seconds < 0.01:
+        return f"{seconds * 1e3:.1f} ms"
+    if seconds < 1.0:
+        return f"{seconds * 1e3:.0f} ms"
+    if seconds < 60.0:
+        return f"{seconds:.1f} s"
+    return f"{seconds / 60.0:.1f} min"
 
 
 def dark_path[P: PurePath](path: P) -> P:
@@ -93,7 +122,7 @@ def render_figure(
     Returns:
         The figure with a transparent background.
     """
-    theme = _DARK if dark else _LIGHT
+    theme = DARK if dark else LIGHT
     if title is None:
         title = f"SBML test suite {result.suite}"
     total = len(result.cases)
@@ -215,6 +244,27 @@ def timing_pairs(
     }
 
 
+def setup_pairs(result: SuiteResult) -> dict[str, tuple[float, float]]:
+    """Setup time of the two simulators, for the cases of `timing_pairs`.
+
+    Args:
+        result: a suite run.
+
+    Returns:
+        The setup seconds of the `sbmlsim` and of the `libopencor` stage by
+        case id, for the cases both simulators ran and timed and whose
+        converted model reproduces the expected results, so that the two
+        simulators are compared over the same cases as in `timing_pairs`.
+    """
+    sbmlsim = result.seconds("sbmlsim", setup=True)
+    libopencor = result.seconds("libopencor", setup=True)
+    return {
+        cid: (sbmlsim[cid], libopencor[cid])
+        for cid in timing_pairs(result)
+        if cid in sbmlsim and cid in libopencor
+    }
+
+
 def _milliseconds(seconds: float) -> str:
     """A wall time in milliseconds, as the figures write it.
 
@@ -254,7 +304,7 @@ def render_timings(
     Returns:
         The figure with a transparent background.
     """
-    theme = _DARK if dark else _LIGHT
+    theme = DARK if dark else LIGHT
     if title is None:
         title = f"SBML test suite {result.suite}"
     pairs = timing_pairs(result)
@@ -363,7 +413,7 @@ def write_figures(
         title: start of the title of the figure, see `render_figure`.
         cases: what a case is, see `render_figure`.
     """
-    _write(render_figure, result, path, title=title, cases=cases)
+    write_variants(render_figure, path, result=result, title=title, cases=cases)
 
 
 def write_timing_figures(
@@ -381,25 +431,18 @@ def write_timing_figures(
         title: start of the title of the figure, see `render_timings`.
         cases: what a case is, see `render_timings`.
     """
-    _write(render_timings, result, path, title=title, cases=cases)
+    write_variants(render_timings, path, result=result, title=title, cases=cases)
 
 
-def _write(
-    render: Callable[..., Figure],
-    result: SuiteResult,
-    path: Path,
-    title: str | None = None,
-    cases: str = "cases",
-) -> None:
+def write_variants(render: Callable[..., Figure], path: Path, **kwargs: object) -> None:
     """Write a figure for light and for dark backgrounds.
 
     Args:
-        render: `render_figure` or `render_timings`.
-        result: a suite run.
+        render: a function which renders the figure, called with `dark` and
+            the further keyword arguments.
         path: SVG file of the figure for light backgrounds, overwritten; the
             figure for dark backgrounds goes to `dark_path(path)`.
-        title: start of the title of the figure.
-        cases: what a case is.
+        kwargs: further keyword arguments of `render`.
     """
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -408,7 +451,7 @@ def _write(
     with mpl.rc_context({"svg.fonttype": "path", "svg.hashsalt": "sbml2cellml"}):
         for file, dark in ((path, False), (dark_path(path), True)):
             buffer = io.StringIO()
-            render(result, title=title, dark=dark, cases=cases).savefig(
+            render(dark=dark, **kwargs).savefig(
                 buffer, format="svg", metadata={"Date": None}
             )
             # matplotlib ends lines with spaces, which the pre-commit hooks

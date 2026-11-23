@@ -18,6 +18,8 @@
 - the SBML test suite harness: every semantic case through both converters and both simulators, results on the [SBML test suite](testsuite.md) page
 - the same check for the manually curated models of [BioModels](https://www.biomodels.org), results on the [BioModels](biomodels.md) page
 - the same check for the CellML models of the [Physiome Model Repository](https://models.physiomeproject.org), from the CellML side, results on the [Physiome](physiome.md) page
+- an overview of which models of the three checks work, on the [Models](models.md) page
+- the wall time of the two simulators over the same models, on the [Benchmarks](benchmarks.md) page
 
 ## Quickstart
 
@@ -76,7 +78,7 @@ The converter puts every SBML compartment, parameter and species as a variable i
 
 The reverse direction, [CellML to SBML](conversion.md#cellml-to-sbml), maps every variable to a parameter with rules and converts units and resets.
 
-The [conversion issues](conversion-issues.md) list what is not converted yet, the [SBML test suite](testsuite.md), [BioModels](biomodels.md) and [Physiome](physiome.md) pages how many of the semantic test cases, of the curated models and of the published CellML models pass.
+The [conversion issues](conversion-issues.md) list what is not converted yet, the [SBML test suite](testsuite.md), [BioModels](biomodels.md) and [Physiome](physiome.md) pages how many of the semantic test cases, of the curated models and of the published CellML models pass. The [Models](models.md) page collects which models of the three checks work and the [Benchmarks](benchmarks.md) page how fast the two simulators are over them.
 
 The [release notes](release-notes/index.md) list the changes of every version.
 

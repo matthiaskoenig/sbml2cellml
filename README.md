@@ -18,6 +18,8 @@ Features include
 - the SBML test suite harness: every semantic case through both converters and both simulators, results on the [SBML test suite](https://matthiaskoenig.github.io/sbml2cellml/testsuite/) page
 - the same check for the manually curated models of [BioModels](https://www.biomodels.org), results on the [BioModels](https://matthiaskoenig.github.io/sbml2cellml/biomodels/) page
 - the same check for the CellML models of the [Physiome Model Repository](https://models.physiomeproject.org), from the CellML side, results on the [Physiome](https://matthiaskoenig.github.io/sbml2cellml/physiome/) page
+- an overview of which models of the three checks work, on the [Models](https://matthiaskoenig.github.io/sbml2cellml/models/) page
+- the wall time of the two simulators over the same models, on the [Benchmarks](https://matthiaskoenig.github.io/sbml2cellml/benchmarks/) page
 
 ```bash
 pip install sbml2cellml
@@ -49,6 +51,14 @@ The curated CellML models of the [Physiome Model Repository](https://models.phys
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/physiome_dark.svg">
   <img alt="Models of the Physiome Model Repository which pass, fail and skip the stages of the roundtrip" src="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/physiome.svg">
+</picture>
+
+# Models and benchmarks
+The [Models](https://matthiaskoenig.github.io/sbml2cellml/models/) page lists every model of the three checks with the stages it passes, so which models work is visible in one table. The [Benchmarks](https://matthiaskoenig.github.io/sbml2cellml/benchmarks/) page compares the two simulators over the models both of them run: the integration time of libopencor against the integration time of sbmlsim-core, and the median setup of each of them per check.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/benchmarks_dark.svg">
+  <img alt="Integration time of libopencor against the integration time of sbmlsim-core, one point per model" src="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/benchmarks.svg">
 </picture>
 
 If you have any questions or issues please [open an issue](https://github.com/matthiaskoenig/sbml2cellml/issues).
