@@ -20,6 +20,7 @@ from sbml2cellml.cellml2sbml import (
     CellML2SBMLConversionError,
     convert_cellml2sbml,
 )
+from sbml2cellml.mathml import MathMLError
 from sbml2cellml.rust import ENGINES
 from sbml2cellml.sbml import SBMLValidationError
 from sbml2cellml.sbml2cellml import SBML2CellMLConversionError, convert_sbml2cellml
@@ -30,6 +31,7 @@ CONVERSION_ERRORS = (
     CellML2SBMLConversionError,
     CellMLValidationError,
     SBMLValidationError,
+    MathMLError,
     OSError,
 )
 

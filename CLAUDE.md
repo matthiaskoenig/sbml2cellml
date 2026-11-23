@@ -94,8 +94,11 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   `"python"` with libsbml, libcellml and this module
   (`_convert_with_python`, which also gives the SBML element of every CellML
   element for the metadata), and `"auto"`, the default, takes rust and
-  converts with python when the rust converter refuses the model (a formula
-  with a delay).
+  converts with python when the rust converter refuses the model (a
+  recursive function definition, an event rust does not write); a formula
+  CellML cannot express (a `delay`, a `factorial` of a variable, a `rateOf`
+  the conversion could not replace) is refused by both engines, so no
+  document libcellml cannot read is written.
   A hierarchical model is flattened first (`sbml.flatten_comp`, with the
   directory of the file as the base path of an external model definition),
   so the submodels become part of the CellML model.
@@ -196,7 +199,21 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   towards zero (`piecewise(ceiling(a / b), a / b < 0, floor(a / b))`, the
   integer division of the OpenMath dictionary the MathML of SBML follows),
   `implies` by `not a or b`, an n-ary operator with less than two arguments
-  by its value) and wrap the equations into the component math. The
+  by its value (`max(a)` is `a`, `_SINGLE_ARGUMENT_OPERATORS`: the
+  generator of libcellml 0.7.2 crashes on a unary min or max), the
+  factorial of a constant by its value
+  (`_factorial_value`)) and wrap the equations into the component math.
+  `miscompiled_not` finds a `not` whose operand is no variable and no
+  number, which the generator of libcellml 0.7.2 writes without
+  parentheses (`!voi > 5.5` for `not(t > 5.5)`): the formula is written as
+  the model has it and the conversion warns, since the document is valid
+  and only the C code of libcellml, which libopencor compiles, is wrong.
+  A formula which CellML 2.0 cannot express (`unsupported_operator`: a
+  `delay`, a `factorial` of a variable, a `rateOf` the conversion could not
+  replace; table 2.1 of the specification has none of the three, and CellML
+  has no gamma and no history of a variable either) raises `MathMLError`
+  instead of being written, so no document libcellml cannot read leaves the
+  converter, with or without the validation. The
   formulas are written as the SBML model has them, negations included:
   libcellml 0.7.2 generates `-(-2.0*a)` for `-((-2) * a)`, which compiles
   (0.7.1 generated `--2.0*a`, a decrement in C).
@@ -428,11 +445,15 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   becomes the truncation of `a / b` towards zero and `implies(a, b)`
   `not a or b`, a relation of
   more than two arguments the conjunction of its pairs and an n-ary
-  operator of less than two arguments its value; `Functions` expands the
+  operator of less than two arguments its value (`max(a)` is `a` as well,
+  which libcellml needs); `Functions` expands the
   calls of the function definitions (a definition in a cycle of calls, a
   call of the wrong arity and one of a function the model does not define
-  are refused), and `delay` and a `rateOf` which the conversion did not
-  replace have no counterpart. `units.rs` is the port of `cellmlunits.py`
+  are refused), the factorial of a constant becomes its value
+  (`eval::constant`, which evaluates a formula of numbers and operators
+  alone) and a `delay`, a `factorial` of a variable and a `rateOf` which
+  the conversion did not replace have no counterpart (`MathError`, as in
+  `mathml.py`, so both engines refuse the same formulas). `units.rs` is the port of `cellmlunits.py`
   (`Units`: every unit definition as CellML units, a scale and a multiplier
   which is a power of ten as the prefix, any other multiplier as its power,
   `item` as new base units and `avogadro` as the dimensionless units of its
@@ -502,6 +523,9 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   `scripts/sbml2cellml_parity.py`
   compares what both converters write over the examples, the SBML test
   suite and the BioModels cache (local only, as the other corpus checks).
+  `warn_about_not` of `model.rs` warns about every equation whose formula
+  holds a `not` of something which is no variable and no number, as
+  `mathml.miscompiled_not` does on the python side.
   `origins` of a conversion is the SBML element of every element of the
   CellML model which stands for one (`Origin`, `Kind`: the model, a
   compartment, a species, a parameter, a reaction, a species reference, a
@@ -629,7 +653,14 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   converters do not support; `comp` is not among them, its submodels are
   flattened); `compare.py` checks a simulation against the expected results
   (`|value - expected| <= absolute + relative * |expected|` with the
-  tolerances of the settings of the case, not the tolerances of the solver);
+  tolerances of the settings of the case, not the tolerances of the solver;
+  the time points are the first column of a result and of the expected
+  results, `TIME_POINTS`, and every variable is taken by its name, so a
+  model with a variable named `time` is compared, as far as the simulators
+  return that variable: sbmlsim-core gives one column for the selection
+  `time` and libopencor the parameter under its full name when the column
+  of the time points is called `time`, so the cases 01820 and 01821 fail
+  with `variable time missing in the result`);
   `runner.py`'s `SOLVER_SETTINGS` are the solver settings of every
   simulation (tolerances 1e-9/1e-12, 100000 internal steps between two time
   points; relaxed tolerances only when CVODE fails, `_simulate`);
@@ -651,7 +682,11 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   settings of the intro come from `SOLVER_SETTINGS`, `timing_lines` is the
   timing section of the two simulators, the failing cases are
   grouped by `_reason` and listed with their complete errors in fenced
-  blocks, nothing is shortened or replaced); `figure.py` its
+  blocks, nothing is shortened or replaced; a numerical mismatch is
+  grouped by what the tags of the case say about it: `DELAYED_EVENT` for a
+  model which uses the delay symbol, whose event the conversion leaves
+  out, `RESETS` for the CellML simulation of a model with events, which
+  libopencor does not apply, and `MISMATCH` for the others); `figure.py` its
   bar diagram `docs/images/testsuite.svg` and `testsuite_dark.svg` (also in
   `README.md`) and the timings `testsuite_timings.svg` and
   `testsuite_timings_dark.svg` (libopencor against sbmlsim-core per case on

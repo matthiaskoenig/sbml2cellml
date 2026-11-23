@@ -238,6 +238,24 @@ def delay_model(mid: str = "delayed") -> libsbml.Model:
     return model
 
 
+def factorial_model(mid: str = "factorials", constant: bool = True) -> libsbml.Model:
+    """`simple_model` with a factorial in the kinetic law.
+
+    CellML has neither factorial nor gamma: the factorial of a constant is
+    converted to the number it stands for, one of a variable is refused.
+
+    Args:
+        mid: the id of the model.
+        constant: whether the factorial is one of a constant, `5!`, or one
+            of a variable, `ceil(S1)!`.
+    """
+    model = simple_model(mid)
+    klaw: libsbml.KineticLaw = model.getReaction("r1").getKineticLaw()
+    formula = "k1 * factorial(5)" if constant else "k1 * factorial(ceil(S1))"
+    klaw.setMath(libsbml.parseL3Formula(formula))
+    return model
+
+
 XHTML = "http://www.w3.org/1999/xhtml"
 
 

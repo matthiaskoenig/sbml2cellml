@@ -21,11 +21,16 @@ is that symbol and not an id of the model; the converter passes ASTs.
 """
 
 import itertools
+import logging
 import math
 import re
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 
 import libsbml
+
+from sbml2cellml.astnodes import text as formula_text
+
+logger = logging.getLogger(__name__)
 
 #: xml declaration written by libsbml in front of the math element
 XML_DECLARATION = re.compile(r"<\?xml[^>]*\?>")
@@ -60,6 +65,132 @@ _EMPTY_OPERATORS = {
     libsbml.AST_LOGICAL_XOR: libsbml.AST_CONSTANT_FALSE,
 }
 
+#: operators which MathML allows with one argument, whose value is that
+#: argument: `max(a)` is `a`. They have no identity element, so an
+#: operator without arguments is not one of them. libcellml 0.7.2 crashes
+#: in its generator on a unary min or max, which libopencor generates with.
+_SINGLE_ARGUMENT_OPERATORS = frozenset(
+    {
+        libsbml.AST_FUNCTION_MAX,
+        libsbml.AST_FUNCTION_MIN,
+    }
+)
+
+
+#: the operators of SBML which the MathML of CellML 2.0 does not have
+#: (table 2.1 of the specification), by the name of the element
+UNSUPPORTED_OPERATORS = {
+    libsbml.AST_FUNCTION_DELAY: "delay",
+    libsbml.AST_FUNCTION_RATE_OF: "rateOf",
+    libsbml.AST_FUNCTION_FACTORIAL: "factorial",
+}
+
+
+def _factorial_value(node: libsbml.ASTNode) -> float | None:
+    """Get the factorial of a formula which is a constant.
+
+    The argument of a factorial is a whole number: the formula is evaluated
+    when it uses no variable and no symbol (libsbml evaluates such an AST
+    without a model), and the result must be a whole number which is not
+    negative, as the factorial of SBML is defined for.
+
+    Args:
+        node: root of the libsbml AST of the argument of the factorial.
+
+    Returns:
+        The factorial of the value, `None` for a formula which is no
+        constant or whose value is no argument of a factorial.
+    """
+    for element in _walk(node):
+        if (
+            element.isName()
+            or element.isConstant()
+            or element.getType()
+            in (
+                libsbml.AST_NAME_TIME,
+                libsbml.AST_NAME_AVOGADRO,
+            )
+        ):
+            return None
+    value = float(libsbml.SBMLTransforms.evaluateASTNode(node))
+    if not math.isfinite(value) or value < 0 or value != int(value):
+        return None
+    return float(math.factorial(int(value)))
+
+
+def unsupported_operator(
+    node: libsbml.ASTNode, operators: dict[int, str] = UNSUPPORTED_OPERATORS
+) -> str | None:
+    """Find an operator of a formula which CellML 2.0 cannot express.
+
+    The MathML of CellML 2.0 is the subset of table 2.1 of its
+    specification, which has no `delay`, no `rateOf` and no `factorial`
+    (and no `gamma`, so a factorial of a variable cannot be written as one
+    either). The conversion replaces the `rateOf` of a formula by the right
+    hand side of the equation of its argument and the factorial of a
+    constant by its value; what is left has no counterpart.
+
+    Args:
+        node: root of the libsbml AST of the formula.
+        operators: the operators to look for, by their AST type; the
+            formulas of an event are checked before the `rateOf` of a
+            formula is replaced, so the caller leaves it out there.
+
+    Returns:
+        The name of the first such operator, `None` for a formula CellML
+        can express.
+    """
+    for element in _walk(node):
+        name = operators.get(element.getType())
+        if name is not None:
+            return name
+    return None
+
+
+def miscompiled_not(node: libsbml.ASTNode) -> libsbml.ASTNode | None:
+    """Find a `not` of a formula which libcellml 0.7.2 miscompiles.
+
+    The generator of libcellml writes the operand of a `not` without
+    parentheses, so `not(t > 5.5)` becomes `!voi > 5.5`, which C reads as
+    `(!voi) > 5.5`, and `not(a and b)` becomes `!(a) && (b)`, the negation
+    of the first operand alone. Only a `not` of a variable or a number is
+    written correctly (`!constants[0]`), and a simulation of the model with
+    libopencor, which compiles that code, is wrong without an error (see
+    the conversion issues of the documentation).
+
+    Args:
+        node: root of the libsbml AST of the formula, after
+            `simplify_operators`, which writes `implies(a, b)` as
+            `not a or b`.
+
+    Returns:
+        The first such `not`, `None` for a formula without one.
+    """
+    for element in _walk(node):
+        if element.getType() != libsbml.AST_LOGICAL_NOT:
+            continue
+        if element.getNumChildren() != 1:
+            continue
+        operand: libsbml.ASTNode = element.getChild(0)
+        if operand.getNumChildren() == 0:
+            continue
+        return element
+    return None
+
+
+def _walk(node: libsbml.ASTNode) -> Iterator[libsbml.ASTNode]:
+    """Iterate a formula and the formulas inside it.
+
+    Args:
+        node: root of the libsbml AST.
+
+    Yields:
+        The root and every node below it.
+    """
+    yield node
+    for k in range(node.getNumChildren()):
+        yield from _walk(node.getChild(k))
+
 
 def simplify_operators(node: libsbml.ASTNode) -> libsbml.ASTNode:
     """Replace the operators CellML does not have or has only with two arguments.
@@ -72,7 +203,14 @@ def simplify_operators(node: libsbml.ASTNode) -> libsbml.ASTNode:
     integer division of the OpenMath dictionary the MathML of SBML follows
     (`piecewise(ceiling(a / b), a / b < 0, floor(a / b))`), and
     `implies(a, b)` becomes `not a or b`: CellML has neither of the two
-    operators.
+    operators. An n-ary operator of less than two arguments becomes its
+    value, the argument or the identity element of the operator
+    (`max(a)` is `a`, `plus()` is 0): libcellml 0.7.2 crashes in its
+    generator on a unary min or max. `factorial(n)` of a constant `n` becomes the number it
+    stands for, the one operator of SBML which a conversion can express
+    without the operator itself (CellML has no factorial and no gamma
+    either), and one of a variable stays, so that
+    `process_mathml_for_cellml` refuses the formula.
 
     Args:
         node: root of the libsbml AST of the formula, changed in place.
@@ -108,6 +246,16 @@ def simplify_operators(node: libsbml.ASTNode) -> libsbml.ASTNode:
         node.addChild(rounded(libsbml.AST_FUNCTION_CEILING))
         node.addChild(negative)
         node.addChild(rounded(libsbml.AST_FUNCTION_FLOOR))
+    elif (
+        node.getType() == libsbml.AST_FUNCTION_FACTORIAL and node.getNumChildren() == 1
+    ):
+        # CellML has neither factorial nor gamma: a factorial of a constant
+        # is the number it stands for, one of a variable has no counterpart
+        folded = _factorial_value(node.getChild(0))
+        if folded is not None:
+            value = libsbml.ASTNode(libsbml.AST_REAL)
+            value.setValue(folded)
+            node = value
     elif node.getType() == libsbml.AST_LOGICAL_IMPLIES and node.getNumChildren() == 2:
         # CellML has no implies: `a implies b` is `not a or b`
         negation = libsbml.ASTNode(libsbml.AST_LOGICAL_NOT)
@@ -125,7 +273,10 @@ def simplify_operators(node: libsbml.ASTNode) -> libsbml.ASTNode:
             pair.addChild(right.deepCopy())
             conjunction.addChild(pair)
         node = conjunction
-    while node.getType() in _EMPTY_OPERATORS and node.getNumChildren() < 2:
+    while node.getNumChildren() < 2 and (
+        node.getType() in _EMPTY_OPERATORS
+        or (node.getNumChildren() == 1 and node.getType() in _SINGLE_ARGUMENT_OPERATORS)
+    ):
         if node.getNumChildren() == 1:
             node = node.getChild(0).deepCopy()
             continue
@@ -223,7 +374,8 @@ def process_mathml_for_cellml(
         avogadro symbols replaced (see `normalize_math`).
 
     Raises:
-        MathMLError: if a formula given as text does not parse.
+        MathMLError: if a formula given as text does not parse, or uses an
+            operator CellML 2.0 does not have (`unsupported_operator`).
     """
     ast: libsbml.ASTNode | None
     if isinstance(formula, str):
@@ -235,6 +387,25 @@ def process_mathml_for_cellml(
     else:
         ast = formula.deepCopy()
     ast = simplify_operators(ast)
+    fragile = miscompiled_not(ast)
+    if fragile is not None:
+        logger.warning(
+            "Formula '%s' uses 'not' of the formula '%s': the generator of "
+            "libcellml 0.7.2 writes its operand without parentheses, so a "
+            "simulation of the CellML model with libopencor is wrong (see "
+            "the conversion issues of the documentation).",
+            formula_text(ast),
+            formula_text(fragile.getChild(0)),
+        )
+    operator = unsupported_operator(ast)
+    if operator is not None:
+        # a formula which CellML cannot express: writing it gives a document
+        # which libcellml refuses, so the conversion refuses it here
+        raise MathMLError(
+            f"CellML 2.0 has no '{operator}': the formula "
+            f"'{formula_text(ast)}' has "
+            "no counterpart in the MathML of CellML"
+        )
     normalize_math(ast, units, number_units, time_id)
     mathml: str = libsbml.writeMathMLToString(ast)
     mathml = XML_DECLARATION.sub("", mathml)

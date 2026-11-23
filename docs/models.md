@@ -21,13 +21,13 @@ The share of the models which pass a stage, the models which pass every stage an
 
 | check | models | source simulated | converted | reproduces | converted back | roundtrip | works | skipped |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [SBML test suite](testsuite.md) | 1658 | 99.9% | 97.1% | 69.6% | 97.1% | 96.4% | 1154 (69.6%) | 165 |
-| [BioModels](biomodels.md) | 1060 | 99.3% | 99.3% | 88.6% | 99.3% | 98.4% | 939 (88.6%) | 15 |
+| [SBML test suite](testsuite.md) | 1658 | 99.9% | 97.2% | 69.8% | 97.2% | 96.6% | 1158 (69.8%) | 165 |
+| [BioModels](biomodels.md) | 1060 | 99.3% | 99.3% | 88.7% | 99.3% | 98.5% | 940 (88.7%) | 15 |
 | [Physiome Model Repository](physiome.md) | 66 | 93.9% | 93.9% | 86.4% | 93.9% | 92.4% | 56 (84.8%) | 34 |
 
 ## BioModels
 
-939 of the 1060 models work, the errors of the others are in the [report](biomodels.md).
+940 of the 1060 models work, the errors of the others are in the [report](biomodels.md).
 
 | model | name | sbmlsim | sbml2cellml | libopencor | cellml2sbml | roundtrip | works |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -467,7 +467,7 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000434](https://www.ebi.ac.uk/biomodels/BIOMD0000000434) | McAuley2012 - Whole-body Cholesterol Metabolism | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000435](https://www.ebi.ac.uk/biomodels/BIOMD0000000435) | deBack2012 - Lineage Specification in Pancreas Development | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000436](https://www.ebi.ac.uk/biomodels/BIOMD0000000436) | Gupta2009 - Eicosanoid Metabolism | pass | pass | fail | pass | pass | no |
-| [BIOMD0000000437](https://www.ebi.ac.uk/biomodels/BIOMD0000000437) | Tseng2012 - Circadian clock of N.crassa | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000437](https://www.ebi.ac.uk/biomodels/BIOMD0000000437) | Tseng2012 - Circadian clock of N.crassa | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000438](https://www.ebi.ac.uk/biomodels/BIOMD0000000438) | Saeidi2012 - Quorum sensing device that produces GFP | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000439](https://www.ebi.ac.uk/biomodels/BIOMD0000000439) | Smith2009 - RGS mediated GTP hydrolysis | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000440](https://www.ebi.ac.uk/biomodels/BIOMD0000000440) | Sarma2012 - Oscillations in MAPK cascade (S1) | pass | pass | pass | pass | pass | yes |

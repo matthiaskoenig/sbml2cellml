@@ -842,3 +842,44 @@ fn the_conversion_gives_the_sbml_element_of_every_cellml_element() {
         ]
     );
 }
+
+#[test]
+fn a_not_libcellml_miscompiles_is_written_with_a_warning() {
+    // the generator of libcellml 0.7.2 writes the operand of a `not`
+    // without parentheses (`!voi > 5.5` for `not(t > 5.5)`), so the
+    // document is right and a simulation of it with libopencor is not;
+    // the python converter warns about the same formulas
+    let found = conversion(&level3(
+        r#"<listOfParameters>
+             <parameter id="a" value="1" constant="true"/>
+             <parameter id="p" value="0" constant="false"/>
+             <parameter id="q" value="0" constant="false"/>
+           </listOfParameters>
+           <listOfRules>
+             <assignmentRule variable="p">
+               <math xmlns="http://www.w3.org/1998/Math/MathML">
+                 <apply><not/><apply><gt/><ci>a</ci><cn>5</cn></apply></apply>
+               </math>
+             </assignmentRule>
+             <assignmentRule variable="q">
+               <math xmlns="http://www.w3.org/1998/Math/MathML">
+                 <apply><not/><ci>a</ci></apply>
+               </math>
+             </assignmentRule>
+           </listOfRules>"#,
+    ));
+    let warnings: Vec<&String> = found
+        .warnings
+        .iter()
+        .filter(|warning| warning.contains("'not'"))
+        .collect();
+    // the `not` of a relation is warned about, the one of a variable
+    // (`!constants[0]`) is written correctly
+    assert_eq!(warnings.len(), 1, "{:?}", found.warnings);
+    assert!(warnings[0].contains("the equation of 'p'"), "{warnings:?}");
+    assert!(
+        equations(&found).iter().any(|e| e.contains("not(")),
+        "{:?}",
+        equations(&found)
+    );
+}

@@ -17,12 +17,12 @@ An `sbmlsim` failure means sbmlsim-core itself cannot simulate the case, it says
 | stage | total | pass | fail | skip | pass rate |
 | --- | --- | --- | --- | --- | --- |
 | sbmlsim | 1658 | 1656 | 2 | 0 | 99.9% |
-| sbml2cellml | 1658 | 1610 | 48 | 0 | 97.1% |
-| libopencor | 1658 | 1154 | 456 | 48 | 69.6% |
-| cellml2sbml | 1658 | 1610 | 0 | 48 | 97.1% |
-| roundtrip | 1658 | 1599 | 11 | 48 | 96.4% |
+| sbml2cellml | 1658 | 1612 | 46 | 0 | 97.2% |
+| libopencor | 1658 | 1158 | 454 | 46 | 69.8% |
+| cellml2sbml | 1658 | 1612 | 0 | 46 | 97.2% |
+| roundtrip | 1658 | 1601 | 11 | 46 | 96.6% |
 
-1008 of the 1154 cases with a passing libopencor stage are informative: the expected results move more than the tolerance band for at least one variable.
+1010 of the 1158 cases with a passing libopencor stage are informative: the expected results move more than the tolerance band for at least one variable.
 
 ## Timings
 
@@ -35,11 +35,11 @@ The two simulators integrate with the same relative tolerance and with an absolu
 
 | stage | simulator | model | simulations | setup median | integration median | integration p95 | integration slowest | integration total |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| sbmlsim | sbmlsim-core | SBML model | 1658 | 1.00 ms | 0.07 ms | 0.20 ms | 727 ms | 1.5 s |
-| libopencor | libopencor | CellML model | 1608 | 4.8 ms | 0.06 ms | 0.13 ms | 8.2 ms | 104 ms |
-| roundtrip | sbmlsim-core | roundtrip SBML model | 1609 | 1.2 ms | 0.07 ms | 0.21 ms | 834 ms | 1.8 s |
+| sbmlsim | sbmlsim-core | SBML model | 1658 | 0.96 ms | 0.07 ms | 0.18 ms | 735 ms | 1.5 s |
+| libopencor | libopencor | CellML model | 1612 | 4.6 ms | 0.06 ms | 0.11 ms | 0.65 ms | 86 ms |
+| roundtrip | sbmlsim-core | roundtrip SBML model | 1611 | 1.1 ms | 0.07 ms | 0.19 ms | 815 ms | 1.7 s |
 
-The two simulators integrate the same dynamics for 1154 cases, those whose CellML model reproduces the expected results. libopencor is 1.1 times faster than sbmlsim-core for the median of them and faster for 743; over these cases the medians are 0.07 ms for sbmlsim-core and 0.06 ms for libopencor.
+The two simulators integrate the same dynamics for 1158 cases, those whose CellML model reproduces the expected results. libopencor is 1.1 times faster than sbmlsim-core for the median of them and faster for 783; over these cases the medians are 0.07 ms for sbmlsim-core and 0.06 ms for libopencor.
 
 ## Failure reasons
 
@@ -52,186 +52,70 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 **2 cases**
 
 ```text
-01820: time points differ from the expected results
-01821: time points differ from the expected results
+01820: variable time missing in the result
+01821: variable time missing in the result
 ```
 
 ### sbml2cellml
 
-48 of 1658 cases fail.
+46 of 1658 cases fail.
 
-**48 cases**
+**46 cases**
 
 ```text
-00028: CellMLValidationError: CellML model 'case00028' converted from '00028-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-    [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-00173: CellMLValidationError: CellML model 'case00173' converted from '00173-sbml-l3v2.xml' has 4 errors:
-    [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-    [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-    [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-    [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-00269: CellMLValidationError: CellML model 'case00269' converted from '00269-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-    [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-00937: CellMLValidationError: CellML model 'case00937' converted from '00937-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-00938: CellMLValidationError: CellML model 'case00938' converted from '00938-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-00939: CellMLValidationError: CellML model 'case00939' converted from '00939-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-00940: CellMLValidationError: CellML model 'case00940' converted from '00940-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-00941: CellMLValidationError: CellML model 'case00941' converted from '00941-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-00942: CellMLValidationError: CellML model 'case00942' converted from '00942-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-00943: CellMLValidationError: CellML model 'case00943' converted from '00943-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-00957: CellMLValidationError: CellML model 'case000957' converted from '00957-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-    [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-00981: CellMLValidationError: CellML model 'case00981' converted from '00981-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-00982: CellMLValidationError: CellML model 'case00982' converted from '00982-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-00983: CellMLValidationError: CellML model 'case00983' converted from '00983-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-00984: CellMLValidationError: CellML model 'case00984' converted from '00984-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-00985: CellMLValidationError: CellML model 'case00985' converted from '00985-sbml-l3v2.xml' has 4 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01142: CellMLValidationError: CellML model 'case01142' converted from '01142-sbml-l3v2.xml' has 6 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01173: CellMLValidationError: CellML model 'case01173' converted from '01173-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01174: CellMLValidationError: CellML model 'case01174' converted from '01174-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01176: CellMLValidationError: CellML model 'case01176' converted from '01176-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01318: CellMLValidationError: CellML model 'case01318' converted from '01318-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01319: CellMLValidationError: CellML model 'case01319' converted from '01319-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01320: CellMLValidationError: CellML model 'case01320' converted from '01320-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01400: CellMLValidationError: CellML model 'case01400' converted from '01400-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01401: CellMLValidationError: CellML model 'case01401' converted from '01401-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01403: CellMLValidationError: CellML model 'case01403' converted from '01403-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01404: CellMLValidationError: CellML model 'case01404' converted from '01404-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01406: CellMLValidationError: CellML model 'case01406' converted from '01406-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01407: CellMLValidationError: CellML model 'case01407' converted from '01407-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01409: CellMLValidationError: CellML model 'case01409' converted from '01409-sbml-l3v2.xml' has 4 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01410: CellMLValidationError: CellML model 'case01410' converted from '01410-sbml-l3v2.xml' has 4 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01411: CellMLValidationError: CellML model 'case01411' converted from '01411-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01412: CellMLValidationError: CellML model 'case01412' converted from '01412-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01413: CellMLValidationError: CellML model 'case01413' converted from '01413-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01414: CellMLValidationError: CellML model 'case01414' converted from '01414-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01415: CellMLValidationError: CellML model 'case01415' converted from '01415-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01416: CellMLValidationError: CellML model 'case01416' converted from '01416-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01417: CellMLValidationError: CellML model 'case01417' converted from '01417-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01418: CellMLValidationError: CellML model 'case01418' converted from '01418-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01419: CellMLValidationError: CellML model 'case01419' converted from '01419-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01454: CellMLValidationError: CellML model 'case01454' converted from '01454-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01480: CellMLValidationError: CellML model 'case01480' converted from '01480-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01486: CellMLValidationError: CellML model 'case01486' converted from '01486-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-    [ERROR] Math has a 'factorial' element that is not a supported MathML element.
-01534: CellMLValidationError: CellML model 'case01534' converted from '01534-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01535: CellMLValidationError: CellML model 'case01535' converted from '01535-sbml-l3v2.xml' has 2 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01537: CellMLValidationError: CellML model 'case01537' converted from '01537-sbml-l3v2.xml' has 4 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01538: CellMLValidationError: CellML model 'case01538' converted from '01538-sbml-l3v2.xml' has 4 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-01593: CellMLValidationError: CellML model 'case01593' converted from '01593-sbml-l3v2.xml' has 4 errors:
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
-    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
+00028: MathMLError: CellML 2.0 has no 'factorial': the formula 'factorial(ceil(p1 * S1)) * p2^-1' has no counterpart in the MathML of CellML
+00173: MathMLError: CellML 2.0 has no 'factorial': the formula '-1 * factorial(ceil(p1 * S1)) * p2^-1' has no counterpart in the MathML of CellML
+00269: MathMLError: CellML 2.0 has no 'factorial': the formula 'factorial(ceil(S1 * p1)) * p2^-1' has no counterpart in the MathML of CellML
+00937: MathMLError: CellML 2.0 has no 'delay': the formula '2 + delay(x, 0.2)' has no counterpart in the MathML of CellML
+00938: MathMLError: CellML 2.0 has no 'delay': the formula '2 + delay(x, 0.2)' has no counterpart in the MathML of CellML
+00939: MathMLError: CellML 2.0 has no 'delay': the formula '2 + delay(x, 0.2)' has no counterpart in the MathML of CellML
+00940: MathMLError: CellML 2.0 has no 'delay': the formula '2 + delay(x, 0.5)' has no counterpart in the MathML of CellML
+00941: MathMLError: CellML 2.0 has no 'delay': the formula '2 + delay(x, 0.5)' has no counterpart in the MathML of CellML
+00942: MathMLError: CellML 2.0 has no 'delay': the formula '2 + delay(x, 0.5)' has no counterpart in the MathML of CellML
+00943: MathMLError: CellML 2.0 has no 'delay': the formula '2 + delay(x, 0.5)' has no counterpart in the MathML of CellML
+00981: MathMLError: CellML 2.0 has no 'delay': the formula ' 2)' has no counterpart in the MathML of CellML
+00982: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(x, temp)' has no counterpart in the MathML of CellML
+00983: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(x, temp)' has no counterpart in the MathML of CellML
+00984: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(x, temp)' has no counterpart in the MathML of CellML
+00985: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(x, 1)' has no counterpart in the MathML of CellML
+01142: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(t1, timeconv * 3)' has no counterpart in the MathML of CellML
+01173: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(t1, timeconv * 3)' has no counterpart in the MathML of CellML
+01174: MathMLError: CellML 2.0 has no 'delay': the formula ' 2))' has no counterpart in the MathML of CellML
+01176: MathMLError: CellML 2.0 has no 'delay': the formula ' timeconv)' has no counterpart in the MathML of CellML
+01318: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(p2, 1)' has no counterpart in the MathML of CellML
+01319: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(p2, 1)' has no counterpart in the MathML of CellML
+01320: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1, 1)' has no counterpart in the MathML of CellML
+01400: MathMLError: CellML 2.0 has no 'delay': the formula ' C) * -J0, 1)' has no counterpart in the MathML of CellML
+01401: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(-0.1 * S1, 1)' has no counterpart in the MathML of CellML
+01403: MathMLError: CellML 2.0 has no 'delay': the formula ' C) * (conversion * -J0), 1)' has no counterpart in the MathML of CellML
+01404: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1, 1)' has no counterpart in the MathML of CellML
+01406: MathMLError: CellML 2.0 has no 'delay': the formula ' C) * (conversion * -J0), 1)' has no counterpart in the MathML of CellML
+01407: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1, 1)' has no counterpart in the MathML of CellML
+01409: MathMLError: CellML 2.0 has no 'delay': the formula ' C) * (sconversion * -J0), 1)' has no counterpart in the MathML of CellML
+01410: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1, 1)' has no counterpart in the MathML of CellML
+01411: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1 + S2, 1)' has no counterpart in the MathML of CellML
+01412: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1 + S2, 1)' has no counterpart in the MathML of CellML
+01413: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1, 0.5 + 0.5)' has no counterpart in the MathML of CellML
+01414: MathMLError: CellML 2.0 has no 'delay': the formula '0.1 * delay(P1, J0_k)' has no counterpart in the MathML of CellML
+01415: MathMLError: CellML 2.0 has no 'delay': the formula '0.1 * delay(P1, J0_k)' has no counterpart in the MathML of CellML
+01416: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1, 1)' has no counterpart in the MathML of CellML
+01417: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1, S1_stoich)' has no counterpart in the MathML of CellML
+01418: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1_stoich, 1)' has no counterpart in the MathML of CellML
+01419: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1_stoich, 1)' has no counterpart in the MathML of CellML
+01454: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1, 0.1)' has no counterpart in the MathML of CellML
+01480: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1, 1)' has no counterpart in the MathML of CellML
+01534: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1, 1)' has no counterpart in the MathML of CellML
+01535: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1, 1)' has no counterpart in the MathML of CellML
+01537: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1, 1)' has no counterpart in the MathML of CellML
+01538: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(S1, 1)' has no counterpart in the MathML of CellML
+01593: MathMLError: CellML 2.0 has no 'delay': the formula 'delay(Q, 1) + delay(R, 1)' has no counterpart in the MathML of CellML
 ```
 
 ### libopencor
 
-456 of 1658 cases fail.
+454 of 1658 cases fail.
 
-**452 cases, numerical mismatch**
+**442 cases, numerical mismatch, the model has events which libopencor does not apply**
 
 ```text
 00026: S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 1.13
@@ -519,7 +403,6 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 01268: p2 exceeds the tolerance by 5
 01269: p2 exceeds the tolerance by 4
 01270: p2 exceeds the tolerance by 7.98
-01279: p1 exceeds the tolerance by 1; p2 exceeds the tolerance by 1; p3 exceeds the tolerance by 1; p4 exceeds the tolerance by 1
 01284: p1 exceeds the tolerance by 3
 01285: p1 exceeds the tolerance by 4
 01286: p1 exceeds the tolerance by 15
@@ -574,7 +457,6 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 01447: A exceeds the tolerance by 5; B exceeds the tolerance by 5
 01448: A exceeds the tolerance by 10; B exceeds the tolerance by 10
 01466: Allsum exceeds the tolerance by 200
-01497: p1 exceeds the tolerance by 1; p2 exceeds the tolerance by 1; p3 exceeds the tolerance by 1; p4 exceeds the tolerance by 1
 01504: S1 exceeds the tolerance by 0.0139; x exceeds the tolerance by 0.0199
 01505: C1 exceeds the tolerance by 0.39; S1 exceeds the tolerance by 0.0471; x exceeds the tolerance by 0.351
 01506: C1 exceeds the tolerance by 0.39; S1 exceeds the tolerance by 0.0288; x exceeds the tolerance by 0.41
@@ -584,12 +466,6 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 01510: S1 exceeds the tolerance by 0.7; x exceeds the tolerance by 1
 01511: S1 exceeds the tolerance by 0.0139; x exceeds the tolerance by 0.0199
 01512: x2 exceeds the tolerance by 5
-01518: P2 exceeds the tolerance by 3
-01520: P2 exceeds the tolerance by 3
-01521: P2 exceeds the tolerance by 3
-01522: P2 exceeds the tolerance by 3
-01523: P2 exceeds the tolerance by 0.5
-01524: P2 exceeds the tolerance by 2.5
 01525: P2 exceeds the tolerance by 3
 01527: P2 exceeds the tolerance by 3
 01528: P2 exceeds the tolerance by 1.5
@@ -598,7 +474,6 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 01531: P0 exceeds the tolerance by 2; P1 exceeds the tolerance by 2; P2 exceeds the tolerance by 2; P3 exceeds the tolerance by 2; P4 exceeds the tolerance by 2; P5 exceeds the tolerance by 2; P6 exceeds the tolerance by 2; P7 exceeds the tolerance by 2; P8 exceeds the tolerance by 2; P9 exceeds the tolerance by 2; P10 exceeds the tolerance by 2; P11 exceeds the tolerance by 2; P12 exceeds the tolerance by 2; P13 exceeds the tolerance by 2; P14 exceeds the tolerance by 2; P15 exceeds the tolerance by 2; P16 exceeds the tolerance by 2; P17 exceeds the tolerance by 2; P18 exceeds the tolerance by 2; P19 exceeds the tolerance by 2; P20 exceeds the tolerance by 2; P21 exceeds the tolerance by 2; P22 exceeds the tolerance by 2; P23 exceeds the tolerance by 2; P24 exceeds the tolerance by 2; P25 exceeds the tolerance by 2; P26 exceeds the tolerance by 2; P27 exceeds the tolerance by 2; P28 exceeds the tolerance by 2; P29 exceeds the tolerance by 2; P30 exceeds the tolerance by 2; P31 exceeds the tolerance by 2; P32 exceeds the tolerance by 2; P33 exceeds the tolerance by 2; P34 exceeds the tolerance by 2; P35 exceeds the tolerance by 2; P36 exceeds the tolerance by 2; P37 exceeds the tolerance by 2; P38 exceeds the tolerance by 2; P39 exceeds the tolerance by 2; P40 exceeds the tolerance by 2; P41 exceeds the tolerance by 2; P42 exceeds the tolerance by 2; P43 exceeds the tolerance by 2; P44 exceeds the tolerance by 2; P45 exceeds the tolerance by 2; P46 exceeds the tolerance by 2; P47 exceeds the tolerance by 2; P48 exceeds the tolerance by 2; P49 exceeds the tolerance by 2; P50 exceeds the tolerance by 2; P51 exceeds the tolerance by 2; P52 exceeds the tolerance by 2; P53 exceeds the tolerance by 2; P54 exceeds the tolerance by 2; P55 exceeds the tolerance by 2
 01532: P0 exceeds the tolerance by 2; P1 exceeds the tolerance by 2; P2 exceeds the tolerance by 2; P3 exceeds the tolerance by 2; P4 exceeds the tolerance by 2; P5 exceeds the tolerance by 2; P6 exceeds the tolerance by 2; P7 exceeds the tolerance by 2; P8 exceeds the tolerance by 2; P9 exceeds the tolerance by 2; P10 exceeds the tolerance by 2; P11 exceeds the tolerance by 2; P12 exceeds the tolerance by 2; P13 exceeds the tolerance by 2; P14 exceeds the tolerance by 2; P15 exceeds the tolerance by 2; P16 exceeds the tolerance by 2; P17 exceeds the tolerance by 2; P18 exceeds the tolerance by 2; P19 exceeds the tolerance by 2; P20 exceeds the tolerance by 2; P21 exceeds the tolerance by 2; P22 exceeds the tolerance by 2; P23 exceeds the tolerance by 2; P24 exceeds the tolerance by 2; P25 exceeds the tolerance by 2; P26 exceeds the tolerance by 2; P27 exceeds the tolerance by 2; P28 exceeds the tolerance by 2; P29 exceeds the tolerance by 2; P30 exceeds the tolerance by 2; P31 exceeds the tolerance by 2; P32 exceeds the tolerance by 2; P33 exceeds the tolerance by 2; P34 exceeds the tolerance by 2; P35 exceeds the tolerance by 2; P36 exceeds the tolerance by 2; P37 exceeds the tolerance by 2; P38 exceeds the tolerance by 2; P39 exceeds the tolerance by 2; P40 exceeds the tolerance by 2; P41 exceeds the tolerance by 2; P42 exceeds the tolerance by 2; P43 exceeds the tolerance by 2; P44 exceeds the tolerance by 2; P45 exceeds the tolerance by 2; P46 exceeds the tolerance by 2; P47 exceeds the tolerance by 2; P48 exceeds the tolerance by 2; P49 exceeds the tolerance by 2; P50 exceeds the tolerance by 2; P51 exceeds the tolerance by 2; P52 exceeds the tolerance by 2
 01533: P0 exceeds the tolerance by 3; P1 exceeds the tolerance by 3; P2 exceeds the tolerance by 3; P3 exceeds the tolerance by 3; P4 exceeds the tolerance by 3; P5 exceeds the tolerance by 3; P6 exceeds the tolerance by 3; P7 exceeds the tolerance by 2; P8 exceeds the tolerance by 3; P9 exceeds the tolerance by 2; P10 exceeds the tolerance by 3; P11 exceeds the tolerance by 3; P12 exceeds the tolerance by 2; P13 exceeds the tolerance by 2; P14 exceeds the tolerance by 3; P15 exceeds the tolerance by 3; P16 exceeds the tolerance by 3; P17 exceeds the tolerance by 3; P18 exceeds the tolerance by 2; P19 exceeds the tolerance by 3; P20 exceeds the tolerance by 2; P21 exceeds the tolerance by 2; P22 exceeds the tolerance by 2; P23 exceeds the tolerance by 2; P24 exceeds the tolerance by 3; P25 exceeds the tolerance by 3; P26 exceeds the tolerance by 3; P27 exceeds the tolerance by 3; P28 exceeds the tolerance by 3; P29 exceeds the tolerance by 3; P30 exceeds the tolerance by 3; P31 exceeds the tolerance by 3; P32 exceeds the tolerance by 2; P33 exceeds the tolerance by 2; P34 exceeds the tolerance by 2; P35 exceeds the tolerance by 3; P36 exceeds the tolerance by 2; P37 exceeds the tolerance by 3; P38 exceeds the tolerance by 2; P39 exceeds the tolerance by 3; P40 exceeds the tolerance by 2; P41 exceeds the tolerance by 3; P42 exceeds the tolerance by 3; P43 exceeds the tolerance by 3; P44 exceeds the tolerance by 2; P45 exceeds the tolerance by 3; P46 exceeds the tolerance by 3; P47 exceeds the tolerance by 2; P48 exceeds the tolerance by 3; P49 exceeds the tolerance by 3; P50 exceeds the tolerance by 2; P51 exceeds the tolerance by 3; P52 exceeds the tolerance by 2
-01536: S1 exceeds the tolerance by 7
 01575: k1 exceeds the tolerance by 7.2; k2 exceeds the tolerance by 7.2
 01577: P1 exceeds the tolerance by 2
 01578: P1 exceeds the tolerance by 2
@@ -611,7 +486,6 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 01589: S exceeds the tolerance by 99
 01590: S exceeds the tolerance by 99.8
 01591: S exceeds the tolerance by 99.8
-01592: S exceeds the tolerance by 99.8
 01594: P2 exceeds the tolerance by 2
 01596: P2 exceeds the tolerance by 2
 01597: P2 exceeds the tolerance by 44
@@ -688,18 +562,31 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 01780: C1 exceeds the tolerance by 0.3; S1 exceeds the tolerance by 0.9; x exceeds the tolerance by 1.5
 ```
 
-**2 cases**
+**8 cases, numerical mismatch, an event whose formulas use a delay is not converted**
 
 ```text
-01280: SimulationFailure: libopencor: worker died during simulate_cellml
-01281: SimulationFailure: libopencor: worker died during simulate_cellml
+01518: P2 exceeds the tolerance by 3
+01520: P2 exceeds the tolerance by 3
+01521: P2 exceeds the tolerance by 3
+01522: P2 exceeds the tolerance by 3
+01523: P2 exceeds the tolerance by 0.5
+01524: P2 exceeds the tolerance by 2.5
+01536: S1 exceeds the tolerance by 7
+01592: S exceeds the tolerance by 99.8
+```
+
+**2 cases, numerical mismatch**
+
+```text
+01279: p1 exceeds the tolerance by 1; p2 exceeds the tolerance by 1; p3 exceeds the tolerance by 1; p4 exceeds the tolerance by 1
+01497: p1 exceeds the tolerance by 1; p2 exceeds the tolerance by 1; p3 exceeds the tolerance by 1; p4 exceeds the tolerance by 1
 ```
 
 **2 cases**
 
 ```text
-01820: time points differ from the expected results
-01821: time points differ from the expected results
+01820: variable time missing in the result
+01821: variable time missing in the result
 ```
 
 The test tags of the cases with a numerical mismatch:
@@ -707,7 +594,7 @@ The test tags of the cases with a numerical mismatch:
 | tags | cases | ids |
 | --- | --- | --- |
 | Amount | 75 | 00026, 00041, 00071, 00072, 00073, 00074, 00348, 00349, 00350, 00351, 00352, 00353, 00354, 00355, 00356, 00357, 00358, 00359, 00360, 00361, 00363, 00364, 00366, 00367, 00399, 00400, 00401, 00405, 00407, 00408, 00409, 00410, 00411, 00412, 00415, 00416, 00417, 00418, 00423, 00424, 00620, 00623, 00638, 00646, 00647, 00648, 00649, 00650, 00651, 00654, 00657, 00661, 00662, 00665, 00666, 00751, 00752, 00753, 00754, 00760, 00773, 00774, 00775, 00778, 00791, 00845, 00846, 00847, 00848, 00883, 00884, 00885, 00886, 00930, 00931 |
-| NonConstantParameter | 26 | 00172, 00396, 00397, 00398, 00402, 00403, 00404, 00453, 00455, 00979, 01119, 01214, 01260, 01262, 01263, 01266, 01267, 01268, 01303, 01304, 01305, 01521, 01658, 01659, 01662, 01664 |
+| NonConstantParameter | 26 | 00172, 00396, 00397, 00398, 00402, 00403, 00404, 00453, 00455, 00979, 01119, 01214, 01260, 01262, 01263, 01266, 01267, 01268, 01303, 01304, 01305, 01658, 01659, 01662, 01664, 01521 |
 | Amount, InitialValueReassigned | 25 | 00619, 00621, 00622, 00624, 00634, 00635, 00636, 00637, 00639, 00652, 00653, 00655, 00656, 00663, 00755, 00756, 00761, 00762, 00771, 00772, 00777, 00779, 00780, 00789, 00790 |
 | Amount, BoundaryCondition | 17 | 00375, 00376, 00377, 00378, 00379, 00380, 00381, 00382, 00383, 00432, 00433, 00434, 00436, 00437, 00438, 00439, 00440 |
 | Concentration, NonUnityCompartment | 14 | 00374, 00743, 00744, 00745, 00746, 00747, 00748, 00749, 00763, 00765, 00766, 00767, 00768, 00769 |
@@ -840,7 +727,7 @@ The test tags of the cases with a numerical mismatch:
 
 11 of 1658 cases fail.
 
-**8 cases, numerical mismatch**
+**7 cases, numerical mismatch, an event whose formulas use a delay is not converted**
 
 ```text
 01518: P2 exceeds the tolerance by 3
@@ -849,21 +736,26 @@ The test tags of the cases with a numerical mismatch:
 01523: P2 exceeds the tolerance by 0.5
 01524: P2 exceeds the tolerance by 2.5
 01536: S1 exceeds the tolerance by 7
-01589: S exceeds the tolerance by 99; errorLow exceeds the tolerance by 0.97
 01592: S exceeds the tolerance by 99.8; errorLow exceeds the tolerance by 0.85
 ```
 
 **2 cases**
 
 ```text
-01820: time points differ from the expected results
-01821: time points differ from the expected results
+01820: variable time missing in the result
+01821: variable time missing in the result
 ```
 
 **1 case**
 
 ```text
 01577: SimulationFailure: sbmlsim: IntegrationError: integration failed at t = 10 (flag -13): IDAICFailFlag: The linesearch algorithm failed: step too small or too many backtracks.
+```
+
+**1 case, numerical mismatch**
+
+```text
+01589: S exceeds the tolerance by 99; errorLow exceeds the tolerance by 0.97
 ```
 
 The test tags of the cases with a numerical mismatch:
@@ -1800,7 +1692,7 @@ The test tags of the cases with a numerical mismatch:
 | 00954 | AssignmentRule, Parameter | pass | pass | pass | pass | pass | no |
 | 00955 | AssignmentRule, CSymbolTime, Parameter | pass | pass | pass | pass | pass | yes |
 | 00956 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
-| 00957 | AssignmentRule, Parameter | pass | fail | skip | skip | skip | no |
+| 00957 | AssignmentRule, Parameter | pass | pass | pass | pass | pass | no |
 | 00958 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 00959 | AssignmentRule, CSymbolTime, Parameter | pass | pass | pass | pass | pass | yes |
 | 00960 | CSymbolAvogadro, InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
@@ -2095,8 +1987,8 @@ The test tags of the cases with a numerical mismatch:
 | 01277 | AssignmentRule, CSymbolTime, Parameter | pass | pass | pass | pass | pass | yes |
 | 01278 | AssignmentRule, CSymbolTime, Parameter | pass | pass | pass | pass | pass | yes |
 | 01279 | AssignmentRule, CSymbolTime, Parameter | pass | pass | fail | pass | pass | yes |
-| 01280 | AssignmentRule, CSymbolTime, Parameter | pass | pass | fail | pass | pass | yes |
-| 01281 | AssignmentRule, CSymbolTime, Parameter | pass | pass | fail | pass | pass | yes |
+| 01280 | AssignmentRule, CSymbolTime, Parameter | pass | pass | pass | pass | pass | yes |
+| 01281 | AssignmentRule, CSymbolTime, Parameter | pass | pass | pass | pass | pass | yes |
 | 01282 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 01283 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 01284 | EventNoDelay, Parameter | pass | pass | fail | pass | pass | no |
@@ -2291,7 +2183,7 @@ The test tags of the cases with a numerical mismatch:
 | 01483 | AlgebraicRule, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01484 | AlgebraicRule, Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01485 | AssignmentRule, FunctionDefinition, Parameter | pass | pass | pass | pass | pass | no |
-| 01486 | AssignmentRule, FunctionDefinition, Parameter | pass | fail | skip | skip | skip | no |
+| 01486 | AssignmentRule, FunctionDefinition, Parameter | pass | pass | pass | pass | pass | no |
 | 01487 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | pass | pass | pass | pass | yes |
 | 01488 | AssignmentRule, CSymbolTime, FunctionDefinition, Parameter | pass | pass | pass | pass | pass | yes |
 | 01489 | FunctionDefinition, InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |

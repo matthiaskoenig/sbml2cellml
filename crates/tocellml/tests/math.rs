@@ -391,6 +391,42 @@ fn the_constants_of_mathml_keep_their_element() {
 }
 
 #[test]
+fn the_factorial_of_a_constant_is_its_value() {
+    // CellML has neither factorial nor gamma: the value of a constant is
+    // what both converters write, `5! = 120`
+    assert_eq!(
+        convert("<apply><factorial/><cn>5</cn></apply>"),
+        Ok(number(120.0, "dimensionless"))
+    );
+    // the argument is evaluated as a simulator of the SBML model does
+    assert_eq!(
+        convert("<apply><factorial/><apply><plus/><cn>2</cn><cn>2</cn></apply></apply>"),
+        Ok(number(24.0, "dimensionless"))
+    );
+    // a factorial of a variable, of a negative number and of a number
+    // which is no whole number has no counterpart
+    assert_eq!(
+        convert("<apply><factorial/><ci>a</ci></apply>"),
+        Err(MathError::Factorial)
+    );
+    assert_eq!(
+        convert("<apply><factorial/><apply><minus/><cn>2</cn></apply></apply>"),
+        Err(MathError::Factorial)
+    );
+    assert_eq!(
+        convert("<apply><factorial/><cn>1.5</cn></apply>"),
+        Err(MathError::Factorial)
+    );
+    // the time of a formula is no constant, it is the variable of integration
+    assert_eq!(
+        convert(
+            r#"<apply><factorial/><csymbol definitionURL="http://www.sbml.org/sbml/symbols/time">t</csymbol></apply>"#
+        ),
+        Err(MathError::Factorial)
+    );
+}
+
+#[test]
 fn what_cellml_has_no_counterpart_for_is_refused() {
     assert_eq!(
         convert(
