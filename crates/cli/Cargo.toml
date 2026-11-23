@@ -1,0 +1,19 @@
+[package]
+name = "sbml2cellml-cli"
+description = "Command line of the rust CellML reader"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+publish = false
+
+[[bin]]
+name = "cellml-info"
+path = "src/main.rs"
+
+[dependencies]
+cellml = { package = "sbml2cellml-cellml", path = "../cellml" }
+
+[lints]
+workspace = true
