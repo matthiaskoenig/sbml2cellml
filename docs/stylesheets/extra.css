@@ -185,6 +185,10 @@
   gap: 0.4rem;
 }
 
+.md-typeset .simulation__actions:empty {
+  display: none;
+}
+
 .md-typeset .simulation__button {
   background-color: var(--md-primary-fg-color);
   border: none;

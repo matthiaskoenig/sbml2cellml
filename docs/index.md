@@ -3,11 +3,11 @@
 # sbml2cellml: conversion between SBML and CellML
 [![GitHub Actions CI/CD Status](https://github.com/matthiaskoenig/sbml2cellml/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/matthiaskoenig/sbml2cellml/actions/workflows/ci-cd.yml) [![Documentation](https://img.shields.io/badge/docs-sbml2cellml-008080.svg)](https://matthiaskoenig.github.io/sbml2cellml) [![Version](https://img.shields.io/pypi/v/sbml2cellml)](https://pypi.org/project/sbml2cellml/) [![Python Versions](https://img.shields.io/pypi/pyversions/sbml2cellml)](https://pypi.org/project/sbml2cellml/) [![MIT License](https://img.shields.io/pypi/l/sbml2cellml)](https://opensource.org/licenses/MIT)
 
-`sbml2cellml` converts between [SBML (Systems Biology Markup Language)](https://sbml.org) and [CellML 2.0](https://cellml.org), so that a model developed with one tooling can be used, simulated and shared in the other ecosystem. The source code is available from [https://github.com/matthiaskoenig/sbml2cellml](https://github.com/matthiaskoenig/sbml2cellml).
+`sbml2cellml` converts between [SBML (Systems Biology Markup Language)](https://sbml.org) and [CellML 2.0](https://cellml.org), so that a model developed with one tooling can be used, simulated and shared in the other ecosystem.
 
 ## Online converter
 
-Convert a model in either direction here. The conversion runs in the browser: the page loads the converter as a WebAssembly module and reads the model locally, so nothing is uploaded and no server sees the model. A CellML model which imports a component or units, an SBML model which uses a package such as `comp`, and the metadata of a conversion need the [python package](installation.md).
+Convert a model in either direction here, without an installation: the converter runs as a WebAssembly module in this page, nothing is uploaded and no server sees the model.
 
 <div class="converter" data-converter data-module="converter/sbml2cellml.wasm">
   <div class="converter__tabs" role="tablist" aria-label="Direction of the conversion">
@@ -55,6 +55,8 @@ Convert a model in either direction here. The conversion runs in the browser: th
     </div>
   </div>
 </div>
+
+A CellML model which imports a component or units, an SBML model which uses a package such as `comp`, and the metadata of a conversion need the [python package](installation.md), which converts and simulates the models of the [roundtrip example](roundtrip.md). The source code of the project is on [GitHub](https://github.com/matthiaskoenig/sbml2cellml).
 
 ## Features
 
