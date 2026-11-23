@@ -19,6 +19,10 @@
 (() => {
   "use strict";
 
+  /** The chart of a plot, the color of a theme and the step of an axis,
+   * `chart.js`, which the simulation of the online converter uses as well. */
+  const { Chart, niceStep, themeColor } = window.sbml2cellmlChart;
+
   /** Where the JavaScript hosts of the two simulators are loaded from. */
   const CDN = "https://cdn.jsdelivr.net/npm";
 
@@ -86,36 +90,6 @@
 
   /** The component of the CellML model the conversion writes. */
   const COMPONENT = "sbml";
-
-  /**
-   * A color of the theme, which follows the light and the dark palette.
-   *
-   * @param {string} name The custom property of the color.
-   * @param {string} fallback The color when the property is not set.
-   * @returns {string} The color.
-   */
-  function themeColor(name, fallback) {
-    const value = getComputedStyle(document.body).getPropertyValue(name);
-    return value.trim() || fallback;
-  }
-
-  /**
-   * A step of an axis which is a round number.
-   *
-   * @param {number} range The range of the axis.
-   * @param {number} count The number of ticks it is divided into.
-   * @returns {number} The step, 1, 2, 2.5 or 5 times a power of ten.
-   */
-  function niceStep(range, count) {
-    const raw = range / count;
-    const magnitude = 10 ** Math.floor(Math.log10(raw));
-    for (const factor of [1, 2, 2.5, 5]) {
-      if (raw <= factor * magnitude) {
-        return factor * magnitude;
-      }
-    }
-    return 10 * magnitude;
-  }
 
   /**
    * A wall time as text.
@@ -320,128 +294,6 @@
     }
   }
 
-  /** A timecourse plot on a canvas, drawn in the colors of the theme. */
-  class Chart {
-    /**
-     * @param {HTMLCanvasElement} canvas The canvas of the plot.
-     */
-    constructor(canvas) {
-      this.canvas = canvas;
-      this.result = null;
-      this.maximum = 1;
-      new ResizeObserver(() => this.draw()).observe(canvas);
-    }
-
-    /**
-     * Show a result.
-     *
-     * @param {{time: number[], series: Object<string, number[]>}} result The
-     *   result of a simulation.
-     * @param {number} maximum The largest value of both plots, so the two
-     *   share their axis.
-     */
-    show(result, maximum) {
-      this.result = result;
-      this.maximum = maximum;
-      this.draw();
-    }
-
-    /** Draw the result, nothing when there is none yet. */
-    draw() {
-      const canvas = this.canvas;
-      const ratio = window.devicePixelRatio || 1;
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-      if (width === 0 || height === 0) {
-        return;
-      }
-      canvas.width = Math.round(width * ratio);
-      canvas.height = Math.round(height * ratio);
-      const context = canvas.getContext("2d");
-      context.setTransform(ratio, 0, 0, ratio, 0, 0);
-      context.clearRect(0, 0, width, height);
-      if (this.result === null) {
-        return;
-      }
-      const text = themeColor("--md-default-fg-color--light", "#666");
-      const line = themeColor("--md-default-fg-color--lightest", "#ddd");
-      const left = 52;
-      const bottom = height - 32;
-      const top = 10;
-      const right = width - 12;
-      const scaleX = (value) =>
-        left +
-        ((value - TIMECOURSE.start) / (TIMECOURSE.end - TIMECOURSE.start)) *
-          (right - left);
-      const scaleY = (value) => bottom - (value / this.maximum) * (bottom - top);
-      context.font =
-        "11px -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif";
-      context.strokeStyle = line;
-      context.fillStyle = text;
-      context.lineWidth = 1;
-      // the grid with the labels of its round ticks
-      const stepY = niceStep(this.maximum, 4);
-      context.textAlign = "right";
-      context.textBaseline = "middle";
-      for (let value = 0; value <= this.maximum + 1e-9; value += stepY) {
-        const y = Math.round(scaleY(value)) + 0.5;
-        context.beginPath();
-        context.moveTo(left, y);
-        context.lineTo(right, y);
-        context.stroke();
-        context.fillText(stepY < 1 ? value.toFixed(1) : value.toFixed(0), left - 6, y);
-      }
-      const stepX = niceStep(TIMECOURSE.end - TIMECOURSE.start, 6);
-      context.textBaseline = "top";
-      for (
-        let value = TIMECOURSE.start;
-        value <= TIMECOURSE.end + 1e-9;
-        value += stepX
-      ) {
-        const x = Math.round(scaleX(value)) + 0.5;
-        context.beginPath();
-        context.moveTo(x, top);
-        context.lineTo(x, bottom);
-        context.stroke();
-        // the first and the last label are kept inside the plot
-        context.textAlign =
-          value === TIMECOURSE.start
-            ? "left"
-            : value + stepX > TIMECOURSE.end
-              ? "right"
-              : "center";
-        context.fillText(value.toFixed(0), x, bottom + 6);
-      }
-      // the labels of the axes
-      context.textAlign = "center";
-      context.fillText("time (min)", (left + right) / 2, bottom + 19);
-      context.save();
-      context.translate(13, (top + bottom) / 2);
-      context.rotate(-Math.PI / 2);
-      context.textBaseline = "middle";
-      context.fillText("proteins per cell", 0, 0);
-      context.restore();
-      // the timecourse of every protein
-      context.lineWidth = 1.6;
-      context.lineJoin = "round";
-      for (const protein of PROTEINS) {
-        const values = this.result.series[protein.id];
-        context.strokeStyle = protein.color;
-        context.beginPath();
-        for (let index = 0; index < values.length; index += 1) {
-          const x = scaleX(this.result.time[index]);
-          const y = scaleY(values[index]);
-          if (index === 0) {
-            context.moveTo(x, y);
-          } else {
-            context.lineTo(x, y);
-          }
-        }
-        context.stroke();
-      }
-    }
-  }
-
   /** The interactive simulation of a page. */
   class Simulation {
     /**
@@ -462,9 +314,10 @@
       this.retry = root.querySelector('[data-action="retry"]');
       this.reset = root.querySelector('[data-action="reset"]');
       this.sliders = new Map();
+      const labels = { x: "time (min)", y: "proteins per cell" };
       this.charts = {
-        cellml: new Chart(root.querySelector('[data-chart="cellml"]')),
-        sbml: new Chart(root.querySelector('[data-chart="sbml"]')),
+        cellml: new Chart(root.querySelector('[data-chart="cellml"]'), labels),
+        sbml: new Chart(root.querySelector('[data-chart="sbml"]'), labels),
       };
       this.timings = {
         cellml: root.querySelector('[data-role="cellml-timing"]'),
@@ -556,10 +409,7 @@
       this.say("Loading the two simulators, about 11 MB ...", "info");
       try {
         const versions = JSON.parse(await fetchText(this.urls.versions));
-        this.cellml = await Cellml.load(
-          versions.libopencor,
-          this.urls.cellml,
-        );
+        this.cellml = await Cellml.load(versions.libopencor, this.urls.cellml);
         this.sbml = await Sbml.load(versions["sbmlsim-core"], this.urls);
         this.root.querySelector('[data-role="plots"]').hidden = false;
         for (const { input } of this.sliders.values()) {
@@ -620,8 +470,10 @@
         }
         const step = niceStep(maximum === 0 ? 1 : maximum, 4);
         maximum = Math.ceil((maximum === 0 ? 1 : maximum) / step) * step;
-        this.charts.cellml.show(cellml, maximum);
-        this.charts.sbml.show(sbml, maximum);
+        // the two plots share their axis, so the curves are comparable
+        const options = { series: PROTEINS, range: TIMECOURSE, maximum };
+        this.charts.cellml.show(cellml, options);
+        this.charts.sbml.show(sbml, options);
         this.timings.cellml.textContent = formatTime(second - first);
         this.timings.sbml.textContent = formatTime(third - second);
         this.difference.textContent = largest.toExponential(1);

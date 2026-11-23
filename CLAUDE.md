@@ -568,6 +568,23 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   markup in `docs/index.md`, the example models in `docs/roundtrip/`).
   Without the module the converter says that
   it is not available and the rest of the page works.
+  `docs/javascripts/simulate.js` simulates the CellML side of a conversion
+  in the same page with libopencor (issue #68): the panel of a direction
+  gives its `Simulator` the document it holds (the file of the
+  `cellml2sbml` direction, the model the `sbml2cellml` direction wrote),
+  the module of npm `@opencor/libopencor` is loaded from a CDN when the
+  visitor simulates the first model, pinned to the version of
+  `docs/roundtrip/simulation/versions.json` which
+  `scripts/build_simulation.py` writes, and the states of the result are
+  drawn on a canvas (`SERIES`, the first eight, the labels of the axes with
+  the units of the model, the name of a state with its component when
+  another state has that name as well) with the solver settings of the
+  python package; an item of the legend shows or hides its series, and the
+  axis follows the series which are shown.
+  The SBML side is not simulated there: sbmlsim-core compiles a model ahead
+  of time and its compiler is not part of its JavaScript host, so the
+  browser runs a model which is compiled for it, as the roundtrip page
+  does.
   `docs/javascripts/repressilator.js` is the interactive simulation of the
   roundtrip page (issue #101), which is its first section and loads the two
   simulators when the page opens (`Simulation.load`, a `Try again` button
@@ -580,8 +597,11 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   isolation as long as the simulation is not run in a background thread),
   `Sbml` the compiled SBML model with sbmlsim-core (`preinit` per parameter,
   the host `loader.mjs` of npm `sbmlsim-core` from a CDN, the engine and the
-  math library from the page) and `Chart` draws a timecourse on a canvas in
-  the colors of the theme. `scripts/build_simulation.py` compiles the SBML
+  math library from the page); `docs/javascripts/chart.js` is the chart of
+  both pages (`window.sbml2cellmlChart`: `Chart` draws a timecourse on a
+  canvas in the colors of the theme and every chart again when the visitor
+  switches the palette, with `themeColor`, `niceStep` and the `COLORS` of
+  the series). `scripts/build_simulation.py` compiles the SBML
   model of the page with the python package and writes it with the runtime
   of the simulator and the versions of the two packages into the gitignored
   `docs/roundtrip/simulation/`, which the `documentation` workflow does as

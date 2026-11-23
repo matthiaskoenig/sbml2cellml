@@ -319,3 +319,75 @@
   font-size: 0.7rem;
   margin: 0.8rem 0 0;
 }
+
+/* the simulation of the online converter, which `docs/javascripts/simulate.js`
+   drives: libopencor integrates the CellML side of a conversion in the
+   browser and `docs/javascripts/chart.js` draws its states */
+.md-typeset .converter__simulation {
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+}
+
+.md-typeset .converter__simulation-head {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.md-typeset .converter__field {
+  align-items: center;
+  color: var(--md-default-fg-color--light);
+  display: flex;
+  font-size: 0.7rem;
+  gap: 0.3rem;
+}
+
+.md-typeset .converter__number {
+  background-color: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 0.2rem;
+  color: var(--md-default-fg-color);
+  font-size: 0.7rem;
+  padding: 0.2rem 0.3rem;
+  width: 4.5rem;
+}
+
+.md-typeset .converter__plot canvas {
+  display: block;
+  height: 15rem;
+  width: 100%;
+}
+
+.md-typeset .converter__legend {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.7rem;
+  gap: 1rem;
+  margin-top: 0.4rem;
+}
+
+/* a series is shown or hidden with its item of the legend */
+.md-typeset .converter__legend-item {
+  align-items: center;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  font-size: inherit;
+  gap: 0.3rem;
+  padding: 0;
+}
+
+.md-typeset .converter__legend-item[aria-pressed="false"] {
+  opacity: 0.4;
+}
+
+.md-typeset .converter__swatch {
+  border-radius: 0.1rem;
+  display: inline-block;
+  height: 0.4rem;
+  width: 0.9rem;
+}

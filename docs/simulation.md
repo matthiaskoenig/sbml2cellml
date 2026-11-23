@@ -91,3 +91,16 @@ A model without differential equations has no variable of integration (the conve
 The CellML model is read from a file or from a string, as the SBML model is: a document which is given as text is handed to libopencor in memory. libopencor reports a model it cannot simulate, e.g., an invalid or underconstrained model, as issues, which are raised as `SimulationError`, and so is a selection which the model has no variable of. Without libopencor the import of `sbml2cellml.simulate` works, `run_timecourse` raises an `ImportError` with the installation hint.
 
 `examples/cellml_example.py` builds a small model with libcellml directly and simulates it. The [roundtrip example](roundtrip.md) simulates an SBML model, its CellML conversion and the SBML model of the roundtrip and plots the three timecourses side by side.
+
+## In the browser
+
+Both simulators also run in a browser, where they are WebAssembly modules which the pages of this documentation load:
+
+| page | model | simulator |
+| --- | --- | --- |
+| [Online converter](index.md#online-converter) | the CellML side of any conversion | libopencor |
+| [Roundtrip example](roundtrip.md#simulate-in-the-browser) | the repressilator, the CellML model and the SBML model | libopencor and sbmlsim-core |
+
+The online converter converts a model with the WebAssembly module of the rust converters and simulates the CellML side of the conversion with libopencor, which reads the document out of the memory of the page: a model is dropped, converted, integrated and plotted without an installation and without an upload. The settings of the solver are the ones of the python package, the tolerances 1e-9 and 1e-12 and 100000 internal steps between two time points, and the plot shows the first eight states of the model, every one of which is shown or hidden with its item of the legend, so a state of a model of many states is read next to its own axis.
+
+The SBML side needs the model compiled: sbmlsim-core compiles an SBML model into a WebAssembly module ahead of time and the compiler is not part of its JavaScript host, so the browser runs the models which are compiled for it, as the roundtrip page does with the repressilator (`scripts/build_simulation.py` compiles it with the python package). The version of a simulator in the browser is the version of the python package of the repository, so both run what the checks run.
