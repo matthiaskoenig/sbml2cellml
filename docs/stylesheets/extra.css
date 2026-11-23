@@ -161,3 +161,157 @@
   max-height: 24rem;
   overflow-y: auto;
 }
+
+/* The interactive simulation of the roundtrip page, which
+   `docs/javascripts/repressilator.js` drives: the sliders of the parameters
+   and the two plots of the simulators side by side. Every color is a color of
+   the theme, so the block follows the light and the dark palette. */
+.md-typeset .simulation {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.2rem;
+  margin: 1em 0;
+  padding: 0.8rem;
+}
+
+/* the theme gives the block of the plots a `display`, which hides its
+   `hidden` attribute before the simulators are loaded */
+.md-typeset .simulation [hidden] {
+  display: none;
+}
+
+.md-typeset .simulation__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.md-typeset .simulation__button {
+  background-color: var(--md-primary-fg-color);
+  border: none;
+  border-radius: 0.2rem;
+  color: var(--md-primary-bg-color);
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.4rem 0.8rem;
+}
+
+.md-typeset .simulation__button:hover:not(:disabled) {
+  background-color: var(--md-accent-fg-color);
+}
+
+.md-typeset .simulation__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* the message of the simulation; the height is kept, so the plots below it
+   do not move when the message appears */
+.md-typeset .simulation__status {
+  font-size: 0.75rem;
+  margin: 0.8rem 0 0;
+  min-height: 1.2em;
+}
+
+.md-typeset .simulation__status[data-kind="error"] {
+  color: #c62828;
+}
+
+.md-typeset .simulation__status[data-kind="success"] {
+  color: #2e7d32;
+}
+
+[data-md-color-scheme="slate"]
+  .md-typeset
+  .simulation__status[data-kind="error"] {
+  color: #ef9a9a;
+}
+
+[data-md-color-scheme="slate"]
+  .md-typeset
+  .simulation__status[data-kind="success"] {
+  color: #a5d6a7;
+}
+
+/* one slider per parameter, two columns on a wide screen */
+.md-typeset .simulation__sliders {
+  display: grid;
+  gap: 0.4rem 1.2rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  margin-top: 0.8rem;
+}
+
+.md-typeset .simulation__head {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: space-between;
+}
+
+.md-typeset .simulation__label {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.7rem;
+}
+
+.md-typeset .simulation__value {
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.md-typeset .simulation__slider input[type="range"] {
+  accent-color: var(--md-primary-fg-color);
+  width: 100%;
+}
+
+.md-typeset .simulation__legend {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.7rem;
+  gap: 1rem;
+  margin-top: 0.8rem;
+}
+
+.md-typeset .simulation__legend span {
+  align-items: center;
+  display: flex;
+  gap: 0.3rem;
+}
+
+.md-typeset .simulation__swatch {
+  border-radius: 0.1rem;
+  display: inline-block;
+  height: 0.4rem;
+  width: 0.9rem;
+}
+
+/* the two plots side by side, stacked on a narrow screen */
+.md-typeset .simulation__charts {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  margin-top: 0.4rem;
+}
+
+.md-typeset .simulation__chart {
+  margin: 0;
+}
+
+.md-typeset .simulation__chart figcaption {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.7rem;
+  margin: 0 0 0.2rem;
+  text-align: left;
+}
+
+.md-typeset .simulation__chart canvas {
+  display: block;
+  height: 13rem;
+  width: 100%;
+}
+
+.md-typeset .simulation__difference {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.7rem;
+  margin: 0.8rem 0 0;
+}

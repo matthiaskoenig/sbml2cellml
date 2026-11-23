@@ -11,15 +11,15 @@ repo_name = "matthiaskoenig/sbml2cellml"
 edit_uri = "edit/develop/docs/"
 extra_css = ["stylesheets/extra.css"]
 # the online converter of the landing page, see `scripts/build_wasm.py`
-extra_javascript = ["javascripts/converter.js"]
+extra_javascript = ["javascripts/converter.js", "javascripts/repressilator.js"]
 
 nav = [
   { "Home" = "index.md" },
   { "User guide" = [
     { "Installation" = "installation.md" },
+    { "Roundtrip example" = "roundtrip.md" },
     { "Conversion" = "conversion.md" },
     { "Simulation" = "simulation.md" },
-    { "Roundtrip example" = "roundtrip.md" },
   ] },
   { "Status" = [
     { "Conversion issues" = "conversion-issues.md" },

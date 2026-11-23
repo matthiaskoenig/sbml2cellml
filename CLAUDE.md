@@ -35,6 +35,7 @@ ruff format
 uvx ty check
 
 uv run python scripts/build_wasm.py      # the module of the online converter into docs/converter/
+uv run python scripts/build_simulation.py # the compiled repressilator and the runtime of sbmlsim-core into docs/roundtrip/simulation/
 uv run zensical build --clean --strict   # docs into site/
 uv run python scripts/llms_txt.py
 uv run zensical serve
@@ -515,6 +516,23 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   markup in `docs/index.md`, the example models in `docs/roundtrip/`).
   Without the module the converter says that
   it is not available and the rest of the page works.
+  `docs/javascripts/repressilator.js` is the interactive simulation of the
+  roundtrip page (issue #101): the sliders of five parameters of the
+  repressilator (`PARAMETERS`, the values of the published model, which
+  `tests/test_package.py` checks against `docs/roundtrip/repressilator.xml`)
+  drive both simulations, `Cellml` simulates the CellML model of the page
+  with libopencor (`SedChangeAttribute` per parameter, the module of npm
+  `@opencor/libopencor` from a CDN, which runs without cross-origin
+  isolation as long as the simulation is not run in a background thread),
+  `Sbml` the compiled SBML model with sbmlsim-core (`preinit` per parameter,
+  the host `loader.mjs` of npm `sbmlsim-core` from a CDN, the engine and the
+  math library from the page) and `Chart` draws a timecourse on a canvas in
+  the colors of the theme. `scripts/build_simulation.py` compiles the SBML
+  model of the page with the python package and writes it with the runtime
+  of the simulator and the versions of the two packages into the gitignored
+  `docs/roundtrip/simulation/`, which the `documentation` workflow does as
+  well; without the assets the page says that the simulation is not
+  available.
 - `console.py`, `log.py`: rich console for scripts and the CLI, opt-in rich
   logging. Library code logs with `logging.getLogger(__name__)` and lazy `%s`
   formatting (ruff `G`), it never prints.

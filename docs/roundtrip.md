@@ -110,6 +110,43 @@ The simulations agree within the tolerances of the integrators (both CVODE with 
 
 The [SBML test suite](testsuite.md) and the [BioModels](biomodels.md) check run this pipeline for every model and compare the numbers with tolerances.
 
+## Simulate in the browser
+
+Both simulators also run in the browser, so the two models of the conversion can be compared here: the sliders set the parameters of both, libopencor simulates the CellML model and sbmlsim-core the SBML model it was converted from, both as WebAssembly. The models are the files of this page, nothing is uploaded and the simulations run in this tab.
+
+<div class="simulation" data-simulation
+  data-cellml="repressilator.cellml"
+  data-model="simulation/repressilator.wasm"
+  data-description="simulation/repressilator.json"
+  data-engine="simulation/engine.wasm"
+  data-mathlib="simulation/mathlib.wasm"
+  data-versions="simulation/versions.json">
+  <div class="simulation__actions">
+    <button class="simulation__button" type="button" data-action="start">Load the simulators and simulate</button>
+    <button class="simulation__button" type="button" data-action="reset" disabled>Reset the parameters</button>
+  </div>
+  <p class="simulation__status" data-role="status" data-kind="info" role="status">The two simulators are about 11 MB, they are loaded when you start the simulation.</p>
+  <div class="simulation__plots" data-role="plots" hidden>
+    <div class="simulation__sliders" data-role="sliders"></div>
+    <div class="simulation__legend">
+      <span><span class="simulation__swatch" style="background-color: #4e79a7"></span>LacI (PX)</span>
+      <span><span class="simulation__swatch" style="background-color: #f28e2b"></span>TetR (PY)</span>
+      <span><span class="simulation__swatch" style="background-color: #59a14f"></span>cI (PZ)</span>
+    </div>
+    <div class="simulation__charts">
+      <figure class="simulation__chart">
+        <figcaption>CellML with libopencor, <span data-role="cellml-timing">-</span></figcaption>
+        <canvas data-chart="cellml" aria-label="Timecourses of the proteins of the CellML model, simulated with libopencor" role="img"></canvas>
+      </figure>
+      <figure class="simulation__chart">
+        <figcaption>SBML with sbmlsim-core, <span data-role="sbml-timing">-</span></figcaption>
+        <canvas data-chart="sbml" aria-label="Timecourses of the proteins of the SBML model, simulated with sbmlsim-core" role="img"></canvas>
+      </figure>
+    </div>
+    <p class="simulation__difference">Proteins per cell over 600 minutes, the same axis for both plots. The largest difference between the two simulations over all time points and all three proteins: <strong data-role="difference">-</strong>.</p>
+  </div>
+</div>
+
 ## The complete example
 
 ??? example "examples/repressilator_example.py"

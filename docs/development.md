@@ -200,6 +200,23 @@ uv run python scripts/build_wasm.py
 Without the module every other part of the page works and the converter says
 that it is not available.
 
+The [interactive simulation](roundtrip.md#simulate-in-the-browser) of the
+roundtrip page simulates the CellML model with libopencor and the SBML model
+with sbmlsim-core in the browser. libopencor reads the CellML document itself,
+sbmlsim-core takes a model which is compiled ahead of time, so the script
+compiles the SBML model of the page and writes it with the runtime of the
+simulator and the versions of the two packages into `docs/roundtrip/simulation/`,
+which is not committed either:
+
+```bash
+uv run python scripts/build_simulation.py
+```
+
+The JavaScript hosts of the two simulators are loaded from a CDN, pinned to
+the versions of the python packages, so the browser runs the simulators the
+checks of the repository run. Without the assets the page says that the
+simulation is not available.
+
 The API reference is rendered from the docstrings by [mkdocstrings](https://mkdocstrings.github.io/); a page in `docs/api/` only contains the module directive:
 
 ```markdown

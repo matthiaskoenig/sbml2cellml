@@ -63,6 +63,7 @@ Convert a model in either direction here. The conversion runs in the browser: th
 - names, notes, SBO terms, annotations and the model history as RDF next to the CellML model, restored in the conversion back to SBML
 - conversion of CellML models to SBML: parameters with rules, unit definitions and units of numbers, resets as events, imports resolved, CellML 1.0 and 1.1 read in the permissive mode of libcellml, the components optionally as `comp` submodels (`--hierarchical`)
 - the online converter of the documentation, which converts a model in either direction in the browser with a WebAssembly module of the rust converters, without an upload ([Online converter](#online-converter))
+- the interactive simulation of the roundtrip example, which simulates the CellML model with libopencor and the SBML model with sbmlsim-core in the browser, with one set of sliders for both ([Roundtrip example](roundtrip.md#simulate-in-the-browser))
 - conversion of a hierarchical SBML model: the `comp` submodels are flattened before the model becomes CellML
 - validation of the result with [libcellml](https://libcellml.org/)
 - timecourse simulation of the SBML with [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/) and of the CellML with [libopencor](https://opencor.ws/libopencor/), both optional, see [Simulation](simulation.md)

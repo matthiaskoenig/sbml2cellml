@@ -5,6 +5,8 @@ import logging
 import re
 from pathlib import Path
 
+import libsbml
+
 import sbml2cellml
 from sbml2cellml import log
 from tests.conftest import GLIMEPIRIDE_MODELS, MODELS_DIR, TEST_MODEL_PATH
@@ -73,3 +75,36 @@ def test_enable_rich_logging_is_idempotent() -> None:
     log.enable_rich_logging()
     rich_handlers = [h for h in logger.handlers if type(h).__name__ == "RichHandler"]
     assert len(rich_handlers) == 1
+
+
+def test_the_sliders_of_the_page_set_parameters_of_the_model() -> None:
+    """The sliders of `docs/roundtrip.md` are parameters of the SBML model.
+
+    The interactive simulation of the page sets the parameters of both
+    models, so every slider has to be a constant parameter of the model
+    (a parameter a rule determines cannot be set) and start at the value
+    the published model has.
+    """
+    script = (ROOT / "docs" / "javascripts" / "repressilator.js").read_text(
+        encoding="utf-8"
+    )
+    sliders = {
+        match.group("id"): float(match.group("value"))
+        for match in re.finditer(
+            r'id: "(?P<id>\w+)",\s*\n\s*label: [^\n]*\n\s*unit: [^\n]*\n'
+            r"\s*value: (?P<value>[\d.]+),",
+            script,
+        )
+    }
+    assert sliders, "the script has no sliders"
+    document = libsbml.readSBMLFromFile(
+        str(MODELS_DIR.parent.parent / "docs" / "roundtrip" / "repressilator.xml")
+    )
+    model = document.getModel()
+    ruled = {rule.getVariable() for rule in model.getListOfRules()}
+    for sid, value in sliders.items():
+        parameter = model.getParameter(sid)
+        assert parameter is not None, f"the model has no parameter {sid}"
+        assert parameter.getConstant(), f"{sid} is not a constant of the model"
+        assert sid not in ruled, f"a rule determines {sid}"
+        assert parameter.getValue() == value, f"{sid} starts at {parameter.getValue()}"
