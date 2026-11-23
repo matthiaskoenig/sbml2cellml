@@ -335,7 +335,19 @@ uv run python scripts/convert_benchmark.py   # the two engines over the corpus, 
   SBML document is read by `sbmlsim-sbml` of sbmlsim-core, a git dependency
   which reads every level and version of SBML core into the model of level 3,
   so the conversion never sees a level, and the CellML model it builds is
-  written by `crates/cellml`. `units.rs` is the port of `cellmlunits.py`
+  written by `crates/cellml`. `math.rs` writes a
+  formula of SBML as the mathematics of CellML (both are content MathML, so
+  an operator keeps its element): every number carries the CellML name of
+  its units and `dimensionless` when it has none, an infinity and a NaN
+  become the elements of MathML, the time symbol becomes the variable of
+  integration and avogadro the number SBML defines for it, `quotient(a, b)`
+  becomes `floor(a / b)` and `implies(a, b)` `not a or b`, a relation of
+  more than two arguments the conjunction of its pairs and an n-ary
+  operator of less than two arguments its value; `Functions` expands the
+  calls of the function definitions (a definition in a cycle of calls, a
+  call of the wrong arity and one of a function the model does not define
+  are refused), and `delay` and a `rateOf` which the conversion did not
+  replace have no counterpart. `units.rs` is the port of `cellmlunits.py`
   (`Units`: every unit definition as CellML units, a scale and a multiplier
   which is a power of ten as the prefix, any other multiplier as its power,
   `item` as new base units and `avogadro` as the dimensionless units of its

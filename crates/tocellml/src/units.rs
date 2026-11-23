@@ -31,8 +31,9 @@ const ITEM: &str = "item";
 /// The unit kind which becomes the dimensionless units of its value.
 const AVOGADRO: &str = "avogadro";
 
-/// The value of the avogadro constant, as SBML defines the symbol.
-const AVOGADRO_VALUE: f64 = 6.022_140_76e23;
+/// The value of the avogadro constant, the one SBML defines for its symbol,
+/// which is not the value of the SI of 2019 (`6.02214076e23`).
+pub const AVOGADRO_VALUE: f64 = 6.022_141_79e23;
 
 /// The units CellML has built in, every one of them a unit kind of SBML.
 const STANDARD_UNITS: [&str; 31] = [

@@ -166,7 +166,7 @@ fn item_becomes_new_base_units_and_avogadro_a_number() {
     let [(reference, _, _, multiplier)] =
         attributes(&units, "avogadro").try_into().expect("one unit");
     assert_eq!(reference, "dimensionless");
-    assert!((multiplier - 6.022_140_76e23).abs() < 1e8, "{multiplier}");
+    assert!((multiplier - 6.022_141_79e23).abs() < 1e8, "{multiplier}");
     assert_eq!(units.name("item").as_deref(), Some("item"));
 }
 
