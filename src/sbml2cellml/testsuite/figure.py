@@ -20,7 +20,7 @@ import matplotlib as mpl
 from matplotlib.figure import Figure
 from matplotlib.patches import Patch
 
-from sbml2cellml.testsuite.results import STAGES, STATUSES, SuiteResult
+from sbml2cellml.testsuite.results import STATUSES, SuiteResult, comparison_stage
 
 #: gap between two segments of a bar, as fraction of the cases
 _GAP = 0.003
@@ -103,7 +103,7 @@ def render_figure(
     ax.patch.set_alpha(0.0)
 
     gap = _GAP * total
-    for row, stage in enumerate(STAGES):
+    for row, stage in enumerate(result.stages):
         counts = result.counts(stage)
         left = 0.0
         for status, fill, ink in zip(STATUSES, theme.fills, theme.inks, strict=True):
@@ -141,7 +141,7 @@ def render_figure(
                 fontweight="bold",
             )
 
-    ax.set_yticks(range(len(STAGES)), labels=list(STAGES), fontsize=11)
+    ax.set_yticks(range(len(result.stages)), labels=list(result.stages), fontsize=11)
     ax.invert_yaxis()
     # room for the pass rates right of the bars, the axis ends with the cases
     ax.set_xlim(0, (total or 1) * 1.09)
@@ -194,12 +194,12 @@ def timing_pairs(
 
     Args:
         result: a suite run.
-        passing: only the cases whose `libopencor` stage passes, i.e. whose
-            CellML model reproduces the expected results: the two
-            simulators integrate the same dynamics there, which a case with
-            a conversion gap (the delay of an event, for example) does
-            not, and neither does a model with resets, which libopencor
-            does not apply.
+        passing: only the cases whose converted model reproduces the
+            expected results (`comparison_stage`): the two simulators
+            integrate the same dynamics there, which a case with a
+            conversion gap (the delay of an event, for example) does not,
+            and neither does a model with resets, which libopencor does not
+            apply.
 
     Returns:
         The integration seconds of the `sbmlsim` and of the `libopencor`
@@ -207,10 +207,11 @@ def timing_pairs(
     """
     sbmlsim = result.seconds("sbmlsim")
     libopencor = result.seconds("libopencor")
+    stage = comparison_stage(result)
     return {
         cid: (sbmlsim[cid], libopencor[cid])
         for cid in sorted(sbmlsim.keys() & libopencor.keys())
-        if not passing or result.cases[cid].stages["libopencor"].status == "pass"
+        if not passing or result.cases[cid].stages[stage].status == "pass"
     }
 
 

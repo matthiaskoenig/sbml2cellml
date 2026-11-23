@@ -152,22 +152,32 @@ def test_skip_reasons(tmp_path: Path) -> None:
         f.rename(no_l3v2 / f.name.replace("00001", "10001"))
     (no_l3v2 / "10001-sbml-l3v2.xml").unlink()
     assert skip_reason(load_case(no_l3v2)) == "no L3V2 file"
-    # comp package
-    comp = tmp_path / "10002"
+    # the fbc package, which no converter supports
+    fbc = tmp_path / "10002"
+    shutil.copytree(src, fbc)
+    for f in fbc.iterdir():
+        f.rename(fbc / f.name.replace("00001", "10002"))
+    m = fbc / "10002-model.m"
+    m.write_text(
+        m.read_text().replace("componentTags: ", "componentTags: fbc:Objective, ")
+    )
+    assert skip_reason(load_case(fbc)) == "package fbc"
+    # the comp package runs, its submodels are flattened
+    comp = tmp_path / "10003"
     shutil.copytree(src, comp)
     for f in comp.iterdir():
-        f.rename(comp / f.name.replace("00001", "10002"))
-    m = comp / "10002-model.m"
+        f.rename(comp / f.name.replace("00001", "10003"))
+    m = comp / "10003-model.m"
     m.write_text(
         m.read_text().replace("componentTags: ", "componentTags: comp:Submodel, ")
     )
-    assert skip_reason(load_case(comp)) == "package comp"
+    assert skip_reason(load_case(comp)) is None
     # other test type
-    other = tmp_path / "10003"
+    other = tmp_path / "10004"
     shutil.copytree(src, other)
     for f in other.iterdir():
-        f.rename(other / f.name.replace("00001", "10003"))
-    m = other / "10003-model.m"
+        f.rename(other / f.name.replace("00001", "10004"))
+    m = other / "10004-model.m"
     m.write_text(
         m.read_text().replace("testType:      TimeCourse", "testType: SteadyState")
     )

@@ -10,12 +10,14 @@ Features include
 - conversion of compartments, parameters, species, assignment and rate rules, reactions and events into a single CellML component
 - conversion of the units: unit definitions, the units of numbers and, for a model with a complete unit annotation, the units of every variable
 - names, notes, SBO terms, annotations and the model history as RDF next to the CellML model, restored in the conversion back to SBML
-- conversion of CellML models to SBML: parameters with rules, unit definitions and units of numbers, resets as events, imports resolved
+- conversion of CellML models to SBML: parameters with rules, unit definitions and units of numbers, resets as events, imports resolved, CellML 1.0 and 1.1 read in the permissive mode of libcellml, the components optionally as `comp` submodels (`--hierarchical`)
+- conversion of a hierarchical SBML model: the `comp` submodels are flattened before the model becomes CellML
 - validation of the result with libcellml
 - timecourse simulation of the SBML with sbmlsim-core and of the CellML with libopencor, both optional
 - the `sbml2cellml` and `cellml2sbml` command lines
 - the SBML test suite harness: every semantic case through both converters and both simulators, results on the [SBML test suite](https://matthiaskoenig.github.io/sbml2cellml/testsuite/) page
 - the same check for the manually curated models of [BioModels](https://www.biomodels.org), results on the [BioModels](https://matthiaskoenig.github.io/sbml2cellml/biomodels/) page
+- the same check for the CellML models of the [Physiome Model Repository](https://models.physiomeproject.org), from the CellML side, results on the [Physiome](https://matthiaskoenig.github.io/sbml2cellml/physiome/) page
 
 ```bash
 pip install sbml2cellml
@@ -39,6 +41,14 @@ The manually curated SBML models of [BioModels](https://www.biomodels.org) go th
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/biomodels_dark.svg">
   <img alt="Curated models of BioModels which pass, fail and skip the stages of the roundtrip" src="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/biomodels.svg">
+</picture>
+
+# Physiome Model Repository
+The curated CellML models of the [Physiome Model Repository](https://models.physiomeproject.org), real world models of many components and mostly CellML 1.0 and 1.1 documents, go through the same pipeline from the CellML side: libopencor simulates the published model (`libopencor`), `cellml2sbml` converts it to SBML (`cellml2sbml`), sbmlsim-core simulates that (`sbmlsim`), `sbml2cellml` converts it back (`sbml2cellml`) and libopencor simulates the roundtrip (`roundtrip`). The details are on the [Physiome](https://matthiaskoenig.github.io/sbml2cellml/physiome/) page.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/physiome_dark.svg">
+  <img alt="Models of the Physiome Model Repository which pass, fail and skip the stages of the roundtrip" src="https://raw.githubusercontent.com/matthiaskoenig/sbml2cellml/develop/docs/images/physiome.svg">
 </picture>
 
 If you have any questions or issues please [open an issue](https://github.com/matthiaskoenig/sbml2cellml/issues).

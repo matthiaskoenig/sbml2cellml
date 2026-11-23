@@ -73,7 +73,7 @@ def build_parser_cellml2sbml() -> argparse.ArgumentParser:
     Returns:
         The parser.
     """
-    return _build_parser(
+    parser = _build_parser(
         prog="cellml2sbml",
         description="Convert a CellML model to SBML.",
         input_help="CellML file",
@@ -81,6 +81,13 @@ def build_parser_cellml2sbml() -> argparse.ArgumentParser:
         metadata_help="do not read the metadata from the RDF file next to the "
         "CellML file (the input with the suffix .rdf)",
     )
+    parser.add_argument(
+        "--hierarchical",
+        action="store_true",
+        help="write every component as a submodel of the hierarchical model "
+        "composition package (comp) instead of one flat model",
+    )
+    return parser
 
 
 def _run(
@@ -93,8 +100,8 @@ def _run(
 
     Args:
         parser: parser of the command.
-        convert: converter taking the input path, the output path, `validate`
-            and `metadata`.
+        convert: converter taking the input path, the output path,
+            `validate`, `metadata` and the parsed arguments.
         suffix: suffix of the default output file.
         argv: arguments without the program name, `sys.argv[1:]` by default.
 
@@ -113,7 +120,9 @@ def _run(
     output_path = Path(args.output) if args.output else input_path.with_suffix(suffix)
 
     try:
-        convert(input_path, output_path, not args.no_validate, not args.no_metadata)
+        convert(
+            input_path, output_path, not args.no_validate, not args.no_metadata, args
+        )
     except CONVERSION_ERRORS as err:
         print(str(err), file=sys.stderr)
         return 1
@@ -134,7 +143,7 @@ def main(argv: list[str] | None = None) -> int:
     """
     return _run(
         build_parser(),
-        lambda sbml_path, cellml_path, validate, metadata: convert_sbml2cellml(
+        lambda sbml_path, cellml_path, validate, metadata, _args: convert_sbml2cellml(
             sbml_path, cellml_path=cellml_path, validate=validate, metadata=metadata
         ),
         ".cellml",
@@ -154,8 +163,12 @@ def main_cellml2sbml(argv: list[str] | None = None) -> int:
     """
     return _run(
         build_parser_cellml2sbml(),
-        lambda cellml_path, sbml_path, validate, metadata: convert_cellml2sbml(
-            cellml_path, sbml_path=sbml_path, validate=validate, metadata=metadata
+        lambda cellml_path, sbml_path, validate, metadata, args: convert_cellml2sbml(
+            cellml_path,
+            sbml_path=sbml_path,
+            validate=validate,
+            metadata=metadata,
+            hierarchical=args.hierarchical,
         ),
         ".xml",
         argv,

@@ -7,8 +7,10 @@ to do with them; `errors` filters the issues of level `ERROR`.
 
 from __future__ import annotations
 
+import io
 from pathlib import Path
 from typing import Any
+from xml.etree import ElementTree
 
 import libcellml
 
@@ -89,11 +91,49 @@ def write_model(model: libcellml.Model, cellml_path: Path) -> None:
     Path(cellml_path).write_text(model_to_string(model), encoding="utf-8")
 
 
-def read_model(cellml_path: Path) -> libcellml.Model:
+#: namespace of every version of CellML before 2.0, which the parser reads
+#: in permissive mode only
+CELLML_1_NAMESPACES: dict[str, str] = {
+    "http://www.cellml.org/cellml/1.0#": "1.0",
+    "http://www.cellml.org/cellml/1.1#": "1.1",
+}
+
+
+def cellml_version(text: str) -> str | None:
+    """Version of CellML before 2.0 a document is written in.
+
+    The models of the Physiome Model Repository are CellML 1.0 and 1.1
+    documents, which libcellml reads in permissive mode (`strict` of the
+    parser and the importer). The version is the namespace of the root
+    element, so a namespace named in a comment or an annotation says
+    nothing; a document which is no XML falls back to the namespaces it
+    holds, so that the parser reports the problem.
+
+    Args:
+        text: the CellML document.
+
+    Returns:
+        `1.0` or `1.1` for a document with the namespace of that version,
+        `None` for a CellML 2.0 document.
+    """
+    try:
+        for _, element in ElementTree.iterparse(io.StringIO(text), events=("start",)):
+            namespace = element.tag[1:].split("}", 1)[0] if "}" in element.tag else ""
+            return CELLML_1_NAMESPACES.get(namespace)
+    except ElementTree.ParseError:
+        for namespace, version in CELLML_1_NAMESPACES.items():
+            if namespace in text:
+                return version
+    return None
+
+
+def read_model(cellml_path: Path, strict: bool = True) -> libcellml.Model:
     """Read a CellML file.
 
     Args:
         cellml_path: path of the CellML file.
+        strict: parse CellML 2.0 only; a CellML 1.0 or 1.1 document needs
+            `strict=False`, where the parser reads it as a 2.0 model.
 
     Returns:
         The parsed model.
@@ -102,6 +142,7 @@ def read_model(cellml_path: Path) -> libcellml.Model:
         CellMLValidationError: if the parser reports errors.
     """
     parser = libcellml.Parser()
+    parser.setStrict(strict)
     model = parser.parseModel(Path(cellml_path).read_text(encoding="utf-8"))
     parser_errors = errors(_issues(parser))
     if parser_errors:

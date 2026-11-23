@@ -380,7 +380,8 @@ def ast_to_sbml(node: Any, ids: VariableIds, units: _Units = None) -> libsbml.AS
 
     Raises:
         MathConversionError: for a node type without SBML counterpart, e.g.
-            `DIFF` or `BVAR` outside the left side of an ODE.
+            `BVAR` outside the left side of an ODE; a derivative in an
+            expression becomes `rateOf` (`_rate_of`).
     """
     node_type = node.type()
     if node_type == AstType.CI:
@@ -407,9 +408,39 @@ def ast_to_sbml(node: Any, ids: VariableIds, units: _Units = None) -> libsbml.AS
         return _log(node, ids, units)
     if node_type == AstType.PIECEWISE:
         return _piecewise(node, ids, units)
+    if node_type == AstType.DIFF:
+        return _rate_of(node, ids)
     raise MathConversionError(
         f"MathML element '{_type_name(node)}' cannot be converted to SBML."
     )
+
+
+def _rate_of(node: Any, ids: VariableIds) -> libsbml.ASTNode:
+    """`rateOf` of the state a derivative in an expression is taken of.
+
+    The derivative of a variable is an expression of its own in CellML, and
+    SBML level 3 version 2 has `rateOf` for it. The derivative on the left
+    of an ODE is the rate rule of the state, which `_add_equation` of
+    `cellml2sbml` writes before an expression is converted.
+
+    Args:
+        node: the `DIFF` node, `d(variable) / d(variable of integration)`.
+        ids: the SBML ids of the variables.
+
+    Returns:
+        `rateOf(state)`.
+
+    Raises:
+        MathConversionError: if the derivative is not taken of a variable.
+    """
+    state = node.rightChild()
+    if state is None or state.type() != AstType.CI:
+        raise MathConversionError(
+            "A derivative in an expression is only supported for a variable."
+        )
+    rate = libsbml.ASTNode(libsbml.AST_FUNCTION_RATE_OF)
+    rate.addChild(variable_node(state.variable(), ids))
+    return rate
 
 
 def _rename(

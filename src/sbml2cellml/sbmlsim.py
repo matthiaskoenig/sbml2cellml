@@ -22,6 +22,7 @@ from typing import Any
 import libsbml
 import pandas as pd
 
+from sbml2cellml.sbml import SBMLValidationError, flatten_comp
 from sbml2cellml.simulate import MAXIMUM_NUMBER_OF_STEPS, SimulationError
 
 logger = logging.getLogger(__name__)
@@ -85,11 +86,14 @@ def _errors(document: libsbml.SBMLDocument) -> str:
     )
 
 
-def compilable_sbml(sbml: str) -> str:
+def compilable_sbml(sbml: str, base_path: Path | None = None) -> str:
     """The model as flat SBML level 3, converted when it is not.
 
     Args:
         sbml: SBML document as string.
+        base_path: directory the `source` of an external model definition
+            of a hierarchical model is resolved from, the working directory
+            when `None`.
 
     Returns:
         The document, converted to level 3 version 2 when its level is lower
@@ -127,15 +131,13 @@ def compilable_sbml(sbml: str) -> str:
                 problems,
             )
         converted = True
-    if document.getPackageRequired("comp"):
-        logger.info("flattening the comp package of the model")
-        properties = libsbml.ConversionProperties()
-        properties.addOption("flatten comp", True)
-        properties.addOption("leave ports", False)
-        if document.convert(properties) != libsbml.LIBSBML_OPERATION_SUCCESS:
-            raise SimulationError(
-                f"the comp package of the model cannot be flattened: {_errors(document)}"
-            )
+    try:
+        flattened = flatten_comp(document, base_path)
+    except SBMLValidationError as err:
+        raise SimulationError(str(err)) from err
+    if flattened is not None:
+        logger.info("flattened the comp package of the model")
+        document = flattened
         converted = True
     return str(libsbml.writeSBMLToString(document)) if converted else sbml
 
@@ -215,7 +217,7 @@ def solver_settings(
     }
 
 
-def load_model(sbml: str) -> Any:
+def load_model(sbml: str, base_path: Path | None = None) -> Any:
     """Compile and load an SBML model, from the cache when it is there.
 
     The model is compiled to WebAssembly and loaded into the runtime of the
@@ -227,6 +229,8 @@ def load_model(sbml: str) -> Any:
 
     Args:
         sbml: SBML document as string, every level.
+        base_path: directory the `source` of an external model definition
+            of a hierarchical model is resolved from.
 
     Returns:
         The `LoadedModel` of sbmlsim-core.
@@ -242,7 +246,9 @@ def load_model(sbml: str) -> Any:
     if model is not None:
         _MODELS.move_to_end(key)
         return model
-    compiled = _sbmlsim_core().compile_sbml(compilable_sbml(sbml), optimize=True)
+    compiled = _sbmlsim_core().compile_sbml(
+        compilable_sbml(sbml, base_path), optimize=True
+    )
     model = runtime().load(compiled.wasm, compiled.description)
     _MODELS[key] = model
     if len(_MODELS) > MODEL_CACHE_SIZE:
@@ -262,6 +268,7 @@ def run_timecourse(
     scale_tolerance: bool = True,
     warmup: bool = False,
     timings: dict[str, float] | None = None,
+    base_path: Path | None = None,
 ) -> pd.DataFrame:
     """Uniform timecourse of an SBML model.
 
@@ -291,6 +298,9 @@ def run_timecourse(
             `setup` is the conversion, the compilation and the loading of
             the model (nothing of it when the model is in the cache of
             `load_model`) and `simulate` the integration.
+        base_path: directory the `source` of an external model definition
+            of a hierarchical model is resolved from; the directory of the
+            file when `sbml` is a path.
 
     Returns:
         The timecourse with `time` as first column and the selections after
@@ -303,8 +313,12 @@ def run_timecourse(
             or simulate the model.
     """
     started = time.perf_counter()
-    text = Path(sbml).read_text(encoding="utf-8") if isinstance(sbml, Path) else sbml
-    model = load_model(text)
+    if isinstance(sbml, Path):
+        text = Path(sbml).read_text(encoding="utf-8")
+        base_path = Path(sbml).parent if base_path is None else base_path
+    else:
+        text = sbml
+    model = load_model(text, base_path)
     if scale_tolerance:
         scale = min(1.0, state_scale(model))
         tolerance = (

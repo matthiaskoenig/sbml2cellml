@@ -9,20 +9,20 @@ An `sbmlsim` failure means sbmlsim-core itself cannot simulate the case, it says
 
 ## Summary
 
-1535 cases run, 288 skipped.
+1658 cases run, 165 skipped.
 
 ![Cases which pass, fail and skip the stages](images/testsuite.svg#only-light)
 ![Cases which pass, fail and skip the stages](images/testsuite_dark.svg#only-dark)
 
 | stage | total | pass | fail | skip | pass rate |
 | --- | --- | --- | --- | --- | --- |
-| sbmlsim | 1535 | 1533 | 2 | 0 | 99.9% |
-| sbml2cellml | 1535 | 1491 | 44 | 0 | 97.1% |
-| libopencor | 1535 | 1061 | 430 | 44 | 69.1% |
-| cellml2sbml | 1535 | 1491 | 0 | 44 | 97.1% |
-| roundtrip | 1535 | 1214 | 277 | 44 | 79.1% |
+| sbmlsim | 1658 | 1656 | 2 | 0 | 99.9% |
+| sbml2cellml | 1658 | 1610 | 48 | 0 | 97.1% |
+| libopencor | 1658 | 1153 | 457 | 48 | 69.5% |
+| cellml2sbml | 1658 | 1610 | 0 | 48 | 97.1% |
+| roundtrip | 1658 | 1320 | 290 | 48 | 79.6% |
 
-951 of the 1061 cases with a passing libopencor stage are informative: the expected results move more than the tolerance band for at least one variable.
+1008 of the 1153 cases with a passing libopencor stage are informative: the expected results move more than the tolerance band for at least one variable.
 
 ## Timings
 
@@ -35,11 +35,11 @@ The two simulators integrate with the same relative tolerance and with an absolu
 
 | stage | simulator | model | simulations | setup median | integration median | integration p95 | integration slowest | integration total |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| sbmlsim | sbmlsim-core | SBML model | 1535 | 0.9 ms | 0.1 ms | 0.2 ms | 740 ms | 1.6 s |
-| libopencor | libopencor | CellML model | 1487 | 4.7 ms | 0.1 ms | 0.1 ms | 0.6 ms | 82 ms |
-| roundtrip | sbmlsim-core | roundtrip SBML model | 1490 | 1.1 ms | 0.1 ms | 0.2 ms | 1.9 s | 3.0 s |
+| sbmlsim | sbmlsim-core | SBML model | 1658 | 0.9 ms | 0.1 ms | 0.2 ms | 779 ms | 1.6 s |
+| libopencor | libopencor | CellML model | 1608 | 4.6 ms | 0.1 ms | 0.1 ms | 0.6 ms | 85 ms |
+| roundtrip | sbmlsim-core | roundtrip SBML model | 1609 | 1.1 ms | 0.1 ms | 0.2 ms | 1.9 s | 3.0 s |
 
-The two simulators integrate the same dynamics for 1061 cases, those whose CellML model reproduces the expected results. libopencor is 1.1 times faster than sbmlsim-core for the median of them and faster for 756; over these cases the medians are 0.1 ms for sbmlsim-core and 0.1 ms for libopencor.
+The two simulators integrate the same dynamics for 1153 cases, those whose CellML model reproduces the expected results. libopencor is 1.1 times faster than sbmlsim-core for the median of them and faster for 814; over these cases the medians are 0.1 ms for sbmlsim-core and 0.1 ms for libopencor.
 
 ## Failure reasons
 
@@ -47,7 +47,7 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 
 ### sbmlsim
 
-2 of 1535 cases fail.
+2 of 1658 cases fail.
 
 **2 cases**
 
@@ -58,9 +58,9 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 
 ### sbml2cellml
 
-44 of 1535 cases fail.
+48 of 1658 cases fail.
 
-**44 cases**
+**48 cases**
 
 ```text
 00028: CellMLValidationError: CellML model 'case00028' converted from '00028-sbml-l3v2.xml' has 2 errors:
@@ -113,6 +113,22 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 00985: CellMLValidationError: CellML model 'case00985' converted from '00985-sbml-l3v2.xml' has 4 errors:
     [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
     [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
+    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
+    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
+01142: CellMLValidationError: CellML model 'case01142' converted from '01142-sbml-l3v2.xml' has 6 errors:
+    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
+    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
+    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
+    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
+    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
+    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
+01173: CellMLValidationError: CellML model 'case01173' converted from '01173-sbml-l3v2.xml' has 2 errors:
+    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
+    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
+01174: CellMLValidationError: CellML model 'case01174' converted from '01174-sbml-l3v2.xml' has 2 errors:
+    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
+    [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
+01176: CellMLValidationError: CellML model 'case01176' converted from '01176-sbml-l3v2.xml' has 2 errors:
     [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
     [ERROR] Math has a 'csymbol' element that is not a supported MathML element.
 01318: CellMLValidationError: CellML model 'case01318' converted from '01318-sbml-l3v2.xml' has 2 errors:
@@ -213,9 +229,9 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 
 ### libopencor
 
-430 of 1535 cases fail.
+457 of 1658 cases fail.
 
-**426 cases, numerical mismatch**
+**453 cases, numerical mismatch**
 
 ```text
 00026: S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 1.13
@@ -476,6 +492,13 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 01106: X exceeds the tolerance by 1
 01119: e1 exceeds the tolerance by 2; e2 exceeds the tolerance by 3
 01120: S3 exceeds the tolerance by 2
+01152: p8 exceeds the tolerance by 80
+01155: sub1__t1 exceeds the tolerance by 2.3; sub1__t2 exceeds the tolerance by 4.5
+01156: sub1__t1 exceeds the tolerance by 2.3; sub1__t2 exceeds the tolerance by 4.5
+01157: sub1__t2 exceeds the tolerance by 4.5
+01158: sub1__t1 exceeds the tolerance by 2.3
+01169: A__y exceeds the tolerance by 4.8
+01177: t5 exceeds the tolerance by 0.995
 01212: x exceeds the tolerance by 4
 01213: x exceeds the tolerance by 4
 01214: x exceeds the tolerance by 4
@@ -526,6 +549,26 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 01336: x exceeds the tolerance by 3
 01337: x exceeds the tolerance by 3; y exceeds the tolerance by 0.999
 01340: S1 exceeds the tolerance by 9; k1 exceeds the tolerance by 2
+01346: A__x exceeds the tolerance by 3
+01347: A__x exceeds the tolerance by 9
+01348: A__x exceeds the tolerance by 4
+01349: A__x exceeds the tolerance by 1
+01355: A__x exceeds the tolerance by 3
+01356: A__x exceeds the tolerance by 9
+01357: A__x exceeds the tolerance by 4
+01358: A__x exceeds the tolerance by 1
+01364: A__x exceeds the tolerance by 3
+01365: A__x exceeds the tolerance by 9
+01366: A__x exceeds the tolerance by 4
+01367: A__x exceeds the tolerance by 1
+01373: A__x exceeds the tolerance by 3
+01374: A__x exceeds the tolerance by 9
+01375: A__x exceeds the tolerance by 4
+01376: A__x exceeds the tolerance by 1
+01382: A__x exceeds the tolerance by 3
+01383: A__x exceeds the tolerance by 9
+01384: A__x exceeds the tolerance by 4
+01385: A__x exceeds the tolerance by 1
 01444: A exceeds the tolerance by 5
 01445: A exceeds the tolerance by 10
 01446: A exceeds the tolerance by 5
@@ -649,15 +692,15 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 **2 cases**
 
 ```text
-01820: SimulationFailure: libopencor: SimulationError: result: the name 'time' occurs twice
-01821: SimulationFailure: libopencor: SimulationError: result: the name 'time' occurs twice
+01280: SimulationFailure: libopencor: worker died during simulate_cellml
+01281: SimulationFailure: libopencor: worker died during simulate_cellml
 ```
 
 **2 cases**
 
 ```text
-01280: SimulationFailure: libopencor: worker died during simulate_cellml
-01281: SimulationFailure: libopencor: worker died during simulate_cellml
+01820: time points differ from the expected results
+01821: time points differ from the expected results
 ```
 
 The test tags of the cases with a numerical mismatch:
@@ -677,6 +720,7 @@ The test tags of the cases with a numerical mismatch:
 | Amount, LocalParameters | 9 | 00389, 00392, 00395, 00446, 00449, 00452, 00707, 00736, 00737 |
 | Amount, AssignedConstantStoichiometry, InitialValueReassigned, NonUnityStoichiometry | 8 | 01071, 01072, 01073, 01074, 01075, 01076, 01094, 01095 |
 | EventUsesTriggerTimeValues, NonConstantParameter | 8 | 00459, 00460, 00461, 01324, 01328, 01330, 01528, 01701 |
+| NonConstantParameter, comp:SubmodelOutput | 8 | 01155, 01156, 01157, 01158, 01355, 01356, 01357, 01358 |
 | Amount, NonUnityStoichiometry | 7 | 00387, 00390, 00393, 00444, 00447, 00723, 00724 |
 | EventUsesAssignmentTimeValues, NonConstantParameter | 7 | 00980, 01325, 01329, 01331, 01529, 01604, 01702 |
 | NonConstantParameter, UncommonMathML | 6 | 01212, 01213, 01530, 01531, 01532, 01533 |
@@ -684,11 +728,15 @@ The test tags of the cases with a numerical mismatch:
 | Amount, AssignedVariableStoichiometry, InitialValueReassigned, NonUnityStoichiometry | 5 | 01444, 01445, 01446, 01447, 01448 |
 | Amount, BoundaryCondition, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment, VolumeConcentrationRates | 5 | 01504, 01505, 01506, 01507, 01512 |
 | Amount, ConstantSpecies | 5 | 00384, 00385, 00386, 00441, 00443 |
+| Amount, BoundaryCondition, NonConstantParameter, comp:SubmodelOutput | 4 | 01373, 01374, 01375, 01376 |
 | Amount, HasOnlySubstanceUnits, LocalParameters, NonConstantParameter, NonUnityCompartment, NonUnityStoichiometry, SpeciesReferenceInMath | 4 | 01769, 01770, 01771, 01772 |
 | Amount, InitialValueReassigned, NonUnityCompartment | 4 | 00679, 00681, 00682, 00684 |
+| Amount, NonConstantParameter, NonUnityStoichiometry, SpeciesReferenceInMath, comp:SubmodelOutput | 4 | 01382, 01383, 01384, 01385 |
+| Amount, NonConstantParameter, comp:SubmodelOutput | 4 | 01346, 01347, 01348, 01349 |
 | Amount, ReversibleReaction | 4 | 01045, 01046, 01047, 01048 |
 | Concentration, InitialValueReassigned, NonUnityCompartment | 4 | 00689, 00690, 00750, 00770 |
 | EventIsPersistent, NonConstantParameter | 4 | 00454, 01525, 01660, 01759 |
+| NonConstantParameter, NonUnityCompartment, comp:SubmodelOutput | 4 | 01364, 01365, 01366, 01367 |
 | Amount, ConversionFactors, EventIsPersistent | 3 | 01675, 01676, 01677 |
 | Amount, ConversionFactors, EventT0Firing | 3 | 01684, 01685, 01686 |
 | Amount, ConversionFactors, EventUsesAssignmentTimeValues | 3 | 01690, 01691, 01692 |
@@ -748,6 +796,7 @@ The test tags of the cases with a numerical mismatch:
 | Amount, EventUsesTriggerTimeValues, NonConstantParameter | 1 | 01326 |
 | Amount, InitialValueReassigned, LocalParameters | 1 | 00708 |
 | Amount, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment | 1 | 00946 |
+| Amount, InitialValueReassigned, NonConstantParameter, comp:ConversionFactor, comp:ExtentConversionFactor, comp:SubmodelOutput, comp:TimeConversionFactor | 1 | 01169 |
 | Amount, LocalParameters, NonConstantParameter | 1 | 01714 |
 | Amount, NonConstantCompartment, NonUnityCompartment | 1 | 00945 |
 | Amount, NonConstantParameter, ReversibleReaction | 1 | 01340 |
@@ -786,12 +835,14 @@ The test tags of the cases with a numerical mismatch:
 | EventUsesAssignmentTimeValues, NoMathML, NonConstantParameter | 1 | 01603 |
 | EventUsesTriggerTimeValues, InitialValueReassigned, NonConstantParameter, UncommonMathML | 1 | 01597 |
 | EventUsesTriggerTimeValues, NoMathML, NonConstantParameter | 1 | 01601 |
+| EventUsesTriggerTimeValues, NonConstantParameter, comp:TimeConversionFactor | 1 | 01177 |
+| NonConstantParameter, comp:ConversionFactor | 1 | 01152 |
 
 ### roundtrip
 
-277 of 1535 cases fail.
+290 of 1658 cases fail.
 
-**274 cases, numerical mismatch**
+**287 cases, numerical mismatch**
 
 ```text
 00071: S1 exceeds the tolerance by 0.873; S2 exceeds the tolerance by 0.786
@@ -933,6 +984,9 @@ The test tags of the cases with a numerical mismatch:
 01106: X exceeds the tolerance by 1
 01119: e1 exceeds the tolerance by 2; e2 exceeds the tolerance by 3
 01120: S3 exceeds the tolerance by 2
+01156: sub1__t1 exceeds the tolerance by 2.3; sub1__t2 exceeds the tolerance by 4.5
+01169: A__y exceeds the tolerance by 1
+01177: t5 exceeds the tolerance by 0.995
 01213: x exceeds the tolerance by 4
 01227: S1 exceeds the tolerance by 4.25
 01228: S1 exceeds the tolerance by 4.5
@@ -970,6 +1024,16 @@ The test tags of the cases with a numerical mismatch:
 01336: x exceeds the tolerance by 3
 01337: x exceeds the tolerance by 3; y exceeds the tolerance by 0.999
 01340: S1 exceeds the tolerance by 9
+01347: A__x exceeds the tolerance by 6
+01349: A__x exceeds the tolerance by 1
+01356: A__x exceeds the tolerance by 6
+01358: A__x exceeds the tolerance by 1
+01365: A__x exceeds the tolerance by 6
+01367: A__x exceeds the tolerance by 1
+01374: A__x exceeds the tolerance by 6
+01376: A__x exceeds the tolerance by 1
+01383: A__x exceeds the tolerance by 6
+01385: A__x exceeds the tolerance by 1
 01466: Allsum exceeds the tolerance by 200
 01505: S1 exceeds the tolerance by 0.109; x exceeds the tolerance by 0.351
 01506: S1 exceeds the tolerance by 0.121; x exceeds the tolerance by 0.39
@@ -1113,16 +1177,21 @@ The test tags of the cases with a numerical mismatch:
 | EventIsNotPersistent, NonConstantParameter, RandomEventExecution | 3 | 00952, 00962, 00964 |
 | EventT0Firing, InitialValueReassigned, NonConstantParameter | 3 | 01578, 01698, 01699 |
 | NonConstantParameter, UncommonMathML | 3 | 01213, 01532, 01533 |
+| NonConstantParameter, comp:SubmodelOutput | 3 | 01156, 01356, 01358 |
 | 0D-Compartment, Amount | 2 | 00419, 00425 |
 | Amount, BoundaryCondition, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment | 2 | 01779, 01780 |
+| Amount, BoundaryCondition, NonConstantParameter, comp:SubmodelOutput | 2 | 01374, 01376 |
 | Amount, ConstantSpecies | 2 | 00441, 00443 |
 | Amount, EventUsesTriggerTimeValues, ReversibleReaction | 2 | 00849, 01049 |
 | Amount, HasOnlySubstanceUnits, LocalParameters, NonConstantParameter, NonUnityCompartment, NonUnityStoichiometry, SpeciesReferenceInMath | 2 | 01771, 01772 |
 | Amount, InitialValueReassigned, NonUnityCompartment | 2 | 00682, 00684 |
+| Amount, NonConstantParameter, NonUnityStoichiometry, SpeciesReferenceInMath, comp:SubmodelOutput | 2 | 01383, 01385 |
+| Amount, NonConstantParameter, comp:SubmodelOutput | 2 | 01347, 01349 |
 | Concentration, InitialValueReassigned, NonUnityCompartment | 2 | 00690, 00770 |
 | EventIsNotPersistent, EventIsPersistent, EventUsesTriggerTimeValues, NonConstantParameter, RandomEventExecution | 2 | 00965, 00966 |
 | EventIsNotPersistent, NonConstantParameter | 2 | 00963, 00967 |
 | EventIsPersistent, EventT0Firing, NonConstantParameter | 2 | 01337, 01758 |
+| NonConstantParameter, NonUnityCompartment, comp:SubmodelOutput | 2 | 01365, 01367 |
 | 0D-Compartment, Amount, EventIsPersistent | 1 | 00422 |
 | Amount, AssignedConstantStoichiometry, AssignedVariableStoichiometry, BoundaryCondition, ConstantSpecies, ConversionFactors, EventIsNotPersistent, EventIsPersistent, EventT0Firing, EventUsesAssignmentTimeValues, EventUsesTriggerTimeValues, HasOnlySubstanceUnits, InitialValueReassigned, LocalParameters, MultiCompartment, NonConstantCompartment, NonConstantParameter, NonUnityCompartment, NonUnityStoichiometry, ReversibleReaction, SpeciesReferenceInMath | 1 | 01000 |
 | Amount, AssignedVariableStoichiometry, DelayInEventAssignment, NonConstantParameter, NonUnityStoichiometry | 1 | 01536 |
@@ -1162,6 +1231,7 @@ The test tags of the cases with a numerical mismatch:
 | Amount, EventUsesTriggerTimeValues, NonConstantParameter | 1 | 01326 |
 | Amount, InitialValueReassigned, LocalParameters | 1 | 00708 |
 | Amount, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment | 1 | 00946 |
+| Amount, InitialValueReassigned, NonConstantParameter, comp:ConversionFactor, comp:ExtentConversionFactor, comp:SubmodelOutput, comp:TimeConversionFactor | 1 | 01169 |
 | Amount, NonConstantCompartment, NonUnityCompartment | 1 | 00945 |
 | Amount, NonConstantParameter, ReversibleReaction | 1 | 01340 |
 | Amount, ReversibleReaction | 1 | 01048 |
@@ -1201,6 +1271,7 @@ The test tags of the cases with a numerical mismatch:
 | EventUsesAssignmentTimeValues, NoMathML, NonConstantParameter | 1 | 01603 |
 | EventUsesTriggerTimeValues, InitialValueReassigned, NonConstantParameter, UncommonMathML | 1 | 01597 |
 | EventUsesTriggerTimeValues, NoMathML, NonConstantParameter | 1 | 01601 |
+| EventUsesTriggerTimeValues, NonConstantParameter, comp:TimeConversionFactor | 1 | 01177 |
 | InitialValueReassigned, NonConstantParameter | 1 | 01261 |
 | NoMathML, NonConstantParameter | 1 | 01241 |
 
@@ -1209,7 +1280,6 @@ The test tags of the cases with a numerical mismatch:
 | reason | cases |
 | --- | --- |
 | no L3V2 file | 131 |
-| package comp | 123 |
 | test type FluxBalanceSteadyState | 34 |
 
 ## Cases
@@ -2276,6 +2346,66 @@ The test tags of the cases with a numerical mismatch:
 | 01121 | AssignmentRule, CSymbolAvogadro, CSymbolTime, Compartment, FunctionDefinition, InitialAssignment, Parameter, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01122 | Compartment, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01123 | Compartment, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01124 | Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01125 | Parameter, comp:ModelDefinition, comp:Port, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01126 | Parameter, comp:ModelDefinition, comp:Port, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01127 | InitialAssignment, Parameter, RateRule, comp:ModelDefinition, comp:Port, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01128 | Parameter, comp:ModelDefinition, comp:ReplacedBy, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01129 | Compartment, Species, comp:ModelDefinition, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01130 | Compartment, Species, comp:ModelDefinition, comp:ReplacedElement, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01131 | Compartment, Species, comp:ModelDefinition, comp:ReplacedElement, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01132 | Compartment, Species, comp:ModelDefinition, comp:ReplacedElement, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01133 | Compartment, Species, comp:ModelDefinition, comp:ReplacedBy, comp:ReplacedElement, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01134 | Compartment, Species, comp:ModelDefinition, comp:Port, comp:ReplacedBy, comp:ReplacedElement, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01135 | Parameter, comp:ModelDefinition, comp:ReplacedBy, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01136 | Parameter, comp:ModelDefinition, comp:ReplacedBy, comp:SBaseRef, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01137 | AssignmentRule, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01138 | AssignmentRule, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01139 | Parameter, RateRule, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01140 | Compartment, Parameter, RateRule, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01141 | Compartment, Parameter, RateRule, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01142 | AlgebraicRule, AssignmentRule, CSymbolDelay, CSymbolTime, Compartment, EventWithDelay, InitialAssignment, Parameter, RateRule, Reaction, Species, comp:ModelDefinition, comp:ReplacedBy, comp:ReplacedElement, comp:Submodel | pass | fail | skip | skip | skip | yes |
+| 01143 | Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01144 | CSymbolTime, Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01145 | Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01146 | AssignmentRule, CSymbolTime, Parameter, comp:ModelDefinition, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01147 | AssignmentRule, CSymbolTime, InitialAssignment, Parameter, comp:ModelDefinition, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01148 | CSymbolTime, Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01149 | Parameter, comp:Deletion, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01150 | Parameter, RateRule, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01151 | Parameter, RateRule, comp:Deletion, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01152 | CSymbolTime, EventNoDelay, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | pass | yes |
+| 01153 | InitialAssignment, Parameter, comp:Deletion, comp:ModelDefinition, comp:Port, comp:ReplacedElement, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01154 | Parameter, comp:Deletion, comp:ModelDefinition, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01155 | CSymbolTime, EventNoDelay, Parameter, comp:Deletion, comp:ModelDefinition, comp:Submodel | pass | pass | fail | pass | pass | yes |
+| 01156 | CSymbolTime, EventWithDelay, Parameter, comp:Deletion, comp:ModelDefinition, comp:Submodel | pass | pass | fail | pass | fail | yes |
+| 01157 | CSymbolTime, EventNoDelay, Parameter, comp:Deletion, comp:ModelDefinition, comp:Submodel | pass | pass | fail | pass | pass | yes |
+| 01158 | CSymbolTime, EventNoDelay, Parameter, comp:Deletion, comp:ModelDefinition, comp:Submodel | pass | pass | fail | pass | pass | yes |
+| 01159 | Compartment, Parameter, Reaction, Species, comp:Deletion, comp:ModelDefinition, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01160 | Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01161 | Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01162 | Parameter, comp:Deletion, comp:ModelDefinition, comp:Port, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01163 | Parameter, RateRule, comp:ModelDefinition, comp:Port, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01164 | Compartment, Reaction, Species, comp:ModelDefinition, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01165 | Compartment, Reaction, Species, comp:Deletion, comp:ExternalModelDefinition, comp:ModelDefinition, comp:Port, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01166 | Compartment, Reaction, Species, comp:Deletion, comp:ModelDefinition, comp:Port, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01167 | Compartment, Reaction, Species, comp:ExternalModelDefinition, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01168 | Compartment, Reaction, Species, comp:ExternalModelDefinition, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01169 | AssignmentRule, Compartment, EventNoDelay, EventPriority, Parameter, RateRule, Reaction, Species, comp:Deletion, comp:ModelDefinition, comp:Port, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | fail | yes |
+| 01170 | CSymbolTime, Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedBy, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01171 | AssignmentRule, CSymbolTime, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01172 | CSymbolTime, Parameter, RateRule, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01173 | AssignmentRule, CSymbolDelay, CSymbolTime, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | fail | skip | skip | skip | yes |
+| 01174 | AlgebraicRule, CSymbolDelay, CSymbolTime, InitialAssignment, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | fail | skip | skip | skip | no |
+| 01175 | CSymbolTime, Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedBy, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01176 | AssignmentRule, CSymbolDelay, CSymbolTime, Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedBy, comp:ReplacedElement, comp:Submodel | pass | fail | skip | skip | skip | yes |
+| 01177 | CSymbolTime, EventWithDelay, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | fail | yes |
+| 01178 | AssignmentRule, Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01179 | CSymbolTime, Parameter, RateRule, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01180 | AssignmentRule, Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01181 | AssignmentRule, Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01182 | AssignmentRule, Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01183 | AssignmentRule, Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
 | 01184 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01185 | Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01197 | Compartment | pass | pass | pass | pass | pass | no |
@@ -2425,6 +2555,57 @@ The test tags of the cases with a numerical mismatch:
 | 01341 | Compartment, Species | pass | pass | pass | pass | pass | no |
 | 01342 | Compartment, Species | pass | pass | pass | pass | pass | no |
 | 01343 | AssignmentRule, CSymbolTime, InitialAssignment, Parameter | pass | pass | pass | pass | pass | yes |
+| 01344 | AssignmentRule, Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01345 | Compartment, InitialAssignment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01346 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | pass | yes |
+| 01347 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | fail | yes |
+| 01348 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | pass | yes |
+| 01349 | CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | fail | yes |
+| 01350 | AlgebraicRule, Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01351 | Compartment, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01352 | Compartment, Parameter, RateRule, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01353 | AssignmentRule, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01354 | InitialAssignment, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01355 | CSymbolTime, EventNoDelay, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | pass | yes |
+| 01356 | CSymbolTime, EventNoDelay, EventPriority, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | fail | yes |
+| 01357 | CSymbolTime, EventNoDelay, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | pass | yes |
+| 01358 | CSymbolTime, EventWithDelay, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | fail | yes |
+| 01359 | AlgebraicRule, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01360 | Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01361 | Parameter, RateRule, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01362 | AssignmentRule, Compartment, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01363 | Compartment, InitialAssignment, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01364 | CSymbolTime, Compartment, EventNoDelay, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | pass | yes |
+| 01365 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | fail | yes |
+| 01366 | CSymbolTime, Compartment, EventNoDelay, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | pass | yes |
+| 01367 | CSymbolTime, Compartment, EventWithDelay, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | fail | yes |
+| 01368 | AlgebraicRule, Compartment, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01369 | Compartment, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01370 | Compartment, Parameter, RateRule, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01371 | AssignmentRule, Compartment, Parameter, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01372 | Compartment, InitialAssignment, Parameter, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01373 | CSymbolTime, Compartment, EventNoDelay, Parameter, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | pass | yes |
+| 01374 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Species, comp:ModelDefinition, comp:ReplacedBy, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | fail | yes |
+| 01375 | CSymbolTime, Compartment, EventNoDelay, Parameter, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | pass | yes |
+| 01376 | CSymbolTime, Compartment, EventWithDelay, Parameter, Species, comp:ModelDefinition, comp:ReplacedBy, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | fail | yes |
+| 01377 | AlgebraicRule, Compartment, Parameter, Species, comp:ModelDefinition, comp:ReplacedBy, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01378 | Compartment, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01379 | Compartment, Parameter, RateRule, Species, comp:ModelDefinition, comp:ReplacedBy, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01380 | AssignmentRule, Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01381 | Compartment, InitialAssignment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01382 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | pass | yes |
+| 01383 | CSymbolTime, Compartment, EventNoDelay, EventPriority, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | fail | yes |
+| 01384 | CSymbolTime, Compartment, EventNoDelay, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | pass | yes |
+| 01385 | CSymbolTime, Compartment, EventWithDelay, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | fail | pass | fail | yes |
+| 01386 | AlgebraicRule, Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01387 | Compartment, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01388 | Compartment, Parameter, RateRule, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01389 | Compartment, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01390 | InitialAssignment, Parameter, comp:ModelDefinition, comp:Port, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01391 | AssignmentRule, Parameter, comp:ModelDefinition, comp:Port, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01392 | AssignmentRule, InitialAssignment, Parameter, comp:ModelDefinition, comp:Port, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01393 | AssignmentRule, CSymbolTime, Parameter, comp:ModelDefinition, comp:Port, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01394 | AssignmentRule, InitialAssignment, Parameter, comp:ModelDefinition, comp:Port, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | no |
 | 01395 | AssignmentRule, Compartment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01400 | AssignmentRule, CSymbolDelay, CSymbolRateOf, Compartment, Parameter, Reaction, Species | pass | fail | skip | skip | skip | yes |
 | 01401 | AssignmentRule, CSymbolDelay, CSymbolRateOf, Parameter, RateRule | pass | fail | skip | skip | skip | yes |
@@ -2488,6 +2669,17 @@ The test tags of the cases with a numerical mismatch:
 | 01464 | Compartment, RateRule, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01465 | AssignmentRule, Compartment, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01466 | AssignmentRule, EventNoDelay, EventPriority, Parameter | pass | pass | fail | pass | fail | no |
+| 01467 | AssignmentRule, Parameter, comp:ModelDefinition, comp:ReplacedElement, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | no |
+| 01468 | Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01469 | Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01470 | Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedBy, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01471 | Compartment, Reaction, Species, comp:Deletion, comp:ExternalModelDefinition, comp:ModelDefinition, comp:Port, comp:ReplacedBy, comp:ReplacedElement, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01472 | Compartment, Reaction, Species, comp:ExternalModelDefinition, comp:ReplacedBy, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01473 | Compartment, Reaction, Species, comp:ExternalModelDefinition, comp:ReplacedElement, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01474 | Compartment, Parameter, Reaction, Species, comp:ModelDefinition, comp:ReplacedElement, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01475 | Compartment, Parameter, Reaction, Species, comp:ExternalModelDefinition, comp:ReplacedElement, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01476 | Compartment, Parameter, Reaction, Species, comp:ExternalModelDefinition, comp:ReplacedElement, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | yes |
+| 01477 | Compartment, Parameter, Reaction, Species, comp:ExternalModelDefinition, comp:ReplacedElement, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | yes |
 | 01478 | AssignmentRule, Compartment, FunctionDefinition, Parameter, RateRule, Species | pass | pass | pass | pass | pass | yes |
 | 01479 | AlgebraicRule, CSymbolAvogadro, Parameter | pass | pass | pass | pass | pass | no |
 | 01480 | AssignmentRule, CSymbolDelay, Compartment, Reaction, Species | pass | fail | skip | skip | skip | yes |
@@ -2721,6 +2913,7 @@ The test tags of the cases with a numerical mismatch:
 | 01775 | CSymbolAvogadro, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01776 | CSymbolAvogadro, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
 | 01777 | CSymbolAvogadro, Compartment, InitialAssignment, Parameter, Reaction, Species | pass | pass | pass | pass | pass | yes |
+| 01778 | Compartment, Parameter, Reaction, Species, comp:ExternalModelDefinition, comp:ReplacedElement, comp:SBaseRef, comp:Submodel | pass | pass | pass | pass | pass | yes |
 | 01779 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, Species | pass | pass | fail | pass | fail | yes |
 | 01780 | AssignmentRule, CSymbolTime, Compartment, EventNoDelay, Parameter, Species | pass | pass | fail | pass | fail | yes |
 | 01781 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |

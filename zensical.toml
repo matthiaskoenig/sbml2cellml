@@ -23,6 +23,7 @@ nav = [
     { "Conversion issues" = "conversion-issues.md" },
     { "SBML test suite" = "testsuite.md" },
     { "BioModels" = "biomodels.md" },
+    { "Physiome" = "physiome.md" },
   ] },
   { "API reference" = [
     { "Overview" = "api/index.md" },
@@ -58,6 +59,12 @@ nav = [
       { "cases" = "api/biomodels.cases.md" },
       { "runner" = "api/biomodels.runner.md" },
       { "cli" = "api/biomodels.cli.md" },
+    ] },
+    { "sbml2cellml.physiome" = [
+      { "models" = "api/physiome.models.md" },
+      { "cases" = "api/physiome.cases.md" },
+      { "runner" = "api/physiome.runner.md" },
+      { "cli" = "api/physiome.cli.md" },
     ] },
   ] },
   { "Release notes" = [

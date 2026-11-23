@@ -25,7 +25,7 @@ issues = validate_model(model)
 print(format_issues(errors(issues)))
 ```
 
-A file without a model raises `SBML2CellMLConversionError`.
+A file without a model raises `SBML2CellMLConversionError`. A hierarchical model, which uses the [comp package](https://sbml.org/documents/specifications/level-3/version-1/comp/) with submodels or model definitions, is flattened first (`CompFlatteningConverter` of libsbml, external model definitions relative to the file) and a warning says so, so the components of the submodels are part of the CellML model; see [Hierarchical models](#hierarchical-models) for the other direction.
 
 ### Logging
 
@@ -91,7 +91,7 @@ SBML level 1 and 2 have the units `substance`, `time`, `volume`, `area` and `len
 
 ## CellML to SBML
 
-[`convert_cellml2sbml`](api/cellml2sbml.md) reads a CellML 2.0 file, resolves its imports relative to the file, analyses it with libcellml and builds an SBML level 3 version 2 document:
+[`convert_cellml2sbml`](api/cellml2sbml.md) reads a CellML file of any version, resolves its imports relative to the file, analyses it with libcellml and builds an SBML level 3 version 2 document:
 
 ```python
 from pathlib import Path
@@ -107,6 +107,7 @@ cellml2sbml model.cellml                 # writes model.xml next to the input
 cellml2sbml model.cellml -o out/model.xml
 cellml2sbml model.cellml --no-validate   # write even if libsbml reports errors
 cellml2sbml model.cellml --no-metadata   # do not read model.rdf
+cellml2sbml model.cellml --hierarchical  # one comp submodel per component
 cellml2sbml model.cellml -v
 ```
 
@@ -135,6 +136,33 @@ CellML has no species, compartments or reactions: every variable becomes a param
 | metadata in `model.rdf` next to `model.cellml`, see [Metadata](#metadata) | name, notes, SBO term, CV terms and history of the parameter of the variable, the unit definition of the units and the model with that `id`; the `id` is the `metaid` |
 | implicit equation (`a + s = 5`, a model of type DAE or NLA) | algebraic rule `0 = a + s - 5`, the unknown a `parameter constant="false"` with its initial value (the guess of the solver) |
 | model which cannot be analysed (e.g. underconstrained) | CellML2SBMLConversionError |
+
+A CellML 1.0 or 1.1 document, as the models of the [Physiome Model Repository](https://models.physiomeproject.org) are, is read in the permissive mode of libcellml, which maps it to the CellML 2.0 structures; a warning names the version. The [Physiome](physiome.md) page reports how many of the published models convert and simulate.
+
+### Hierarchical models
+
+By default every component of the CellML model becomes part of one flat SBML model. `hierarchical=True`, or `--hierarchical` on the command line, writes the components as a hierarchical model instead, with the [SBML comp package](https://sbml.org/documents/specifications/level-3/version-1/comp/):
+
+```python
+doc = convert_cellml2sbml(
+    Path("model.cellml"), sbml_path=Path("model.xml"), hierarchical=True
+)
+```
+
+| CellML | SBML comp |
+| --- | --- |
+| component | `comp:modelDefinition` with the id `<component>_component`, holding the parameters and rules of its own equations |
+| component without an encapsulation parent | `comp:submodel` of the main model |
+| encapsulated component | `comp:submodel` of the model definition of its parent |
+| variable of a component | parameter of its model definition, by its CellML name (one namespace per component, so the same name in two components stays the same name) |
+| connection (an equivalence set of more than one variable) | parameter of the main model with a `comp:replacedElement` per member, which points at the parameter of its submodel, nested along the encapsulation |
+| variable used only inside its component | stays a parameter of the model definition, nothing is replaced |
+
+The flattened hierarchical model (`CompFlatteningConverter` of libsbml, which both simulators and `sbml2cellml` apply) is the flat conversion of the same model: the same equations with the submodel prefix on the ids of the variables which are not connected to the main model.
+
+Metadata from `model.rdf` is applied to the elements of the main model, so a record of a variable which no connection replaces is logged and not applied; the flat conversion keeps all of it.
+
+The other direction, an SBML model with `comp` submodels, is flattened before it is converted to CellML, so no structure of the CellML model mirrors the submodels yet.
 
 ### Limitations
 

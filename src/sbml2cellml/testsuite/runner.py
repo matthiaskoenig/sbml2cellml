@@ -18,6 +18,7 @@ import libsbml
 import pandas as pd
 
 from sbml2cellml import __version__, convert_cellml2sbml, convert_sbml2cellml
+from sbml2cellml.sbml import flatten_comp
 from sbml2cellml.simulate import MAXIMUM_NUMBER_OF_STEPS
 from sbml2cellml.testsuite.cases import SUITE_VERSION, Case, skip_reason
 from sbml2cellml.testsuite.compare import (
@@ -66,7 +67,7 @@ _ABSOLUTE_PATH = re.compile(r"'[^']*/([^/']+)'")
 _LONG_DECIMAL = re.compile(r"\d+\.\d{7,}(?:e[+-]?\d+)?")
 
 
-def _message(err: BaseException) -> str:
+def error_message(err: BaseException) -> str:
     """Type and the complete text of an exception.
 
     The text is kept in full, with all its lines (e.g. every issue of a
@@ -89,7 +90,9 @@ def _message(err: BaseException) -> str:
     return f"{type(err).__name__}: " + "\n".join(lines)
 
 
-def _stage(comparison: Comparison, result: dict[str, Any] | None = None) -> StageResult:
+def stage_result(
+    comparison: Comparison, result: dict[str, Any] | None = None
+) -> StageResult:
     """Stage result of a comparison.
 
     Args:
@@ -123,7 +126,7 @@ def selections(case: Case, model: libsbml.Model) -> list[str]:
     ]
 
 
-def _simulate(
+def simulate_stage(
     worker: SimulatorWorker, function: str, **arguments: Any
 ) -> dict[str, Any]:
     """Run a simulation, with relaxed tolerances when the integrator fails.
@@ -156,7 +159,7 @@ def _simulate(
                 function,
                 settings["relative_tolerance"],
                 settings["absolute_tolerance"],
-                _message(first),
+                error_message(first),
             )
         return result
     assert first is not None
@@ -204,13 +207,17 @@ def run_case(
         )
 
     try:
-        model = libsbml.readSBMLFromFile(str(case.sbml_path)).getModel()
+        document = libsbml.readSBMLFromFile(str(case.sbml_path))
+        # the variables of a hierarchical model are those of its submodels,
+        # which the simulators and the converters see flattened as well
+        flattened = flatten_comp(document, base_path=case.sbml_path.parent)
+        model = (flattened or document).getModel()
         if model is None:
             raise ValueError("no model in the SBML file")
         quantities = species_quantities(model)
         compartments = [c.getId() for c in model.getListOfCompartments()]
     except Exception as err:
-        message = f"setup: {_message(err)}"
+        message = f"setup: {error_message(err)}"
         stages = {stage: StageResult("fail", message) for stage in STAGES}
         return _result(stages)
 
@@ -219,7 +226,7 @@ def run_case(
     # sbmlsim
     expected: pd.DataFrame | None = case.expected
     try:
-        result = _simulate(
+        result = simulate_stage(
             sbmlsim,
             "simulate_sbml",
             sbml=case.sbml_path.read_text(encoding="utf-8"),
@@ -227,6 +234,7 @@ def run_case(
             start=settings.start,
             end=settings.end,
             steps=settings.steps,
+            base_path=str(case.sbml_path.parent),
         )
         original = strip_brackets(frame(result))
         if expected is None:
@@ -237,9 +245,11 @@ def run_case(
                 setup_seconds=result["setup_seconds"],
             )
         else:
-            stages["sbmlsim"] = _stage(compare(original, expected, settings), result)
+            stages["sbmlsim"] = stage_result(
+                compare(original, expected, settings), result
+            )
     except Exception as err:
-        stages["sbmlsim"] = StageResult("fail", _message(err))
+        stages["sbmlsim"] = StageResult("fail", error_message(err))
 
     informative = is_informative(expected, settings) if expected is not None else None
 
@@ -249,7 +259,7 @@ def run_case(
         convert_sbml2cellml(case.sbml_path, cellml_path=cellml_path, validate=True)
         stages["sbml2cellml"] = StageResult("pass")
     except Exception as err:
-        stages["sbml2cellml"] = StageResult("fail", _message(err))
+        stages["sbml2cellml"] = StageResult("fail", error_message(err))
         for stage in ("libopencor", "cellml2sbml", "roundtrip"):
             stages[stage] = StageResult("skip", "sbml2cellml failed")
         return _result(stages, informative)
@@ -259,7 +269,7 @@ def run_case(
         stages["libopencor"] = StageResult("skip", "sbmlsim failed")
     else:
         try:
-            result = _simulate(
+            result = simulate_stage(
                 libopencor,
                 "simulate_cellml",
                 cellml_path=str(cellml_path),
@@ -268,9 +278,9 @@ def run_case(
                 steps=settings.steps,
             )
             df = requested_frame(frame(result), quantities, settings)
-            stages["libopencor"] = _stage(compare(df, expected, settings), result)
+            stages["libopencor"] = stage_result(compare(df, expected, settings), result)
         except Exception as err:
-            stages["libopencor"] = StageResult("fail", _message(err))
+            stages["libopencor"] = StageResult("fail", error_message(err))
 
     # cellml2sbml
     roundtrip_path = work_dir / f"{case.id}-roundtrip.xml"
@@ -278,7 +288,7 @@ def run_case(
         convert_cellml2sbml(cellml_path, sbml_path=roundtrip_path, validate=True)
         stages["cellml2sbml"] = StageResult("pass")
     except Exception as err:
-        stages["cellml2sbml"] = StageResult("fail", _message(err))
+        stages["cellml2sbml"] = StageResult("fail", error_message(err))
         stages["roundtrip"] = StageResult("skip", "cellml2sbml failed")
         return _result(stages, informative)
 
@@ -290,7 +300,7 @@ def run_case(
             roundtrip_selections = list(
                 dict.fromkeys([*settings.variables, *compartments])
             )
-            result = _simulate(
+            result = simulate_stage(
                 sbmlsim,
                 "simulate_sbml",
                 sbml=roundtrip_path.read_text(encoding="utf-8"),
@@ -300,9 +310,9 @@ def run_case(
                 steps=settings.steps,
             )
             df = requested_frame(frame(result), quantities, settings)
-            stages["roundtrip"] = _stage(compare(df, expected, settings), result)
+            stages["roundtrip"] = stage_result(compare(df, expected, settings), result)
         except Exception as err:
-            stages["roundtrip"] = StageResult("fail", _message(err))
+            stages["roundtrip"] = StageResult("fail", error_message(err))
 
     return _result(stages, informative)
 

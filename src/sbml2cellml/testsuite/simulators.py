@@ -27,6 +27,7 @@ def simulate_sbml(
     relative_tolerance: float | None = None,
     absolute_tolerance: float | None = None,
     maximum_number_of_steps: int | None = None,
+    base_path: str | None = None,
 ) -> dict[str, Any]:
     """Uniform timecourse of an SBML model with sbmlsim-core.
 
@@ -43,6 +44,9 @@ def simulate_sbml(
         maximum_number_of_steps: internal steps of the integrator between
             two time points, the default of `sbml2cellml.sbmlsim` when
             `None`.
+
+        base_path: directory the `source` of an external model definition
+            of a hierarchical model is resolved from.
 
     Returns:
         `columns` (the selections with `time` first), `rows`,
@@ -62,6 +66,7 @@ def simulate_sbml(
         maximum_number_of_steps=maximum_number_of_steps,
         warmup=True,
         timings=timings,
+        base_path=Path(base_path) if base_path is not None else None,
     )
     return {
         "columns": list(df.columns),

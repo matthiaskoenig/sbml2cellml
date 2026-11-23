@@ -22,10 +22,8 @@ from tests.cellml_models import (
     reset_model,
     variable,
 )
-from tests.conftest import TEST_MODEL_PATH
+from tests.conftest import DATA_DIR, TEST_MODEL_PATH
 from tests.sbml_models import event_model, write_sbml
-
-DATA_DIR = Path(__file__).parent / "data"
 
 
 def parameters(model: libsbml.Model) -> dict[str, libsbml.Parameter]:
@@ -218,6 +216,27 @@ def test_convert_with_imports() -> None:
     assert set(p) == {"m", "k"}
     assert rules(model)["m"].isRate()
     assert model.getUnitDefinition("per_second") is not None
+    assert validate_document(doc) == []
+
+
+def test_convert_a_cellml_1_0_model() -> None:
+    doc = convert_cellml2sbml(DATA_DIR / "decay_cellml_1_0.cellml")
+    model = doc.getModel()
+    assert model.getId() == "decay"
+    assert set(parameters(model)) == {"k", "x"}
+    assert rules(model)["x"].isRate()
+    assert libsbml.formulaToL3String(rules(model)["x"].getMath()) == "-k * x"
+    assert model.getUnitDefinition("per_second") is not None
+    assert validate_document(doc) == []
+
+
+def test_derivative_in_an_expression_becomes_rate_of() -> None:
+    model = math_model({"v": "<apply><diff/><bvar><ci>t</ci></bvar><ci>x</ci></apply>"})
+    doc = build_document(model, analyse(model), {})
+    model_sbml = doc.getModel()
+    rule = rules(model_sbml)["v"]
+    assert rule.isAssignment()
+    assert libsbml.formulaToL3String(rule.getMath()) == "rateOf(x)"
     assert validate_document(doc) == []
 
 

@@ -82,9 +82,14 @@ def test_biomodel_case() -> None:
         model, LIVER_MODEL.read_text(encoding="utf-8")
     )
 
-    case_with_package = biomodel_case(INFO, LIVER_MODEL, ("comp",))
-    assert "comp:package" in case_with_package.component_tags
-    assert skip_reason(case_with_package) == "package comp"
+    # a package the converters do not support skips the model; `comp` is
+    # not one of them, its submodels are flattened
+    case_with_package = biomodel_case(INFO, LIVER_MODEL, ("fbc",))
+    assert "fbc:package" in case_with_package.component_tags
+    assert skip_reason(case_with_package) == "package fbc"
+    case_with_comp = biomodel_case(INFO, LIVER_MODEL, ("comp",))
+    assert "comp:package" in case_with_comp.component_tags
+    assert skip_reason(case_with_comp) is None
 
 
 def test_biomodel_case_parameter_rate_rule_variable(tmp_path: Path) -> None:

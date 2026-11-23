@@ -7,17 +7,17 @@ import pytest
 
 from sbml2cellml.biomodels import runner
 from sbml2cellml.testsuite.results import STAGES
-from tests.biomodels_mocks import INFO_A, INFO_B, mock_downloads, write_comp_model
+from tests.biomodels_mocks import INFO_A, INFO_B, mock_downloads, write_package_model
 
 
 @pytest.fixture
-def comp_path(tmp_path: Path) -> Path:
-    return write_comp_model(tmp_path / "comp_model.xml")
+def package_path(tmp_path: Path) -> Path:
+    return write_package_model(tmp_path / "fbc_model.xml")
 
 
 @pytest.fixture(autouse=True)
-def _mocks(monkeypatch: pytest.MonkeyPatch, comp_path: Path) -> None:
-    mock_downloads(monkeypatch, runner, comp_path)
+def _mocks(monkeypatch: pytest.MonkeyPatch, package_path: Path) -> None:
+    mock_downloads(monkeypatch, runner, package_path)
 
 
 def _no_variables_model(path: Path) -> Path:
@@ -58,7 +58,7 @@ def _broken_model(path: Path) -> Path:
 def test_prepare_cases() -> None:
     cases, skipped = runner.prepare_cases(["BIOMD_A", "BIOMD_B", "BIOMD_C"])
     assert [case.id for case in cases] == ["BIOMD_A", "BIOMD_B"]
-    assert "comp:package" in cases[1].component_tags
+    assert "fbc:package" in cases[1].component_tags
     assert skipped == {"BIOMD_C": "download failed: BioModelsError"}
 
 
@@ -104,7 +104,7 @@ def test_run_biomodels(tmp_path: Path) -> None:
     result = runner.run_biomodels(["BIOMD_A", "BIOMD_B", "BIOMD_C"], work_dir=tmp_path)
     assert result.suite == "biomodels"
     assert result.skipped == {
-        "BIOMD_B": "package comp",
+        "BIOMD_B": "package fbc",
         "BIOMD_C": "download failed: BioModelsError",
     }
     case_a = result.cases["BIOMD_A"]

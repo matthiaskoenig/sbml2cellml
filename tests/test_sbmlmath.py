@@ -137,9 +137,13 @@ def test_unsupported_node_raises() -> None:
         if analyser_model.analyserEquation(k).type()
         == libcellml.AnalyserEquation.Type.ODE  # ty: ignore[unresolved-attribute]
     )
-    # the left side of an ODE holds a DIFF node, which has no place in an expression
-    with pytest.raises(MathConversionError, match="diff"):
-        ast_to_sbml(ode.ast().leftChild(), ids)
+    # the derivative of the left side of an ODE is `rateOf` in an expression,
+    # the variable of integration below it has no SBML counterpart
+    assert libsbml.formulaToL3String(ast_to_sbml(ode.ast().leftChild(), ids)) == (
+        "rateOf(x)"
+    )
+    with pytest.raises(MathConversionError, match="bvar"):
+        ast_to_sbml(ode.ast().leftChild().leftChild(), ids)
 
 
 def test_variable_node() -> None:

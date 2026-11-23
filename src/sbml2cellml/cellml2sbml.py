@@ -32,7 +32,16 @@ from sbml2cellml.sbmlmath import (
     variable_node,
 )
 from sbml2cellml.units import UnitsConversionError, add_units, unit_id
-from sbml2cellml.variables import VariableIds, analyser_variables
+from sbml2cellml.variables import (
+    ComponentIds,
+    VariableIds,
+    analyser_variables,
+    components,
+    equivalence_set,
+    sanitize_id,
+    unique_sid,
+    variable_key,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -57,12 +66,16 @@ class CellML2SBMLConversionError(ValueError):
 #: suffix of the file with the metadata, next to the CellML file
 METADATA_SUFFIX = ".rdf"
 
+#: name of the SBML package for the hierarchical model composition
+COMP_PACKAGE = "comp"
+
 
 def convert_cellml2sbml(
     cellml_path: Path,
     sbml_path: Path | None = None,
     validate: bool = True,
     metadata: bool = True,
+    hierarchical: bool = False,
 ) -> libsbml.SBMLDocument:
     """Convert a CellML file to an SBML document.
 
@@ -73,6 +86,9 @@ def convert_cellml2sbml(
             if it has errors.
         metadata: read the metadata from the RDF file next to the CellML file
             (`<stem>.rdf`, see `sbml2cellml.metadata`) when it exists.
+        hierarchical: write every component as a submodel of the
+            hierarchical model composition package (`comp`,
+            `build_hierarchical_document`) instead of one flat model.
 
     Returns:
         The SBML document.
@@ -89,10 +105,9 @@ def convert_cellml2sbml(
         raise CellML2SBMLConversionError(
             f"CellML file does not exist: '{cellml_path}'."
         )
-    model = cellml.read_model(cellml_path)
+    model = read_cellml_model(cellml_path)
     logger.info("Converting CellML model '%s' from '%s'", model.name(), cellml_path)
-    model = _flatten(model, cellml_path.parent)
-    analyser_model = _analyse(model)
+    analyser_model = analyse_model(model)
     metadata_path = cellml_path.with_suffix(METADATA_SUFFIX)
     records: dict[str, Record] = {}
     if metadata and metadata_path.is_file():
@@ -101,8 +116,9 @@ def convert_cellml2sbml(
         except ValueError as err:
             raise CellML2SBMLConversionError(str(err)) from err
         logger.info("Metadata of %d elements in '%s'", len(records), metadata_path)
+    build = build_hierarchical_document if hierarchical else build_document
     try:
-        doc = build_document(model, analyser_model, records)
+        doc = build(model, analyser_model, records)
     except (MathConversionError, UnitsConversionError) as err:
         raise CellML2SBMLConversionError(
             f"CellML model '{model.name()}' cannot be converted: {err}"
@@ -121,11 +137,52 @@ def convert_cellml2sbml(
     return doc
 
 
-def _flatten(model: libcellml.Model, base_path: Path) -> libcellml.Model:
-    """Resolve the imports of a model and flatten it, if it has any."""
+def read_cellml_model(cellml_path: Path) -> libcellml.Model:
+    """Read a CellML file of any version and flatten its imports.
+
+    A CellML 1.0 or 1.1 document, which the models of the Physiome Model
+    Repository are, is read in the permissive mode of libcellml, as are the
+    files it imports.
+
+    Args:
+        cellml_path: path of the CellML file; imports are resolved relative
+            to it.
+
+    Returns:
+        The model with its imports flattened.
+
+    Raises:
+        CellMLValidationError: if the file cannot be parsed.
+        CellML2SBMLConversionError: if the imports cannot be resolved.
+    """
+    cellml_path = Path(cellml_path)
+    version = cellml.cellml_version(cellml_path.read_text(encoding="utf-8"))
+    if version is not None:
+        logger.warning(
+            "CellML %s model '%s', read in permissive mode", version, cellml_path
+        )
+    model = cellml.read_model(cellml_path, strict=version is None)
+    return _flatten(model, cellml_path.parent, permissive=version is not None)
+
+
+def _flatten(
+    model: libcellml.Model, base_path: Path, permissive: bool = False
+) -> libcellml.Model:
+    """Resolve the imports of a model and flatten it, if it has any.
+
+    Args:
+        model: the parsed model.
+        base_path: directory the imports are resolved from.
+        permissive: read the imported files as CellML 1.0 and 1.1 documents
+            as well, as the parser of a model of that version does.
+
+    Returns:
+        The model with its imports flattened, the model itself when it has
+        no imports.
+    """
     if not model.hasImports():
         return model
-    importer = libcellml.Importer()
+    importer = libcellml.Importer(permissive)
     importer.resolveImports(model, str(base_path))
     issues = [importer.issue(k) for k in range(importer.issueCount())]
     errors = cellml.errors(issues)
@@ -144,7 +201,7 @@ def _flatten(model: libcellml.Model, base_path: Path) -> libcellml.Model:
     return flat
 
 
-def _analyse(model: libcellml.Model) -> Any:
+def analyse_model(model: libcellml.Model) -> Any:
     """Analyse a model, raising on errors and unsupported model types."""
     analyser = libcellml.Analyser()
     analyser.analyseModel(model)
@@ -243,6 +300,397 @@ def build_document(
         _add_equation(model_sbml, analyser_model.analyserEquation(k), ids, number_units)
 
     _add_events(model_sbml, model, ids, sbml_unit_id)
+    _add_metadata(model_sbml, model, ids, unit_ids, records or {})
+    return doc
+
+
+def _first_variable(node: Any) -> Any | None:
+    """First variable of an analyser AST, depth first from the left."""
+    if node is None:
+        return None
+    if node.type() == AstType.CI:
+        return node.variable()
+    for child in (node.leftChild(), node.rightChild()):
+        found = _first_variable(child)
+        if found is not None:
+            return found
+    return None
+
+
+def _equation_component(equation: Any) -> str | None:
+    """Name of the component the math of an equation is written in.
+
+    The analyser keeps the variables of the component an equation comes
+    from, so the first variable of its left side (the state of an ODE, the
+    variable of an assignment, any variable of an implicit equation) names
+    the component.
+
+    Args:
+        equation: analyser equation.
+
+    Returns:
+        The name of the component, `None` for an equation without variables.
+    """
+    ast = equation.ast()
+    if ast is None:
+        return None
+    side = ast.leftChild() if ast.type() == AstType.EQUALITY else ast
+    if side is not None and side.type() == AstType.DIFF:
+        side = side.rightChild()
+    variable = _first_variable(side)
+    if variable is None:
+        variable = _first_variable(ast)
+    if variable is None or variable.parent() is None:
+        return None
+    return variable.parent().name()
+
+
+def _equations_by_component(analyser_model: Any) -> dict[str, list[Any]]:
+    """The analyser equations of a model by the component they come from.
+
+    Args:
+        analyser_model: model of a libcellml analyser without errors.
+
+    Returns:
+        The equations per component name, in the order of the analyser.
+
+    Raises:
+        MathConversionError: if an equation belongs to no component.
+    """
+    by_component: dict[str, list[Any]] = {}
+    for k in range(analyser_model.analyserEquationCount()):
+        equation = analyser_model.analyserEquation(k)
+        name = _equation_component(equation)
+        if name is None:
+            raise MathConversionError(
+                "An equation of the model is not written in a component."
+            )
+        by_component.setdefault(name, []).append(equation)
+    return by_component
+
+
+def _member_of(component_name: str, variable: Any) -> Any | None:
+    """The variable of an equivalence set which lives in a component."""
+    for member in equivalence_set(variable):
+        if member.parent() is not None and member.parent().name() == component_name:
+            return member
+    return None
+
+
+def _computed_names(component: Any, equations: list[Any]) -> set[str]:
+    """Names of the variables an equation or a reset of the component writes.
+
+    They become the parameters which are not constant: a state with its rate
+    rule, an algebraic variable with its assignment rule, the unknowns of an
+    implicit equation and the variable of a reset. A computed constant keeps
+    its initial assignment and stays constant, as in the flat conversion.
+
+    Args:
+        component: CellML component.
+        equations: the analyser equations of that component.
+
+    Returns:
+        The names of the variables of the component.
+    """
+    names: set[str] = set()
+    for equation in equations:
+        equation_type = equation.type()
+        ast = equation.ast()
+        if equation_type == EquationType.ODE:
+            left = ast.leftChild() if ast is not None else None
+            state = left.rightChild() if left is not None else None
+            variable = state.variable() if state is not None else None
+            if variable is not None:
+                names.add(variable.name())
+        elif equation_type == EquationType.ALGEBRAIC:
+            variable = _first_variable(ast.leftChild() if ast is not None else None)
+            if variable is not None:
+                names.add(variable.name())
+        elif equation_type == EquationType.NLA:
+            for analyser_variable in _equation_variables(equation):
+                member = _member_of(component.name(), analyser_variable.variable())
+                if member is not None:
+                    names.add(member.name())
+    for k in range(component.resetCount()):
+        variable = component.reset(k).variable()
+        if variable is not None:
+            names.add(variable.name())
+    return names
+
+
+def _add_component_parameters(
+    definition: libsbml.Model,
+    component: Any,
+    equations: list[Any],
+    ids: ComponentIds,
+    unit_ids: dict[str, str],
+) -> None:
+    """Add a parameter for every variable of a component to its definition.
+
+    A variable the component computes is not constant, the others are: their
+    value comes from the model the submodel is used in, through the
+    replacement of the variable (`_add_replacements`).
+
+    Args:
+        definition: the SBML model definition of the component.
+        component: CellML component.
+        equations: the analyser equations of that component.
+        ids: the local ids of the variables.
+        unit_ids: the SBML unit ids by CellML units name.
+
+    Raises:
+        MathConversionError: if an initial value names a variable which is
+            not part of the component.
+    """
+    computed = _computed_names(component, equations)
+    for k in range(component.variableCount()):
+        variable = component.variable(k)
+        if ids.is_voi(variable):
+            continue
+        sid = ids.id_for(variable)
+        parameter: libsbml.Parameter = definition.createParameter()
+        parameter.setId(sid)
+        parameter.setConstant(variable.name() not in computed)
+        parameter.setUnits(unit_id(variable.units().name(), unit_ids))
+        if sid != variable.name():
+            parameter.setName(variable.name())
+        initial = variable.initialValue()
+        if not initial:
+            continue
+        try:
+            parameter.setValue(float(initial))
+        except ValueError:
+            try:
+                reference = ids.lookup(component.name(), initial)
+            except KeyError as err:
+                raise MathConversionError(
+                    f"Initial value '{initial}' of variable '{variable.name()}' "
+                    f"in component '{component.name()}' is not a variable of "
+                    f"that component."
+                ) from err
+            assignment: libsbml.InitialAssignment = definition.createInitialAssignment()
+            assignment.setSymbol(sid)
+            node = libsbml.ASTNode(libsbml.AST_NAME)
+            node.setName(reference)
+            assignment.setMath(node)
+
+
+def _add_component_resets(
+    definition: libsbml.Model,
+    component: Any,
+    ids: ComponentIds,
+    sbml_unit_id: Callable[[str], str],
+) -> None:
+    """Add an event per reset of a component to its model definition."""
+    for k in range(component.resetCount()):
+        _add_reset(definition, component, component.reset(k), k + 1, ids, sbml_unit_id)
+
+
+def _replacement_path(variable: Any) -> list[str]:
+    """Names of the components from the top of the model down to a variable."""
+    path: list[str] = []
+    parent = variable.parent()
+    while isinstance(parent, libcellml.Component):
+        path.append(parent.name())
+        parent = parent.parent()
+    path.reverse()
+    return path
+
+
+def _add_replacements(
+    parameter: libsbml.Parameter,
+    analyser_variable: Any,
+    submodels: dict[str, str],
+    ids: ComponentIds,
+) -> None:
+    """Replace the variable of every component by a parameter of the model.
+
+    The parameter of the top level model replaces the parameter of every
+    component of the equivalence set, which is what the connections of the
+    CellML model say: they are one variable. A variable of a component which
+    is encapsulated by another one is addressed through the submodels down
+    to it (`comp:sBaseRef`).
+
+    Args:
+        parameter: the parameter of the top level model.
+        analyser_variable: the analyser variable of the equivalence set.
+        submodels: the id of the submodel of a component by component name.
+        ids: the local ids of the variables.
+    """
+    plugin = parameter.getPlugin(COMP_PACKAGE)
+    for member in equivalence_set(analyser_variable.variable()):
+        path = _replacement_path(member)
+        if not path or path[0] not in submodels:
+            continue
+        replaced: libsbml.ReplacedElement = plugin.createReplacedElement()
+        replaced.setSubmodelRef(submodels[path[0]])
+        reference: Any = replaced
+        for name in path[1:]:
+            reference.setIdRef(submodels[name])
+            reference = reference.createSBaseRef()
+        reference.setIdRef(ids.id_for(member))
+
+
+def _connected_variables(analyser_model: Any, model: libcellml.Model) -> list[Any]:
+    """Analyser variables whose equivalence set spans more than one component.
+
+    They become the parameters of the top level model, which replace the
+    parameters of the components. A variable of a single component stays
+    inside the model definition of that component, as does the initial value
+    which names a variable of the same component.
+
+    Args:
+        analyser_model: model of a libcellml analyser without errors.
+        model: the CellML model.
+
+    Returns:
+        The analyser variables, states first.
+    """
+    variables = [
+        analyser_model.state(k) for k in range(analyser_model.stateCount())
+    ] + analyser_variables(analyser_model)
+    voi = analyser_model.voi()
+    voi_variable = voi.variable() if voi is not None else None
+    connected = []
+    for analyser_variable in variables:
+        variable = analyser_variable.variable()
+        if voi_variable is not None and ids_of_set(variable) == ids_of_set(
+            voi_variable
+        ):
+            continue
+        components_of_set = {
+            member.parent().name()
+            for member in equivalence_set(variable)
+            if member.parent() is not None
+        }
+        if len(components_of_set) > 1:
+            connected.append(analyser_variable)
+    return connected
+
+
+def ids_of_set(variable: Any) -> frozenset[tuple[str, str]]:
+    """Keys of the variables of an equivalence set."""
+    return frozenset(variable_key(member) for member in equivalence_set(variable))
+
+
+def build_hierarchical_document(
+    model: libcellml.Model,
+    analyser_model: Any,
+    records: dict[str, Record] | None = None,
+) -> libsbml.SBMLDocument:
+    """Build the SBML document of a model, one submodel per component.
+
+    Every component of the CellML model becomes a model definition of the
+    hierarchical model composition package (`comp`) with the parameters of
+    its variables, the rules of its equations and the events of its resets;
+    a component encapsulated by another one is a submodel of the definition
+    of that component, the other components are submodels of the model. A
+    variable which is connected to a variable of another component is a
+    parameter of the model which replaces the parameter of every component
+    of the equivalence set, so that the flattened model is the model of
+    `build_document`.
+
+    Args:
+        model: the (flattened) CellML model.
+        analyser_model: its analyser model without errors.
+        records: metadata by the id of a CellML element
+            (`sbml2cellml.metadata.read_metadata`), none when `None`.
+
+    Returns:
+        The SBML document with the comp package, not validated.
+
+    Raises:
+        MathConversionError: for a construct which cannot be converted;
+            `convert_cellml2sbml` wraps it.
+        UnitsConversionError: for units which cannot be converted;
+            `convert_cellml2sbml` wraps it.
+    """
+    namespaces = libsbml.SBMLNamespaces(3, 2, COMP_PACKAGE, 1)
+    doc = libsbml.SBMLDocument(namespaces)
+    doc.setPackageRequired(COMP_PACKAGE, True)
+    document_plugin = doc.getPlugin(COMP_PACKAGE)
+    model_sbml: libsbml.Model = doc.createModel()
+    name = model.name() or "model"
+
+    unit_ids = add_units(model, model_sbml)
+    ids = VariableIds(analyser_model)
+    local = ComponentIds(model, analyser_model)
+    model_sbml.setId(ids.reserve(name))
+    model_sbml.setName(name)
+    voi = analyser_model.voi()
+    if voi is not None:
+        model_sbml.setTimeUnits(unit_id(voi.variable().units().name(), unit_ids))
+
+    def sbml_unit_id(units_name: str) -> str:
+        return unit_id(units_name, unit_ids)
+
+    number_units = NumberUnits(model, local, sbml_unit_id)
+    equations = _equations_by_component(analyser_model)
+    definitions: dict[str, str] = {}
+    used: set[str] = set()
+    for component in components(model):
+        definitions[component.name()] = unique_sid(
+            sanitize_id(f"{component.name()}_component"), used
+        )
+
+    submodels: dict[str, str] = {}
+    for component in components(model):
+        definition = document_plugin.createModelDefinition()
+        definition.setId(definitions[component.name()])
+        definition.setName(component.name())
+        add_units(model, definition)
+        component_equations = equations.get(component.name(), [])
+        _add_component_parameters(
+            definition, component, component_equations, local, unit_ids
+        )
+        for equation in component_equations:
+            _add_equation(definition, equation, local, number_units)
+        _add_component_resets(definition, component, local, sbml_unit_id)
+        logger.info(
+            "'%s' model definition of component '%s' with %d parameters",
+            definition.getId(),
+            component.name(),
+            definition.getNumParameters(),
+        )
+        for k in range(component.componentCount()):
+            child = component.component(k)
+            submodel: libsbml.Submodel = definition.getPlugin(
+                COMP_PACKAGE
+            ).createSubmodel()
+            submodel.setId(local.reserve(child.name()))
+            submodel.setModelRef(definitions[child.name()])
+            submodels[child.name()] = submodel.getId()
+
+    model_plugin = model_sbml.getPlugin(COMP_PACKAGE)
+    for k in range(model.componentCount()):
+        component = model.component(k)
+        submodel = model_plugin.createSubmodel()
+        submodel.setId(ids.reserve(component.name()))
+        submodel.setModelRef(definitions[component.name()])
+        submodels[component.name()] = submodel.getId()
+
+    reset_targets = {
+        ids.id_for(component.reset(k).variable())
+        for component in components(model)
+        for k in range(component.resetCount())
+    }
+    for analyser_variable in _connected_variables(analyser_model, model):
+        sid = ids.id_for(analyser_variable.variable())
+        variable_type = analyser_variable.type()
+        constant = (
+            variable_type in (VariableType.CONSTANT, VariableType.COMPUTED_CONSTANT)
+            and sid not in reset_targets
+        )
+        _add_parameter(model_sbml, analyser_variable, ids, unit_ids, constant=constant)
+        _add_replacements(
+            model_sbml.getParameter(sid), analyser_variable, submodels, local
+        )
+    logger.info(
+        "Hierarchical model '%s' with %d submodels and %d replaced variables",
+        model_sbml.getId(),
+        model_plugin.getNumSubmodels(),
+        model_sbml.getNumParameters(),
+    )
     _add_metadata(model_sbml, model, ids, unit_ids, records or {})
     return doc
 
