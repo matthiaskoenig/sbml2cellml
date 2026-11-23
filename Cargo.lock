@@ -39,7 +39,21 @@ name = "sbml2cellml-cli"
 version = "0.5.0"
 dependencies = [
  "sbml2cellml-cellml",
+ "sbml2cellml-convert",
 ]
+
+[[package]]
+name = "sbml2cellml-convert"
+version = "0.5.0"
+dependencies = [
+ "sbml2cellml-cellml",
+ "sbml2cellml-sbml",
+ "thiserror",
+]
+
+[[package]]
+name = "sbml2cellml-sbml"
+version = "0.5.0"
 
 [[package]]
 name = "syn"

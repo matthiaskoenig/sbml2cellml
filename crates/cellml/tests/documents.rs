@@ -283,3 +283,41 @@ fn a_variable_without_units_is_refused() {
         }
     );
 }
+
+#[test]
+fn the_degree_of_a_root_and_the_base_of_a_logarithm_are_qualifiers() {
+    let text = r#"<model xmlns="http://www.cellml.org/cellml/2.0#"
+                         xmlns:cellml="http://www.cellml.org/cellml/2.0#" name="qualifiers">
+      <component name="c">
+        <variable name="x" units="dimensionless"/>
+        <variable name="y" units="dimensionless"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply><eq/>
+            <ci>y</ci>
+            <apply><root/><degree><cn cellml:units="dimensionless">3</cn></degree><ci>x</ci></apply>
+          </apply>
+          <apply><eq/>
+            <ci>x</ci>
+            <apply><log/><logbase><cn cellml:units="dimensionless">2</cn></logbase><ci>y</ci></apply>
+          </apply>
+        </math>
+      </component>
+    </model>"#;
+    let document = cellml::read(text).unwrap();
+    let math = &document.model.components[0].math;
+    let qualifier = |node: &Node| match node {
+        Node::Apply { arguments, .. } => match &arguments[1] {
+            Node::Apply { arguments, .. } => match &arguments[0] {
+                Node::Qualifier { name, value } => match value.as_ref() {
+                    Node::Number { value, .. } => Some((name.clone(), *value)),
+                    _ => None,
+                },
+                _ => None,
+            },
+            _ => None,
+        },
+        _ => None,
+    };
+    assert_eq!(qualifier(&math[0]), Some(("degree".to_string(), 3.0)));
+    assert_eq!(qualifier(&math[1]), Some(("logbase".to_string(), 2.0)));
+}

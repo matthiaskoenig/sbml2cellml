@@ -228,6 +228,45 @@ def analyse_model(model: libcellml.Model) -> Any:
     return analyser_model
 
 
+def _check_rates(model: libcellml.Model, analyser_model: Any) -> None:
+    """Check that every state of an analysed model has a rate equation.
+
+    The analyser of libcellml reads a model whose rate equations give the
+    rate of a state through the rate of another (`d x / d t = d y / d t +
+    1` and `d y / d t = 2 - d x / d t`) as an ODE model without any
+    equation at all, and reports no issue
+    ([cellml/libcellml#1531](https://github.com/cellml/libcellml/issues/1531));
+    its generator crashes on such a model. The conversion would write a
+    model whose states stay at their initial value, so it refuses it
+    instead.
+
+    Args:
+        model: the CellML model, for the message.
+        analyser_model: its analyser model.
+
+    Raises:
+        CellML2SBMLConversionError: if a state has no rate equation.
+    """
+    with_equation = {
+        equation.state(k).variable().name()
+        for i in range(analyser_model.analyserEquationCount())
+        if (equation := analyser_model.analyserEquation(i)) is not None
+        for k in range(equation.stateCount())
+    }
+    missing = sorted(
+        analyser_model.state(k).variable().name()
+        for k in range(analyser_model.stateCount())
+        if analyser_model.state(k).variable().name() not in with_equation
+    )
+    if missing:
+        raise CellML2SBMLConversionError(
+            f"CellML model '{model.name()}' has no equation for the rate of "
+            f"{', '.join(repr(name) for name in missing)}: the analyser of "
+            f"libcellml leaves out a rate equation which uses the rate of "
+            f"another state (cellml/libcellml#1531)."
+        )
+
+
 def build_document(
     model: libcellml.Model,
     analyser_model: Any,
@@ -259,6 +298,8 @@ def build_document(
 
     model_sbml.setId(ids.reserve(name))
     model_sbml.setName(name)
+
+    _check_rates(model, analyser_model)
 
     voi = analyser_model.voi()
     if voi is not None:

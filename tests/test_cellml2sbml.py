@@ -230,6 +230,15 @@ def test_convert_a_cellml_1_0_model() -> None:
     assert validate_document(doc) == []
 
 
+def test_coupled_rate_equations_are_refused() -> None:
+    # the analyser of libcellml reads a model whose rate equations give the
+    # rate of a state through the rate of another as an ODE model without
+    # any equation, cellml/libcellml#1531; the conversion refuses it
+    # instead of writing states which stay at their initial value
+    with pytest.raises(CellML2SBMLConversionError, match="no equation for the rate"):
+        convert_cellml2sbml(DATA_DIR / "coupled_rates.cellml")
+
+
 def test_derivative_in_an_expression_becomes_rate_of() -> None:
     model = math_model({"v": "<apply><diff/><bvar><ci>t</ci></bvar><ci>x</ci></apply>"})
     doc = build_document(model, analyse(model), {})

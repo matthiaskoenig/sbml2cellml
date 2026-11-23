@@ -44,4 +44,4 @@ jobs:
       # the reader runs in a browser next to sbmlsim-core, so it must
       # build for the web
       - name: Build for the web
-        run: cargo build --locked --target wasm32-unknown-unknown -p sbml2cellml-cellml
+        run: cargo build --locked --target wasm32-unknown-unknown -p sbml2cellml-cellml -p sbml2cellml-convert

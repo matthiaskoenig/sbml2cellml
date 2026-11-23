@@ -282,23 +282,29 @@ The two pages are generated and committed, and they are rendered from the result
 
 ## Rust workspace { #rust }
 
-[Issue #68](https://github.com/matthiaskoenig/sbml2cellml/issues/68) moves the reader and the converter to rust, so that a conversion is fast and runs in a browser next to [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/), whose compiler takes SBML text and whose engine is WebAssembly: a CellML model converted to SBML in the browser is simulated there without a server. The first step is the reader, the python package keeps libcellml and libsbml until the rust path is measured against them.
+[Issue #68](https://github.com/matthiaskoenig/sbml2cellml/issues/68) moves the reader and the converter to rust, so that a conversion is fast and runs in a browser next to [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/), whose compiler takes SBML text and whose engine is WebAssembly: a CellML model converted to SBML in the browser is simulated there without a server. The reader and the conversion of CellML to SBML are there, the python package keeps libcellml and libsbml until the rust path is measured against them over the three checks.
 
 `crates/cellml` reads a document of CellML 2.0, 1.1 or 1.0 and gives the model with its unit definitions, its components with their variables and their mathematics, its connections, its encapsulation and its imports. A document of CellML 1.0 is read as it is written, with its `public_interface` and its groups of the relationship `encapsulation`, and gives the same model as the document of CellML 2.0 of the same system, so what reads the model afterwards does not know the version; the built in units CellML 2.0 renamed (`meter`, `liter`) are read as `metre` and `litre` unless the model defines units of that name, as libcellml reads them. The crate validates nothing and resolves nothing: an import keeps its `href`, there is no file system and no network access, and the crate builds for `wasm32-unknown-unknown`. `equivalence_sets` gives the variables a chain of connections makes one quantity, which the conversion to SBML needs. `crates/cli` is the command `cellml-info`, which prints what the reader reads of a document as JSON.
+
+`crates/sbml` holds the SBML level 3 version 2 document the conversion writes - unit definitions, parameters, initial assignments and rules, since a CellML model has no reactions - and its XML, which it writes itself: there is no libsbml in the rust workspace. `crates/convert` is the conversion. It reads the equations of the model where the python converter asks the analyser of libcellml: every equivalence set of variables becomes one parameter, a derivative on one side of an equation makes the other side the rate of a state, an equation with a single variable on one side determines that variable, an equation which determines no single variable becomes an algebraic rule, and a variable which an equation computes from constants only becomes an initial assignment. The custom units become unit definitions of the base units of SBML, and the mathematics keeps its operators, with the variable of integration written as the time of SBML and a derivative inside an expression as its `rateOf`. An equation whose variable its own right hand side uses, and a pair of equations which compute each other, are implicit and become algebraic rules, which is what SBML needs: an assignment rule must not depend on itself. An operator which SBML does not have, units which the model does not define, an imported component or imported units are refused, so that nothing is written which a simulator reads as something else. `crates/cli` holds the two commands, `cellml-info`, which prints what the reader reads of a document as JSON, and `cellml-convert`, which writes the SBML of a document.
 
 ```bash
 cargo test                  # the rust tests, over the CellML fixtures of the repository
 cargo clippy --all-targets  # the lints, denied in the workspace
 cargo fmt --check           # the formatting
-cargo build --release       # the cellml-info command in target/release
-cargo build --target wasm32-unknown-unknown -p sbml2cellml-cellml
+cargo build --release       # the cellml-info and cellml-convert commands in target/release
+cargo build --target wasm32-unknown-unknown -p sbml2cellml-cellml -p sbml2cellml-convert
+
+target/release/cellml-convert model.cellml            # writes model.xml
+target/release/cellml-convert -o - model.cellml       # to the standard output
 ```
 
 The `rust` workflow runs these in continuous integration. `scripts/cellml_parity.py` measures the reader against libcellml over the models of the Physiome selection and the CellML files of the repository, which is run locally like the checks of BioModels and of the Physiome repository:
 
 ```bash
 cargo build --release
-uv run python scripts/cellml_parity.py        # the corpus
+uv run python scripts/cellml_parity.py        # the reader against libcellml
+uv run python scripts/cellml2sbml_parity.py   # the converter against the python converter
 uv run python scripts/cellml_parity.py --count 10 -v
 ```
 
@@ -307,6 +313,12 @@ variable of CellML 1.0 from the presence of the attributes `public_interface` an
 and not from their values, so a variable which declares `private_interface="none"` is given a private
 interface ([cellml/libcellml#1528](https://github.com/cellml/libcellml/issues/1528)); the reader takes
 the value, as the specification defines it.
+
+`scripts/cellml2sbml_parity.py` measures the conversion against the python converter over the same corpus: it converts every document with both, validates the SBML of the rust converter with libsbml and compares the parameters with their value, their units and whether they are constant, the rules by kind and target, the initial assignments and the formula of every rule, which `libsbml.formulaToL3String` writes for both sides.
+
+Of the 102 documents of the corpus, the rust converter converts 92, and libsbml validates every one of those without an error. 68 documents are converted by both: 35 give the same SBML model, 23 differ in the notation or in the nesting of a formula only (the rust converter writes the mathematics as the CellML model has it and a square root without the degree two, the python converter writes the tree of the analyser of libcellml and keeps the degree with its units), and 10 differ in which variable of an equivalence set gives its parameter the id, since the python converter takes the variable the analyser of libcellml picked and the rust converter the first one of the document. 24 documents are converted by the rust converter alone, since the analyser of libcellml refuses the model; 1 by the python converter alone, the fixture with an import, which the rust converter does not resolve yet; 9 by neither.
+
+What the rust converter does not do yet: resolve the imports of a document, convert the resets of a model to events, and write the metadata of the CellML elements. Those are the next steps of the issue, together with the binding which lets the python package use the rust path.
 
 ## Release
 

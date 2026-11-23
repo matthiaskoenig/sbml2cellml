@@ -1,0 +1,20 @@
+[package]
+name = "sbml2cellml-convert"
+description = "Conversion of a CellML model to an SBML level 3 version 2 model"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+publish = false
+
+[lib]
+name = "convert"
+
+[dependencies]
+cellml = { package = "sbml2cellml-cellml", path = "../cellml" }
+sbml = { package = "sbml2cellml-sbml", path = "../sbml" }
+thiserror.workspace = true
+
+[lints]
+workspace = true

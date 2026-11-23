@@ -1,0 +1,15 @@
+[package]
+name = "sbml2cellml-sbml"
+description = "The SBML level 3 version 2 documents the converter writes"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+publish = false
+
+[lib]
+name = "sbml"
+
+[lints]
+workspace = true

@@ -136,6 +136,15 @@ pub enum Node {
         /// What is differentiated.
         expression: Box<Node>,
     },
+    /// A qualifier of an operator: the `<degree>` of a root and the
+    /// `<logbase>` of a logarithm, which keep their place among the
+    /// arguments of the `<apply>`.
+    Qualifier {
+        /// The name of the element, `degree` or `logbase`.
+        name: String,
+        /// Its expression.
+        value: Box<Node>,
+    },
     /// An element the reader does not model, by its name.
     Other(String),
 }
@@ -185,6 +194,15 @@ pub fn parse(node: X, cellml_ns: &str) -> Result<Node, MathError> {
             }
         }
         "apply" => apply(node, cellml_ns),
+        // the qualifiers of a root and of a logarithm, which SBML writes
+        // the same way; the `<bvar>` of a derivative is read with it
+        "degree" | "logbase" => match elements(node).first() {
+            Some(value) => Ok(Node::Qualifier {
+                name: name.to_string(),
+                value: Box::new(parse(*value, cellml_ns)?),
+            }),
+            None => Ok(Node::Other(name.to_string())),
+        },
         "piecewise" => piecewise(node, cellml_ns),
         // a `<math>` or a `<semantics>` around an expression
         "math" | "semantics" => {
@@ -267,9 +285,16 @@ fn derivative(arguments: &[X], cellml_ns: &str) -> Result<Node, MathError> {
         .find(|child| child.tag_name().name() == "ci")
         .map(text_of)
         .ok_or(MathError::BadDerivative)?;
-    let degree = elements(*bvar)
+    let degree_element = elements(*bvar)
         .into_iter()
         .find(|child| child.tag_name().name() == "degree")
+        .or_else(|| {
+            arguments
+                .iter()
+                .copied()
+                .find(|argument| argument.tag_name().name() == "degree")
+        });
+    let degree = degree_element
         .and_then(|child| {
             elements(child)
                 .first()
@@ -281,7 +306,7 @@ fn derivative(arguments: &[X], cellml_ns: &str) -> Result<Node, MathError> {
         .unwrap_or(1);
     let expression = arguments
         .iter()
-        .find(|argument| argument.tag_name().name() != "bvar")
+        .find(|argument| !matches!(argument.tag_name().name(), "bvar" | "degree"))
         .ok_or(MathError::BadDerivative)?;
     Ok(Node::Derivative {
         variable,
