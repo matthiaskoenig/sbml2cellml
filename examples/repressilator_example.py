@@ -79,9 +79,8 @@ def simulate_sbml(sbml_path: Path, csv_path: Path) -> pd.DataFrame:
 
 
 def simulate_libopencor(cellml_path: Path) -> pd.DataFrame:
-    """Simulate a CellML model with libopencor."""
-    df, _ = run_timecourse(cellml_path, start=0.0, end=END, steps=STEPS)
-    return df[["time", *PROTEINS]]
+    """Simulate a CellML model with libopencor, with the call of the SBML side."""
+    return run_timecourse(cellml_path, list(PROTEINS), start=0.0, end=END, steps=STEPS)
 
 
 def plot_roundtrip(timecourses: dict[str, pd.DataFrame], dark: bool = False) -> Figure:

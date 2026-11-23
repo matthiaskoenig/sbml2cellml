@@ -256,9 +256,59 @@ def load_model(sbml: str, base_path: Path | None = None) -> Any:
     return model
 
 
+def _column_units(sbml: str, columns: list[str]) -> dict[str, str]:
+    """The units of the columns of a result, by the model of the document.
+
+    The units are the ones the SBML model states: the `timeUnits` of the
+    model for `time`, the units of a compartment, a parameter or a species
+    (the substance units of an amount, substance over size for a
+    concentration in brackets) and the extent over the time of the model
+    for the rate of a reaction. A unit a model of level 1 or 2 does not
+    state is the built in unit of the quantity.
+
+    Args:
+        sbml: the SBML document the simulation ran, as a string.
+        columns: the names of the columns of the result.
+
+    Returns:
+        The unit of every column, empty for a column whose units the model
+        does not state.
+    """
+    document: libsbml.SBMLDocument = libsbml.readSBMLFromString(sbml)
+    model: libsbml.Model | None = None if document is None else document.getModel()
+    if model is None:
+        return dict.fromkeys(columns, "")
+    time_units = model.getTimeUnits() or "time"
+    substance = model.getSubstanceUnits() or "substance"
+    extent = model.getExtentUnits() or substance
+
+    def units_of(name: str) -> str:
+        """The units of one column of the result."""
+        if name == "time":
+            return time_units
+        concentration = name.startswith("[") and name.endswith("]")
+        sid = name[1:-1] if concentration else name
+        species: libsbml.Species | None = model.getSpecies(sid)
+        if species is not None:
+            amount = species.getSubstanceUnits() or substance
+            if not concentration:
+                return amount
+            compartment = model.getCompartment(species.getCompartment())
+            size = "" if compartment is None else compartment.getUnits()
+            return f"{amount}/{size or 'volume'}"
+        for element in (model.getCompartment(sid), model.getParameter(sid)):
+            if element is not None:
+                return element.getUnits()
+        if model.getReaction(sid) is not None:
+            return f"{extent}/{time_units}"
+        return ""
+
+    return {name: units_of(name) for name in columns}
+
+
 def run_timecourse(
     sbml: str | Path,
-    selections: list[str],
+    selections: list[str] | None = None,
     start: float = 0.0,
     end: float = 1.0,
     steps: int = 100,
@@ -267,15 +317,23 @@ def run_timecourse(
     maximum_number_of_steps: int | None = None,
     scale_tolerance: bool = True,
     warmup: bool = False,
+    units: dict[str, str] | None = None,
     timings: dict[str, float] | None = None,
     base_path: Path | None = None,
 ) -> pd.DataFrame:
     """Uniform timecourse of an SBML model.
 
+    The call is the one of `sbml2cellml.simulate.run_timecourse`, which
+    simulates the CellML model of the same conversion: the same arguments
+    in the same order, a frame with `time` in the first column and the
+    selected variables after it, and the units of the columns in `units`
+    when a dictionary is given.
+
     Args:
-        sbml: SBML document as string, or the path of an SBML file.
+        sbml: path of an SBML file, or the document as a string.
         selections: the variables of the result after `time`, by id; a
-            species in brackets (`[S1]`) is its concentration.
+            species in brackets (`[S1]`) is its concentration, and every
+            variable of the model is taken when `None`.
         start: start time.
         end: end time.
         steps: number of intervals, the result has `steps + 1` rows.
@@ -294,6 +352,8 @@ def run_timecourse(
             out of the integration time, as on the CellML side, where
             libopencor generates the code of a model when it runs it the
             first time.
+        units: filled with the units of every column when a dictionary is
+            given, by the name of the column (`_column_units`).
         timings: filled with the wall time of the phases when given:
             `setup` is the conversion, the compilation and the loading of
             the model (nothing of it when the model is in the cache of
@@ -304,7 +364,8 @@ def run_timecourse(
 
     Returns:
         The timecourse with `time` as first column and the selections after
-        it, one row per time point.
+        it, every variable of the model when none are given, one row per
+        time point.
 
     Raises:
         ImportError: if sbmlsim-core is not installed.
@@ -339,7 +400,9 @@ def run_timecourse(
         "output": {"uniform": {"steps": steps}},
         "preinit": [],
         "changes": [],
-        "selections": list(selections),
+        # sbmlsim-core writes `time` as the first column of every result
+        # and takes every variable of the model for an empty selection
+        "selections": [] if selections is None else list(selections),
         "settings": solver_settings(
             relative_tolerance, absolute_tolerance, maximum_number_of_steps
         ),
@@ -353,4 +416,8 @@ def run_timecourse(
     if timings is not None:
         timings["setup"] = prepared - started
         timings["simulate"] = simulated - prepared
-    return pd.DataFrame(output.values, columns=output.columns)
+    frame = pd.DataFrame(output.values, columns=output.columns)
+    if units is not None:
+        units.clear()
+        units.update(_column_units(text, list(frame.columns)))
+    return frame

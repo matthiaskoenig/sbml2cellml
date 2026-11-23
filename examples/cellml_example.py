@@ -83,6 +83,7 @@ if __name__ == "__main__":
     write_model(model=model, cellml_path=cellml_path)
     console.print(f"CellML written to '{cellml_path}'")
 
-    df, units = run_timecourse(cellml_path, start=0.0, end=100.0, steps=100)
+    units: dict[str, str] = {}
+    df = run_timecourse(cellml_path, start=0.0, end=100.0, steps=100, units=units)
     console.print(df)
     plot_timecourse(df=df, units=units)

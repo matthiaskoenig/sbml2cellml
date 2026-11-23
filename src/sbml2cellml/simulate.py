@@ -20,6 +20,9 @@ logger = logging.getLogger(__name__)
 
 #: first column of the timecourse of a model without variable of integration
 STEADY_STATE_TIME = "time"
+#: name libopencor reads a document from memory under, for a model which is
+#: given as text instead of a file
+MODEL_URL = "https://sbml2cellml.local/model.cellml"
 #: internal steps of the ODE solver between two time points of the output.
 #: The 500 of libopencor end the simulation of many models ("mxstep steps
 #: taken before reaching tout"), mostly with tight tolerances or few outputs
@@ -50,6 +53,43 @@ def _raise_on_issues(what: str, issues: Any) -> None:
     descriptions = [issue.description for issue in issues]
     if descriptions:
         raise SimulationError(f"{what}: " + "; ".join(descriptions))
+
+
+def _document_text(cellml: str | Path) -> str | None:
+    """The document when the model is given as text, `None` for a path.
+
+    Args:
+        cellml: path of a CellML file, or the document as a string.
+
+    Returns:
+        The document, `None` when `cellml` names a file.
+    """
+    if isinstance(cellml, Path):
+        return None
+    return cellml if cellml.lstrip().startswith("<") else None
+
+
+def _columns(columns: list[str], selections: list[str]) -> list[str]:
+    """The columns of the selections, with the first column before them.
+
+    Args:
+        columns: the columns of the result, the variable of integration
+            first.
+        selections: the names of the selected variables, in their order.
+
+    Returns:
+        The names of the columns to keep.
+
+    Raises:
+        SimulationError: if the result has no column of a selection.
+    """
+    first = columns[0]
+    missing = [name for name in selections if name not in columns]
+    if missing:
+        raise SimulationError(
+            "result: the model has no variable " + ", ".join(f"'{m}'" for m in missing)
+        )
+    return [first] + [name for name in selections if name != first]
 
 
 def _variable_name(name: str) -> str:
@@ -127,21 +167,31 @@ def _result_names(task: Any, steady_state: bool) -> list[str]:
 
 
 def run_timecourse(
-    cellml_path: Path,
+    cellml: str | Path,
+    selections: list[str] | None = None,
     start: float = 0.0,
-    end: float = 100.0,
+    end: float = 1.0,
     steps: int = 100,
     relative_tolerance: float | None = None,
     absolute_tolerance: float | None = None,
-    maximum_number_of_steps: int = MAXIMUM_NUMBER_OF_STEPS,
+    maximum_number_of_steps: int | None = None,
     scale_tolerance: bool = True,
     warmup: bool = False,
+    units: dict[str, str] | None = None,
     timings: dict[str, float] | None = None,
-) -> tuple[pd.DataFrame, dict[str, str]]:
+) -> pd.DataFrame:
     """Run a uniform timecourse of a CellML model.
 
+    The call is the one of `sbml2cellml.sbmlsim.run_timecourse`, which
+    simulates the SBML model of the same conversion: the same arguments in
+    the same order, a frame with the variable of integration in the first
+    column and the selected variables after it, and the units of the
+    columns in `units` when a dictionary is given.
+
     Args:
-        cellml_path: path of the CellML file.
+        cellml: path of the CellML file, or the document as a string.
+        selections: the variables of the result after the variable of
+            integration, by name; every variable of the model when `None`.
         start: start time of the output.
         end: end time of the output.
         steps: number of steps, the output has `steps + 1` rows.
@@ -150,7 +200,8 @@ def run_timecourse(
         absolute_tolerance: absolute tolerance of the ODE solver, the
             libopencor default when `None`.
         maximum_number_of_steps: number of internal steps the ODE solver may
-            take between two time points of the output.
+            take between two time points of the output,
+            `MAXIMUM_NUMBER_OF_STEPS` when `None`.
         scale_tolerance: multiply the absolute tolerance with the smallest
             initial value of a state when it is below one, so that the
             tolerance stays below the states of a model whose values are
@@ -164,31 +215,40 @@ def run_timecourse(
             generates the code of a model when it runs it the first time,
             which takes longer than the integration of a small model, so a
             measurement of the integration alone needs it.
+        units: filled with the units of every column when a dictionary is
+            given, by the name of the column.
         timings: filled with the wall time of the phases when given:
             `setup` is everything but the integration of the result,
             `simulate` the integration.
 
     Returns:
         The timecourse with the variable of integration in the first column
-        followed by the states, the algebraic variables, the constants and
-        the computed constants, and the units of every column. A model
-        without a variable of integration (an algebraic model, which
-        libopencor solves as a steady state) has the same values at every
-        time point, in a first column `time` of the requested time points.
+        followed by the selections, which are the states, the algebraic
+        variables, the constants and the computed constants of the model
+        when none are given. A model without a variable of integration (an
+        algebraic model, which libopencor solves as a steady state) has the
+        same values at every time point, in a first column `time` of the
+        requested time points.
 
     Raises:
         ImportError: if libopencor is not installed.
         SimulationError: if libopencor reports issues, e.g., for a model which
-            is not valid or not fully constrained, or two result columns get
-            the same name.
+            is not valid or not fully constrained, two result columns get
+            the same name, or the model has no variable of a selection.
     """
     entered = time.perf_counter()
     libopencor = _libopencor()
-    path = Path(cellml_path).resolve()
-    if not path.is_file():
-        raise SimulationError(f"file: '{path}' does not exist")
+    document_text = _document_text(cellml)
+    source = Path(cellml) if document_text is None else Path(MODEL_URL)
+    if document_text is None:
+        source = source.resolve()
+        if not source.is_file():
+            raise SimulationError(f"file: '{source}' does not exist")
 
-    file = libopencor.File(str(path))
+    file = libopencor.File(str(source))
+    if document_text is not None:
+        # libopencor reads the document from memory, as it reads a file
+        file.contents = list(document_text.encode("utf-8"))
     _raise_on_issues("file", file.issues)
     document = libopencor.SedDocument(file)
     _raise_on_issues("document", document.issues)
@@ -206,7 +266,11 @@ def run_timecourse(
             simulation.ode_solver.relative_tolerance = relative_tolerance
         if absolute_tolerance is not None:
             simulation.ode_solver.absolute_tolerance = absolute_tolerance
-        simulation.ode_solver.maximum_number_of_steps = maximum_number_of_steps
+        simulation.ode_solver.maximum_number_of_steps = (
+            MAXIMUM_NUMBER_OF_STEPS
+            if maximum_number_of_steps is None
+            else maximum_number_of_steps
+        )
 
     started = time.perf_counter()
 
@@ -240,7 +304,7 @@ def run_timecourse(
 
     task = instance.tasks[0]
     data: dict[str, Any] = {}
-    units: dict[str, str] = {}
+    column_units: dict[str, str] = {}
     rows = steps + 1 if steady_state else len(task.voi)
     names = _result_names(task, steady_state)
 
@@ -249,7 +313,7 @@ def run_timecourse(
         if name in data:
             raise SimulationError(f"result: the name '{name}' occurs twice")
         data[name] = values
-        units[name] = unit
+        column_units[name] = unit
 
     if steady_state:
         # one value per variable, repeated at the requested time points
@@ -279,31 +343,50 @@ def run_timecourse(
         )
         index += 1
 
-    logger.info("Simulated '%s': %d rows, %d columns", path, steps + 1, len(data))
+    frame = pd.DataFrame(data)
+    if selections is not None:
+        frame = frame[_columns(list(frame.columns), selections)]
+    if units is not None:
+        units.clear()
+        units.update({name: column_units[name] for name in frame.columns})
+    logger.info(
+        "Simulated '%s': %d rows, %d columns", source, steps + 1, len(frame.columns)
+    )
     if timings is not None:
         timings["setup"] = started - entered
         timings["simulate"] = simulated - started
-    return pd.DataFrame(data), units
+    return frame
 
 
 def plot_timecourse(
-    df: pd.DataFrame, units: dict[str, str], show: bool = True
+    df: pd.DataFrame, units: dict[str, str] | None = None, show: bool = True
 ) -> Figure:
     """Plot every column of a timecourse against the first column.
 
+    The frame is the one of `run_timecourse` of either simulator, of this
+    module or of `sbml2cellml.sbmlsim`, and the units are the ones they
+    fill in when a dictionary is given.
+
     Args:
         df: timecourse from `run_timecourse`.
-        units: units of the columns from `run_timecourse`.
+        units: units of the columns from `run_timecourse`, no unit in the
+            labels when `None`.
         show: call `matplotlib.pyplot.show`.
 
     Returns:
         The figure.
     """
+
+    def label(name: str) -> str:
+        """The name of a column with its unit, when it is known."""
+        unit = "" if units is None else units.get(name, "")
+        return f"{name} [{unit}]" if unit else name
+
     fig, ax = plt.subplots(nrows=1, ncols=1)
     voi = df.columns[0]
     for name in df.columns[1:]:
-        ax.plot(df[voi], df[name], label=f"{name} [{units[name]}]")
-    ax.set_xlabel(f"{voi} [{units[voi]}]")
+        ax.plot(df[voi], df[name], label=label(name))
+    ax.set_xlabel(label(voi))
     ax.set_ylabel("value")
     ax.legend()
     if show:

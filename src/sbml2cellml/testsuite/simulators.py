@@ -103,21 +103,17 @@ def simulate_cellml(
         `columns` (`time` first, then every variable), `rows`,
         `setup_seconds` and `seconds`.
     """
-    from sbml2cellml.simulate import MAXIMUM_NUMBER_OF_STEPS, run_timecourse
+    from sbml2cellml.simulate import run_timecourse
 
     timings: dict[str, float] = {}
-    df, _ = run_timecourse(
+    df = run_timecourse(
         Path(cellml_path),
         start=start,
         end=end,
         steps=steps,
         relative_tolerance=relative_tolerance,
         absolute_tolerance=absolute_tolerance,
-        maximum_number_of_steps=(
-            MAXIMUM_NUMBER_OF_STEPS
-            if maximum_number_of_steps is None
-            else maximum_number_of_steps
-        ),
+        maximum_number_of_steps=maximum_number_of_steps,
         warmup=True,
         timings=timings,
     )

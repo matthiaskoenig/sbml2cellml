@@ -9,6 +9,27 @@ Both sides of a conversion can be simulated, which is how a conversion is checke
 
 Both simulators integrate with CVODE of SUNDIALS and run in the same python process, so a script can simulate a model and its conversion side by side.
 
+Both functions take the same call, so the two sides of a conversion are simulated the same way:
+
+```python
+run_timecourse(
+    model,  # the file, or the document as a string
+    selections=None,  # the variables of the result, every one when None
+    start=0.0,
+    end=1.0,
+    steps=100,
+    relative_tolerance=None,  # the default of the simulator when None
+    absolute_tolerance=None,
+    maximum_number_of_steps=None,
+    scale_tolerance=True,  # the absolute tolerance follows small states
+    warmup=False,  # a discarded run before the timed one
+    units=None,  # filled with the unit of every column
+    timings=None,  # filled with the wall time of the phases
+)
+```
+
+The result is a pandas data frame with the time in the first column and the selected variables after it, `steps + 1` rows. The variable of integration is always there, it is never a selection; `units` and `timings` are filled when a dictionary is given, as the solver settings and the two simulators below describe.
+
 ## Setup
 
 The `simulate` extra adds both simulators together with pandas and matplotlib for the timecourse results and plots, see [Installation](installation.md#simulators):
@@ -30,7 +51,7 @@ df = run_timecourse(
 )
 ```
 
-The first argument is the path of an SBML file or the document as a string, the second the variables of the result: an id, or `[S1]` for the concentration of a species. The frame has `time` as first column and the selections after it, one row per time point (`steps + 1` rows). `relative_tolerance`, `absolute_tolerance` and `maximum_number_of_steps` set the solver, as for the CellML side below.
+The first argument is the path of an SBML file or the document as a string, the second the variables of the result: an id, or `[S1]` for the concentration of a species. Without selections the frame holds every variable of the model, as on the CellML side. `relative_tolerance`, `absolute_tolerance` and `maximum_number_of_steps` set the solver, as for the CellML side below, and `units` takes the units the SBML model states for the columns (the `timeUnits` of the model for `time`, the substance units of an amount, substance over size for a concentration and the extent over the time of the model for the rate of a reaction).
 
 The converted CellML model has one variable per compartment, parameter and species, named by the SBML id, where a species is a concentration unless it has `hasOnlySubstanceUnits` (a species in concentration whose compartment changes in time has the additional variable `<species>_amount`), so selecting `[S1]` gives the column which the CellML variable `S1` is compared with.
 
@@ -56,16 +77,17 @@ print(timings)  # {'setup': 0.0185, 'simulate': 0.0004}
 from pathlib import Path
 from sbml2cellml.simulate import plot_timecourse, run_timecourse
 
-df, units = run_timecourse(Path("model.cellml"), start=0.0, end=100.0, steps=100)
+units: dict[str, str] = {}
+df = run_timecourse(Path("model.cellml"), start=0.0, end=100.0, steps=100, units=units)
 plot_timecourse(df, units)
 ```
 
-`run_timecourse` returns a pandas data frame with the variable of integration in the first column, followed by the states, the algebraic variables, the constants and the computed constants, and a dictionary with the units of every column. The column names are the variable names of the CellML model, i.e., the SBML ids for a converted model; a name which more than one variable of the model has keeps its component (`membrane/V`), so the variables of a model of many components stay apart. `steps` is the number of intervals, so the frame has `steps + 1` rows, like the SBML result above. `relative_tolerance` and `absolute_tolerance` set the tolerances of the solver (CVODE). `maximum_number_of_steps` is the number of internal steps the solver may take between two time points of the output, 100000 by default: the 500 steps of libopencor end the simulation of many models with `mxstep steps taken before reaching tout`, mostly with tight tolerances or few time points.
+`run_timecourse` returns a pandas data frame with the variable of integration in the first column, followed by the states, the algebraic variables, the constants and the computed constants of the model, or by the `selections` when they are given. `plot_timecourse` plots every column against the first one and takes the frame of either simulator, with the units of the labels when they were collected. The column names are the variable names of the CellML model, i.e., the SBML ids for a converted model; a name which more than one variable of the model has keeps its component (`membrane/V`), so the variables of a model of many components stay apart. `steps` is the number of intervals, so the frame has `steps + 1` rows, like the SBML result above. `relative_tolerance` and `absolute_tolerance` set the tolerances of the solver (CVODE). `maximum_number_of_steps` is the number of internal steps the solver may take between two time points of the output, 100000 by default: the 500 steps of libopencor end the simulation of many models with `mxstep steps taken before reaching tout`, mostly with tight tolerances or few time points.
 
 The absolute tolerance follows the states of the model as on the SBML side: it is multiplied with the smallest initial value of a state when that value is below one (`scale_tolerance=False` switches it off). libopencor fills the arrays of the states only when it runs, so a model with small states is run once with the given tolerance, which gives the initial values, and again with the scaled one; a model whose states are of the order of one runs once. `timings` takes the wall time of the phases as above, with the first run as part of the `setup`.
 
 A model without differential equations has no variable of integration (the converter leaves `time` out of an SBML model without rate rules and reactions); libopencor computes it as a steady state, and `run_timecourse` returns its values at every requested time point, with the time points in a first column `time`.
 
-libopencor reports a model it cannot simulate, e.g., an invalid or underconstrained model, as issues, which are raised as `SimulationError`. Without libopencor the import of `sbml2cellml.simulate` works, `run_timecourse` raises an `ImportError` with the installation hint.
+The CellML model is read from a file or from a string, as the SBML model is: a document which is given as text is handed to libopencor in memory. libopencor reports a model it cannot simulate, e.g., an invalid or underconstrained model, as issues, which are raised as `SimulationError`, and so is a selection which the model has no variable of. Without libopencor the import of `sbml2cellml.simulate` works, `run_timecourse` raises an `ImportError` with the installation hint.
 
 `examples/cellml_example.py` builds a small model with libcellml directly and simulates it. The [roundtrip example](roundtrip.md) simulates an SBML model, its CellML conversion and the SBML model of the roundtrip and plots the three timecourses side by side.

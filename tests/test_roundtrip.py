@@ -92,7 +92,7 @@ def test_roundtrip_test_model(tmp_path: Path) -> None:
     result = simulate_sbml(
         document_to_string(doc), ["m"], start=0.0, end=END, steps=STEPS
     )
-    df, _ = run_timecourse(TEST_MODEL_PATH, start=0.0, end=END, steps=STEPS)
+    df = run_timecourse(TEST_MODEL_PATH, start=0.0, end=END, steps=STEPS)
     np.testing.assert_allclose(result[:, 0], df["m"].to_numpy(), rtol=1e-4)
 
 
@@ -110,3 +110,27 @@ def test_roundtrip_simple_model(tmp_path: Path) -> None:
     )
     assert expected[0, 0] == 10.0 and expected[-1, 0] < 1.0  # S1 really decays
     np.testing.assert_allclose(result, expected, rtol=1e-4, atol=1e-8)
+
+
+def test_the_two_simulators_take_the_same_call() -> None:
+    """Both `run_timecourse` functions have the same arguments in order."""
+    import inspect
+    from collections.abc import Callable
+    from typing import Any
+
+    from sbml2cellml.sbmlsim import run_timecourse as sbml_timecourse
+    from sbml2cellml.simulate import run_timecourse as cellml_timecourse
+
+    def arguments(function: Callable[..., Any]) -> list[tuple[str, object]]:
+        parameters = list(inspect.signature(function).parameters.values())
+        return [(p.name, p.default) for p in parameters[1:] if p.name != "base_path"]
+
+    sbml_arguments = arguments(sbml_timecourse)
+    cellml_arguments = arguments(cellml_timecourse)
+    assert sbml_arguments == cellml_arguments
+    assert [name for name, _ in sbml_arguments][:4] == [
+        "selections",
+        "start",
+        "end",
+        "steps",
+    ]
