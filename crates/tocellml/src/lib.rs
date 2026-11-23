@@ -12,6 +12,7 @@
 //! decides whether the variables carry their units or are all
 //! `dimensionless`, as in the python converter.
 
+pub mod algebraic;
 pub mod eval;
 pub mod events;
 pub mod ids;

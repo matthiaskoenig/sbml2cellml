@@ -11,10 +11,10 @@ variable it determines, and the names of the unit definitions. The
 mathematics is compared as a canonical expression of the MathML of both
 sides, so an equation which differs is found whatever the two write it as.
 
-The rust converter refuses what it does not convert yet (an algebraic rule,
-an event, an initial assignment, a formula with a delay), which the summary
-counts apart from a document which needs a package the reader does not read
-(`comp`, whose submodels the python converter flattens with libsbml).
+The rust converter refuses what CellML cannot express (a formula with a
+delay), which the summary counts apart from a document which needs a package
+the reader does not read (`comp`, whose submodels the python converter
+flattens with libsbml).
 
 The units of a variable and of a number are compared by what they are and
 not by the name they carry: both converters take a unit definition of the
@@ -25,14 +25,14 @@ with it the python converter do not take for each other). An initial value
 is compared to twelve significant digits, since libcellml writes fifteen of
 them and the rust writer every digit of the double.
 
-Of the 1692 cases of the SBML test suite, 1427 are converted by both
-converters and 1426 of them give the same CellML model; 140 are refused by
-the rust converter (an algebraic rule, a formula with a delay or a
-factorial) and 125 need `comp`. Of the 1075 models of BioModels, 1063 are
-converted by both and 1061 of them give the same model.
+Of the 1692 cases of the SBML test suite, 1528 are converted by both
+converters and 1526 of them give the same CellML model; 39 are refused by the
+rust converter (a formula with a delay) and 125 need `comp`. Of the 1075
+models of BioModels, 1063 are converted by both and 1061 of them give the
+same model.
 
-The three models which differ differ because the rust converter is right and
-the python converter follows libsbml:
+The four models which differ differ because the rust converter is right or
+as right as the python converter, which follows libsbml:
 
 - case `01282` of the test suite: libsbml evaluates a number as a condition
   of a `piecewise` as true only when it is 1, where every simulator and the
@@ -43,6 +43,13 @@ the python converter follows libsbml:
   reader of SBML writes as an assignment rule of the id it gives the
   reference or as the number it is, where the python converter takes the
   stoichiometry as it stands (issue #86).
+- case `01589` of the test suite: the guess of the solver for the variable
+  of an algebraic rule. The rust converter solves the rule with the
+  conventions of a simulator of SBML, where the unset value of a parameter
+  of the rule is the 1 both converters give it; libsbml evaluates the
+  formula to NaN instead, so the python converter keeps the value of the
+  model as the guess. Both models hold the same equation and the solver of
+  the simulation finds the same solution.
 
 The script is run locally, like the checks of BioModels and of the Physiome
 repository, and needs the command line of the rust workspace:

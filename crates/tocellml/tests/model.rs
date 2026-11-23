@@ -4,7 +4,7 @@ mod common;
 
 use cellml::{Constant, Node, Operator};
 use common::{conversion, equations, level3, units, variables};
-use tocellml::model::{COMPONENT, ConvertError, convert};
+use tocellml::model::{COMPONENT, convert};
 
 #[test]
 fn a_reaction_gives_the_rate_and_the_differential_equations() {
@@ -648,25 +648,6 @@ fn a_document_of_level_2_is_converted_as_one_of_level_3() {
     assert_eq!(
         equations(&conversion),
         ["d1(S1)/d(time) = minus(times(k, S1))"]
-    );
-}
-
-#[test]
-fn what_this_stage_does_not_convert_is_refused() {
-    let algebraic = sbml::read(&level3(
-        r#"<listOfParameters>
-             <parameter id="x" value="1" constant="false"/>
-           </listOfParameters>
-           <listOfRules>
-             <algebraicRule>
-               <math xmlns="http://www.w3.org/1998/Math/MathML"><ci>x</ci></math>
-             </algebraicRule>
-           </listOfRules>"#,
-    ))
-    .expect("the document is read");
-    assert_eq!(
-        convert(&algebraic, "m").err(),
-        Some(ConvertError::AlgebraicRule)
     );
 }
 

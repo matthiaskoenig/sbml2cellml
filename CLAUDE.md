@@ -397,9 +397,23 @@ uv run python scripts/convert_benchmark.py   # the two engines over the corpus, 
   `_amount` variable sets the amount; an event without a trigger or an
   assignment, one with a delay which has mathematics and one whose formulas
   use a factorial, a delay or a `rateOf` is not converted, with a warning,
-  as in the python converter). An algebraic rule and
-  a model which needs a package are refused (`ConvertError`), which the
-  later stages of issue #82 convert; `scripts/sbml2cellml_parity.py`
+  as in the python converter). `algebraic.rs` converts the algebraic rules
+  of the model to the implicit equations `0 = formula` of CellML, which name
+  no variable where libcellml needs to know which one the equation
+  determines: `match_rules` gives every rule a variable of its formula which
+  nothing else determines (a compartment, parameter, species or species
+  reference which is not constant, no target of another rule and no species
+  a reaction changes), with a maximum matching when several rules share
+  their candidates, and orders a rule after the rules which determine the
+  other unknowns it uses; `solve` solves the rules at the start with the
+  secant method, which is the guess of the solver and the size of a
+  compartment an algebraic rule determines, and
+  `add_constants_of_algebraic_rules` of `model.rs` states the other
+  variables of a rule as the equations `y = value`, since libcellml takes
+  any variable with an initial value in an implicit equation for its
+  unknown. A model which needs a package is refused (`ConvertError`), and a
+  formula with a delay has no counterpart in CellML;
+  `scripts/sbml2cellml_parity.py`
   compares what both converters write over the examples, the SBML test
   suite and the BioModels cache (local only, as the other corpus checks).
   `crates/python` is the module `sbml2cellml._rust` (pyo3, `abi3-py314`,

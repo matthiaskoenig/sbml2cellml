@@ -35,6 +35,7 @@
 //! takes the model instead of a conversion writing something else: an
 //! algebraic rule, an event and an initial assignment.
 
+use crate::algebraic;
 use crate::eval::Start;
 use crate::events::{self, Event};
 use crate::math::{self, Functions, MathError, Names};
@@ -58,10 +59,6 @@ pub enum ConvertError {
     /// A formula which has no counterpart in CellML.
     #[error("{0}")]
     Math(#[from] MathError),
-    /// An algebraic rule, which needs the variable it determines and a
-    /// solution at the start.
-    #[error("an algebraic rule is not converted")]
-    AlgebraicRule,
 }
 
 /// A converted model and what the conversion has to say about it.
@@ -91,6 +88,9 @@ struct Formulas {
     assignment_rules: Vec<(String, Sbml)>,
     /// The formula of every initial assignment, by the symbol it computes.
     initial_assignments: Vec<(String, Sbml)>,
+    /// The formula which is zero of every algebraic rule, by the variable
+    /// the rule determines, in the order the equations are written.
+    algebraic_rules: Vec<(String, Sbml)>,
     /// The right-hand side of `d x / d time` by the target of a rate rule.
     rate_rules: Vec<(String, Sbml)>,
     /// The right-hand side of `d x / d time` from the reactions, by species
@@ -199,6 +199,14 @@ fn evaluate(
             )),
         }
     }
+    // the solution of the algebraic rules at the start is the guess of the
+    // solver of the simulation, and the size of a compartment an algebraic
+    // rule determines converts the initial values of its species
+    values.initial.extend(algebraic::solve(
+        &formulas.algebraic_rules,
+        &mut start,
+        warnings,
+    ));
     for compartment in &model.compartments {
         let size = if assigned.contains(compartment.id.as_str()) {
             start.value(&compartment.id).ok()
@@ -245,7 +253,6 @@ fn apply(op: Op, args: Vec<Sbml>) -> Sbml {
 /// of the document does in the python converter.
 pub fn convert(document: &Document, name: &str) -> Result<Conversion, ConvertError> {
     let model = &document.model;
-    refuse_what_is_not_converted(model)?;
     let mut warnings = Vec::new();
     let formulas = collect(model, &mut warnings)?;
     build(document, name, &formulas, &mut warnings)
@@ -253,17 +260,6 @@ pub fn convert(document: &Document, name: &str) -> Result<Conversion, ConvertErr
 
 /// Refuses a model with what this stage does not convert, so that the python
 /// converter takes it instead.
-fn refuse_what_is_not_converted(model: &Model) -> Result<(), ConvertError> {
-    if model
-        .rules
-        .iter()
-        .any(|rule| matches!(rule, Rule::Algebraic { .. }))
-    {
-        return Err(ConvertError::AlgebraicRule);
-    }
-    Ok(())
-}
-
 /// The formulas of the rules and the reactions of a model, with the calls of
 /// the function definitions and the `rateOf` symbols expanded.
 fn collect(model: &Model, warnings: &mut Vec<String>) -> Result<Formulas, ConvertError> {
@@ -276,6 +272,7 @@ fn collect(model: &Model, warnings: &mut Vec<String>) -> Result<Formulas, Conver
         time_id,
         ..Formulas::default()
     };
+    let mut algebraic: Vec<(String, Sbml)> = Vec::new();
     for rule in &model.rules {
         match rule {
             Rule::Assignment { variable, math, .. } => {
@@ -300,9 +297,33 @@ fn collect(model: &Model, warnings: &mut Vec<String>) -> Result<Formulas, Conver
                     ));
                 }
             }
-            Rule::Algebraic { .. } => return Err(ConvertError::AlgebraicRule),
+            Rule::Algebraic { id, math } => {
+                if let Some(math) = math {
+                    let name = id.clone().map_or_else(
+                        || format!("{}", algebraic.len() + 1),
+                        |id| format!("'{id}'"),
+                    );
+                    algebraic.push((name, functions.expand(math)?));
+                } else {
+                    warnings.push(format!(
+                        "the algebraic rule '{}' has no mathematics and is ignored",
+                        id.clone().unwrap_or_default()
+                    ));
+                }
+            }
         }
     }
+    // an algebraic rule names no variable, where libcellml needs to know
+    // which variable the implicit equation determines
+    let determined: HashSet<&str> = formulas
+        .assignment_rules
+        .iter()
+        .chain(formulas.rate_rules.iter())
+        .map(|(id, _)| id.as_str())
+        .collect();
+    let matched = algebraic::match_rules(model, &algebraic, &determined, warnings);
+    drop(determined);
+    formulas.algebraic_rules = matched;
     formulas.events = events::collect(model, &functions, &mut used, warnings)?;
     for assignment in &model.initial_assignments {
         if let Some(math) = &assignment.math {
@@ -361,11 +382,13 @@ fn collect(model: &Model, warnings: &mut Vec<String>) -> Result<Formulas, Conver
         .assignment_rules
         .iter()
         .chain(formulas.rate_rules.iter())
+        .chain(formulas.algebraic_rules.iter())
         .map(|(id, _)| id.as_str())
         .collect();
     let solved: HashSet<&str> = formulas
         .rate_rules
         .iter()
+        .chain(formulas.algebraic_rules.iter())
         .map(|(id, _)| id.as_str())
         .collect();
     let changing = changing(model, &formulas.assignment_rules, &solved);
@@ -384,9 +407,11 @@ fn collect(model: &Model, warnings: &mut Vec<String>) -> Result<Formulas, Conver
     // CellML has no rateOf: every symbol is replaced by the right-hand side
     // of the equation of its variable
     let derivatives = formulas.derivatives();
+    // the rate of a variable an equation computes is unknown
     let assigned: HashSet<String> = formulas
         .assigned()
         .into_iter()
+        .chain(formulas.algebraic_rules.iter().map(|(id, _)| id.as_str()))
         .map(ToString::to_string)
         .collect();
     for formula in formulas
@@ -396,6 +421,7 @@ fn collect(model: &Model, warnings: &mut Vec<String>) -> Result<Formulas, Conver
         .chain(formulas.reaction_terms.iter_mut())
         .chain(formulas.rates.iter_mut())
         .chain(formulas.initial_assignments.iter_mut())
+        .chain(formulas.algebraic_rules.iter_mut())
     {
         formula.1 = expand_rate_of(&formula.1, &derivatives, &assigned, &[], warnings);
     }
@@ -1071,6 +1097,18 @@ fn build(
         let equation = math::expression(formula, &names, &mut units)?;
         component.math.push(assignment(id, equation));
     }
+    for (_, formula) in &formulas.algebraic_rules {
+        let expression = math::expression(formula, &names, &mut units)?;
+        let zero = Node::Number {
+            value: 0.0,
+            units: Some(DIMENSIONLESS.to_string()),
+        };
+        component.math.push(Node::Apply {
+            operator: Operator::Eq,
+            arguments: vec![zero, expression],
+        });
+    }
+    add_constants_of_algebraic_rules(&mut component, formulas, warnings);
     for event in &formulas.events {
         let condition = events::trigger_equation(&event.condition);
         let equation = math::expression(&condition, &names, &mut units)?;
@@ -1097,6 +1135,86 @@ fn build(
         },
         warnings: std::mem::take(warnings),
     })
+}
+
+/// States the constants of the algebraic rules as equations.
+///
+/// libcellml takes the variable of an implicit equation which has an initial
+/// value for its unknown, the value being the guess of the solver; with a
+/// second such variable in the equation the model is underconstrained. So
+/// every other variable of an algebraic rule which is not a state loses its
+/// initial value to the equation `y = value`, and the unknown of one
+/// algebraic rule which another one uses loses its guess.
+fn add_constants_of_algebraic_rules(
+    component: &mut Component,
+    formulas: &Formulas,
+    warnings: &mut Vec<String>,
+) {
+    let unknowns: HashSet<&str> = formulas
+        .algebraic_rules
+        .iter()
+        .map(|(id, _)| id.as_str())
+        .collect();
+    let keep: HashSet<&str> = unknowns
+        .iter()
+        .copied()
+        .chain(formulas.rate_rules.iter().map(|(id, _)| id.as_str()))
+        .chain(formulas.reaction_terms.iter().map(|(id, _)| id.as_str()))
+        .collect();
+    let mut names: Vec<&str> = Vec::new();
+    let mut without_guess: HashSet<&str> = HashSet::new();
+    for (id, formula) in &formulas.algebraic_rules {
+        for name in formula.symbols() {
+            names.push(name);
+            if name != id.as_str() && unknowns.contains(name) {
+                without_guess.insert(name);
+            }
+        }
+    }
+    for name in without_guess {
+        if let Some(variable) = component
+            .variables
+            .iter_mut()
+            .find(|variable| variable.name == name)
+        {
+            variable.initial_value = None;
+            warnings.push(format!(
+                "'{name}' has no guess of the solver, another algebraic rule uses it"
+            ));
+        }
+    }
+    names.sort_unstable();
+    names.dedup();
+    let mut equations = Vec::new();
+    for name in names {
+        if keep.contains(name) {
+            continue;
+        }
+        let Some(variable) = component
+            .variables
+            .iter_mut()
+            .find(|variable| variable.name == name)
+        else {
+            continue;
+        };
+        let value = variable
+            .initial_value
+            .as_deref()
+            .and_then(|value| value.parse::<f64>().ok());
+        let Some(value) = value else {
+            continue;
+        };
+        variable.initial_value = None;
+        let units = variable.units.clone();
+        equations.push(assignment(
+            name,
+            Node::Number {
+                value,
+                units: Some(units),
+            },
+        ));
+    }
+    component.math.extend(equations);
 }
 
 /// Adds the resets of the events of the model.

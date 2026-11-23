@@ -51,6 +51,7 @@ pub struct Start<'a> {
     rules: HashMap<&'a str, &'a Sbml>,
     rates: HashMap<&'a str, &'a Sbml>,
     locals: HashMap<String, f64>,
+    overrides: HashMap<String, f64>,
     values: HashMap<String, f64>,
     pending: Vec<String>,
 }
@@ -86,9 +87,20 @@ impl<'a> Start<'a> {
             rules: by_id(rules),
             rates: by_id(rates),
             locals,
+            overrides: HashMap::new(),
             values: HashMap::new(),
             pending: Vec::new(),
         }
+    }
+
+    /// Gives a quantity a value, whatever the model states: the value of
+    /// the variable of an algebraic rule while it is solved.
+    ///
+    /// Every value which was evaluated before is evaluated again, since it
+    /// may read the quantity.
+    pub fn override_value(&mut self, id: &str, value: f64) {
+        self.overrides.insert(id.to_string(), value);
+        self.values.clear();
     }
 
     /// Whether an initial assignment gives the quantity its value.
@@ -124,6 +136,9 @@ impl<'a> Start<'a> {
 
     /// The value of a quantity, without the cache and the cycle check.
     fn computed(&mut self, id: &str) -> Result<f64, EvalError> {
+        if let Some(value) = self.overrides.get(id) {
+            return Ok(*value);
+        }
         if let Some(formula) = self.assignments.get(id).copied() {
             return self.eval(formula);
         }
