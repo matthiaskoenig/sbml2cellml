@@ -7,7 +7,10 @@ parameters of both. The CellML model is the file of the page, which
 libopencor reads itself; sbmlsim-core takes a model which is compiled ahead
 of time, so this script compiles the SBML model of the page with the python
 package, writes the engine and the math library it embeds next to it and
-notes the versions, which the page loads its JavaScript hosts for.
+notes the versions, which the page loads its JavaScript hosts for. The
+compiler of the browser (`compiler.wasm`) is written next to them as well,
+which the online converter of the landing page compiles the SBML side of a
+conversion with.
 
 ```bash
 uv run python scripts/build_simulation.py
@@ -37,6 +40,15 @@ MODEL = ROOT / "docs" / "roundtrip" / "repressilator.xml"
 DESTINATION = ROOT / "docs" / "roundtrip" / "simulation"
 """Where the page loads the assets from."""
 
+RUNTIME_MODULES = ("engine", "mathlib", "compiler")
+"""The modules of `sbmlsim_core.runtime_wasm()`, written as `<key>.wasm`.
+
+`engine` and `mathlib` run a compiled model, `compiler` compiles one in the
+browser (sbmlsim-core 0.23.0 and newer); a release without the compiler
+writes the two it has, and the online converter simulates the CellML side of
+a conversion alone.
+"""
+
 
 def compile_model() -> dict[str, int]:
     """Compile the SBML model and write it with the runtime of its engine.
@@ -65,7 +77,8 @@ def compile_model() -> dict[str, int]:
         **sbmlsim_core.runtime_wasm(),
     }
     for name, content in files.items():
-        path = DESTINATION / (f"{name}.wasm" if name in ("engine", "mathlib") else name)
+        # the modules of the runtime are given by their key, the model by its name
+        path = DESTINATION / (f"{name}.wasm" if name in RUNTIME_MODULES else name)
         path.write_bytes(content)
     return {path.name: path.stat().st_size for path in sorted(DESTINATION.iterdir())}
 

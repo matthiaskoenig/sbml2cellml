@@ -354,10 +354,35 @@
   width: 4.5rem;
 }
 
+/* the two plots of a simulation side by side, stacked on a narrow screen */
+.md-typeset .converter__plots {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  margin-top: 0.4rem;
+}
+
+.md-typeset .converter__plot {
+  margin: 0;
+}
+
+.md-typeset .converter__plot figcaption {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.7rem;
+  margin: 0 0 0.2rem;
+  text-align: left;
+}
+
 .md-typeset .converter__plot canvas {
   display: block;
   height: 15rem;
   width: 100%;
+}
+
+.md-typeset .converter__difference {
+  color: var(--md-default-fg-color--light);
+  font-size: 0.7rem;
+  margin: 0.6rem 0 0;
 }
 
 .md-typeset .converter__legend {
@@ -366,6 +391,10 @@
   font-size: 0.7rem;
   gap: 1rem;
   margin-top: 0.4rem;
+}
+
+.md-typeset .converter__legend:empty {
+  margin-top: 0;
 }
 
 /* a series is shown or hidden with its item of the legend */
