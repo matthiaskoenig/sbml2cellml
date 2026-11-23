@@ -107,6 +107,16 @@ def test_cellml2sbml_convert_with_output(
     assert str(out) in capsys.readouterr().out
 
 
+def test_cellml2sbml_hierarchical(tmp_path: Path) -> None:
+    out = tmp_path / "test_model.xml"
+    assert (
+        main_cellml2sbml([str(TEST_MODEL_PATH), "-o", str(out), "--hierarchical"]) == 0
+    )
+    doc = libsbml.readSBMLFromFile(str(out))
+    assert doc.getPackageRequired("comp")
+    assert doc.getPlugin("comp").getNumModelDefinitions() > 0
+
+
 def test_cellml2sbml_default_output_next_to_input(tmp_path: Path) -> None:
     cellml_path = tmp_path / "test_model.cellml"
     shutil.copy(TEST_MODEL_PATH, cellml_path)

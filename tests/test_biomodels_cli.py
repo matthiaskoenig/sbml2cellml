@@ -8,17 +8,17 @@ import pytest
 from sbml2cellml.biomodels import cli, runner
 from sbml2cellml.biomodels.models import load_selection, write_selection
 from sbml2cellml.testsuite.results import STAGES, CaseResult, StageResult, SuiteResult
-from tests.biomodels_mocks import mock_downloads, write_comp_model
+from tests.biomodels_mocks import mock_downloads, write_package_model
 
 
 @pytest.fixture
-def comp_path(tmp_path: Path) -> Path:
-    return write_comp_model(tmp_path / "comp_model.xml")
+def package_path(tmp_path: Path) -> Path:
+    return write_package_model(tmp_path / "fbc_model.xml")
 
 
 @pytest.fixture(autouse=True)
-def _mocks(monkeypatch: pytest.MonkeyPatch, comp_path: Path) -> None:
-    mock_downloads(monkeypatch, runner, comp_path)
+def _mocks(monkeypatch: pytest.MonkeyPatch, package_path: Path) -> None:
+    mock_downloads(monkeypatch, runner, package_path)
 
 
 def test_cli_run_with_ids(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:

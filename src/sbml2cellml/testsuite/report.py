@@ -11,7 +11,11 @@ from sbml2cellml.testsuite.figure import (
     write_figures,
     write_timing_figures,
 )
-from sbml2cellml.testsuite.results import STAGES, SuiteResult
+from sbml2cellml.testsuite.results import (
+    SuiteResult,
+    cellml_first,
+    comparison_stage,
+)
 from sbml2cellml.testsuite.runner import SOLVER_SETTINGS
 
 #: intro paragraphs of the SBML test suite report
@@ -34,12 +38,40 @@ TESTSUITE_INTRO = (
 TESTSUITE_FIGURE = "images/testsuite.svg"
 #: heading of the timing section, without the `##` of the markdown
 TIMINGS_HEADING = "Timings"
-#: the stages with a simulation, with the simulator and the model they time
+
+
+def converted_model(result: SuiteResult) -> str:
+    """Name of the model the converter of a run writes, `SBML` or `CellML`."""
+    return "SBML" if cellml_first(result) else "CellML"
+
+
+#: the stages with a simulation of a run whose source is the SBML model,
+#: with the simulator and the model they time
 TIMED_STAGES = (
     ("sbmlsim", "sbmlsim-core", "SBML model"),
     ("libopencor", "libopencor", "CellML model"),
     ("roundtrip", "sbmlsim-core", "roundtrip SBML model"),
 )
+#: the same for a run whose source is the CellML model (`physiome`)
+CELLML_TIMED_STAGES = (
+    ("libopencor", "libopencor", "CellML model"),
+    ("sbmlsim", "sbmlsim-core", "SBML model"),
+    ("roundtrip", "libopencor", "roundtrip CellML model"),
+)
+
+
+def timed_stages(result: SuiteResult) -> tuple[tuple[str, str, str], ...]:
+    """The stages with a simulation of a run, in the order of its pipeline.
+
+    Args:
+        result: a suite run.
+
+    Returns:
+        The stage, the simulator and the model it simulates, per stage.
+    """
+    return CELLML_TIMED_STAGES if cellml_first(result) else TIMED_STAGES
+
+
 #: reason of the cases whose values exceed the tolerance of the comparison
 MISMATCH = "numerical mismatch"
 #: quoted text, e.g. the formula of an algebraic rule a simulator does not support
@@ -153,7 +185,8 @@ def timing_lines(result: SuiteResult, figure: str | None = None) -> list[str]:
     Returns:
         The markdown lines, empty when no simulation of the run was timed.
     """
-    timed = {stage: result.seconds(stage) for stage, _, _ in TIMED_STAGES}
+    stages = timed_stages(result)
+    timed = {stage: result.seconds(stage) for stage, _, _ in stages}
     if not any(timed.values()):
         return []
     lines = [
@@ -190,7 +223,7 @@ def timing_lines(result: SuiteResult, figure: str | None = None) -> list[str]:
         "integration total |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
-    for stage, simulator, model in TIMED_STAGES:
+    for stage, simulator, model in stages:
         seconds = list(timed[stage].values())
         if not seconds:
             continue
@@ -219,7 +252,8 @@ def timing_lines(result: SuiteResult, figure: str | None = None) -> list[str]:
         lines += [
             "",
             f"The two simulators integrate the same dynamics for {len(pairs)} "
-            "cases, those whose CellML model reproduces the expected results. "
+            f"cases, those whose {converted_model(result)} model reproduces "
+            "the expected results. "
             f"libopencor is {comparison} than sbmlsim-core for the median of "
             f"them and faster for {faster}; over these cases the medians are "
             f"{duration_text(median([pair[0] for pair in pairs.values()]))} "
@@ -368,24 +402,23 @@ def render_report(
         "| --- | --- | --- | --- | --- | --- |",
     ]
     total = len(result.cases)
-    for stage in STAGES:
+    for stage in result.stages:
         counts = result.counts(stage)
         lines.append(
             f"| {stage} | {total} | {counts['pass']} | {counts['fail']} | "
             f"{counts['skip']} | {100 * counts['pass'] / (total or 1):.1f}% |"
         )
 
-    passing_libopencor = [
-        case
-        for case in result.cases.values()
-        if case.stages["libopencor"].status == "pass"
+    stage = comparison_stage(result)
+    passing = [
+        case for case in result.cases.values() if case.stages[stage].status == "pass"
     ]
-    if passing_libopencor:
-        informative = sum(1 for case in passing_libopencor if case.informative)
+    if passing:
+        informative = sum(1 for case in passing if case.informative)
         lines += [
             "",
-            f"{informative} of the {len(passing_libopencor)} cases with a passing "
-            "libopencor stage are informative: the expected results move more "
+            f"{informative} of the {len(passing)} cases with a passing "
+            f"{stage} stage are informative: the expected results move more "
             "than the tolerance band for at least one variable.",
         ]
 
@@ -399,7 +432,7 @@ def render_report(
         "case is listed with its complete error.",
         "",
     ]
-    for stage in STAGES:
+    for stage in result.stages:
         groups: dict[str, list[str]] = defaultdict(list)
         for cid, case in sorted(result.cases.items()):
             stage_result = case.stages[stage]
@@ -448,12 +481,14 @@ def render_report(
         "## Cases",
         "",
         f"| case | {name_header}components | "
-        + " | ".join(STAGES)
+        + " | ".join(result.stages)
         + " | informative |",
-        f"| --- | {name_sep}--- | " + " | ".join("---" for _ in STAGES) + " | --- |",
+        f"| --- | {name_sep}--- | "
+        + " | ".join("---" for _ in result.stages)
+        + " | --- |",
     ]
     for cid, case in sorted(result.cases.items()):
-        statuses = " | ".join(case.stages[stage].status for stage in STAGES)
+        statuses = " | ".join(case.stages[stage].status for stage in result.stages)
         name_cell = f"{_cell(case.name)} | " if names else ""
         if case.informative is None:
             informative_cell = ""

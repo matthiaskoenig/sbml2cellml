@@ -5,8 +5,12 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
-#: the stages of the pipeline, in order
+#: the stages of the pipeline of the test suite, in order: the SBML model
+#: is the source, its simulation gives the expected results
 STAGES = ("sbmlsim", "sbml2cellml", "libopencor", "cellml2sbml", "roundtrip")
+#: the stages of a pipeline whose source is the CellML model (`physiome`),
+#: where the simulation of that model gives the expected results
+CELLML_STAGES = ("libopencor", "cellml2sbml", "sbmlsim", "sbml2cellml", "roundtrip")
 #: possible statuses of a stage
 STATUSES = ("pass", "fail", "skip")
 
@@ -52,6 +56,10 @@ class SuiteResult:
     version: str
     cases: dict[str, CaseResult] = field(default_factory=dict)
     skipped: dict[str, str] = field(default_factory=dict)
+    #: the stages of the pipeline in the order they ran, which is `STAGES`
+    #: for a run whose source is the SBML model and `CELLML_STAGES` for one
+    #: whose source is the CellML model
+    stages: tuple[str, ...] = STAGES
 
     def seconds(self, stage: str, setup: bool = False) -> dict[str, float]:
         """Wall time of the simulations of a stage, by case.
@@ -105,6 +113,7 @@ class SuiteResult:
         data: dict[str, Any] = {
             "suite": self.suite,
             "version": self.version,
+            "stages": list(self.stages),
             "cases": cases,
             "skipped": dict(sorted(self.skipped.items())),
         }
@@ -134,7 +143,38 @@ class SuiteResult:
             version=data["version"],
             cases=cases,
             skipped=dict(data["skipped"]),
+            stages=tuple(data.get("stages", STAGES)),
         )
+
+
+def cellml_first(result: SuiteResult) -> bool:
+    """Whether the source of a run is the CellML model and not the SBML one.
+
+    Args:
+        result: a suite run.
+
+    Returns:
+        Whether the simulation of the CellML model gives the expected
+        results, as in the Physiome check.
+    """
+    return bool(result.stages) and result.stages[0] == "libopencor"
+
+
+def comparison_stage(result: SuiteResult) -> str:
+    """The stage which compares the converted model with the expected results.
+
+    The source of a run is simulated for the expected results, the model of
+    the other language is compared with them: `libopencor` simulates the
+    CellML model of a run which starts from SBML, `sbmlsim` the SBML model
+    of a run which starts from CellML.
+
+    Args:
+        result: a suite run.
+
+    Returns:
+        The name of the stage.
+    """
+    return "sbmlsim" if cellml_first(result) else "libopencor"
 
 
 def regressions(old: SuiteResult, new: SuiteResult) -> list[str]:
@@ -156,7 +196,7 @@ def regressions(old: SuiteResult, new: SuiteResult) -> list[str]:
         if cid not in new.cases:
             lines.append(f"{cid}: missing")
             continue
-        for stage in STAGES:
+        for stage in new.stages:
             before = case.stages.get(stage)
             after = new.cases[cid].stages.get(stage)
             if before is None or after is None:
@@ -177,7 +217,7 @@ def improvements(old: SuiteResult, new: SuiteResult) -> list[str]:
         if cid not in old.cases:
             lines.append(f"{cid}: new")
             continue
-        for stage in STAGES:
+        for stage in new.stages:
             before = old.cases[cid].stages.get(stage)
             after = case.stages.get(stage)
             if before is None or after is None:

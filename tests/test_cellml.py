@@ -7,6 +7,7 @@ import pytest
 
 from sbml2cellml.cellml import (
     CellMLValidationError,
+    cellml_version,
     errors,
     format_issue,
     model_to_string,
@@ -14,7 +15,7 @@ from sbml2cellml.cellml import (
     validate_model,
     write_model,
 )
-from tests.conftest import TEST_MODEL_PATH
+from tests.conftest import DATA_DIR, TEST_MODEL_PATH
 
 
 def invalid_model() -> libcellml.Model:
@@ -34,6 +35,37 @@ def test_read_model() -> None:
     assert model.name() == "test_model"
     assert model.componentCount() == 1
     assert model.component(0).variableCount() == 3
+
+
+def test_cellml_version_of_a_2_0_model() -> None:
+    assert cellml_version(TEST_MODEL_PATH.read_text(encoding="utf-8")) is None
+
+
+@pytest.mark.parametrize("version", ["1.0", "1.1"])
+def test_cellml_version_of_an_older_model(version: str) -> None:
+    text = f'<model xmlns="http://www.cellml.org/cellml/{version}#" name="m"/>'
+    assert cellml_version(text) == version
+
+
+def test_cellml_version_ignores_a_namespace_outside_the_root() -> None:
+    text = (
+        '<model xmlns="http://www.cellml.org/cellml/2.0#" name="m">'
+        "<!-- http://www.cellml.org/cellml/1.1# --></model>"
+    )
+    assert cellml_version(text) is None
+
+
+def test_cellml_version_of_a_document_which_is_no_xml() -> None:
+    assert cellml_version("broken http://www.cellml.org/cellml/1.1#") == "1.1"
+
+
+def test_read_a_cellml_1_0_model_needs_the_permissive_parser() -> None:
+    path = DATA_DIR / "decay_cellml_1_0.cellml"
+    with pytest.raises(CellMLValidationError, match="strict parsing mode"):
+        read_model(path)
+    model = read_model(path, strict=False)
+    assert model.name() == "decay"
+    assert model.componentCount() == 1
 
 
 def test_read_model_raises_on_invalid_xml(tmp_path: Path) -> None:

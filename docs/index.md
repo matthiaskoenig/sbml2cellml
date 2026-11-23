@@ -10,12 +10,14 @@
 - conversion of compartments, parameters, species, assignment and rate rules, reactions and events into a single CellML component
 - conversion of the units: unit definitions, the units of numbers and, for a model with a complete unit annotation, the units of every variable
 - names, notes, SBO terms, annotations and the model history as RDF next to the CellML model, restored in the conversion back to SBML
-- conversion of CellML models to SBML: parameters with rules, unit definitions and units of numbers, resets as events, imports resolved
+- conversion of CellML models to SBML: parameters with rules, unit definitions and units of numbers, resets as events, imports resolved, CellML 1.0 and 1.1 read in the permissive mode of libcellml, the components optionally as `comp` submodels (`--hierarchical`)
+- conversion of a hierarchical SBML model: the `comp` submodels are flattened before the model becomes CellML
 - validation of the result with [libcellml](https://libcellml.org/)
 - timecourse simulation of the SBML with [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/) and of the CellML with [libopencor](https://opencor.ws/libopencor/), both optional, see [Simulation](simulation.md)
 - the `sbml2cellml` and `cellml2sbml` command lines
 - the SBML test suite harness: every semantic case through both converters and both simulators, results on the [SBML test suite](testsuite.md) page
 - the same check for the manually curated models of [BioModels](https://www.biomodels.org), results on the [BioModels](biomodels.md) page
+- the same check for the CellML models of the [Physiome Model Repository](https://models.physiomeproject.org), from the CellML side, results on the [Physiome](physiome.md) page
 
 ## Quickstart
 
@@ -74,7 +76,7 @@ The converter puts every SBML compartment, parameter and species as a variable i
 
 The reverse direction, [CellML to SBML](conversion.md#cellml-to-sbml), maps every variable to a parameter with rules and converts units and resets.
 
-The [conversion issues](conversion-issues.md) list what is not converted yet, the [SBML test suite](testsuite.md) and [BioModels](biomodels.md) pages how many of the semantic test cases and of the curated models pass.
+The [conversion issues](conversion-issues.md) list what is not converted yet, the [SBML test suite](testsuite.md), [BioModels](biomodels.md) and [Physiome](physiome.md) pages how many of the semantic test cases, of the curated models and of the published CellML models pass.
 
 The [release notes](release-notes/index.md) list the changes of every version.
 

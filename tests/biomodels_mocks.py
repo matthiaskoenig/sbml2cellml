@@ -32,11 +32,12 @@ INFO_B = ModelInfo(
 )
 
 
-def write_comp_model(path: Path) -> Path:
-    """Write a tiny SBML file declaring `comp` and using `comp:submodel`.
+def write_package_model(path: Path) -> Path:
+    """Write a tiny SBML file declaring `fbc` and using an `fbc` element.
 
     The model has one species (so it is not skipped as `no species`) and one
-    `comp:submodel` element, so `models.packages` reports it uses `comp`.
+    `fbc:objective` element, so `models.packages` reports it uses `fbc`,
+    which the converters do not support.
 
     Args:
         path: file to write.
@@ -47,14 +48,16 @@ def write_comp_model(path: Path) -> Path:
     path.write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" '
-        'xmlns:comp="http://www.sbml.org/sbml/level3/version1/comp/version1" '
+        'xmlns:fbc="http://www.sbml.org/sbml/level3/version1/fbc/version2" '
         'level="3" version="1"><model id="m">'
         '<listOfCompartments><compartment id="cell" size="1" constant="true"/>'
         "</listOfCompartments>"
         '<listOfSpecies><species id="S1" compartment="cell" '
         'initialConcentration="1" hasOnlySubstanceUnits="false" '
         'boundaryCondition="false" constant="false"/></listOfSpecies>'
-        '<comp:submodel comp:id="s1" comp:modelRef="m2"/>'
+        '<fbc:listOfObjectives fbc:activeObjective="o1">'
+        '<fbc:objective fbc:id="o1" fbc:type="maximize"/>'
+        "</fbc:listOfObjectives>"
         "</model></sbml>\n",
         encoding="utf-8",
     )
@@ -62,7 +65,7 @@ def write_comp_model(path: Path) -> Path:
 
 
 def mock_downloads(
-    monkeypatch: pytest.MonkeyPatch, module: object, comp_path: Path
+    monkeypatch: pytest.MonkeyPatch, module: object, package_path: Path
 ) -> None:
     """Monkeypatch `model_info` and `download_model` of `module`.
 
@@ -70,7 +73,7 @@ def mock_downloads(
         monkeypatch: the fixture of the calling test.
         module: module whose `model_info` and `download_model` names are
             replaced, e.g. `sbml2cellml.biomodels.runner`.
-        comp_path: SBML file served for `BIOMD_B`.
+        package_path: SBML file served for `BIOMD_B`.
     """
 
     def fake_model_info(model_id: str, cache: Path | None = None) -> ModelInfo:
@@ -84,7 +87,7 @@ def mock_downloads(
         if model_id == "BIOMD_A":
             return LIVER_MODEL
         if model_id == "BIOMD_B":
-            return comp_path
+            return package_path
         raise BioModelsError("boom")
 
     monkeypatch.setattr(module, "model_info", fake_model_info)

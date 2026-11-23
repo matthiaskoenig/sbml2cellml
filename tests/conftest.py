@@ -8,6 +8,8 @@ from pathlib import Path
 
 #: models of the examples, also used as test fixtures
 MODELS_DIR: Path = Path(__file__).parent.parent / "examples" / "models"
+#: small fixtures created for a test
+DATA_DIR: Path = Path(__file__).parent / "data"
 #: simple hand written CellML model (mass decay)
 TEST_MODEL_PATH: Path = MODELS_DIR / "test_model.cellml"
 #: names of the glimepiride SBML models, `<name>.xml` in `MODELS_DIR`

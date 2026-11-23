@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model xmlns="http://www.cellml.org/cellml/1.0#" name="decay">
+  <units name="per_second">
+    <unit units="second" exponent="-1"/>
+  </units>
+  <component name="main">
+    <variable name="t" units="second"/>
+    <variable name="k" units="per_second" initial_value="0.1"/>
+    <variable name="x" units="dimensionless" initial_value="10"/>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply>
+        <eq/>
+        <apply>
+          <diff/>
+          <bvar><ci>t</ci></bvar>
+          <ci>x</ci>
+        </apply>
+        <apply>
+          <times/>
+          <apply><minus/><ci>k</ci></apply>
+          <ci>x</ci>
+        </apply>
+      </apply>
+    </math>
+  </component>
+</model>

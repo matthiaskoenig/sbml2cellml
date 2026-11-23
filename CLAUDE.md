@@ -44,6 +44,12 @@ tox r -e biomodels                      # the run below in the locked environmen
 uv run sbml2cellml-biomodels run        # curated BioModels selection, writes biomodels/results.json, docs/biomodels.md and docs/images/biomodels*.svg
 uv run sbml2cellml-biomodels update     # refresh the committed selection biomodels/models.json
 uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the figures from the results file
+
+# local only, not in CI (the workspaces are cloned into ~/.cache/sbml2cellml/physiome)
+tox r -e physiome                       # the run below in the locked environment with python 3.14
+uv run sbml2cellml-physiome run         # curated Physiome selection, writes physiome/results.json, docs/physiome.md and docs/images/physiome*.svg
+uv run sbml2cellml-physiome update      # refresh the committed selection physiome/models.json
+uv run sbml2cellml-physiome report      # rerender docs/physiome.md and the figures from the results file
 ```
 
 `develop` is the default branch and takes every change through a pull request; the rulesets in `.github/rulesets/` (applied with `apply.sh`) require the `tests`, `ruff`, `ty` and `docs` checks. Continuous integration is kept minimal: `tests` runs `py3.14` on linux, macos and windows, every workflow cancels a superseded run (`cancel-in-progress: true`), uv caches packages and interpreters, dependabot runs monthly. `main` tracks the latest release and is fast-forwarded by the `sync-main` job of the release workflow. Release steps are in `docs/development.md`: release branch, `uvx bump-my-version bump [major|minor|patch]` (updates `__init__.py` and `CITATION.cff`, no tag), release notes in `docs/release-notes/`, pull request, tag on `develop` after the merge.
@@ -51,6 +57,9 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
 ## Architecture
 
 - `sbml2cellml.py`: `convert_sbml2cellml(sbml_path, cellml_path=None, validate=True)`.
+  A hierarchical model is flattened first (`sbml.flatten_comp`, with the
+  directory of the file as the base path of an external model definition),
+  so the submodels become part of the CellML model.
   One CellML component `sbml`, one variable per compartment, parameter and
   species plus `time`. `_variable_units` gives the variables their units when
   the unit annotation of the SBML model is complete (all or nothing: unset
@@ -163,7 +172,10 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   the CellML id as metaid.
 - `cellml.py`: libcellml `Parser`, `Printer`, `Validator` and `Analyser`
   wrappers; issues are returned, `errors()` filters level `ERROR`,
-  `CellMLValidationError`.
+  `CellMLValidationError`. `cellml_version` reads the CellML version from
+  the namespace of a document (`None` for 2.0), `read_model(path,
+  strict=True)` parses a 1.0 or 1.1 document with `strict=False`, the
+  permissive mode which maps it to the CellML 2.0 structures.
 - `simulate.py`: libopencor timecourse; the library is imported inside
   `run_timecourse` so the package works without it. The settings are applied
   to `document.simulations[0]`, with `MAXIMUM_NUMBER_OF_STEPS` (100000) internal
@@ -173,8 +185,11 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   fills the arrays of the states only when it runs, so a model whose states
   are small is run once with the given tolerance and again with the scaled
   one, and the first run counts as setup. `timings` takes the wall time of
-  `setup` and `simulate`. Results drop the `component/` prefix of the
-  variable names. Issues raise `SimulationError`.
+  `setup` and `simulate`. A result column is the name of the variable
+  without the `component/` prefix of libopencor, or the full name when more
+  than one variable of the model has that name (`_result_names`), so a model
+  of many components keeps its variables apart. Issues raise
+  `SimulationError`.
 - `sbmlsim.py`: sbmlsim-core timecourse of an SBML model (path or text), the
   library is imported inside `run_timecourse` as well. `compilable_sbml`
   gives the compiler what it reads: level 1 and 2 are converted to L3V2
@@ -198,7 +213,8 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   trajectory (`scale_tolerance=False` switches it off). `timings` takes the
   wall time of the phases, `setup` (conversion, compilation, loading,
   nothing of it for a cached model) and `simulate`.
-- `cellml2sbml.py`: `convert_cellml2sbml(cellml_path, sbml_path=None, validate=True)`,
+- `cellml2sbml.py`: `convert_cellml2sbml(cellml_path, sbml_path=None,
+  validate=True, metadata=True, hierarchical=False)`,
   analyser driven: parameters by variable type, rules by equation type, initial
   assignments for computed constants and variable-referenced initial values,
   implicit (NLA) equations as algebraic rules,
@@ -207,9 +223,23 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   `piecewise(1, condition, 0)` and whose test value is 1, as `sbml2cellml`
   writes an event, gives the event the condition as its trigger
   (`_condition_of_a_trigger`): a simulator evaluates it as a boolean
-  instead of looking for the root of a step.
+  instead of looking for the root of a step. `read_cellml_model` reads a
+  file of any CellML version (1.0 and 1.1 in the permissive mode of
+  libcellml, `cellml.cellml_version`) and flattens its imports,
+  `analyse_model` analyses it; both are also used by the Physiome check.
+  `hierarchical=True` (`--hierarchical`) writes the components as SBML comp
+  submodels instead of one flat model (`build_hierarchical_document`): one
+  `modelDefinition` per component (id `<component>_component`, the
+  parameters named by `variables.ComponentIds`), an encapsulated component
+  a submodel of its parent, every equivalence set of more than one variable
+  a parameter of the main model with a `ReplacedElement` per member
+  (`_replacement_path` nests the `SBaseRef` chain along the encapsulation).
+  The flattened hierarchical model is the flat conversion of the same
+  model, which `tests/test_hierarchical.py` asserts.
 - `variables.py`: `VariableIds` gives one SBML id per equivalence set, a
-  component prefix on name clashes; `unique_sid` adds a numeric suffix for
+  component prefix on name clashes; `ComponentIds` one namespace per
+  component for the hierarchical conversion, `components(parent)` iterates
+  the components of a model recursively; `unique_sid` adds a numeric suffix for
   colliding ids (parameters, unit definitions, the model id and event ids);
   `VariableIds.reserve` reserves an id outside the variables (model, events).
 - `sbmlmath.py`: analyser AST to libsbml AST, nested piecewise flattened,
@@ -221,7 +251,13 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   of a reference to custom units folded into the first unit, new base units
   `item` as the unit kind.
 - `sbml.py`: libsbml helpers, `validate_document` returns error messages, unit
-  problems are warnings.
+  problems are warnings. `flatten_comp` flattens the submodels of a
+  hierarchical model with `CompFlatteningConverter` (`basePath` for an
+  external model definition) and returns the document written and read
+  again, since an element taken from an external model definition keeps a
+  pointer into the document which was freed (libsbml segfaults in
+  `setModelHistory` otherwise); `None` when the document does not use
+  `comp`.
 - `cli.py`: argparse, `[project.scripts]` entry point.
 - `console.py`, `log.py`: rich console for scripts and the CLI, opt-in rich
   logging. Library code logs with `logging.getLogger(__name__)` and lazy `%s`
@@ -230,7 +266,9 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   through both converters and both simulators. `cases.py` fetches
   `cases/semantic` of the pinned `SUITE_COMMIT` of the suite repository into
   the cache (partial, one commit deep `git` clone, `_git`) and reads
-  the cases; `compare.py` checks a simulation against the expected results
+  the cases (`PACKAGE_PREFIXES` skips a case which needs a package the
+  converters do not support; `comp` is not among them, its submodels are
+  flattened); `compare.py` checks a simulation against the expected results
   (`|value - expected| <= absolute + relative * |expected|` with the
   tolerances of the settings of the case, not the tolerances of the solver);
   `runner.py`'s `SOLVER_SETTINGS` are the solver settings of every
@@ -241,12 +279,15 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   simulator for the whole run, for the timeout and the isolation of a
   crash); `runner.py` is the five-stage pipeline
   (`sbmlsim`/`sbml2cellml`/`libopencor`/`cellml2sbml`/`roundtrip`) per
-  case, a failed stage keeps the complete text of its exception (`_message`)
+  case, a failed stage keeps the complete text of its exception
+  (`error_message`)
   and the wall time of its simulation (`StageResult.seconds`, measured in
   the worker around the call of the simulator, the compilation of the model
   included); `results.py` is `SuiteResult` (JSON) with `regressions`/
   `improvements` and `seconds` per stage (the integration, and the setup of
-  the simulator with `setup=True`); `report.py` renders
+  the simulator with `setup=True`) and the stages of the run
+  (`SuiteResult.stages`, `STAGES` for an SBML first run and `CELLML_STAGES`
+  for the Physiome check, `cellml_first`/`comparison_stage`); `report.py` renders
   `docs/testsuite.md` (the solver
   settings of the intro come from `SOLVER_SETTINGS`, `timing_lines` is the
   timing section of the two simulators, the failing cases are
@@ -271,6 +312,34 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   BioModels has none; `cli.py` is the `sbml2cellml-biomodels` entry point,
   which renders the report `docs/biomodels.md` with the report and figure
   code of the test suite.
+- `physiome/` (run locally, never in CI; see `physiome/README.md`):
+  `sbml2cellml-physiome run|update|report` runs curated CellML models of the
+  Physiome Model Repository through the same stages in the order of a CellML
+  model (`CELLML_STAGES`:
+  `libopencor`/`cellml2sbml`/`sbmlsim`/`sbml2cellml`/`roundtrip`), the
+  libopencor simulation of the published model as the expected results.
+  `models.py` reads the exposures through the webservice of the repository
+  (`Accept: application/vnd.physiome.pmr2.json.1`), which gives the title,
+  the commit and the CellML file of an exposure, clones the workspace of an
+  exposure at that commit into the cache (the repository refuses a shallow
+  fetch, so `git init`/`fetch`/`checkout` of the whole workspace, which also
+  gives a model the files it imports) and reads/writes the selection
+  `physiome/models.json` (one exposure per workspace, the first 100 by id);
+  `cases.py` builds the case with the generic timecourse (0 to 100 time
+  units, 1000 steps: the models are stiff and switch their right-hand side
+  hard, where the two solvers step over the switch differently on a coarse
+  output grid; tolerances `RELATIVE` 1e-3 and `ABSOLUTE` 1e-6) and the
+  map `PhysiomeCase.columns` from the names of the libopencor result
+  (`component/variable` and, for a name no other variable of the model has,
+  the name alone, as `simulate._result_names` writes them; the variable of
+  integration maps to `time`) to the SBML ids of `VariableIds`, so both
+  sides of a comparison hold the same columns; `runner.py` is the pipeline
+  (`prepare_cases` skips a model which cannot be cloned, read or analysed
+  with the kind of its problem, `skip_reason`/`SKIP_REASONS`, and logs the
+  complete error, since the report groups the skipped models by reason;
+  `run_case` compares the SBML side against the renamed libopencor result);
+  `cli.py` is the `sbml2cellml-physiome` entry point, which renders
+  `docs/physiome.md` with the report and figure code of the test suite.
 
 ## Conventions
 
@@ -319,4 +388,6 @@ uv run sbml2cellml-biomodels report     # rerender docs/biomodels.md and the fig
   `docs/images/biomodels*.svg` are generated (`update` and `run`) and
   committed. The check runs locally only, there is no workflow and no gating
   test for it: rerun it after converter changes, review the regressions it
-  prints and commit the regenerated files.
+  prints and commit the regenerated files. The same holds for
+  `physiome/models.json`, `physiome/results.json`, `docs/physiome.md` and
+  `docs/images/physiome*.svg`.

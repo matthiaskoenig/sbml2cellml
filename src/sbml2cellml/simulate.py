@@ -7,6 +7,7 @@ runs, so the rest of the package works without it. See `LIBOPENCOR_INSTALL`.
 import logging
 import math
 import time
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -89,6 +90,40 @@ def _state_scale(instance: Any) -> float:
             magnitudes.append(abs(float(values[0])))
     nonzero = [value for value in magnitudes if value > 0.0 and math.isfinite(value)]
     return min(nonzero) if nonzero else 1.0
+
+
+def _result_names(task: Any, steady_state: bool) -> list[str]:
+    """Names of the columns of a result, in the order the task lists them.
+
+    The `component/variable` name of libopencor becomes the name of the
+    variable, which is what a model of one component needs; a name which
+    more than one variable of the model has keeps its component, so that
+    the variables of a model of many components stay apart.
+
+    Args:
+        task: the task of the instance.
+        steady_state: whether the first column is the time points of a
+            steady state instead of the variable of integration.
+
+    Returns:
+        The names: the variable of integration (or the time points of a
+        steady state) first, then the states, the algebraic variables, the
+        constants and the computed constants.
+    """
+    full = [STEADY_STATE_TIME if steady_state else task.voi_name]
+    full += [task.state_name(k) for k in range(task.state_count)]
+    full += [
+        task.algebraic_variable_name(k) for k in range(task.algebraic_variable_count)
+    ]
+    full += [task.constant_name(k) for k in range(task.constant_count)]
+    full += [
+        task.computed_constant_name(k) for k in range(task.computed_constant_count)
+    ]
+    counts = Counter(_variable_name(name) for name in full)
+    return [
+        name if counts[_variable_name(name)] > 1 else _variable_name(name)
+        for name in full
+    ]
 
 
 def run_timecourse(
@@ -206,10 +241,11 @@ def run_timecourse(
     task = instance.tasks[0]
     data: dict[str, Any] = {}
     units: dict[str, str] = {}
+    rows = steps + 1 if steady_state else len(task.voi)
+    names = _result_names(task, steady_state)
 
-    def add(name: str, values: Any, unit: str) -> None:
-        # the component prefix is dropped, so two variables, or a variable
-        # and the time points of a steady state, may get the same name
+    def add(key: int, values: Any, unit: str) -> None:
+        name = names[key]
         if name in data:
             raise SimulationError(f"result: the name '{name}' occurs twice")
         data[name] = values
@@ -217,32 +253,31 @@ def run_timecourse(
 
     if steady_state:
         # one value per variable, repeated at the requested time points
-        rows = steps + 1
-        add(STEADY_STATE_TIME, np.linspace(start, end, rows), "")
+        add(0, np.linspace(start, end, rows), "")
     else:
-        rows = len(task.voi)
-        add(_variable_name(task.voi_name), task.voi, task.voi_unit)
+        add(0, task.voi, task.voi_unit)
+    index = 1
     for k in range(task.state_count):
-        add(_variable_name(task.state_name(k)), task.state(k), task.state_unit(k))
+        add(index, task.state(k), task.state_unit(k))
+        index += 1
     for k in range(task.algebraic_variable_count):
         values = task.algebraic_variable(k)
         add(
-            _variable_name(task.algebraic_variable_name(k)),
+            index,
             [_scalar(values)] * rows if steady_state else values,
             task.algebraic_variable_unit(k),
         )
+        index += 1
     for k in range(task.constant_count):
-        add(
-            _variable_name(task.constant_name(k)),
-            [_scalar(task.constant(k))] * rows,
-            task.constant_unit(k),
-        )
+        add(index, [_scalar(task.constant(k))] * rows, task.constant_unit(k))
+        index += 1
     for k in range(task.computed_constant_count):
         add(
-            _variable_name(task.computed_constant_name(k)),
+            index,
             [_scalar(task.computed_constant(k))] * rows,
             task.computed_constant_unit(k),
         )
+        index += 1
 
     logger.info("Simulated '%s': %d rows, %d columns", path, steps + 1, len(data))
     if timings is not None:

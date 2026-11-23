@@ -252,6 +252,22 @@ The check is run locally and not in continuous integration: it takes about 20 mi
 
 `uv run sbml2cellml-biomodels update` refreshes the committed selection `biomodels/models.json` (the date, the search query and the sorted ids) from the current BioModels search; it is run occasionally, not with every check.
 
+## Physiome { #physiome }
+
+`sbml2cellml.physiome` runs a curated selection of the CellML models of the [Physiome Model Repository](https://models.physiomeproject.org) through the same pipeline, in the order of a CellML model (`CELLML_STAGES` of `sbml2cellml.testsuite.results`): libopencor simulates the published model (`libopencor`), `cellml2sbml` converts it to SBML (`cellml2sbml`), sbmlsim-core simulates that model (`sbmlsim`), `sbml2cellml` converts it back to CellML (`sbml2cellml`) and libopencor simulates the roundtrip (`roundtrip`). The models are real world models of many components, most of them CellML 1.0 and 1.1 documents which libcellml reads in its permissive mode, so the check measures the converters on models which were not written for them.
+
+The repository has no expected results, so the libopencor simulation of the published model over a generic timecourse (0 to 100 time units, 1000 steps: the models are stiff and many of them switch their right-hand side hard, where the two solvers step over the switch differently on a coarse output grid, so the comparison would measure the grid instead of the conversion) is what the `sbmlsim` and `roundtrip` simulations are compared with, with a relative tolerance of `1e-3` and an absolute tolerance of `1e-6` (`RELATIVE` and `ABSOLUTE` of `sbml2cellml.physiome.cases`) and the solver settings of the test suite (`1e-9`/`1e-12`, relaxed only when CVODE fails). A `libopencor` failure means libopencor cannot simulate the published model, it says nothing about the converters. The CellML simulation names a variable by its name, or by `component/variable` when more than one variable of the model has that name, while the SBML simulation names it by the id of its equivalence set: the case carries the map between them (`PhysiomeCase.columns`), built from the ids of `sbml2cellml.variables.VariableIds`, so every comparison runs on the same columns. A model which libcellml cannot read or analyse is skipped with its error.
+
+```bash
+uv run sbml2cellml-physiome run
+```
+
+clones the workspace of every model at the commit of its exposure into `~/.cache/sbml2cellml/physiome` on first use (cached for later runs, so a model which imports other files of its workspace has them all on disk), runs the pipeline, prints the regressions and improvements against the committed results and writes `physiome/results.json`, the page [Physiome Model Repository](physiome.md) (`docs/physiome.md`), its bar diagram `docs/images/physiome.svg` (`physiome_dark.svg` for dark backgrounds) and the timings `docs/images/physiome_timings.svg`. `--ids 5f,2c` and `--count N` restrict the run to single exposures or the first N models of the selection; give such a run its own `--results` and `--report`. `uv run sbml2cellml-physiome report` rerenders the report and the figures from the results file.
+
+The check is run locally and not in continuous integration: it clones about a hundred git repositories and depends on the repository web service. `tox r -e physiome` runs it in the locked environment with python 3.14; arguments follow `--`, e.g., `tox r -e physiome -- --count 5 --results /tmp/results.json --report /tmp/report.md`. The generated files are committed; rerun the check after changes of the converters, review the regressions and commit the regenerated files with the change.
+
+`uv run sbml2cellml-physiome update` refreshes the committed selection `physiome/models.json` from the current exposures of the repository: it reads the listing of every exposure, keeps the ones which publish a CellML file (the exposure of a workspace which was published again counts once) and writes the first 100 of them by exposure id, each with the workspace, the commit and the file, so that a run of the check is reproducible. It is run occasionally, not with every check.
+
 ## Release
 
 A release is made from `develop`. Since `develop` only accepts pull requests,

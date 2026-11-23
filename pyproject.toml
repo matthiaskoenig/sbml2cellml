@@ -77,6 +77,7 @@ sbml2cellml = "sbml2cellml.cli:main"
 cellml2sbml = "sbml2cellml.cli:main_cellml2sbml"
 sbml2cellml-testsuite = "sbml2cellml.testsuite.cli:main"
 sbml2cellml-biomodels = "sbml2cellml.biomodels.cli:main"
+sbml2cellml-physiome = "sbml2cellml.physiome.cli:main"
 
 [project.urls]
 Homepage = "https://matthiaskoenig.github.io/sbml2cellml"

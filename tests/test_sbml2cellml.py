@@ -10,6 +10,7 @@ import pytest
 
 from sbml2cellml import convert_sbml2cellml
 from sbml2cellml.cellml import CellMLValidationError, errors, read_model, validate_model
+from sbml2cellml.sbml import flatten_comp
 from sbml2cellml.sbml2cellml import COMPONENT_ID, TIME_ID, SBML2CellMLConversionError
 from tests.conftest import GLIMEPIRIDE_MODELS, MODELS_DIR
 from tests.sbml_models import (
@@ -42,7 +43,9 @@ def test_convert_glimepiride_structure(name: str, tmp_path: Path) -> None:
     assert model.component(0).name() == COMPONENT_ID
 
     doc = libsbml.readSBMLFromFile(str(sbml_path))
-    m_sbml = doc.getModel()
+    # the body model is hierarchical, its submodels are flattened as well
+    flattened = flatten_comp(doc, base_path=sbml_path.parent)
+    m_sbml = (flattened or doc).getModel()
     # time, the compartments, parameters and species, and the reactions whose
     # id a formula uses as its rate
     sbml_ids = {TIME_ID} | {

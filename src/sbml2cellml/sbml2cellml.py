@@ -37,11 +37,12 @@ from pathlib import Path
 import libcellml
 import libsbml
 
-from sbml2cellml import astnodes, cellml, mathml
+from sbml2cellml import astnodes, cellml, mathml, sbml
 from sbml2cellml import metadata as sbml_metadata
 from sbml2cellml.cellml import CellMLValidationError
 from sbml2cellml.cellmlunits import CellMLUnits
 from sbml2cellml.mathml import TIME_ID
+from sbml2cellml.sbml import SBMLValidationError
 from sbml2cellml.variables import unique_sid
 
 logger = logging.getLogger(__name__)
@@ -92,6 +93,18 @@ def convert_sbml2cellml(
     model_sbml: libsbml.Model | None = doc.getModel()
     if model_sbml is None:
         raise SBML2CellMLConversionError(f"No model in SBML file '{sbml_path}'.")
+    # CellML has no counterpart of a submodel: a hierarchical model is
+    # flattened, so its components are those of the flat model
+    try:
+        flattened = sbml.flatten_comp(doc, base_path=Path(sbml_path).parent)
+    except SBMLValidationError as err:
+        raise SBML2CellMLConversionError(str(err)) from err
+    if flattened is not None:
+        logger.warning(
+            "Flattened the submodels of the hierarchical model '%s'", sbml_path
+        )
+        doc = flattened
+        model_sbml = doc.getModel()
     mid: str = model_sbml.getId() if model_sbml.isSetId() else Path(sbml_path).stem
     logger.info("Converting SBML model '%s' from '%s'", mid, sbml_path)
     # CellML has neither functions nor initial assignments: libsbml inlines the

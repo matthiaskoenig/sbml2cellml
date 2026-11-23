@@ -1,0 +1,3216 @@
+{
+ "cases": {
+  "105": {
+   "component_tags": [
+    "20 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "105",
+   "informative": true,
+   "name": "A Quantitative Model of Human Jejunal Smooth Muscle Cell Electrophysiology",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.0028,
+     "setup_seconds": 0.107,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00286,
+     "setup_seconds": 0.0811,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00311,
+     "setup_seconds": 0.0289,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "12b": {
+   "component_tags": [
+    "17 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "12b",
+   "informative": true,
+   "name": "A single compartment model of pacemaking in dissasociated Substantia nigra neurons with hyperbolic tetrahedral geometry",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000951,
+     "setup_seconds": 0.038,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000961,
+     "setup_seconds": 0.0336,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00115,
+     "setup_seconds": 0.00979,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "135": {
+   "component_tags": [
+    "11 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "135",
+   "informative": null,
+   "name": "Bugenhagen 2010",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "libopencor failed",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "skip"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "SimulationFailure: libopencor: worker died during simulate_cellml",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "fail"
+    },
+    "roundtrip": {
+     "max_excess": null,
+     "message": "libopencor failed",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "skip"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "libopencor failed",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "skip"
+    },
+    "sbmlsim": {
+     "max_excess": null,
+     "message": "libopencor failed",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "skip"
+    }
+   },
+   "test_tags": []
+  },
+  "137": {
+   "component_tags": [
+    "2 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "137",
+   "informative": true,
+   "name": "Library of metabolic components in CellML",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000144,
+     "setup_seconds": 0.0194,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00016,
+     "setup_seconds": 0.00607,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -9.98e-07,
+     "message": "",
+     "seconds": 0.000193,
+     "setup_seconds": 0.00206,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "139": {
+   "component_tags": [
+    "35 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "139",
+   "informative": true,
+   "name": "An updated computational model of rabbit sinoatrial action potential to investigate the mechanisms of heart rate modulation.",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.548,
+     "setup_seconds": 0.482,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.565,
+     "setup_seconds": 0.473,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.495,
+     "setup_seconds": 0.519,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "188": {
+   "component_tags": [
+    "43 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "188",
+   "informative": true,
+   "name": "Decker, Heijman, Silva, Hund, Rudy, 2009",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00698,
+     "setup_seconds": 0.113,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -9.93e-07,
+     "message": "",
+     "seconds": 0.00723,
+     "setup_seconds": 0.1,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -9.94e-07,
+     "message": "",
+     "seconds": 0.00761,
+     "setup_seconds": 0.029,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "1a0": {
+   "component_tags": [
+    "25 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "1a0",
+   "informative": true,
+   "name": "Carro, Rodriguez, Laguna, Pueyo (2011)",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00501,
+     "setup_seconds": 0.0924,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00508,
+     "setup_seconds": 0.0874,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00644,
+     "setup_seconds": 0.0237,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "22e": {
+   "component_tags": [
+    "8 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "22e",
+   "informative": null,
+   "name": "Renal SGLT1 model",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "libopencor failed",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "skip"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 14.6 and h = 2.02e-05, the corrector convergence test failed repeatedly or with |h| = hmin.",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "fail"
+    },
+    "roundtrip": {
+     "max_excess": null,
+     "message": "libopencor failed",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "skip"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "libopencor failed",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "skip"
+    },
+    "sbmlsim": {
+     "max_excess": null,
+     "message": "libopencor failed",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "skip"
+    }
+   },
+   "test_tags": []
+  },
+  "24": {
+   "component_tags": [
+    "12 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "24",
+   "informative": true,
+   "name": "Two compartment model of diazepam biotransformation in an organotypical culture of primary human hepatocytes",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000239,
+     "setup_seconds": 0.0113,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000247,
+     "setup_seconds": 0.0106,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00034,
+     "setup_seconds": 0.00273,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "25": {
+   "component_tags": [
+    "22 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "25",
+   "informative": true,
+   "name": "Vasalou, Henson, 2010",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00433,
+     "setup_seconds": 0.0597,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00471,
+     "setup_seconds": 0.0508,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00422,
+     "setup_seconds": 0.0179,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "260": {
+   "component_tags": [
+    "38 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "260",
+   "informative": true,
+   "name": "Faber, Rudy, 2000 and Tong, Ghouri, Taggart, 2014",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00123,
+     "setup_seconds": 0.0836,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00125,
+     "setup_seconds": 0.0695,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00319,
+     "setup_seconds": 0.0211,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "27d": {
+   "component_tags": [
+    "8 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "27d",
+   "informative": true,
+   "name": "An analysis of deformation-dependent electromechanical coupling in the mouse heart",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000351,
+     "setup_seconds": 0.0134,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000348,
+     "setup_seconds": 0.0106,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000831,
+     "setup_seconds": 0.0034,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "2a6": {
+   "component_tags": [
+    "8 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "2a6",
+   "informative": true,
+   "name": "Noble, 1962",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.0782,
+     "setup_seconds": 0.0868,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1.01e-06,
+     "message": "",
+     "seconds": 0.074,
+     "setup_seconds": 0.0798,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1.01e-06,
+     "message": "",
+     "seconds": 0.078,
+     "setup_seconds": 0.0811,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "2f": {
+   "component_tags": [
+    "16 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "2f",
+   "informative": true,
+   "name": "Fujita, Toyoshima, Uda, Ozaki, Kubota, Kuroda, 2010",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000235,
+     "setup_seconds": 0.011,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000239,
+     "setup_seconds": 0.00994,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000301,
+     "setup_seconds": 0.00224,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "30": {
+   "component_tags": [
+    "20 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "30",
+   "informative": true,
+   "name": "Maurya, Bornheimer, Venkatasubramanian, Subramaniam, 2005",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000235,
+     "setup_seconds": 0.0175,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00024,
+     "setup_seconds": 0.015,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00028,
+     "setup_seconds": 0.00327,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "31": {
+   "component_tags": [
+    "20 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "31",
+   "informative": true,
+   "name": "Wang, Cirit, Haugh, 2009",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000438,
+     "setup_seconds": 0.0205,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000425,
+     "setup_seconds": 0.0177,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000532,
+     "setup_seconds": 0.000912,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "32": {
+   "component_tags": [
+    "9 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "32",
+   "informative": true,
+   "name": "De Vries, Sherman, 2000",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000139,
+     "setup_seconds": 0.0091,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1.23e-06,
+     "message": "",
+     "seconds": 0.000137,
+     "setup_seconds": 0.00798,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1.23e-06,
+     "message": "",
+     "seconds": 0.000215,
+     "setup_seconds": 0.00207,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "38": {
+   "component_tags": [
+    "25 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "38",
+   "informative": true,
+   "name": "Li, Smith, 2009",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00121,
+     "setup_seconds": 0.0694,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00125,
+     "setup_seconds": 0.0615,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00264,
+     "setup_seconds": 0.0168,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "3c": {
+   "component_tags": [
+    "7 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "3c",
+   "informative": true,
+   "name": "Morris, Lecar, 1981",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000286,
+     "setup_seconds": 0.00919,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000285,
+     "setup_seconds": 0.00824,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000414,
+     "setup_seconds": 0.0026,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "3d": {
+   "component_tags": [
+    "5 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "3d",
+   "informative": true,
+   "name": "Alexander, Wahl, 2010",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000256,
+     "setup_seconds": 0.00605,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000254,
+     "setup_seconds": 0.00611,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000296,
+     "setup_seconds": 0.00168,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "3f7": {
+   "component_tags": [
+    "5 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "3f7",
+   "informative": true,
+   "name": "Moore, Li, 2004",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000271,
+     "setup_seconds": 0.00681,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1.02e-06,
+     "message": "",
+     "seconds": 0.000272,
+     "setup_seconds": 0.00672,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1.02e-06,
+     "message": "",
+     "seconds": 0.000353,
+     "setup_seconds": 0.00182,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "3f8": {
+   "component_tags": [
+    "20 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "3f8",
+   "informative": true,
+   "name": "A model for pacemaking in substantia nigra neurons (A simple model based on a spherical geometry)",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00112,
+     "setup_seconds": 0.0538,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.0012,
+     "setup_seconds": 0.0471,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00131,
+     "setup_seconds": 0.0167,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "3fa": {
+   "component_tags": [
+    "17 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "3fa",
+   "informative": true,
+   "name": "A single compartment model of pacemaking in dissasociated Substantia nigra neurons with hyperbolic tetrahedral geometry",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00115,
+     "setup_seconds": 0.0399,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000986,
+     "setup_seconds": 0.0332,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00116,
+     "setup_seconds": 0.0102,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "3fc": {
+   "component_tags": [
+    "51 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "3fc",
+   "informative": true,
+   "name": "Aguda, B, 1999",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00101,
+     "setup_seconds": 0.0226,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00113,
+     "setup_seconds": 0.0181,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00121,
+     "setup_seconds": 0.00467,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "3fd": {
+   "component_tags": [
+    "2 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "3fd",
+   "informative": true,
+   "name": "None",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000408,
+     "setup_seconds": 0.0136,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000417,
+     "setup_seconds": 0.0126,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000802,
+     "setup_seconds": 0.0035,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "3fe": {
+   "component_tags": [
+    "6 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "3fe",
+   "informative": true,
+   "name": "Arresting the mitotic oscillator and the control of cell proliferation: insights from a cascade model for cdc2 kinase activation",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00158,
+     "setup_seconds": 0.00901,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1.11e-06,
+     "message": "",
+     "seconds": 0.00155,
+     "setup_seconds": 0.00822,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1.11e-06,
+     "message": "",
+     "seconds": 0.00189,
+     "setup_seconds": 0.00359,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "3ff": {
+   "component_tags": [
+    "52 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "3ff",
+   "informative": true,
+   "name": "Aslanidi 2009",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.0045,
+     "setup_seconds": 0.0885,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00429,
+     "setup_seconds": 0.0769,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00632,
+     "setup_seconds": 0.0267,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "400": {
+   "component_tags": [
+    "9 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "400",
+   "informative": true,
+   "name": "Bagci 2008",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000558,
+     "setup_seconds": 0.0154,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000586,
+     "setup_seconds": 0.0138,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000873,
+     "setup_seconds": 0.00369,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "403": {
+   "component_tags": [
+    "5 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "403",
+   "informative": true,
+   "name": "Alexander, Wahl, 2010",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000261,
+     "setup_seconds": 0.00656,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000253,
+     "setup_seconds": 0.00603,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000316,
+     "setup_seconds": 0.000653,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "41": {
+   "component_tags": [
+    "23 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "41",
+   "informative": true,
+   "name": "Bondarenko, Szigeti, Bett, Kim, Rasmusson, 2004",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.0125,
+     "setup_seconds": 0.075,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.0122,
+     "setup_seconds": 0.067,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.0123,
+     "setup_seconds": 0.0268,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "412": {
+   "component_tags": [
+    "27 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "412",
+   "informative": true,
+   "name": "Benson, Aslanidi, Zhang, Holden, 2008",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00387,
+     "setup_seconds": 0.074,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00368,
+     "setup_seconds": 0.0676,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.0065,
+     "setup_seconds": 0.0221,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "413": {
+   "component_tags": [
+    "38 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "413",
+   "informative": true,
+   "name": "Barberis, Klipp, Vanoni, Alberghina, 2007",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00134,
+     "setup_seconds": 0.0362,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00141,
+     "setup_seconds": 0.0285,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00107,
+     "setup_seconds": 0.00597,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "414": {
+   "component_tags": [
+    "5 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "414",
+   "informative": true,
+   "name": "Ben-Tal, 2006",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000954,
+     "setup_seconds": 0.0207,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000995,
+     "setup_seconds": 0.019,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00146,
+     "setup_seconds": 0.00683,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "417": {
+   "component_tags": [
+    "64 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "417",
+   "informative": true,
+   "name": "Chen, Calzone, Csikasznagy, Cross, Novak, Tyson, 2004",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00389,
+     "setup_seconds": 0.0569,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00365,
+     "setup_seconds": 0.0483,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.0043,
+     "setup_seconds": 0.0142,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "423": {
+   "component_tags": [
+    "3 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "423",
+   "informative": true,
+   "name": "Wodarz, Hamer, 2007",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000156,
+     "setup_seconds": 0.00514,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000168,
+     "setup_seconds": 0.00481,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000223,
+     "setup_seconds": 0.00128,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "424": {
+   "component_tags": [
+    "11 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "424",
+   "informative": true,
+   "name": "Bertram, Rhoads, Cimbora, 2008",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000227,
+     "setup_seconds": 0.0136,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000235,
+     "setup_seconds": 0.0118,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000363,
+     "setup_seconds": 0.00337,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "427": {
+   "component_tags": [
+    "12 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "427",
+   "informative": true,
+   "name": "Butera, Rinzel, Smith, 1999",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000277,
+     "setup_seconds": 0.013,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00032,
+     "setup_seconds": 0.0138,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000378,
+     "setup_seconds": 0.00338,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "42f": {
+   "component_tags": [
+    "14 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "42f",
+   "informative": true,
+   "name": "Novak, Tyson, 1993",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000501,
+     "setup_seconds": 0.0153,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000501,
+     "setup_seconds": 0.013,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000637,
+     "setup_seconds": 0.00327,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "44": {
+   "component_tags": [
+    "3 components",
+    "DifferentialEquations"
+   ],
+   "id": "44",
+   "informative": true,
+   "name": "Tabak, Mascagni, Bertram, 2010",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00014,
+     "setup_seconds": 0.00608,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000145,
+     "setup_seconds": 0.00601,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000195,
+     "setup_seconds": 0.00159,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "447": {
+   "component_tags": [
+    "8 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "447",
+   "informative": true,
+   "name": "Cui, Kaandorp, 2006",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000871,
+     "setup_seconds": 0.0142,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": 0.00304,
+     "message": "dmdt exceeds the tolerance by 0.00304",
+     "seconds": 0.00091,
+     "setup_seconds": 0.0128,
+     "status": "fail"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": 0.00315,
+     "message": "dmdt exceeds the tolerance by 0.00315",
+     "seconds": 0.000994,
+     "setup_seconds": 0.00409,
+     "status": "fail"
+    }
+   },
+   "test_tags": []
+  },
+  "449": {
+   "component_tags": [
+    "22 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "449",
+   "informative": true,
+   "name": "Vasalou, Henson, 2010",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00442,
+     "setup_seconds": 0.058,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00436,
+     "setup_seconds": 0.0491,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00424,
+     "setup_seconds": 0.0175,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "47": {
+   "component_tags": [
+    "27 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "47",
+   "informative": true,
+   "name": "Bornheimer, Maurya, Farquhar, Subramaniam, 2004",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000663,
+     "setup_seconds": 0.0303,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000597,
+     "setup_seconds": 0.0258,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00079,
+     "setup_seconds": 0.00502,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "47f": {
+   "component_tags": [
+    "50 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "47f",
+   "informative": true,
+   "name": "Kholodenko, Demin, Moehren, Hoek, 1999",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000845,
+     "setup_seconds": 0.0315,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000843,
+     "setup_seconds": 0.027,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000884,
+     "setup_seconds": 0.00517,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "48": {
+   "component_tags": [
+    "8 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "48",
+   "informative": true,
+   "name": "Elowitz, Leibler, 2000",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000383,
+     "setup_seconds": 0.0106,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000384,
+     "setup_seconds": 0.00787,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000475,
+     "setup_seconds": 0.00241,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "48a": {
+   "component_tags": [
+    "38 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "48a",
+   "informative": true,
+   "name": "Computational analysis of the human sinus node action potential: model development and effects of mutations",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.303,
+     "setup_seconds": 0.339,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.289,
+     "setup_seconds": 0.326,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.286,
+     "setup_seconds": 0.31,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "4a7": {
+   "component_tags": [
+    "1 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "4a7",
+   "informative": true,
+   "name": "A model of intracellular pH control",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 8.83e-05,
+     "setup_seconds": 0.009,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 9.99e-05,
+     "setup_seconds": 0.00739,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000349,
+     "setup_seconds": 0.00294,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "4bc": {
+   "component_tags": [
+    "37 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "4bc",
+   "informative": true,
+   "name": "Varela - Canine Atrial Cell Models",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.0042,
+     "setup_seconds": 0.0678,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00425,
+     "setup_seconds": 0.0601,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00722,
+     "setup_seconds": 0.0206,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "4d": {
+   "component_tags": [
+    "8 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "4d",
+   "informative": true,
+   "name": "Goldbeter, 1995",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000454,
+     "setup_seconds": 0.0103,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -0.000201,
+     "message": "",
+     "seconds": 0.000439,
+     "setup_seconds": 0.00961,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -0.000201,
+     "message": "",
+     "seconds": 0.000554,
+     "setup_seconds": 0.00243,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "4ea": {
+   "component_tags": [
+    "4 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "4ea",
+   "informative": true,
+   "name": "HH Sodium Current model for estimation task",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000427,
+     "setup_seconds": 0.0086,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1.06e-06,
+     "message": "",
+     "seconds": 0.000416,
+     "setup_seconds": 0.00802,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1.06e-06,
+     "message": "",
+     "seconds": 0.000902,
+     "setup_seconds": 0.00296,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "4f1": {
+   "component_tags": [
+    "2 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "4f1",
+   "informative": true,
+   "name": "Steady state HMT",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 6.15e-05,
+     "setup_seconds": 0.00482,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 6.79e-05,
+     "setup_seconds": 0.005,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000112,
+     "setup_seconds": 0.00129,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "50": {
+   "component_tags": [
+    "11 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "50",
+   "informative": true,
+   "name": "Goldbeter, Gonze, Pourquie, 2007",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000349,
+     "setup_seconds": 0.00925,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000405,
+     "setup_seconds": 0.00814,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000419,
+     "setup_seconds": 0.0023,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "51": {
+   "component_tags": [
+    "8 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "51",
+   "informative": true,
+   "name": "Guyton, Volume Receptors, 2008",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 6.91e-05,
+     "setup_seconds": 0.00647,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 6.2e-05,
+     "setup_seconds": 0.00547,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000104,
+     "setup_seconds": 0.00219,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "513": {
+   "component_tags": [
+    "32 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "513",
+   "informative": true,
+   "name": "Clancy, Rudy, 2002",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00144,
+     "setup_seconds": 0.0906,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00145,
+     "setup_seconds": 0.0777,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": null,
+     "message": "SimulationFailure: sbmlsim: IntegrationError: integration failed at t = 3.01 (flag -1): CVode: At t = 3.01, mxstep steps taken before reaching tout.",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "fail"
+    }
+   },
+   "test_tags": []
+  },
+  "514": {
+   "component_tags": [
+    "32 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "514",
+   "informative": null,
+   "name": "Clancy, Rudy, 2001",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "libopencor failed",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "skip"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 0.102, mxstep steps taken before reaching tout.",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "fail"
+    },
+    "roundtrip": {
+     "max_excess": null,
+     "message": "libopencor failed",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "skip"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "libopencor failed",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "skip"
+    },
+    "sbmlsim": {
+     "max_excess": null,
+     "message": "libopencor failed",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "skip"
+    }
+   },
+   "test_tags": []
+  },
+  "52": {
+   "component_tags": [
+    "11 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "52",
+   "informative": true,
+   "name": "Nelson, Perelson, 1995",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000225,
+     "setup_seconds": 0.0137,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000231,
+     "setup_seconds": 0.0118,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000353,
+     "setup_seconds": 0.00297,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "53": {
+   "component_tags": [
+    "228 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "53",
+   "informative": true,
+   "name": "Schoeberl, Eichler-Jonsson, Gilles, Muller, 2002",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.0201,
+     "setup_seconds": 0.154,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.0194,
+     "setup_seconds": 0.135,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.012,
+     "setup_seconds": 0.0247,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "59": {
+   "component_tags": [
+    "4 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "59",
+   "informative": true,
+   "name": "[Ca2+]i oscillations in sympathetic neurons: an experimental test of a theoretical model",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000299,
+     "setup_seconds": 0.00805,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000302,
+     "setup_seconds": 0.00773,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000734,
+     "setup_seconds": 0.00258,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "594": {
+   "component_tags": [
+    "31 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "594",
+   "informative": true,
+   "name": "Paci, Hyttinen, Aalto-Setala, Severi 2013 HiPSC models",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.272,
+     "setup_seconds": 0.331,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": 0.000271,
+     "message": "tau_f1 exceeds the tolerance by 0.000271",
+     "seconds": 0.274,
+     "setup_seconds": 0.32,
+     "status": "fail"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.353,
+     "setup_seconds": 0.37,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "5a0": {
+   "component_tags": [
+    "25 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "5a0",
+   "informative": true,
+   "name": "O'Hara-Rudy-CiPA-v1.0 (2017)",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.0104,
+     "setup_seconds": 0.164,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00989,
+     "setup_seconds": 0.138,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.0115,
+     "setup_seconds": 0.0471,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "5bc": {
+   "component_tags": [
+    "10 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "5bc",
+   "informative": true,
+   "name": "Fenton, Karma, 1998",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000367,
+     "setup_seconds": 0.0121,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000366,
+     "setup_seconds": 0.0108,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000761,
+     "setup_seconds": 0.00316,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "5f": {
+   "component_tags": [
+    "29 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "5f",
+   "informative": true,
+   "name": "Winslow, Rice, Jafri, Marban, O'Rorke, 1999",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00202,
+     "setup_seconds": 0.0763,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00204,
+     "setup_seconds": 0.0676,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": null,
+     "message": "SimulationFailure: sbmlsim: IntegrationError: integration failed at t = 0.376 (flag -1): CVode: At t = 0.376, mxstep steps taken before reaching tout.",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "fail"
+    }
+   },
+   "test_tags": []
+  },
+  "5f0": {
+   "component_tags": [
+    "28 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "5f0",
+   "informative": null,
+   "name": "C. Trovato, E. Passini, N. Nagy, et al. (2019),A computational human cardiac Purkinje electrophysiological model",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "libopencor failed",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "skip"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "SimulationFailure: libopencor: SimulationError: run: Task | CVODE: at t = 1.46 and h = 5.6e-10, the corrector convergence test failed repeatedly or with |h| = hmin.",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "fail"
+    },
+    "roundtrip": {
+     "max_excess": null,
+     "message": "libopencor failed",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "skip"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "libopencor failed",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "skip"
+    },
+    "sbmlsim": {
+     "max_excess": null,
+     "message": "libopencor failed",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "skip"
+    }
+   },
+   "test_tags": []
+  },
+  "5f1": {
+   "component_tags": [
+    "27 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "5f1",
+   "informative": true,
+   "name": "Tomek, Jakub, et al. (2019)- A computational human ventricular electrophysiological model",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00724,
+     "setup_seconds": 0.181,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.0079,
+     "setup_seconds": 0.149,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.0103,
+     "setup_seconds": 0.05,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "5f7": {
+   "component_tags": [
+    "12 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "5f7",
+   "informative": true,
+   "name": "McIntyre, Richardson, Grill, 2001",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.000149,
+     "setup_seconds": 0.0169,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.000143,
+     "setup_seconds": 0.0144,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": 454.0,
+     "message": "V_m exceeds the tolerance by 137; h exceeds the tolerance by 0.838; m exceeds the tolerance by 0.97; p exceeds the tolerance by 0.799; s exceeds the tolerance by 0.63; n exceeds the tolerance by 0.923; i_Lk exceeds the tolerance by 0.961; i_Ks exceeds the tolerance by 5.86; i_Nap exceeds the tolerance by 0.859; i_Naf exceeds the tolerance by 14.5; beta_m exceeds the tolerance by 19.1; alpha_m exceeds the tolerance by 454; beta_h exceeds the tolerance by 12.4; alpha_h exceeds the tolerance by 0.951; beta_p exceeds the tolerance by 0.0483; alpha_p exceeds the tolerance by 2.67; beta_s exceeds the tolerance by 0.00586; alpha_s exceeds the tolerance by 0.3; beta_n exceeds the tolerance by 2.1; alpha_n exceeds the tolerance by 6.09",
+     "seconds": 0.005,
+     "setup_seconds": 0.0083,
+     "status": "fail"
+    }
+   },
+   "test_tags": []
+  },
+  "62": {
+   "component_tags": [
+    "46 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "62",
+   "informative": true,
+   "name": "Model of a rabbit Purkinje cell",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00109,
+     "setup_seconds": 0.0584,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00109,
+     "setup_seconds": 0.0478,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.0023,
+     "setup_seconds": 0.0138,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  },
+  "639": {
+   "component_tags": [
+    "25 components",
+    "DifferentialEquations",
+    "Units"
+   ],
+   "id": "639",
+   "informative": true,
+   "name": "An encoding of the human ORd model by Steve Neiderer",
+   "stages": {
+    "cellml2sbml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "libopencor": {
+     "max_excess": null,
+     "message": "",
+     "seconds": 0.00664,
+     "setup_seconds": 0.145,
+     "status": "pass"
+    },
+    "roundtrip": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00679,
+     "setup_seconds": 0.125,
+     "status": "pass"
+    },
+    "sbml2cellml": {
+     "max_excess": null,
+     "message": "",
+     "seconds": null,
+     "setup_seconds": null,
+     "status": "pass"
+    },
+    "sbmlsim": {
+     "max_excess": -1e-06,
+     "message": "",
+     "seconds": 0.00734,
+     "setup_seconds": 0.0377,
+     "status": "pass"
+    }
+   },
+   "test_tags": []
+  }
+ },
+ "skipped": {
+  "10": "model cannot be analysed",
+  "103": "model cannot be analysed",
+  "129": "model cannot be analysed",
+  "13c": "model cannot be analysed",
+  "173": "model cannot be analysed",
+  "17d": "model cannot be analysed",
+  "184": "model cannot be analysed",
+  "1cc": "model cannot be analysed",
+  "236": "workspace cannot be cloned",
+  "23a": "model cannot be analysed",
+  "26": "model cannot be analysed",
+  "2ca": "imports cannot be resolved",
+  "2cb": "imports cannot be resolved",
+  "2d0": "imports cannot be resolved",
+  "2e": "model cannot be parsed",
+  "2e2": "imports cannot be resolved",
+  "2ff": "imports cannot be resolved",
+  "33": "model cannot be analysed",
+  "37": "model cannot be analysed",
+  "39": "model cannot be parsed",
+  "430": "model cannot be analysed",
+  "434": "model cannot be analysed",
+  "49": "model cannot be analysed",
+  "498": "file missing in the workspace",
+  "4b6": "model cannot be analysed",
+  "4c": "model cannot be analysed",
+  "4c4": "file missing in the workspace",
+  "4c8": "model cannot be analysed",
+  "4e": "model cannot be parsed",
+  "4e2": "model cannot be analysed",
+  "4f": "model cannot be analysed",
+  "5": "model cannot be analysed",
+  "5f3": "model cannot be parsed",
+  "631": "model cannot be analysed"
+ },
+ "stages": [
+  "libopencor",
+  "cellml2sbml",
+  "sbmlsim",
+  "sbml2cellml",
+  "roundtrip"
+ ],
+ "suite": "physiome",
+ "version": "0.5.0"
+}

@@ -36,11 +36,12 @@ SUITE_TIMEOUT = 600.0
 CACHE_ENV = "SBML2CELLML_CACHE"
 #: name of a case directory
 CASE_ID = re.compile(r"^\d{5}$")
-#: component tags of SBML packages, none of which the converters support;
-#: `layout` and `render` are deliberately absent - they only describe the
-#: diagram of the model, not its math, so a model using them still runs
+#: component tags of SBML packages the converters do not support; `layout`
+#: and `render` are deliberately absent - they only describe the diagram of
+#: the model, not its math, so a model using them still runs, and so is
+#: `comp`, whose submodels are flattened before a model is converted or
+#: simulated (`sbml2cellml.sbml.flatten_comp`)
 PACKAGE_PREFIXES = (
-    "comp",
     "fbc",
     "qual",
     "multi",

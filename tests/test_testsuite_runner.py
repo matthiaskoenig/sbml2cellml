@@ -13,10 +13,10 @@ from sbml2cellml.testsuite.cases import SUITE_VERSION, load_cases
 from sbml2cellml.testsuite.results import STAGES, STATUSES, SuiteResult
 from sbml2cellml.testsuite.runner import (
     SOLVER_SETTINGS,
-    _message,
-    _simulate,
+    error_message,
     run_suite,
     selections,
+    simulate_stage,
 )
 from sbml2cellml.testsuite.worker import SimulationFailure, SimulatorWorker
 from tests.sbml_models import simple_model, write_sbml
@@ -34,7 +34,7 @@ def test_message_keeps_every_line() -> None:
         "[ERROR] the first issue  \n"
         "[ERROR] the second issue\n"
     )
-    assert _message(err) == (
+    assert error_message(err) == (
         "CellMLValidationError: CellML model 'x' converted from 'path' has 2 errors:\n"
         "[ERROR] the first issue\n"
         "[ERROR] the second issue"
@@ -43,19 +43,19 @@ def test_message_keeps_every_line() -> None:
 
 def test_message_is_not_shortened() -> None:
     text = "the variable " + ", ".join(f"S{k}" for k in range(500)) + " is missing"
-    assert _message(ValueError(text)) == f"ValueError: {text}"
+    assert error_message(ValueError(text)) == f"ValueError: {text}"
 
 
 def test_message_single_line_unchanged() -> None:
     err = ValueError("no time column")
-    assert _message(err) == "ValueError: no time column"
+    assert error_message(err) == "ValueError: no time column"
 
 
 def test_message_reduces_absolute_paths_to_basename() -> None:
     # the message must not depend on $HOME or where the suite was checked
     # out, or the committed docs/testsuite.md would differ across machines
     err = ValueError("model '/home/x/y/z/case.xml' is invalid")
-    message = _message(err)
+    message = error_message(err)
     assert "'case.xml'" in message
     assert "/home/" not in message
 
@@ -65,7 +65,7 @@ def test_message_rounds_long_decimals() -> None:
     # is an artifact of the solver and the machine it ran on and would churn
     # the committed message across machines; rounded to 3 significant digits
     err = RuntimeError("CVODE: at t = 0.0827801454102412, mxstep steps taken")
-    message = _message(err)
+    message = error_message(err)
     assert "0.0827801454102412" not in message
     assert "0.0828" in message
 
@@ -74,7 +74,7 @@ def test_message_keeps_long_decimals_outside_integrator_failures() -> None:
     # a constant of the model in the code a compiler error points at is no
     # artifact of the machine, and rounding it would shift the marker below
     text = "Compiler: expression is not assignable:\n  1 | x = --0.00166112956810631;"
-    assert _message(RuntimeError(text)) == f"RuntimeError: {text}"
+    assert error_message(RuntimeError(text)) == f"RuntimeError: {text}"
 
 
 def test_selections() -> None:
@@ -269,13 +269,13 @@ CVODE_FAILURE = "libopencor: RuntimeError: CVODE Error: CV_TOO_MUCH_WORK"
 
 def test_simulate_uses_the_tight_settings_first() -> None:
     worker = _Worker(failures=0, message=CVODE_FAILURE)
-    _simulate(cast(SimulatorWorker, worker), "simulate_sbml", start=0.0)
+    simulate_stage(cast(SimulatorWorker, worker), "simulate_sbml", start=0.0)
     assert worker.calls == [{"start": 0.0, **SOLVER_SETTINGS[0]}]
 
 
 def test_simulate_relaxes_the_tolerances_when_cvode_fails() -> None:
     worker = _Worker(failures=1, message=CVODE_FAILURE)
-    result = _simulate(cast(SimulatorWorker, worker), "simulate_sbml", start=0.0)
+    result = simulate_stage(cast(SimulatorWorker, worker), "simulate_sbml", start=0.0)
     assert result["columns"] == ["time"]
     assert worker.calls == [
         {"start": 0.0, **SOLVER_SETTINGS[0]},
@@ -293,14 +293,14 @@ def test_simulate_relaxes_the_tolerances_for_an_integration_error() -> None:
         "CVode: mxstep steps taken before reaching tout."
     )
     worker = _Worker(failures=1, message=message)
-    _simulate(cast(SimulatorWorker, worker), "simulate_sbml", start=0.0)
+    simulate_stage(cast(SimulatorWorker, worker), "simulate_sbml", start=0.0)
     assert len(worker.calls) == 2
 
 
 def test_simulate_raises_the_first_failure_when_no_settings_integrate() -> None:
     worker = _Worker(failures=len(SOLVER_SETTINGS), message=CVODE_FAILURE)
     with pytest.raises(SimulationFailure, match=r"CV_TOO_MUCH_WORK \(1\)"):
-        _simulate(cast(SimulatorWorker, worker), "simulate_sbml", start=0.0)
+        simulate_stage(cast(SimulatorWorker, worker), "simulate_sbml", start=0.0)
     assert len(worker.calls) == len(SOLVER_SETTINGS)
 
 
@@ -310,5 +310,5 @@ def test_simulate_does_not_retry_other_failures() -> None:
         failures=1, message="sbmlsim: CompileError: required package is not supported"
     )
     with pytest.raises(SimulationFailure, match="required package"):
-        _simulate(cast(SimulatorWorker, worker), "simulate_sbml", start=0.0)
+        simulate_stage(cast(SimulatorWorker, worker), "simulate_sbml", start=0.0)
     assert len(worker.calls) == 1

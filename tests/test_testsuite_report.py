@@ -19,7 +19,7 @@ from sbml2cellml.testsuite.report import (
     write_report,
 )
 from sbml2cellml.testsuite.results import STAGES, CaseResult, StageResult, SuiteResult
-from sbml2cellml.testsuite.runner import _message
+from sbml2cellml.testsuite.runner import error_message
 
 FIXTURES = Path(__file__).parent / "data" / "testsuite" / "semantic"
 
@@ -236,14 +236,14 @@ def test_tolerance_text() -> None:
 
 
 def test_reason_groups_tolerance_messages() -> None:
-    a = _message(RuntimeError("S1 exceeds the tolerance by 0.5"))
-    b = _message(RuntimeError("S2 exceeds the tolerance by nan"))
+    a = error_message(RuntimeError("S1 exceeds the tolerance by 0.5"))
+    b = error_message(RuntimeError("S2 exceeds the tolerance by nan"))
     assert _reason(a) == _reason(b) == "numerical mismatch"
 
 
 def test_reason_groups_cellml_validation_messages() -> None:
     def message(cid: str, count: int) -> str:
-        return _message(
+        return error_message(
             CellMLValidationError(
                 f"CellML model 'case{cid}' converted from "
                 f"'/home/mkoenig/.cache/sbml2cellml/sbml-test-suite/3.5.0/semantic/"
@@ -292,7 +292,7 @@ def test_render_report_groups_failure_reasons() -> None:
     for cid, validation_message in validation:
         stages = dict(ok)
         stages["sbml2cellml"] = StageResult(
-            "fail", _message(CellMLValidationError(validation_message))
+            "fail", error_message(CellMLValidationError(validation_message))
         )
         for stage in ("libopencor", "cellml2sbml", "roundtrip"):
             stages[stage] = StageResult("skip", "sbml2cellml failed")

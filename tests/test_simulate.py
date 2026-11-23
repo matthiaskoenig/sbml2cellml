@@ -103,8 +103,10 @@ def test_run_timecourse_algebraic_model(tmp_path: Path) -> None:
     assert set(units) == set(df.columns)
 
 
-def test_run_timecourse_duplicate_names_raise(tmp_path: Path) -> None:
-    """A variable `time` of an algebraic model would replace the time points."""
+def test_run_timecourse_keeps_the_component_of_a_clashing_name(
+    tmp_path: Path,
+) -> None:
+    """A variable `time` of an algebraic model keeps its component."""
     model = algebraic_model()
     model.component(0).variable("a").setName("time")
     model.component(0).setMath(
@@ -112,8 +114,10 @@ def test_run_timecourse_duplicate_names_raise(tmp_path: Path) -> None:
     )
     cellml_path = tmp_path / "time.cellml"
     write_model(model, cellml_path)
-    with pytest.raises(SimulationError, match="'time' occurs twice"):
-        run_timecourse(cellml_path)
+    df, _ = run_timecourse(cellml_path, start=0.0, end=10.0, steps=5)
+    # the time points stay `time`, the variable of the component keeps it
+    assert df["time"].tolist() == [0.0, 2.0, 4.0, 6.0, 8.0, 10.0]
+    assert df["main/time"].tolist() == [2.0] * 6
 
 
 def test_run_timecourse_boundary_species_is_not_changed_by_reactions(

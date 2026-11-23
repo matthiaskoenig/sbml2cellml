@@ -10,6 +10,7 @@ SIds; a sanitized id which is already taken gets a numeric suffix.
 
 import re
 from collections import Counter
+from collections.abc import Iterator
 from typing import Any
 
 import libcellml
@@ -112,6 +113,21 @@ def analyser_variables(analyser_model: libcellml.AnalyserModel) -> list[Any]:
     )
 
 
+def components(parent: Any) -> Iterator[Any]:
+    """The components of a model or component, recursively (encapsulation).
+
+    Args:
+        parent: CellML model or component.
+
+    Yields:
+        Every component below the parent, a parent before its children.
+    """
+    for k in range(parent.componentCount()):
+        component = parent.component(k)
+        yield component
+        yield from components(component)
+
+
 class VariableIds:
     """SBML ids of the variables of an analysed CellML model."""
 
@@ -197,3 +213,33 @@ class VariableIds:
     def is_voi(self, variable: Any) -> bool:
         """Whether a libcellml variable is the variable of integration."""
         return variable_key(variable) in self._voi
+
+
+class ComponentIds(VariableIds):
+    """SBML ids of the variables, one namespace per component.
+
+    The hierarchical conversion gives every component of the CellML model
+    its own SBML model definition, so a variable is identified by its own
+    name inside its component instead of by the id of its equivalence set
+    (`VariableIds`). The variable of integration and the reserved ids are
+    those of the flat conversion, since the components share the SBML time
+    symbol and an event id has to be unique in every model definition it is
+    written to.
+    """
+
+    def __init__(self, model: libcellml.Model, analyser_model: Any) -> None:
+        """Assign the local ids.
+
+        Args:
+            model: the CellML model with the components.
+            analyser_model: model of a libcellml analyser without errors.
+        """
+        super().__init__(analyser_model)
+        self._ids = {}
+        for component in components(model):
+            used: set[str] = set()
+            name = component.name()
+            for k in range(component.variableCount()):
+                variable = component.variable(k)
+                sid = unique_sid(sanitize_id(variable.name()), used)
+                self._ids[(name, variable.name())] = sid
