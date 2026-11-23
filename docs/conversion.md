@@ -29,7 +29,7 @@ A file without a model raises `SBML2CellMLConversionError`. A hierarchical model
 
 ### Logging
 
-The package logs the conversion steps and the constructs it skips (the delay of an event, algebraic rules which determine no variable, initial assignments libsbml cannot evaluate, unset initial values) and does not print. Scripts enable the rich output of the package with
+The package logs the conversion steps and the constructs it skips (an event which has no counterpart in CellML, algebraic rules which determine no variable, initial assignments libsbml cannot evaluate, unset initial values) and does not print. Scripts enable the rich output of the package with
 
 ```python
 from sbml2cellml import log
@@ -90,6 +90,23 @@ The RDF is the one of SBML annotations, written and parsed by libsbml, so an ann
 | history | `dcterms:creator` (vCard 4), `dcterms:created`, `dcterms:modified` |
 
 The elements with metadata are the ones with a CellML element: the model, compartments, species, parameters, local parameters, species references with an id, reactions (the variable of the rate) and unit definitions. [`convert_cellml2sbml`](#cellml-to-sbml) reads the file back, so the metadata survives the roundtrip; the [roundtrip example](roundtrip.md) shows the files.
+
+The file also carries what a reset of CellML cannot express, under the subject of the trigger variable of the event, in the namespace of this project (`https://matthiaskoenig.github.io/sbml2cellml/rdf#`):
+
+```xml
+<rdf:Description rdf:about="model.cellml#e1_trigger">
+  <sbml2cellml:event>
+    <sbml2cellml:delay rdf:parseType="Literal">
+      <math xmlns="http://www.w3.org/1998/Math/MathML">
+        <cn type="integer"> 2 </cn>
+      </math>
+    </sbml2cellml:delay>
+    <sbml2cellml:initialValue>false</sbml2cellml:initialValue>
+  </sbml2cellml:event>
+</rdf:Description>
+```
+
+The block holds the `delay` and the `priority` of the event as MathML and the flags `initialValue`, `persistent` and `useValuesFromTriggerTime` when they are not the default of SBML, so the event of the roundtrip model is the event of the original. `--no-metadata` writes no file, and the events of the roundtrip model then fire immediately, with the defaults of SBML.
 
 ### Units
 
@@ -175,8 +192,8 @@ CellML has no species, compartments or reactions: every variable becomes a param
 | custom units | unit definition expanded to base kinds; the prefix becomes the scale, the multiplier `m` of a unit with the exponent `e` the multiplier `m^(1/e)` (SBML applies the exponent to the multiplier as well) |
 | units of a number | `sbml:units` of the number, by the id of the unit definition |
 | new base units `item` | the unit kind `item` |
-| variable written only by a reset | parameter constant="false" (an event assignment needs a non-constant target) |
-| reset | event with the trigger `test_variable == test_value`, priority `-order`, one event assignment; a test variable which is `piecewise(1, condition, 0)`, as the conversion of an SBML event writes it, gives the trigger `condition` |
+| variable written only by a reset | parameter constant="false" (an event assignment needs a non-constant target); a variable computed from it is no initial assignment but an assignment rule, since it changes whenever the reset fires |
+| resets of one test variable and test value | one event with one event assignment per reset, ordered by `order`, the trigger `test_variable == test_value` and the priority `-order`; a test variable which is `piecewise(1, condition, 0)`, as the conversion of an SBML event writes it, gives the trigger `condition`, and the metadata of the trigger variable gives the event its delay, its priority and the flags of SBML |
 | components and connections | one flat namespace; a variable name used by several unconnected variables is prefixed with its component (`cell_x`), the CellML name is kept as `name`; the model id and event ids also get a numeric suffix when they collide with a variable id |
 | imports | resolved and flattened before the conversion |
 | metadata in `model.rdf` next to `model.cellml`, see [Metadata](#metadata) | name, notes, SBO term, CV terms and history of the parameter of the variable, the unit definition of the units and the model with that `id`; the `id` is the `metaid` |

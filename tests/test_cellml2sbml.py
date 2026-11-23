@@ -114,7 +114,9 @@ def test_convert_reset_model(tmp_path: Path) -> None:
     write_model(reset_model(), cellml_path)
     doc = convert_cellml2sbml(cellml_path)
     model = doc.getModel()
-    assert model.getNumEvents() == 2
+    # the two resets share their test variable and their test value, so
+    # they fire together and become one event with two assignments
+    assert model.getNumEvents() == 1
 
     # count is only ever written by the second reset, so it must not be
     # constant even though the analyser types it CONSTANT
@@ -129,15 +131,12 @@ def test_convert_reset_model(tmp_path: Path) -> None:
     assert trigger.getPersistent() and trigger.getInitialValue()
     assert libsbml.formulaToL3String(trigger.getMath()) == "m == m_div"
     assert libsbml.formulaToL3String(event.getPriority().getMath()) == "-0"
-    assert event.getNumEventAssignments() == 1
+    assert event.getNumEventAssignments() == 2
     assignment = event.getEventAssignment(0)
     assert assignment.getVariable() == "m"
     assert libsbml.formulaToL3String(assignment.getMath()) == "m / 2 dimensionless"
 
-    count_event = model.getEvent(1)
-    assert count_event.getId() == "reset_2"
-    assert count_event.getNumEventAssignments() == 1
-    count_assignment = count_event.getEventAssignment(0)
+    count_assignment = event.getEventAssignment(1)
     assert count_assignment.getVariable() == "count"
     assert (
         libsbml.formulaToL3String(count_assignment.getMath())
@@ -481,3 +480,25 @@ def test_a_single_argument_plus_is_written_without_the_operator(
         ]
         assert "x" in rules, (engine, rules)
         assert not any("plus(" in rule for rule in rules), (engine, rules)
+
+
+def test_resets_of_different_triggers_stay_apart(tmp_path: Path) -> None:
+    """Only the resets which fire together become one event."""
+    model = reset_model()
+    component = model.component("environment")
+    other = variable(component, "other", "dimensionless", 3.0)
+    reset = libcellml.Reset()
+    reset.setVariable(component.variable("count"))
+    reset.setTestVariable(other)
+    reset.setOrder(2)
+    reset.setTestValue(math(assignment("other", cn("3"))))
+    reset.setResetValue(math(assignment("count", cn("0"))))
+    component.addReset(reset)
+    cellml_path = tmp_path / "two.cellml"
+    write_model(model, cellml_path)
+    model_sbml = convert_cellml2sbml(cellml_path).getModel()
+    assert model_sbml.getNumEvents() == 2
+    assignments = [
+        event.getNumEventAssignments() for event in model_sbml.getListOfEvents()
+    ]
+    assert assignments == [2, 1]

@@ -113,6 +113,9 @@ pub enum Kind {
     LocalParameter,
     /// A unit definition.
     Units,
+    /// An event, the variable of its trigger: the metadata carries what a
+    /// reset cannot express, the delay, the priority and the flags.
+    Event,
 }
 
 impl Kind {
@@ -127,6 +130,7 @@ impl Kind {
             Kind::SpeciesReference => "species_reference",
             Kind::LocalParameter => "local_parameter",
             Kind::Units => "units",
+            Kind::Event => "event",
         }
     }
 }
@@ -203,6 +207,7 @@ impl Formulas {
             let rate = self
                 .reaction_terms
                 .iter()
+                .chain(self.rate_rules.iter())
                 .find(|(id, _)| *id == amount.variable)
                 .map_or_else(|| Sbml::number(0.0), |(_, formula)| formula.clone());
             derivatives.insert(
@@ -439,11 +444,19 @@ fn collect(model: &Model, warnings: &mut Vec<String>) -> Result<Formulas, Conver
             .push((reaction.id.clone(), rename(&math, &local)));
     }
 
-    let determined: HashSet<&str> = formulas
+    // a species an assignment or an algebraic rule determines keeps its
+    // concentration as its own quantity, which the rule gives; a rate rule
+    // gives the rate of the concentration, which the amount integrates when
+    // an event sets the size of the compartment
+    let computed: HashSet<&str> = formulas
         .assignment_rules
         .iter()
-        .chain(formulas.rate_rules.iter())
         .chain(formulas.algebraic_rules.iter())
+        .map(|(id, _)| id.as_str())
+        .collect();
+    let rated: HashSet<&str> = formulas
+        .rate_rules
+        .iter()
         .map(|(id, _)| id.as_str())
         .collect();
     let solved: HashSet<&str> = formulas
@@ -453,7 +466,11 @@ fn collect(model: &Model, warnings: &mut Vec<String>) -> Result<Formulas, Conver
         .map(|(id, _)| id.as_str())
         .collect();
     let changing = changing(model, &formulas.assignment_rules, &solved);
-    formulas.amounts = amounts(model, &determined, &changing, &mut used);
+    formulas.amounts = amounts(model, &computed, &rated, &changing, &mut used);
+    drop(computed);
+    drop(rated);
+    drop(solved);
+    rate_rules_of_amounts(&mut formulas);
     formulas.reaction_terms = reaction_terms(model, &formulas, warnings);
 
     // CellML knows the variable of integration only from a differential
@@ -486,6 +503,26 @@ fn collect(model: &Model, warnings: &mut Vec<String>) -> Result<Formulas, Conver
     {
         formula.1 = expand_rate_of(&formula.1, &derivatives, &assigned, &[], warnings);
     }
+    // the formulas of an event as well: an event assignment may use the
+    // rate of a variable (`rateOf(x)`), which CellML has no symbol for
+    for event in &mut formulas.events {
+        event.condition = expand_rate_of(&event.condition, &derivatives, &assigned, &[], warnings);
+        for assignment in &mut event.assignments {
+            assignment.1 = expand_rate_of(&assignment.1, &derivatives, &assigned, &[], warnings);
+        }
+    }
+    // an event whose formulas still use a symbol CellML has no counterpart
+    // for is not converted, as in the python converter
+    formulas.events.retain(|event| match events::unsupported(event) {
+        Some(operator) => {
+            warnings.push(format!(
+                "the event '{}' uses '{operator}', which has no counterpart in CellML: it is not converted",
+                event.id
+            ));
+            false
+        }
+        None => true,
+    });
     Ok(formulas)
 }
 
@@ -662,8 +699,9 @@ fn symbols(node: &Sbml) -> Vec<&str> {
 
 /// The ids of the variables which change in time: the targets of rate rules,
 /// the species the reactions change, the rates of the reactions, the targets
-/// of assignment rules which use time or a variable which changes, and the
-/// concentration of a species in a compartment which changes.
+/// of the assignments of the events, the targets of assignment rules which
+/// use time or a variable which changes, and the concentration of a species
+/// in a compartment which changes.
 ///
 /// An assignment rule of constants, a volume from a body weight for example,
 /// does not change its target.
@@ -679,6 +717,13 @@ fn changing(
             if !boundary(model, &reference.species) {
                 changing.insert(reference.species.clone());
             }
+        }
+    }
+    // an event assignment changes its target when it fires, which is what
+    // makes the concentration of a species in such a compartment change
+    for event in &model.events {
+        for assignment in &event.assignments {
+            changing.insert(assignment.variable.clone());
         }
     }
     let names: Vec<(&str, Vec<&str>)> = assignment_rules
@@ -723,17 +768,63 @@ fn boundary(model: &Model, species: &str) -> bool {
 ///
 /// SBML keeps the amount of a species when the size of its compartment
 /// changes, so the concentration follows the size.
+/// Move the rate rule of a species with a variable of its amount to that
+/// amount.
+///
+/// The rule gives the rate of the concentration `S = A / C`, which the
+/// amount integrates as `dA/dt = rate * C + S * rateOf(C)`; the `rateOf` is
+/// replaced by the rate of the compartment later and is 0 for a compartment
+/// only an event sets, where the amount of the species does not change.
+fn rate_rules_of_amounts(formulas: &mut Formulas) {
+    for (species, amount) in &formulas.amounts {
+        let Some(index) = formulas.rate_rules.iter().position(|(id, _)| id == species) else {
+            continue;
+        };
+        let (_, rate) = formulas.rate_rules.remove(index);
+        let compartment = Sbml::Symbol(amount.compartment.clone());
+        formulas.rate_rules.push((
+            amount.variable.clone(),
+            apply(
+                Op::Plus,
+                vec![
+                    apply(Op::Times, vec![rate, compartment.clone()]),
+                    apply(
+                        Op::Times,
+                        vec![
+                            Sbml::Symbol(species.clone()),
+                            apply(Op::RateOf, vec![compartment]),
+                        ],
+                    ),
+                ],
+            ),
+        ));
+    }
+}
+
 fn amounts(
     model: &Model,
-    determined: &HashSet<&str>,
+    computed: &HashSet<&str>,
+    rated: &HashSet<&str>,
     changing: &HashSet<String>,
     used: &mut HashSet<String>,
 ) -> Vec<(String, Amount)> {
+    // the targets of the event assignments: the size of such a compartment
+    // jumps, where the amount of a species in it stays
+    let assigned_by_events: HashSet<&str> = model
+        .events
+        .iter()
+        .flat_map(|event| event.assignments.iter().map(|a| a.variable.as_str()))
+        .collect();
     let mut amounts = Vec::new();
     for species in &model.species {
         if species.has_only_substance_units
-            || determined.contains(species.id.as_str())
+            || computed.contains(species.id.as_str())
             || !changing.contains(&species.compartment)
+        {
+            continue;
+        }
+        if rated.contains(species.id.as_str())
+            && !assigned_by_events.contains(species.compartment.as_str())
         {
             continue;
         }
@@ -1185,7 +1276,7 @@ fn build(
     add_non_finite_equations(&mut component, &states, warnings);
 
     let model_name = model.id.clone().unwrap_or_else(|| name.to_string());
-    let origins = origins(model, formulas, &mut units, &model_name);
+    let origins = origins(model, formulas, &mut units, &model_name, &formulas.events);
 
     warnings.extend(units.warnings().iter().cloned());
     Ok(Conversion {
@@ -1355,7 +1446,13 @@ fn add_resets(
 /// The SBML element of every element of the CellML model which stands for
 /// one, in the order the python converter collects them, so that both
 /// engines write the metadata of a model in the same order.
-fn origins(model: &Model, formulas: &Formulas, units: &mut Units, name: &str) -> Vec<Origin> {
+fn origins(
+    model: &Model,
+    formulas: &Formulas,
+    units: &mut Units,
+    name: &str,
+    events: &[Event],
+) -> Vec<Origin> {
     let mut origins = vec![Origin {
         name: name.to_string(),
         kind: Kind::Model,
@@ -1403,6 +1500,11 @@ fn origins(model: &Model, formulas: &Formulas, units: &mut Units, name: &str) ->
         if let Some(name) = units.name(&definition.id) {
             push(&name, Kind::Units, &definition.id, "");
         }
+    }
+    // the trigger variable of an event, which the metadata carries the
+    // delay, the priority and the flags of the event under
+    for event in events {
+        push(&event.trigger, Kind::Event, &event.id, "");
     }
     origins
 }

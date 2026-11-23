@@ -98,6 +98,9 @@ pub enum Kind {
     Units,
     /// The parameter of the equivalence set of a variable.
     Parameter,
+    /// The event of the resets of a trigger variable, which the metadata
+    /// of the model carries the delay, the priority and the flags of.
+    Event,
 }
 
 impl Kind {
@@ -108,6 +111,7 @@ impl Kind {
             Self::Model => "model",
             Self::Units => "units",
             Self::Parameter => "parameter",
+            Self::Event => "event",
         }
     }
 }
@@ -160,8 +164,28 @@ pub fn convert(model: &Model) -> Result<Conversion, ConvertError> {
         model.name.clone()
     };
     let model_id = ids.reserve(&name);
-    let event_ids: Vec<String> = (1..=events::resets(model).count())
-        .map(|index| ids.reserve(&format!("reset_{index}")))
+    // the event of a group of resets keeps the id of the SBML event the
+    // trigger variable was written from, so the names are decided before
+    // the ids are reserved
+    let names: Vec<Option<String>> = {
+        let context = Context {
+            model,
+            ids: &ids,
+            units: &unit_ids,
+            voi: analysis.voi,
+        };
+        events::groups(model)
+            .iter()
+            .map(|group| events::name(&analysis, context, group))
+            .collect()
+    };
+    let event_ids: Vec<String> = names
+        .iter()
+        .enumerate()
+        .map(|(index, name)| match name {
+            Some(name) => ids.reserve(name),
+            None => ids.reserve(&format!("reset_{}", index + 1)),
+        })
         .collect();
     let reset_targets = events::targets(model, &ids);
     let context = Context {
@@ -297,7 +321,7 @@ pub fn convert(model: &Model) -> Result<Conversion, ConvertError> {
         None => None,
     };
 
-    let mappings = mappings(model, &ids, &unit_ids, analysis.voi, &model_id);
+    let mappings = mappings(model, &ids, &unit_ids, analysis.voi, &model_id, &event_ids);
 
     Ok(Conversion {
         document: Document {
@@ -330,6 +354,7 @@ fn mappings(
     unit_ids: &UnitIds,
     voi: Option<usize>,
     model_id: &str,
+    event_ids: &[String],
 ) -> Vec<Mapping> {
     let mut mappings = Vec::new();
     if let Some(id) = &model.id {
@@ -366,6 +391,22 @@ fn mappings(
                 id: id.clone(),
                 kind: Kind::Parameter,
                 sbml: ids.id(quantity).to_string(),
+            });
+        }
+    }
+    // the event of a group of resets, under the id of its test variable,
+    // which `sbml2cellml` writes the trigger of an SBML event as
+    for (group, event) in events::groups(model).iter().zip(event_ids) {
+        let component = &model.components[group.component];
+        let test = component
+            .variables
+            .iter()
+            .find(|variable| variable.name == group.resets[0].test_variable);
+        if let Some(id) = test.and_then(|variable| variable.id.as_ref()) {
+            mappings.push(Mapping {
+                id: id.clone(),
+                kind: Kind::Event,
+                sbml: event.clone(),
             });
         }
     }

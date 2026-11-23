@@ -30,6 +30,70 @@ pub fn resets(model: &Model) -> impl Iterator<Item = (usize, &Reset)> {
         .flat_map(|(component, element)| element.resets.iter().map(move |reset| (component, reset)))
 }
 
+/// The resets of one component which fire together: they share their test
+/// variable and their test value, so they become one event of SBML, which
+/// evaluates the assignments of an event together and applies them at once.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Group<'a> {
+    /// The component the resets are written in.
+    pub component: usize,
+    /// The resets, ordered as CellML applies them, the lowest order first.
+    pub resets: Vec<&'a Reset>,
+}
+
+/// The groups of resets of a model, in the order of the document.
+pub fn groups(model: &Model) -> Vec<Group<'_>> {
+    let mut groups: Vec<Group<'_>> = Vec::new();
+    for (component, reset) in resets(model) {
+        let existing = groups.iter_mut().find(|group| {
+            group.component == component
+                && group.resets[0].test_variable == reset.test_variable
+                && group.resets[0].test_value == reset.test_value
+        });
+        match existing {
+            Some(group) => group.resets.push(reset),
+            None => groups.push(Group {
+                component,
+                resets: vec![reset],
+            }),
+        }
+    }
+    for group in &mut groups {
+        group.resets.sort_by_key(|reset| reset.order);
+    }
+    groups
+}
+
+/// The name an event of a group takes, `None` for a group whose test
+/// variable is no trigger of an SBML event.
+///
+/// `sbml2cellml` writes the trigger of an event as the variable
+/// `<event>_trigger`, so the event of such a group keeps the id of the
+/// event the conversion wrote it from.
+pub fn name(analysis: &Analysis, context: Context, group: &Group) -> Option<String> {
+    let reset = group.resets[0];
+    let test_variable =
+        context
+            .ids
+            .quantity_of(context.model, group.component, &reset.test_variable)?;
+    let test_value = math_of(
+        context,
+        group.component,
+        reset,
+        reset.test_value.as_ref(),
+        test_variable,
+        "test value",
+    )
+    .ok()?;
+    condition_of_a_trigger(analysis, context, test_variable, &test_value)?;
+    let id = context.ids.id(test_variable);
+    let name = id.strip_suffix(TRIGGER_SUFFIX)?;
+    (!name.is_empty()).then(|| name.to_string())
+}
+
+/// The suffix of the variable `sbml2cellml` writes a trigger as.
+const TRIGGER_SUFFIX: &str = "_trigger";
+
 /// The quantities a reset sets: they have an initial value and no equation,
 /// but a reset writes them, so they are no constants of SBML.
 pub fn targets(model: &Model, ids: &Ids) -> HashSet<usize> {
@@ -44,8 +108,8 @@ pub fn targets(model: &Model, ids: &Ids) -> HashSet<usize> {
 ///
 /// * `analysis` - the equations of the model, for the trigger of a reset
 ///   which stands for an event of SBML.
-/// * `event_ids` - the id of the event of every reset, reserved in the
-///   order of [`resets`].
+/// * `event_ids` - the id of the event of every group, reserved in the
+///   order of [`groups`].
 /// * `context` - the model, its quantities and its units.
 ///
 /// # Errors
@@ -59,25 +123,34 @@ pub fn events(
 ) -> Result<Vec<Event>, ConvertError> {
     let model = context.model;
     let mut events = Vec::new();
-    for ((component, reset), id) in resets(model).zip(event_ids) {
-        let variable = quantity(context, component, reset, &reset.variable)?;
-        let test_variable = quantity(context, component, reset, &reset.test_variable)?;
+    for (group, id) in groups(model).iter().zip(event_ids) {
+        let component = group.component;
+        let first = group.resets[0];
+        let test_variable = quantity(context, component, first, &first.test_variable)?;
         let test_value = math_of(
             context,
             component,
-            reset,
-            reset.test_value.as_ref(),
+            first,
+            first.test_value.as_ref(),
             test_variable,
             "test value",
         )?;
-        let reset_value = math_of(
-            context,
-            component,
-            reset,
-            reset.reset_value.as_ref(),
-            variable,
-            "reset value",
-        )?;
+        let mut assignments = Vec::new();
+        for reset in &group.resets {
+            let variable = quantity(context, component, reset, &reset.variable)?;
+            let reset_value = math_of(
+                context,
+                component,
+                reset,
+                reset.reset_value.as_ref(),
+                variable,
+                "reset value",
+            )?;
+            assignments.push(EventAssignment {
+                variable: context.ids.id(variable).to_string(),
+                math: reset_value,
+            });
+        }
         let condition = condition_of_a_trigger(analysis, context, test_variable, &test_value);
         let math = match condition {
             Some(condition) => condition,
@@ -97,13 +170,10 @@ pub fn events(
                 math,
             },
             priority: Some(Math::Number {
-                value: -f64::from(reset.order),
+                value: -f64::from(first.order),
                 units: None,
             }),
-            assignments: vec![EventAssignment {
-                variable: context.ids.id(variable).to_string(),
-                math: reset_value,
-            }],
+            assignments,
         });
     }
     Ok(events)

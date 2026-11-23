@@ -17,6 +17,25 @@ RDF. In addition an element has
 - `dcterms:description`: its notes, the XHTML as an XML literal,
 - a first `bqbiol:is` (`bqmodel:is` for the model) with the single resource
   `https://identifiers.org/SBO:...`: its SBO term.
+
+An event carries more than its metadata: CellML applies a reset when its
+test variable reaches its test value, so the delay of an event, its
+priority, and the `persistent`, `initialValue` and
+`useValuesFromTriggerTime` flags of SBML have no counterpart in the model.
+They are written in the namespace of this package under the subject of the
+trigger variable of the event, `<event>_trigger`, which the conversion back
+to SBML applies to the event of its resets, so that an event survives the
+roundtrip:
+
+```xml
+<sbml2cellml:event>
+  <sbml2cellml:delay rdf:parseType="Literal"><math ...>...</math></sbml2cellml:delay>
+  <sbml2cellml:priority rdf:parseType="Literal"><math ...>...</math></sbml2cellml:priority>
+  <sbml2cellml:persistent>false</sbml2cellml:persistent>
+  <sbml2cellml:initialValue>false</sbml2cellml:initialValue>
+  <sbml2cellml:useValuesFromTriggerTime>false</sbml2cellml:useValuesFromTriggerTime>
+</sbml2cellml:event>
+```
 """
 
 import logging
@@ -33,6 +52,10 @@ logger = logging.getLogger(__name__)
 RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 DCTERMS_NS = "http://purl.org/dc/terms/"
 XHTML_NS = "http://www.w3.org/1999/xhtml"
+MATHML_NS = "http://www.w3.org/1998/Math/MathML"
+#: namespace of what SBML has and CellML cannot express, the attributes of
+#: an event
+SBML2CELLML_NS = "https://matthiaskoenig.github.io/sbml2cellml/rdf#"
 #: prefixes of the RDF of SBML annotations as libsbml writes them
 NAMESPACES = {
     "rdf": RDF_NS,
@@ -41,15 +64,54 @@ NAMESPACES = {
     "vCard4": "http://www.w3.org/2006/vcard/ns#",
     "bqbiol": "http://biomodels.net/biology-qualifiers/",
     "bqmodel": "http://biomodels.net/model-qualifiers/",
+    "sbml2cellml": SBML2CELLML_NS,
 }
 for _prefix, _uri in NAMESPACES.items():
     ET.register_namespace(_prefix, _uri)
+# the mathematics of a delay or a priority is written without a prefix, as
+# libsbml writes it: a default namespace is no option for an element with an
+# attribute which has none, e.g. the `type` of a number
+ET.register_namespace("", MATHML_NS)
 
 #: resource of an SBO term
 SBO_RESOURCE = "https://identifiers.org/"
 _SBO_TERM = re.compile(r"SBO:\d{7}$")
 #: metaid of the scratch element libsbml writes the RDF of
 _SCRATCH_METAID = "metadata"
+
+
+@dataclass(frozen=True)
+class EventRecord:
+    """What an SBML event has and the resets of CellML cannot express.
+
+    The resets of the CellML model hold the trigger and the assignments of
+    an event; its delay, its priority and the three flags of SBML are kept
+    here, so that `cellml2sbml` writes the event the model was converted
+    from.
+    """
+
+    #: the delay, the serialized `math` element, empty without one
+    delay: str = ""
+    #: the priority, the serialized `math` element, empty without one
+    priority: str = ""
+    #: whether the trigger is persistent, i.e. the event fires even when the
+    #: trigger does not hold any more when it is executed
+    persistent: bool = True
+    #: the value of the trigger before the start time, which decides whether
+    #: an event whose trigger holds at the start fires there
+    initial_value: bool = True
+    #: whether the assignments take the values of the time of the trigger
+    use_values_from_trigger_time: bool = True
+
+    def __bool__(self) -> bool:
+        """Whether the event has anything a reset cannot express."""
+        return bool(
+            self.delay
+            or self.priority
+            or not self.persistent
+            or not self.initial_value
+            or not self.use_values_from_trigger_time
+        )
 
 
 @dataclass(frozen=True)
@@ -67,10 +129,12 @@ class Record:
     terms: str = ""
     #: whether the element is the model, whose SBO term is a `bqmodel:is`
     is_model: bool = False
+    #: of an event: what its resets cannot express
+    event: EventRecord | None = None
 
     def __bool__(self) -> bool:
         """Whether the element has any metadata."""
-        return bool(self.name or self.notes or self.sbo or self.terms)
+        return bool(self.name or self.notes or self.sbo or self.terms or self.event)
 
 
 def _prefixes(node: libsbml.XMLNode, prefixes: dict[str, str]) -> None:
@@ -138,8 +202,53 @@ def _terms(element: libsbml.SBase) -> str:
     return _children(rdf.getChild(0)) if rdf.getNumChildren() else ""
 
 
+def _math_of(element: libsbml.Delay | libsbml.Priority | None) -> str:
+    """The `math` element of a delay or a priority, empty without one.
+
+    The calls of the function definitions of the model are expanded, as the
+    conversion expands them everywhere else: the model the metadata is
+    applied to has no function definitions, CellML has no functions.
+    """
+    if element is None or not element.isSetMath():
+        return ""
+    math_node: libsbml.ASTNode = element.getMath().deepCopy()
+    model: libsbml.Model | None = element.getModel()
+    if model is not None and model.getNumFunctionDefinitions():
+        libsbml.SBMLTransforms.replaceFD(
+            math_node, model.getListOfFunctionDefinitions()
+        )
+    return (
+        libsbml.writeMathMLToString(math_node)
+        .strip()
+        .removeprefix('<?xml version="1.0" encoding="UTF-8"?>')
+        .strip()
+    )
+
+
+def event_record(event: libsbml.Event) -> EventRecord:
+    """What an SBML event has and the resets of CellML cannot express.
+
+    Args:
+        event: the SBML event.
+
+    Returns:
+        Its delay, its priority and its flags.
+    """
+    trigger: libsbml.Trigger | None = event.getTrigger()
+    return EventRecord(
+        delay=_math_of(event.getDelay()),
+        priority=_math_of(event.getPriority()),
+        persistent=True if trigger is None else trigger.getPersistent(),
+        initial_value=True if trigger is None else trigger.getInitialValue(),
+        use_values_from_trigger_time=event.getUseValuesFromTriggerTime(),
+    )
+
+
 def element_record(element: libsbml.SBase) -> Record:
     """The metadata of an SBML element.
+
+    An event carries what its resets cannot express as well
+    (`event_record`).
 
     Args:
         element: the model, a compartment, species, parameter, reaction, ...
@@ -148,12 +257,14 @@ def element_record(element: libsbml.SBase) -> Record:
         The record, which is false when the element has no metadata.
     """
     name: str = element.getName() if element.isSetName() else ""
+    event = event_record(element) if isinstance(element, libsbml.Event) else None
     return Record(
         name="" if name == element.getId() else name,
         notes=_children(element.getNotes()) if element.isSetNotes() else "",
         sbo=element.getSBOTermID() if element.isSetSBOTerm() else "",
         terms=_terms(element),
         is_model=isinstance(element, libsbml.Model),
+        event=event if event else None,
     )
 
 
@@ -195,8 +306,15 @@ def write_metadata(records: dict[str, Record], cellml_name: str, path: Path) -> 
             `<cellml_name>#<id>`.
         path: path of the RDF file.
     """
+    # the namespace of this project is declared for a model with an event,
+    # the RDF of a model without one is the RDF of SBML annotations alone
+    prefixes = {
+        prefix: uri
+        for prefix, uri in NAMESPACES.items()
+        if prefix != "sbml2cellml" or any(record.event for record in records.values())
+    }
     declarations = " ".join(
-        f'xmlns:{prefix}="{uri}"' for prefix, uri in NAMESPACES.items()
+        f'xmlns:{prefix}="{uri}"' for prefix, uri in prefixes.items()
     )
     lines = ['<?xml version="1.0" encoding="UTF-8"?>', f"<rdf:RDF {declarations}>"]
     for cid, record in records.items():
@@ -213,10 +331,53 @@ def write_metadata(records: dict[str, Record], cellml_name: str, path: Path) -> 
             lines.append(_indent(_sbo_element(record), 4))
         if record.terms:
             lines.append(_indent(record.terms, 4))
+        if record.event:
+            lines.extend(_event_lines(record.event))
         lines.append("  </rdf:Description>")
     lines.append("</rdf:RDF>")
     Path(path).write_text("\n".join(lines) + "\n", encoding="utf-8")
     logger.info("Metadata of %d elements written to '%s'", len(records), path)
+
+
+def _event_lines(event: EventRecord) -> list[str]:
+    """The lines of the attributes of an event a reset cannot express."""
+    lines = ["    <sbml2cellml:event>"]
+    for name, math in (("delay", event.delay), ("priority", event.priority)):
+        if math:
+            # an XML literal: the MathML is the mathematics of the event
+            lines.append(f'      <sbml2cellml:{name} rdf:parseType="Literal">')
+            lines.append(_indent(math, 8))
+            lines.append(f"      </sbml2cellml:{name}>")
+    for name, flag in (
+        ("persistent", event.persistent),
+        ("initialValue", event.initial_value),
+        ("useValuesFromTriggerTime", event.use_values_from_trigger_time),
+    ):
+        if not flag:
+            lines.append(f"      <sbml2cellml:{name}>false</sbml2cellml:{name}>")
+    lines.append("    </sbml2cellml:event>")
+    return lines
+
+
+def _event_of(element: ET.Element) -> EventRecord:
+    """The attributes of an event from its `sbml2cellml:event` element."""
+    values: dict[str, str] = {}
+    maths: dict[str, str] = {}
+    for child in element:
+        name = child.tag.rpartition("}")[2]
+        if name in ("delay", "priority"):
+            maths[name] = "\n".join(_serialize(math) for math in child)
+        else:
+            values[name] = (child.text or "").strip()
+    return EventRecord(
+        delay=maths.get("delay", ""),
+        priority=maths.get("priority", ""),
+        persistent=values.get("persistent", "true") != "false",
+        initial_value=values.get("initialValue", "true") != "false",
+        use_values_from_trigger_time=(
+            values.get("useValuesFromTriggerTime", "true") != "false"
+        ),
+    )
 
 
 def _serialize(element: ET.Element, default_namespace: str | None = None) -> str:
@@ -272,19 +433,46 @@ def read_metadata(path: Path, cellml_name: str) -> dict[str, Record]:
             continue
         name = notes = sbo = ""
         is_model = False
+        event: EventRecord | None = None
         terms: list[str] = []
         for child in description:
             if child.tag == f"{{{DCTERMS_NS}}}title":
                 name = child.text or ""
             elif child.tag == f"{{{DCTERMS_NS}}}description":
                 notes = "\n".join(_serialize(note, XHTML_NS) for note in child)
+            elif child.tag == f"{{{SBML2CELLML_NS}}}event":
+                event = _event_of(child)
             elif not sbo and not terms and _sbo_term(child):
                 sbo = _sbo_term(child)
                 is_model = child.tag.startswith(f"{{{NAMESPACES['bqmodel']}}}")
             else:
                 terms.append(_serialize(child))
-        records[cid] = Record(name, notes, sbo, "\n".join(terms), is_model)
+        records[cid] = Record(name, notes, sbo, "\n".join(terms), is_model, event)
     return records
+
+
+def apply_event(event: libsbml.Event, record: EventRecord) -> None:
+    """Set what a reset cannot express on the event of the resets.
+
+    Args:
+        event: the SBML event of the resets of the trigger variable.
+        record: the delay, the priority and the flags of the original
+            event.
+    """
+    for name, math_text in (("delay", record.delay), ("priority", record.priority)):
+        if not math_text:
+            continue
+        math_node: libsbml.ASTNode | None = libsbml.readMathMLFromString(math_text)
+        if math_node is None:
+            logger.warning("The %s of event '%s' cannot be read", name, event.getId())
+            continue
+        element = event.createDelay() if name == "delay" else event.createPriority()
+        element.setMath(math_node)
+    trigger: libsbml.Trigger | None = event.getTrigger()
+    if trigger is not None:
+        trigger.setPersistent(record.persistent)
+        trigger.setInitialValue(record.initial_value)
+    event.setUseValuesFromTriggerTime(record.use_values_from_trigger_time)
 
 
 def apply_metadata(element: libsbml.SBase, record: Record, metaid: str) -> None:

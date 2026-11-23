@@ -103,7 +103,7 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | compartment | variable with the size as initial value |
 | parameter | variable with the value as initial value |
 | species | variable in amount (`hasOnlySubstanceUnits`) or concentration |
-| species in concentration whose compartment changes in time | a second variable `<species>_amount` which the reactions change, and the equation `species = amount / compartment`: the amount is kept when the size changes, not the concentration |
+| species in concentration whose compartment changes in time | a second variable `<species>_amount` which the reactions change (the rate rule of the species when it has one and an event sets the size), and the equation `species = amount / compartment`: the amount is kept when the size changes, not the concentration |
 | assignment rule | equation; its target has no initial value, the equation defines it from the start |
 | rate rule | differential equation |
 | reaction | variable of its rate with the kinetic law as equation; the rate times the stoichiometry is added to the differential equation of every reactant and product which is not a boundary species, divided by the size of the compartment for a species in concentration |
@@ -125,7 +125,7 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | function definition | calls replaced by the body of the function |
 | names, notes, SBO terms, annotations (CV terms) and the model history | RDF file next to the CellML file which points at the `id` of the elements, see [Metadata](conversion.md#metadata); `cellml2sbml` reads it back |
 | local parameter of a kinetic law | variable `<reaction>_<parameter>` (numeric suffix when taken) |
-| event | resets: the variable `<event>_trigger` is `piecewise(1, trigger, 0)` and every assignment a reset which fires when it reaches 1; an event with a delay is skipped with a warning |
+| event | resets: the variable `<event>_trigger` is `piecewise(1, trigger, 0)` and every assignment a reset which fires when it reaches 1; the delay, the priority and the flags of the event go into the metadata, which gives the event back on the way to SBML |
 | algebraic rule | implicit equation `0 = formula` for the variable the rule determines, which starts from the solution at the start time; the constants of the rule become equations `y = value` |
 | `plus`, `times`, `and`, `or`, `xor` with less than two arguments | their value (the argument or the identity element) |
 | relation of more than two arguments (`a < b < c`) | the conjunction of its pairs, `and(a < b, b < c)` |

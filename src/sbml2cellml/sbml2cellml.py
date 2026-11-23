@@ -229,6 +229,12 @@ def _rust_elements(
         cellml_id: str
         if kind == "model":
             element, cellml_id = model_sbml, model.id()
+        elif kind == "event":
+            # the trigger variable carries what a reset cannot express
+            variable = component.variable(name)
+            if variable is None:
+                continue
+            element, cellml_id = _event_of(model_sbml, sid), variable.id()
         elif kind == "units":
             units: libcellml.Units | None = model.units(name)
             if units is None:
@@ -621,7 +627,11 @@ class _Formulas:
                 astnodes.name(sid),
                 astnodes.apply(libsbml.AST_FUNCTION_RATE_OF, compartment),
             )
-            rate = self.reaction_terms.get(amount.variable, astnodes.number(0.0))
+            # the reaction terms of the amount, or the rate rule of the
+            # concentration which became the rate of the amount
+            rate = self.reaction_terms.get(amount.variable)
+            if rate is None:
+                rate = self.rate_rules.get(amount.variable, astnodes.number(0.0))
             derivatives[sid] = astnodes.apply(
                 libsbml.AST_DIVIDE,
                 astnodes.apply(libsbml.AST_MINUS, rate, dilution),
@@ -655,11 +665,17 @@ def _collect_formulas(model_sbml: libsbml.Model) -> _Formulas:
         model_sbml, algebraic, set(assignment_rules) | set(rate_rules)
     )
     local_ids = _local_parameter_ids(model_sbml, used)
-    determined = set(assignment_rules) | set(rate_rules) | set(algebraic_rules)
     changing = _changing(
         model_sbml, assignment_rules, set(rate_rules) | set(algebraic_rules)
     )
-    amounts = _amounts(model_sbml, determined, changing, used)
+    amounts = _amounts(
+        model_sbml,
+        set(assignment_rules) | set(algebraic_rules),
+        set(rate_rules),
+        changing,
+        used,
+    )
+    _rate_rules_of_amounts(rate_rules, amounts)
     rates = _kinetic_laws(model_sbml, local_ids)
     reaction_terms = _collect_reaction_terms(
         model_sbml, rates, amounts, stoichiometry_names
@@ -1186,7 +1202,8 @@ def _changing(
     """Ids of the variables which change in time.
 
     The targets of rate and algebraic rules, the species which reactions
-    change, the rates of the reactions, the targets of assignment rules which
+    change, the rates of the reactions, the targets of the assignments of
+    the events, the targets of assignment rules which
     use time or a variable which changes, and the concentration of a species
     in a compartment which changes. An assignment rule of constants (e.g. a
     volume from a body weight) does not change its target.
@@ -1206,6 +1223,14 @@ def _changing(
         ]:
             if not model_sbml.getSpecies(reference.getSpecies()).getBoundaryCondition():
                 changing.add(reference.getSpecies())
+
+    # an event assignment changes its target when it fires, which is what
+    # makes the concentration of a species in such a compartment change
+    event: libsbml.Event
+    for event in model_sbml.getListOfEvents():
+        assignment: libsbml.EventAssignment
+        for assignment in event.getListOfEventAssignments():
+            changing.add(assignment.getVariable())
 
     names_of: dict[str, set[str]] = {}
     for vid, formula in assignment_rules.items():
@@ -1234,7 +1259,8 @@ def _changing(
 
 def _amounts(
     model_sbml: libsbml.Model,
-    determined: set[str],
+    computed: set[str],
+    rate_rules: set[str],
     changing: set[str],
     used: set[str],
 ) -> dict[str, _Amount]:
@@ -1245,12 +1271,20 @@ def _amounts(
     concentration follows when the size of the compartment changes, so a
     species in a compartment which changes becomes the equation
     `species = amount / compartment` with the amount as the variable the
-    reactions change. A species which a rule determines itself stays as it
-    is: the rule gives its concentration or the rate of it.
+    reactions change. A species which a rule determines itself keeps its
+    concentration as its quantity, which the rule gives (its value or the
+    rate of it), unless an event sets the size of its compartment: the
+    amount of the species does not change then, where its concentration
+    follows the size, so such a species gets the amount as well and a rate
+    rule becomes the rate of the amount
+    (`d amount / d time = rate * compartment + species * rateOf(compartment)`,
+    `_rate_rules_of_amounts`). The size a rule gives changes
+    continuously, where both forms are the same equations.
 
     Args:
         model_sbml: the SBML model.
-        determined: ids which assignment, rate and algebraic rules determine.
+        computed: ids which assignment and algebraic rules determine.
+        rate_rules: ids which rate rules determine.
         changing: ids of the variables which change in time (`_changing`).
         used: ids taken so far, the new ids are added.
 
@@ -1258,19 +1292,55 @@ def _amounts(
         The variable `<species>_amount` (with a numeric suffix when that id
         is taken) by species id.
     """
+    # the targets of the event assignments: the size of such a compartment
+    # jumps, where the amount of a species in it stays
+    assigned_by_events = {
+        assignment.getVariable()
+        for event in model_sbml.getListOfEvents()
+        for assignment in event.getListOfEventAssignments()
+    }
     amounts: dict[str, _Amount] = {}
     species: libsbml.Species
     for species in model_sbml.getListOfSpecies():
         sid: str = species.getId()
         cid: str = species.getCompartment()
-        if (
-            species.getHasOnlySubstanceUnits()
-            or sid in determined
-            or cid not in changing
-        ):
+        if species.getHasOnlySubstanceUnits() or sid in computed or cid not in changing:
+            continue
+        if sid in rate_rules and cid not in assigned_by_events:
             continue
         amounts[sid] = _Amount(unique_sid(f"{sid}_amount", used), cid)
     return amounts
+
+
+def _rate_rules_of_amounts(
+    rate_rules: dict[str, libsbml.ASTNode], amounts: dict[str, _Amount]
+) -> None:
+    """Move the rate rule of a species with an amount to its amount.
+
+    The rule gives the rate of the concentration `S = A / C`, which the
+    amount integrates as `dA/dt = rate * C + S * rateOf(C)`
+    (`rateOf(C)` is replaced by the rate of the compartment and is 0 for a
+    compartment only an event sets).
+
+    Args:
+        rate_rules: the rate rules by the id of their target, changed in
+            place.
+        amounts: the variable of the amount by species id.
+    """
+    for sid, amount in amounts.items():
+        rate = rate_rules.pop(sid, None)
+        if rate is None:
+            continue
+        compartment = astnodes.name(amount.compartment)
+        rate_rules[amount.variable] = astnodes.apply(
+            libsbml.AST_PLUS,
+            astnodes.apply(libsbml.AST_TIMES, rate, compartment),
+            astnodes.apply(
+                libsbml.AST_TIMES,
+                astnodes.name(sid),
+                astnodes.apply(libsbml.AST_FUNCTION_RATE_OF, compartment),
+            ),
+        )
 
 
 def _add_local_parameters(
@@ -1578,8 +1648,11 @@ def _add_resets(
 def _collect_events(model_sbml: libsbml.Model, used: set[str]) -> list[_Event]:
     """The events of the model which become resets.
 
-    An event with a delay is skipped: CellML applies a reset when the test
-    variable reaches the test value, it has no counterpart for the delay.
+    An event with a delay becomes resets which fire when the trigger holds:
+    CellML applies a reset when the test variable reaches the test value and
+    has no counterpart for the delay, which the metadata of the conversion
+    keeps (`sbml2cellml.metadata`), as it keeps the priority and the flags
+    of the event.
 
     Args:
         model_sbml: the SBML model.
@@ -1599,11 +1672,18 @@ def _collect_events(model_sbml: libsbml.Model, used: set[str]) -> list[_Event]:
         delay: libsbml.Delay = event.getDelay()
         if delay is not None and delay.isSetMath():
             logger.warning(
-                "Event '%s' has a delay, CellML has no counterpart for it: the "
-                "event is not converted.",
+                "Event '%s' has a delay, which a reset of CellML cannot express: "
+                "the reset fires when the trigger holds, the delay is kept in the "
+                "metadata of the conversion.",
                 sid,
             )
-            continue
+            if _unsupported_math(delay.getMath()):
+                logger.warning(
+                    "Event '%s' has a delay CellML has no counterpart for: it is "
+                    "not converted.",
+                    sid,
+                )
+                continue
         assignments = {}
         assignment: libsbml.EventAssignment
         for assignment in event.getListOfEventAssignments():
@@ -1613,7 +1693,7 @@ def _collect_events(model_sbml: libsbml.Model, used: set[str]) -> list[_Event]:
             _unsupported_math(formula) for formula in assignments.values()
         ):
             logger.warning(
-                "Event '%s' uses math CellML has no counterpart for, e.g. a "
+                "Event '%s' uses math CellML has no counterpart for, a "
                 "delay or a factorial: it is not converted.",
                 sid,
             )
@@ -1633,13 +1713,15 @@ def _collect_events(model_sbml: libsbml.Model, used: set[str]) -> list[_Event]:
         if not trigger.getInitialValue():
             logger.warning(
                 "Trigger of event '%s' has initialValue 'false', which a reset "
-                "cannot express: it does not fire at the start time.",
+                "cannot express: it does not fire at the start time, the value is "
+                "kept in the metadata of the conversion.",
                 sid,
             )
         if not trigger.getPersistent():
             logger.warning(
                 "Trigger of event '%s' is not persistent, which a reset cannot "
-                "express: it fires whenever the trigger becomes true.",
+                "express: it fires whenever the trigger becomes true, the flag is "
+                "kept in the metadata of the conversion.",
                 sid,
             )
         events.append(
@@ -1654,12 +1736,13 @@ def _collect_events(model_sbml: libsbml.Model, used: set[str]) -> list[_Event]:
     return events
 
 
-#: operators of an SBML formula which no CellML model can express
+#: operators of an SBML formula which no CellML model can express; a
+#: `rateOf` is not among them, `_expand_rate_of` replaces it by the rate it
+#: stands for, also in the formulas of an event
 _UNSUPPORTED_MATH = frozenset(
     {
         libsbml.AST_FUNCTION_FACTORIAL,
         libsbml.AST_FUNCTION_DELAY,
-        libsbml.AST_FUNCTION_RATE_OF,
     }
 )
 
@@ -1859,6 +1942,10 @@ def _constants_of_algebraic_rules(
     underconstrained, so every other variable of an algebraic rule which is
     not a state loses its initial value to the equation `y = value`, and the
     unknown of one algebraic rule which another one uses loses its guess.
+    A variable a reset writes loses it as well: libcellml reports the model
+    as underconstrained otherwise (the resets of a model whose implicit
+    equation uses such a variable do not reach the SBML of a roundtrip,
+    which the test suite reports for the cases 01589 and 01592).
 
     Args:
         component: the component with the variables.
@@ -2231,7 +2318,37 @@ def _metadata_elements(
         )
         if units is not None and units.id():
             elements[units.id()] = definition
+    # the trigger variable of an event carries what a reset cannot express,
+    # the delay, the priority and the flags of the event
+    component: libcellml.Component = model.component(COMPONENT_ID)
+    for event in formulas.events:
+        event_element: libsbml.Event | None = _event_of(model_sbml, event.sid)
+        variable = None if component is None else component.variable(event.trigger)
+        if event_element is not None and variable is not None and variable.id():
+            elements[variable.id()] = event_element
     return elements
+
+
+def _event_of(model_sbml: libsbml.Model, sid: str) -> libsbml.Event | None:
+    """The event of an id, also for an event which has none of its own.
+
+    `_collect_events` names an event without an id `event_<index>`, which
+    `getEvent` does not find.
+
+    Args:
+        model_sbml: the SBML model.
+        sid: the id `_collect_events` gave the event.
+
+    Returns:
+        The event, `None` when the model has no such event.
+    """
+    event: libsbml.Event = model_sbml.getEvent(sid)
+    if event is not None:
+        return event
+    prefix, _, index = sid.rpartition("_")
+    if prefix == "event" and index.isdigit():
+        return model_sbml.getEvent(int(index) - 1)
+    return None
 
 
 def _write_metadata(elements: dict[str, libsbml.SBase], cellml_path: Path) -> None:

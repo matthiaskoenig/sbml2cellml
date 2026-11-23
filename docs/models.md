@@ -21,8 +21,8 @@ The share of the models which pass a stage, the models which pass every stage an
 
 | check | models | source simulated | converted | reproduces | converted back | roundtrip | works | skipped |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [SBML test suite](testsuite.md) | 1658 | 99.9% | 97.1% | 69.6% | 97.1% | 79.7% | 1154 (69.6%) | 165 |
-| [BioModels](biomodels.md) | 1060 | 99.3% | 99.3% | 88.6% | 99.3% | 94.6% | 939 (88.6%) | 15 |
+| [SBML test suite](testsuite.md) | 1658 | 99.9% | 97.1% | 69.6% | 97.1% | 96.4% | 1154 (69.6%) | 165 |
+| [BioModels](biomodels.md) | 1060 | 99.3% | 99.3% | 88.6% | 99.3% | 98.4% | 939 (88.6%) | 15 |
 | [Physiome Model Repository](physiome.md) | 66 | 93.9% | 93.9% | 86.4% | 93.9% | 92.4% | 56 (84.8%) | 34 |
 
 ## BioModels
@@ -111,7 +111,7 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000078](https://www.ebi.ac.uk/biomodels/BIOMD0000000078) | Leloup2003_CircClock_LD | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000079](https://www.ebi.ac.uk/biomodels/BIOMD0000000079) | Goldbeter2006_weightCycling | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000080](https://www.ebi.ac.uk/biomodels/BIOMD0000000080) | Thomsen1989_AdenylateCyclase | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000081](https://www.ebi.ac.uk/biomodels/BIOMD0000000081) | Suh2004_KCNQ_Regulation | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000081](https://www.ebi.ac.uk/biomodels/BIOMD0000000081) | Suh2004_KCNQ_Regulation | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000082](https://www.ebi.ac.uk/biomodels/BIOMD0000000082) | Thomsen1988_AdenylateCyclase_Inhibition | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000083](https://www.ebi.ac.uk/biomodels/BIOMD0000000083) | Leloup2003_CircClock_LD_REV-ERBalpha | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000084](https://www.ebi.ac.uk/biomodels/BIOMD0000000084) | Hornberg2005_ERKcascade | pass | pass | pass | pass | pass | yes |
@@ -125,16 +125,16 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000092](https://www.ebi.ac.uk/biomodels/BIOMD0000000092) | Fuentes2005_ZymogenActivation | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000093](https://www.ebi.ac.uk/biomodels/BIOMD0000000093) | Yamada2003_JAK_STAT_pathway | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000094](https://www.ebi.ac.uk/biomodels/BIOMD0000000094) | Yamada2003_JAK_STAT_SOCS1_knockout | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000095](https://www.ebi.ac.uk/biomodels/BIOMD0000000095) | Zeilinger2006_PRR7-PRR9-Y | pass | pass | fail | pass | fail | no |
-| [BIOMD0000000096](https://www.ebi.ac.uk/biomodels/BIOMD0000000096) | Zeilinger2006_PRR7-PRR9light-Y | pass | pass | fail | pass | fail | no |
-| [BIOMD0000000097](https://www.ebi.ac.uk/biomodels/BIOMD0000000097) | Zeilinger2006_PRR7-PRR9light-Yprime | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000095](https://www.ebi.ac.uk/biomodels/BIOMD0000000095) | Zeilinger2006_PRR7-PRR9-Y | pass | pass | fail | pass | pass | no |
+| [BIOMD0000000096](https://www.ebi.ac.uk/biomodels/BIOMD0000000096) | Zeilinger2006_PRR7-PRR9light-Y | pass | pass | fail | pass | pass | no |
+| [BIOMD0000000097](https://www.ebi.ac.uk/biomodels/BIOMD0000000097) | Zeilinger2006_PRR7-PRR9light-Yprime | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000098](https://www.ebi.ac.uk/biomodels/BIOMD0000000098) | Goldbeter1990_CalciumSpike_CICR | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000099](https://www.ebi.ac.uk/biomodels/BIOMD0000000099) | Laub1998_SpontaneousOscillations | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000100](https://www.ebi.ac.uk/biomodels/BIOMD0000000100) | Rozi2003_GlycogenPhosphorylase_Activation | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000101](https://www.ebi.ac.uk/biomodels/BIOMD0000000101) | Vilar2006_TGFbeta | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000102](https://www.ebi.ac.uk/biomodels/BIOMD0000000102) | Legewie2006_apoptosis_WT | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000103](https://www.ebi.ac.uk/biomodels/BIOMD0000000103) | Legewie2006_apoptosis_NC | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000104](https://www.ebi.ac.uk/biomodels/BIOMD0000000104) | Klipp2002_MetabolicOptimization_linearPathway(n=2) | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000104](https://www.ebi.ac.uk/biomodels/BIOMD0000000104) | Klipp2002_MetabolicOptimization_linearPathway(n=2) | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000105](https://www.ebi.ac.uk/biomodels/BIOMD0000000105) | Proctor2007 - Age related decline of proteolysis, ubiquitin-proteome system | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000106](https://www.ebi.ac.uk/biomodels/BIOMD0000000106) | Yang2007_ArachidonicAcid | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000107](https://www.ebi.ac.uk/biomodels/BIOMD0000000107) | Novak1993 - Cell cycle M-phase control | pass | pass | pass | pass | pass | yes |
@@ -150,13 +150,13 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000117](https://www.ebi.ac.uk/biomodels/BIOMD0000000117) | Dupont1991_CaOscillation | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000118](https://www.ebi.ac.uk/biomodels/BIOMD0000000118) | Golomb2006_SomaticBursting | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000119](https://www.ebi.ac.uk/biomodels/BIOMD0000000119) | Golomb2006_SomaticBursting_nonzero[Ca] | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000120](https://www.ebi.ac.uk/biomodels/BIOMD0000000120) | Chan2004_TCell_receptor_activation | pass | pass | fail | pass | fail | no |
-| [BIOMD0000000121](https://www.ebi.ac.uk/biomodels/BIOMD0000000121) | Clancy2001_Kchannel | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000120](https://www.ebi.ac.uk/biomodels/BIOMD0000000120) | Chan2004_TCell_receptor_activation | pass | pass | fail | pass | pass | no |
+| [BIOMD0000000121](https://www.ebi.ac.uk/biomodels/BIOMD0000000121) | Clancy2001_Kchannel | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000122](https://www.ebi.ac.uk/biomodels/BIOMD0000000122) | Fisher2006_Ca_Oscillation_dpdnt_NFAT_dynamics | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000123](https://www.ebi.ac.uk/biomodels/BIOMD0000000123) | Fisher2006_NFAT_Activation | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000124](https://www.ebi.ac.uk/biomodels/BIOMD0000000124) | Wu2006_K+Channel | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000125](https://www.ebi.ac.uk/biomodels/BIOMD0000000125) | Komarova2005_TheoreticalFramework_BasicArchitecture | pass | pass | fail | pass | fail | no |
-| [BIOMD0000000126](https://www.ebi.ac.uk/biomodels/BIOMD0000000126) | Clancy2002_CardiacSodiumChannel_WT | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000125](https://www.ebi.ac.uk/biomodels/BIOMD0000000125) | Komarova2005_TheoreticalFramework_BasicArchitecture | pass | pass | fail | pass | pass | no |
+| [BIOMD0000000126](https://www.ebi.ac.uk/biomodels/BIOMD0000000126) | Clancy2002_CardiacSodiumChannel_WT | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000127](https://www.ebi.ac.uk/biomodels/BIOMD0000000127) | Izhikevich2003_SpikingNeuron | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000128](https://www.ebi.ac.uk/biomodels/BIOMD0000000128) | Bertram2006_Endothelin | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000129](https://www.ebi.ac.uk/biomodels/BIOMD0000000129) | Izhikevich2004_SpikingNeurons_inhibitionInducedSpiking | pass | pass | fail | pass | pass | no |
@@ -167,7 +167,7 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000134](https://www.ebi.ac.uk/biomodels/BIOMD0000000134) | Izhikevich2004_SpikingNeurons_SpikeLatency | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000135](https://www.ebi.ac.uk/biomodels/BIOMD0000000135) | Izhikevich2004_SpikingNeurons_subthresholdOscillations | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000136](https://www.ebi.ac.uk/biomodels/BIOMD0000000136) | Izhikevich2004_SpikingNeurons_thresholdVariability | pass | pass | fail | pass | pass | no |
-| [BIOMD0000000137](https://www.ebi.ac.uk/biomodels/BIOMD0000000137) | Sedaghat2002_InsulinSignalling_noFeedback | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000137](https://www.ebi.ac.uk/biomodels/BIOMD0000000137) | Sedaghat2002_InsulinSignalling_noFeedback | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000138](https://www.ebi.ac.uk/biomodels/BIOMD0000000138) | Tabak2007_dopamine | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000139](https://www.ebi.ac.uk/biomodels/BIOMD0000000139) | Hoffmann2002_KnockOut_IkBNFkB_Signaling | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000140](https://www.ebi.ac.uk/biomodels/BIOMD0000000140) | Hoffmann2002_WT_IkBNFkB_Signaling | pass | pass | pass | pass | pass | yes |
@@ -265,7 +265,7 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000232](https://www.ebi.ac.uk/biomodels/BIOMD0000000232) | Nazaret2009_TCA_RC_ATP | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000233](https://www.ebi.ac.uk/biomodels/BIOMD0000000233) | Wilhelm2009_BistableReaction | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000234](https://www.ebi.ac.uk/biomodels/BIOMD0000000234) | Tham2008 - PDmodel, Tumour shrinkage by gemcitabine and carboplatin | pass | pass | fail | pass | pass | no |
-| [BIOMD0000000235](https://www.ebi.ac.uk/biomodels/BIOMD0000000235) | Kuhn2009_EndoMesodermNetwork | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000235](https://www.ebi.ac.uk/biomodels/BIOMD0000000235) | Kuhn2009_EndoMesodermNetwork | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000236](https://www.ebi.ac.uk/biomodels/BIOMD0000000236) | Westermark2003_Pancreatic_GlycOsc_extended | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000237](https://www.ebi.ac.uk/biomodels/BIOMD0000000237) | Schaber2006_Pheromone_Starvation_Crosstalk | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000238](https://www.ebi.ac.uk/biomodels/BIOMD0000000238) | Overgaard2007_PDmodel_IL21 | pass | pass | pass | pass | pass | yes |
@@ -315,7 +315,7 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000282](https://www.ebi.ac.uk/biomodels/BIOMD0000000282) | Chance1952_Catalase_Mechanism | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000283](https://www.ebi.ac.uk/biomodels/BIOMD0000000283) | Chance1943_Peroxidase_ES_Kinetics | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000284](https://www.ebi.ac.uk/biomodels/BIOMD0000000284) | Hofmeyer1986_SeqFb_Proc_AA_Synthesis | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000285](https://www.ebi.ac.uk/biomodels/BIOMD0000000285) | Tang2010_PolyGlutamate | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000285](https://www.ebi.ac.uk/biomodels/BIOMD0000000285) | Tang2010_PolyGlutamate | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000286](https://www.ebi.ac.uk/biomodels/BIOMD0000000286) | Proctor2010 - a link between GSK3 and p53 in Alzheimer's Disease | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000287](https://www.ebi.ac.uk/biomodels/BIOMD0000000287) | Passos2010_DNAdamage_CellularSenescence | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000288](https://www.ebi.ac.uk/biomodels/BIOMD0000000288) | Wang2009 - PI3K Ras Crosstalk | pass | pass | pass | pass | pass | yes |
@@ -346,9 +346,9 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000313](https://www.ebi.ac.uk/biomodels/BIOMD0000000313) | Raia2010 - IL13 Signalling MedB1 | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000314](https://www.ebi.ac.uk/biomodels/BIOMD0000000314) | Raia2011 - IL13 L1236 | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000315](https://www.ebi.ac.uk/biomodels/BIOMD0000000315) | Montagne2011_Oligator_optimised | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000316](https://www.ebi.ac.uk/biomodels/BIOMD0000000316) | Shen-Orr2002_FeedForward_AND_gate | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000316](https://www.ebi.ac.uk/biomodels/BIOMD0000000316) | Shen-Orr2002_FeedForward_AND_gate | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000317](https://www.ebi.ac.uk/biomodels/BIOMD0000000317) | Shen-Orr2002_Single_Input_Module | pass | pass | fail | pass | pass | no |
-| [BIOMD0000000318](https://www.ebi.ac.uk/biomodels/BIOMD0000000318) | Yao2008_Rb_E2F_Switch | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000318](https://www.ebi.ac.uk/biomodels/BIOMD0000000318) | Yao2008_Rb_E2F_Switch | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000319](https://www.ebi.ac.uk/biomodels/BIOMD0000000319) | Decroly1982_Enzymatic_Oscillator | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000320](https://www.ebi.ac.uk/biomodels/BIOMD0000000320) | Grange2001 - PK interaction of L-dopa and benserazide | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000321](https://www.ebi.ac.uk/biomodels/BIOMD0000000321) | Grange2001 - L Dopa PK model | pass | pass | pass | pass | pass | yes |
@@ -368,8 +368,8 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000335](https://www.ebi.ac.uk/biomodels/BIOMD0000000335) | Hockin2002_BloodCoagulation | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000336](https://www.ebi.ac.uk/biomodels/BIOMD0000000336) | Jones1994_BloodCoagulation | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000337](https://www.ebi.ac.uk/biomodels/BIOMD0000000337) | Pfeiffer2001_ATP-ProducingPathways_CooperationCompetition | pass | pass | fail | pass | pass | no |
-| [BIOMD0000000338](https://www.ebi.ac.uk/biomodels/BIOMD0000000338) | Wajima2009_BloodCoagulation_aPTTtest | pass | pass | fail | pass | fail | no |
-| [BIOMD0000000339](https://www.ebi.ac.uk/biomodels/BIOMD0000000339) | Wajima2009_BloodCoagulation_PTtest | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000338](https://www.ebi.ac.uk/biomodels/BIOMD0000000338) | Wajima2009_BloodCoagulation_aPTTtest | pass | pass | fail | pass | pass | no |
+| [BIOMD0000000339](https://www.ebi.ac.uk/biomodels/BIOMD0000000339) | Wajima2009_BloodCoagulation_PTtest | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000340](https://www.ebi.ac.uk/biomodels/BIOMD0000000340) | Wajima2009_BloodCoagulation_warfarin_heparin | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000341](https://www.ebi.ac.uk/biomodels/BIOMD0000000341) | Topp2000_BetaCellMass_Diabetes | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000342](https://www.ebi.ac.uk/biomodels/BIOMD0000000342) | Zi2011_TGF-beta_Pathway | pass | pass | pass | pass | pass | yes |
@@ -438,7 +438,7 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000405](https://www.ebi.ac.uk/biomodels/BIOMD0000000405) | Cookson2011_EnzymaticQueueingCoupling | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000406](https://www.ebi.ac.uk/biomodels/BIOMD0000000406) | Moriya2011_CellCycle_FissionYeast | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000407](https://www.ebi.ac.uk/biomodels/BIOMD0000000407) | Schliemann2011_TNF_ProAntiApoptosis | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000408](https://www.ebi.ac.uk/biomodels/BIOMD0000000408) | Hettling2011_CreatineKinase | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000408](https://www.ebi.ac.uk/biomodels/BIOMD0000000408) | Hettling2011_CreatineKinase | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000409](https://www.ebi.ac.uk/biomodels/BIOMD0000000409) | Queralt2006_MitoticExit_Cdc55DownregulationBySeparase | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000410](https://www.ebi.ac.uk/biomodels/BIOMD0000000410) | Wegner2012_TGFbetaSignalling_FeedbackLoops | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000411](https://www.ebi.ac.uk/biomodels/BIOMD0000000411) | Heiland2012_CircadianClock_C.reinhardtii | pass | pass | pass | pass | pass | yes |
@@ -524,7 +524,7 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000491](https://www.ebi.ac.uk/biomodels/BIOMD0000000491) | Pathak2013 - MAPK activation in response to various abiotic stresses | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000492](https://www.ebi.ac.uk/biomodels/BIOMD0000000492) | Pathak2013 - MAPK activation in response to various biotic stresses | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000493](https://www.ebi.ac.uk/biomodels/BIOMD0000000493) | Schittler2010 - Cell fate of progenitor cells, osteoblasts or chondrocytes | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000494](https://www.ebi.ac.uk/biomodels/BIOMD0000000494) | Roblitz2013 - Menstrual Cycle following GnRH analogue administration | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000494](https://www.ebi.ac.uk/biomodels/BIOMD0000000494) | Roblitz2013 - Menstrual Cycle following GnRH analogue administration | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000495](https://www.ebi.ac.uk/biomodels/BIOMD0000000495) | Sen2013 - Phospholipid Synthesis in P.knowlesi | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000496](https://www.ebi.ac.uk/biomodels/BIOMD0000000496) | Stanford2013 - Kinetic model of yeast metabolic network (standard) | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000497](https://www.ebi.ac.uk/biomodels/BIOMD0000000497) | Stanford2013 - Kinetic model of yeast metabolic network (regulation) | pass | pass | pass | pass | pass | yes |
@@ -564,14 +564,14 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000531](https://www.ebi.ac.uk/biomodels/BIOMD0000000531) | Crespo2012 - Kinetics of Amyloid Fibril Formation | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000532](https://www.ebi.ac.uk/biomodels/BIOMD0000000532) | Vazquez2014 - Chemical inhibition from amyloid protein aggregation kinetics | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000533](https://www.ebi.ac.uk/biomodels/BIOMD0000000533) | Steckmann2012 - Amyloid beta-protein fibrillogenesis (kinetics of secondary structure conversion) | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000534](https://www.ebi.ac.uk/biomodels/BIOMD0000000534) | Dwivedi2014 - Healthy Volunteer IL6 Model | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000534](https://www.ebi.ac.uk/biomodels/BIOMD0000000534) | Dwivedi2014 - Healthy Volunteer IL6 Model | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000535](https://www.ebi.ac.uk/biomodels/BIOMD0000000535) | Dwivedi2014 - Crohns IL6 Disease model - Anti-IL6 Antibody | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000536](https://www.ebi.ac.uk/biomodels/BIOMD0000000536) | Dwivedi2014 - Crohns IL6 Disease model - sgp130 activity | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000537](https://www.ebi.ac.uk/biomodels/BIOMD0000000537) | Dwivedi2014 - Crohns IL6 Disease model - Anti-IL6R Antibody | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000537](https://www.ebi.ac.uk/biomodels/BIOMD0000000537) | Dwivedi2014 - Crohns IL6 Disease model - Anti-IL6R Antibody | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000538](https://www.ebi.ac.uk/biomodels/BIOMD0000000538) | Clarke2000 - One-hit model of cell death in neuronal degenerations | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000539](https://www.ebi.ac.uk/biomodels/BIOMD0000000539) | François2005 - Mixed Feedback Loop (two-gene network) | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000540](https://www.ebi.ac.uk/biomodels/BIOMD0000000540) | Yugi2014 - Insulin induced signalling (PFKL phosphorylation) - model 1 | pass | pass | fail | pass | fail | no |
-| [BIOMD0000000541](https://www.ebi.ac.uk/biomodels/BIOMD0000000541) | Yugi2014 - Insulin induced signalling (PFKL phosphorylation) - model 2 | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000540](https://www.ebi.ac.uk/biomodels/BIOMD0000000540) | Yugi2014 - Insulin induced signalling (PFKL phosphorylation) - model 1 | pass | pass | fail | pass | pass | no |
+| [BIOMD0000000541](https://www.ebi.ac.uk/biomodels/BIOMD0000000541) | Yugi2014 - Insulin induced signalling (PFKL phosphorylation) - model 2 | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000542](https://www.ebi.ac.uk/biomodels/BIOMD0000000542) | Yuraszeck2010 - Vulnerabilities in the Tau Network in Tau Pathophysiology | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000543](https://www.ebi.ac.uk/biomodels/BIOMD0000000543) | Qi2013 - IL-6 and IFN crosstalk model (non-competitive) | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000544](https://www.ebi.ac.uk/biomodels/BIOMD0000000544) | Qi2013 - IL-6 and IFN crosstalk model | pass | pass | pass | pass | pass | yes |
@@ -640,15 +640,15 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000610](https://www.ebi.ac.uk/biomodels/BIOMD0000000610) | PetelenzKuehn_osmoadaptation_gpd1D | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000611](https://www.ebi.ac.uk/biomodels/BIOMD0000000611) | Nayak2015 - Blood Coagulation Network - Predicting the Effects of Various Therapies on Biomarkers | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000612](https://www.ebi.ac.uk/biomodels/BIOMD0000000612) | Proctor2016 - Circadian rhythm of PTH and the dynamics of signaling molecules on bone remodeling | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000613](https://www.ebi.ac.uk/biomodels/BIOMD0000000613) | Peterson2010 - Integrated calcium homeostasis and bone remodelling | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000613](https://www.ebi.ac.uk/biomodels/BIOMD0000000613) | Peterson2010 - Integrated calcium homeostasis and bone remodelling | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000614](https://www.ebi.ac.uk/biomodels/BIOMD0000000614) | Kamihira2000 - calcitonin fibrillation kinetics | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000615](https://www.ebi.ac.uk/biomodels/BIOMD0000000615) | Kuznetsov2016(II) - α-syn aggregation kinetics in Parkinson's Disease | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000616](https://www.ebi.ac.uk/biomodels/BIOMD0000000616) | Dunster2014 - WBC Interactions (Model1) | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000617](https://www.ebi.ac.uk/biomodels/BIOMD0000000617) | Walsh2014 - Inhibition kinetics of DAPT on APP Cleavage | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000618](https://www.ebi.ac.uk/biomodels/BIOMD0000000618) | Krohn2011 - Cerebral amyloid-β proteostasis regulated by membrane transport protein ABCC1 | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000619](https://www.ebi.ac.uk/biomodels/BIOMD0000000619) | Sluka2016  - Acetaminophen PBPK | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000620](https://www.ebi.ac.uk/biomodels/BIOMD0000000620) | Palmer2014 - Effect of IL-1β-Blocking therapies in T2DM - Disease Condition | pass | pass | fail | pass | fail | no |
-| [BIOMD0000000621](https://www.ebi.ac.uk/biomodels/BIOMD0000000621) | Palmer2014 - Effect of IL-1β-Blocking therapies in T2DM - Healthy Condition | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000620](https://www.ebi.ac.uk/biomodels/BIOMD0000000620) | Palmer2014 - Effect of IL-1β-Blocking therapies in T2DM - Disease Condition | pass | pass | fail | pass | pass | no |
+| [BIOMD0000000621](https://www.ebi.ac.uk/biomodels/BIOMD0000000621) | Palmer2014 - Effect of IL-1β-Blocking therapies in T2DM - Healthy Condition | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000622](https://www.ebi.ac.uk/biomodels/BIOMD0000000622) | NguyenLK2011 - Ubiquitination dynamics in Ring1B/Bmi1 system | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000623](https://www.ebi.ac.uk/biomodels/BIOMD0000000623) | Orton2009 - Modelling cancerous mutations in the EGFR/ERK pathway - EGF Model | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000624](https://www.ebi.ac.uk/biomodels/BIOMD0000000624) | Sluka2016 - Acetaminophen metabolism | pass | pass | pass | pass | pass | yes |
@@ -731,7 +731,7 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000703](https://www.ebi.ac.uk/biomodels/BIOMD0000000703) | Diedrichs2018 - A data-entrained computational model for testing the regulatory logic of the vertebrate unfolded protein response | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000704](https://www.ebi.ac.uk/biomodels/BIOMD0000000704) | Aguda1999 - G2 DNA damage checkpoint | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000705](https://www.ebi.ac.uk/biomodels/BIOMD0000000705) | Smith2010 - Response of FOXO Transcription Factors to Post-Translational Modifications Made by Ageing-Related Signalling Pathways | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000706](https://www.ebi.ac.uk/biomodels/BIOMD0000000706) | Smith2010 - Response of FOXO Transcription Factors to Post-Translational Modifications (with acetylation pathway) | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000706](https://www.ebi.ac.uk/biomodels/BIOMD0000000706) | Smith2010 - Response of FOXO Transcription Factors to Post-Translational Modifications (with acetylation pathway) | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000707](https://www.ebi.ac.uk/biomodels/BIOMD0000000707) | Revilla2003 - Controlling HIV infection using recombinant viruses | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000708](https://www.ebi.ac.uk/biomodels/BIOMD0000000708) | Liu2017 - Dynamics of Avian Influenza with Logistic Growth | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000709](https://www.ebi.ac.uk/biomodels/BIOMD0000000709) | Liu2017 - Dynamics of Avian Influenza with Allee Growth Effect | pass | pass | pass | pass | pass | yes |
@@ -743,7 +743,7 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000715](https://www.ebi.ac.uk/biomodels/BIOMD0000000715) | Huo2017 - SEIS epidemic model with the impact of media | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000716](https://www.ebi.ac.uk/biomodels/BIOMD0000000716) | Lee2018 - Avian human bilinear incidence (BI) model | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000717](https://www.ebi.ac.uk/biomodels/BIOMD0000000717) | Lee2018 - Avian human half-saturated incidence (HSI) model | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000718](https://www.ebi.ac.uk/biomodels/BIOMD0000000718) | Li2008 - Caulobacter Cell Cycle | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000718](https://www.ebi.ac.uk/biomodels/BIOMD0000000718) | Li2008 - Caulobacter Cell Cycle | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000719](https://www.ebi.ac.uk/biomodels/BIOMD0000000719) | Tsai2014 - Cell cycle duration control by oscillatory Dynamics  in Early Xenopus laevis Embryos | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000720](https://www.ebi.ac.uk/biomodels/BIOMD0000000720) | Yan2012 - Rb-E2F pathway dynamics with miR449 | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000721](https://www.ebi.ac.uk/biomodels/BIOMD0000000721) | Graham2013 - Role of osteocytes in targeted bone remodeling | pass | pass | pass | pass | pass | yes |
@@ -831,7 +831,7 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000803](https://www.ebi.ac.uk/biomodels/BIOMD0000000803) | Park2019 - IL7 receptor signaling in T cells | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000804](https://www.ebi.ac.uk/biomodels/BIOMD0000000804) | Koenders2015 - multiple myeloma | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000805](https://www.ebi.ac.uk/biomodels/BIOMD0000000805) | Al-Husari2013 - pH and lactate in tumor | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000806](https://www.ebi.ac.uk/biomodels/BIOMD0000000806) | Eftimie2019-Macrophages Plasticity | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000806](https://www.ebi.ac.uk/biomodels/BIOMD0000000806) | Eftimie2019-Macrophages Plasticity | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000807](https://www.ebi.ac.uk/biomodels/BIOMD0000000807) | Fassoni2019 - Oncogenesis encompassing mutations and genetic instability | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000808](https://www.ebi.ac.uk/biomodels/BIOMD0000000808) | Kronik2008 - Improving alloreactive CTL immunotherapy for malignant gliomas using a simulation model of their interactive dynamics | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000809](https://www.ebi.ac.uk/biomodels/BIOMD0000000809) | Malinzi2018 - tumour-immune interaction model | pass | pass | pass | pass | pass | yes |
@@ -842,7 +842,7 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000814](https://www.ebi.ac.uk/biomodels/BIOMD0000000814) | Perez-Garcia19 - Computational design of improved standardized chemotherapy protocols for grade 2 oligodendrogliomas | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000815](https://www.ebi.ac.uk/biomodels/BIOMD0000000815) | Chrobak2011 - A mathematical model of induced cancer-adaptive immune system competition | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000816](https://www.ebi.ac.uk/biomodels/BIOMD0000000816) | Gevertz2018 - Cancer Treatment with Oncolytic Viruses and Dendritic Cell injections original model | pass | pass | fail | pass | pass | no |
-| [BIOMD0000000817](https://www.ebi.ac.uk/biomodels/BIOMD0000000817) | Gevertz2018 - cancer treatment with oncolytic viruses and dendritic cell injections minimal model | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000817](https://www.ebi.ac.uk/biomodels/BIOMD0000000817) | Gevertz2018 - cancer treatment with oncolytic viruses and dendritic cell injections minimal model | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000818](https://www.ebi.ac.uk/biomodels/BIOMD0000000818) | Lee2008 - ERK and PI3K signal integration by Myc | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000819](https://www.ebi.ac.uk/biomodels/BIOMD0000000819) | Nazari2018 - IL6 mediated stem cell driven tumor growth and targeted treatment | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000820](https://www.ebi.ac.uk/biomodels/BIOMD0000000820) | West2019 - Cellular interactions constrain tumor growth | pass | pass | fail | pass | pass | no |
@@ -853,8 +853,8 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000825](https://www.ebi.ac.uk/biomodels/BIOMD0000000825) | Greene2019 - Differentiate Spontaneous and Induced Evolution to Drug Resistance During Cancer Treatment | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000826](https://www.ebi.ac.uk/biomodels/BIOMD0000000826) | Shin_2018_EGFR-PYK2-c-Met interaction network_model | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000827](https://www.ebi.ac.uk/biomodels/BIOMD0000000827) | Ito2019 - gefitnib resistance of lung adenocarcinoma caused by MET amplification | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000828](https://www.ebi.ac.uk/biomodels/BIOMD0000000828) | Jung2019 - Regulating glioblastoma signaling pathways and anti-invasion therapy - core control model | pass | pass | fail | pass | fail | no |
-| [BIOMD0000000829](https://www.ebi.ac.uk/biomodels/BIOMD0000000829) | Jung2019 - egulating glioblastoma signaling pathways and anti-invasion therapy cell cycle dynamics model | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000828](https://www.ebi.ac.uk/biomodels/BIOMD0000000828) | Jung2019 - Regulating glioblastoma signaling pathways and anti-invasion therapy - core control model | pass | pass | fail | pass | pass | no |
+| [BIOMD0000000829](https://www.ebi.ac.uk/biomodels/BIOMD0000000829) | Jung2019 - egulating glioblastoma signaling pathways and anti-invasion therapy cell cycle dynamics model | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000830](https://www.ebi.ac.uk/biomodels/BIOMD0000000830) | GiantsosAdams2013 - Growth of glycocalyx under static conditions | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000831](https://www.ebi.ac.uk/biomodels/BIOMD0000000831) | Smith1980 - Hypothalamic Regulation | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000832](https://www.ebi.ac.uk/biomodels/BIOMD0000000832) | Shin2016 - Unveiling Hidden Dynamics of Hippo Signalling | pass | pass | pass | pass | pass | yes |
@@ -953,7 +953,7 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000925](https://www.ebi.ac.uk/biomodels/BIOMD0000000925) | Dunster2016 - Nondimensional Coagulation Model | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000926](https://www.ebi.ac.uk/biomodels/BIOMD0000000926) | Rhodes2019 - Immune-Mediated theory of Metastasis | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000927](https://www.ebi.ac.uk/biomodels/BIOMD0000000927) | Grigolon2018-Responses to auxin signals | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000928](https://www.ebi.ac.uk/biomodels/BIOMD0000000928) | Baker2017 - The role of cytokines, MMPs and fibronectin fragments osteoarthritis | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000928](https://www.ebi.ac.uk/biomodels/BIOMD0000000928) | Baker2017 - The role of cytokines, MMPs and fibronectin fragments osteoarthritis | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000929](https://www.ebi.ac.uk/biomodels/BIOMD0000000929) | Li2016 - Model for pancreatic cancer patients receiving immunotherapy | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000930](https://www.ebi.ac.uk/biomodels/BIOMD0000000930) | Liu2017 - chemotherapy targeted model of tumor immune system | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000931](https://www.ebi.ac.uk/biomodels/BIOMD0000000931) | Voliotis2019-GnRH Pulse Generation | pass | pass | pass | pass | pass | yes |
@@ -980,13 +980,13 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000952](https://www.ebi.ac.uk/biomodels/BIOMD0000000952) | Rodenfels2019 - Heat Oscillations Driven by the Embryonic Cell Cycle Reveal the Energetic Costs of Signaling | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000953](https://www.ebi.ac.uk/biomodels/BIOMD0000000953) | Queralt2006 - Initiation of mitotic exit by downregulation of PP2A in budding yeast | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000954](https://www.ebi.ac.uk/biomodels/BIOMD0000000954) | Pandey2018-reversible transition between quiescence and proliferation | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000955](https://www.ebi.ac.uk/biomodels/BIOMD0000000955) | Giordano2020 - SIDARTHE model of COVID-19 spread in Italy | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000955](https://www.ebi.ac.uk/biomodels/BIOMD0000000955) | Giordano2020 - SIDARTHE model of COVID-19 spread in Italy | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000956](https://www.ebi.ac.uk/biomodels/BIOMD0000000956) | Bertozzi2020 - SIR model of scenarios of COVID-19 spread in CA and NY | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000957](https://www.ebi.ac.uk/biomodels/BIOMD0000000957) | Roda2020 - SIR model of COVID-19 spread in Wuhan | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000958](https://www.ebi.ac.uk/biomodels/BIOMD0000000958) | Ndairou2020 - early-stage transmission dynamics of COVID-19 in Wuhan | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000959](https://www.ebi.ac.uk/biomodels/BIOMD0000000959) | Kok2020 - IFNalpha-induced signaling in Huh7.5 cells | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000960](https://www.ebi.ac.uk/biomodels/BIOMD0000000960) | Paiva2020 - SEIAHRD model of transmission dynamics of COVID-19 | pass | pass | fail | pass | fail | no |
-| [BIOMD0000000961](https://www.ebi.ac.uk/biomodels/BIOMD0000000961) | McDougal2017 - Metabolism in ischemic cardiomyocytes | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000960](https://www.ebi.ac.uk/biomodels/BIOMD0000000960) | Paiva2020 - SEIAHRD model of transmission dynamics of COVID-19 | pass | pass | fail | pass | pass | no |
+| [BIOMD0000000961](https://www.ebi.ac.uk/biomodels/BIOMD0000000961) | McDougal2017 - Metabolism in ischemic cardiomyocytes | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000962](https://www.ebi.ac.uk/biomodels/BIOMD0000000962) | Zhao2020 - SUQC model of COVID-19 transmission dynamics in Wuhan, Hubei, and China | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000963](https://www.ebi.ac.uk/biomodels/BIOMD0000000963) | Weitz2020 - SIR model of COVID-19 transmission with shielding | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000964](https://www.ebi.ac.uk/biomodels/BIOMD0000000964) | Mwalili2020 - SEIR model of COVID-19 transmission and environmental pathogen prevalence | pass | pass | pass | pass | pass | yes |
@@ -994,24 +994,24 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000000966](https://www.ebi.ac.uk/biomodels/BIOMD0000000966) | Cui2008 - in vitro transcriptional response of zinc homeostasis system in Escherichia coli | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000967](https://www.ebi.ac.uk/biomodels/BIOMD0000000967) | McLean1991 - Behaviour of HIV in the presence of zidovudine | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000968](https://www.ebi.ac.uk/biomodels/BIOMD0000000968) | Palmer2008 - Negative Feedback in IL-7 mediated Jak-Stat signaling | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000969](https://www.ebi.ac.uk/biomodels/BIOMD0000000969) | Cuadros2020 - SIHRD spatiotemporal model of COVID-19 transmission in Ohio | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000969](https://www.ebi.ac.uk/biomodels/BIOMD0000000969) | Cuadros2020 - SIHRD spatiotemporal model of COVID-19 transmission in Ohio | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000970](https://www.ebi.ac.uk/biomodels/BIOMD0000000970) | Hou2020 - SEIR model of COVID-19 transmission in Wuhan | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000971](https://www.ebi.ac.uk/biomodels/BIOMD0000000971) | Tang2020 - Estimation of transmission risk of COVID-19 and impact of public health interventions | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000972](https://www.ebi.ac.uk/biomodels/BIOMD0000000972) | Tang2020 - Estimation of transmission risk of COVID-19 and impact of public health interventions - update | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000973](https://www.ebi.ac.uk/biomodels/BIOMD0000000973) | Dasgupta2020 - Reduced model of receptor clusturing and aggregation | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000974](https://www.ebi.ac.uk/biomodels/BIOMD0000000974) | Carcione2020 - Deterministic SEIR simulation of a COVID-19 outbreak | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000975](https://www.ebi.ac.uk/biomodels/BIOMD0000000975) | Leloup2004 - Mammalian Circadian Rhythm models for 23.8 and 24.2 hours timeperiod | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000976](https://www.ebi.ac.uk/biomodels/BIOMD0000000976) | Ghanbari2020 - forecasting the second wave of COVID-19 in Iran | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000976](https://www.ebi.ac.uk/biomodels/BIOMD0000000976) | Ghanbari2020 - forecasting the second wave of COVID-19 in Iran | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000977](https://www.ebi.ac.uk/biomodels/BIOMD0000000977) | Sarkar2020 - SAIR model of COVID-19 transmission with quarantine measures in India | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000978](https://www.ebi.ac.uk/biomodels/BIOMD0000000978) | Mukandavire2020 - SEIR model of early COVID-19 transmission in South Africa | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000979](https://www.ebi.ac.uk/biomodels/BIOMD0000000979) | Malkov2020 - SEIRS model of COVID-19 transmission with reinfection | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000980](https://www.ebi.ac.uk/biomodels/BIOMD0000000980) | Malkov2020 - SEIRS model of COVID-19 transmission with time-varying R values and reinfection | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000981](https://www.ebi.ac.uk/biomodels/BIOMD0000000981) | Wan2020 - risk estimation and prediction of the transmission of COVID-19 in maninland China excluding Hubei province | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000982](https://www.ebi.ac.uk/biomodels/BIOMD0000000982) | Law2020 - SIR model of COVID-19 transmission in Malyasia with time-varying parameters | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000983](https://www.ebi.ac.uk/biomodels/BIOMD0000000983) | Zongo2020 - model of COVID-19 transmission dynamics under containment measures in France | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000983](https://www.ebi.ac.uk/biomodels/BIOMD0000000983) | Zongo2020 - model of COVID-19 transmission dynamics under containment measures in France | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000984](https://www.ebi.ac.uk/biomodels/BIOMD0000000984) | Fang2020 - SEIR model of COVID-19 transmission considering government interventions in Wuhan | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000985](https://www.ebi.ac.uk/biomodels/BIOMD0000000985) | Gex-Fabry1984 - model of receptor-mediated endocytosis of EGF in BALB/c 3T3 cells | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000000986](https://www.ebi.ac.uk/biomodels/BIOMD0000000986) | Aubry1995 - Multi-compartment model of fluid-phase endocytosis kinetics in Dictyostelium discoideum | pass | pass | fail | pass | fail | no |
+| [BIOMD0000000986](https://www.ebi.ac.uk/biomodels/BIOMD0000000986) | Aubry1995 - Multi-compartment model of fluid-phase endocytosis kinetics in Dictyostelium discoideum | pass | pass | fail | pass | pass | no |
 | [BIOMD0000000987](https://www.ebi.ac.uk/biomodels/BIOMD0000000987) | Aubry1995 - Nine-compartment model of fluid-phase endocytosis kinetics in Dictyostelium discoideum | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000988](https://www.ebi.ac.uk/biomodels/BIOMD0000000988) | Westerhoff2020 - systems biology model of the coronavirus pandemic 2020 | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000000989](https://www.ebi.ac.uk/biomodels/BIOMD0000000989) | Strasen2018 - TGFb SMAD Signalling - Dose dependent dynamics upon TGFb stimulation | pass | pass | pass | pass | pass | yes |
@@ -1029,7 +1029,7 @@ The share of the models which pass a stage, the models which pass every stage an
 | [BIOMD0000001003](https://www.ebi.ac.uk/biomodels/BIOMD0000001003) | Strasen2018 - TGFb SMAD Signalling Class 6 | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000001004](https://www.ebi.ac.uk/biomodels/BIOMD0000001004) | Intosalmi2015 - Th17 core network model | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000001005](https://www.ebi.ac.uk/biomodels/BIOMD0000001005) | Bae2017 - Mathematical analysis of circadian disruption and metabolic re-entrainment of hepatic gluconeogenesis | pass | pass | pass | pass | pass | yes |
-| [BIOMD0000001006](https://www.ebi.ac.uk/biomodels/BIOMD0000001006) | Ciliberto2005 - Steady states and oscillations in the p53/Mdm2 network | pass | pass | fail | pass | fail | no |
+| [BIOMD0000001006](https://www.ebi.ac.uk/biomodels/BIOMD0000001006) | Ciliberto2005 - Steady states and oscillations in the p53/Mdm2 network | pass | pass | fail | pass | pass | no |
 | [BIOMD0000001007](https://www.ebi.ac.uk/biomodels/BIOMD0000001007) | Zhang2007 - Mechanism of DNA damage response (Model1) | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000001008](https://www.ebi.ac.uk/biomodels/BIOMD0000001008) | Scaramellini1997 - Two-receptor:One-transducer (2R1T) model for analysis of interactions between agonists | pass | pass | pass | pass | pass | yes |
 | [BIOMD0000001009](https://www.ebi.ac.uk/biomodels/BIOMD0000001009) | Zhang2007 - Mechanism of DNA damage response (Model2) | pass | pass | pass | pass | pass | yes |

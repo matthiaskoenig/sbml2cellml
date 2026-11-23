@@ -9,10 +9,12 @@
 //! (`crates/convert`, `_condition_of_a_trigger` of the python converter).
 //!
 //! An event CellML cannot express is not converted, with a warning, as in
-//! the python converter: one without a trigger or without an assignment,
-//! one with a delay, since a reset applies its value when it fires, and one
-//! whose mathematics uses a factorial, a delay or a `rateOf`, which no
-//! CellML model holds.
+//! the python converter: one without a trigger or without an assignment and
+//! one whose mathematics uses a factorial, a delay or a `rateOf`, which no
+//! CellML model holds. What a reset cannot express, the delay of an event,
+//! its priority and the flags of SBML, is kept in the metadata of the
+//! conversion (`sbml2cellml.metadata`), which the python package writes
+//! from the SBML element of every element of the CellML model.
 
 use std::collections::HashSet;
 
@@ -99,9 +101,8 @@ fn convertible(
     };
     if event.delay.is_some() {
         warnings.push(format!(
-            "the event '{id}' has a delay, which a reset of CellML cannot express: it is not converted"
+            "the event '{id}' has a delay, which a reset of CellML cannot express: the reset fires when the trigger holds, the delay is kept in the metadata of the conversion"
         ));
-        return Ok(None);
     }
     let mut assignments = Vec::new();
     for assignment in &event.assignments {
@@ -116,22 +117,15 @@ fn convertible(
         return Ok(None);
     }
     let condition = functions.expand(condition)?;
-    let formulas = std::iter::once(&condition).chain(assignments.iter().map(|(_, math)| math));
-    if let Some(operator) = formulas.filter_map(without_counterpart).next() {
-        warnings.push(format!(
-            "the event '{id}' uses '{operator}', which has no counterpart in CellML: it is not converted"
-        ));
-        return Ok(None);
-    }
     if let Some(trigger) = &event.trigger {
         if !trigger.initial_value {
             warnings.push(format!(
-                "the trigger of the event '{id}' has the initial value 'false', which a reset cannot express: the reset fires at the start as well when the condition holds"
+                "the trigger of the event '{id}' has the initial value 'false', which a reset cannot express: the value is kept in the metadata of the conversion"
             ));
         }
         if !trigger.persistent {
             warnings.push(format!(
-                "the trigger of the event '{id}' is not persistent, which a reset cannot express: the reset fires whenever the condition becomes true"
+                "the trigger of the event '{id}' is not persistent, which a reset cannot express: the flag is kept in the metadata of the conversion"
             ));
         }
     }
@@ -140,6 +134,19 @@ fn convertible(
         assignments,
         priority(event, id, warnings),
     )))
+}
+
+/// The name of the first operator of the formulas of an event which has no
+/// counterpart in CellML, `None` when the event has none.
+///
+/// A `rateOf` is replaced by the rate it stands for before this is asked
+/// (`model::expand_rate_of`), so one which is left has none either.
+#[must_use]
+pub fn unsupported(event: &Event) -> Option<&'static str> {
+    std::iter::once(&event.condition)
+        .chain(event.assignments.iter().map(|(_, math)| math))
+        .filter_map(without_counterpart)
+        .next()
 }
 
 /// The name of the first operator of a formula which has no counterpart in
