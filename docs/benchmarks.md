@@ -27,9 +27,9 @@ The setup is everything a simulator does with a model before it integrates: read
 
 | check | models | sbmlsim-core | libopencor | ratio | libopencor faster | sbmlsim-core sum | libopencor sum |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [SBML test suite](testsuite.md) | 1153 | 0.97 ms | 4.7 ms | 5.05 | 86 of 1153 | 1.6 s | 5.6 s |
+| [SBML test suite](testsuite.md) | 1154 | 0.95 ms | 4.6 ms | 5.10 | 88 of 1154 | 1.5 s | 5.6 s |
 | [BioModels](biomodels.md) | 939 | 29 ms | 18 ms | 0.63 | 838 of 939 | 1.6 min | 55.4 s |
-| [Physiome Model Repository](physiome.md) | 57 | 5.7 ms | 21 ms | 3.69 | 2 of 57 | 1.6 s | 3.2 s |
+| [Physiome Model Repository](physiome.md) | 57 | 6.0 ms | 20 ms | 3.57 | 2 of 57 | 1.6 s | 3.2 s |
 
 ## Integration
 
@@ -40,9 +40,9 @@ The integration is the run of the solver over the output grid, the same grid and
 
 | check | models | sbmlsim-core | libopencor | ratio | libopencor faster | sbmlsim-core sum | libopencor sum |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [SBML test suite](testsuite.md) | 1153 | 0.07 ms | 0.06 ms | 0.92 | 760 of 1153 | 73 ms | 66 ms |
+| [SBML test suite](testsuite.md) | 1154 | 0.07 ms | 0.06 ms | 0.91 | 813 of 1154 | 74 ms | 66 ms |
 | [BioModels](biomodels.md) | 939 | 0.48 ms | 0.43 ms | 0.88 | 651 of 939 | 1.8 s | 3.2 s |
-| [Physiome Model Repository](physiome.md) | 57 | 0.92 ms | 0.61 ms | 0.77 | 47 of 57 | 1.1 s | 1.0 s |
+| [Physiome Model Repository](physiome.md) | 57 | 0.89 ms | 0.59 ms | 0.77 | 51 of 57 | 1.1 s | 983 ms |
 
 ## Total
 
@@ -53,9 +53,9 @@ The setup and the integration of a model together, what a simulator costs for a 
 
 | check | models | sbmlsim-core | libopencor | ratio | libopencor faster | sbmlsim-core sum | libopencor sum |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [SBML test suite](testsuite.md) | 1153 | 1.0 ms | 4.7 ms | 4.75 | 86 of 1153 | 1.7 s | 5.7 s |
+| [SBML test suite](testsuite.md) | 1154 | 1.0 ms | 4.7 ms | 4.80 | 88 of 1154 | 1.6 s | 5.7 s |
 | [BioModels](biomodels.md) | 939 | 29 ms | 18 ms | 0.64 | 839 of 939 | 1.6 min | 58.6 s |
-| [Physiome Model Repository](physiome.md) | 57 | 6.4 ms | 21 ms | 3.21 | 2 of 57 | 2.6 s | 4.2 s |
+| [Physiome Model Repository](physiome.md) | 57 | 6.5 ms | 21 ms | 3.15 | 2 of 57 | 2.7 s | 4.2 s |
 
 ## Slowest models
 
@@ -65,11 +65,11 @@ The 5 models of every check with the longest integration, by the longer of the t
 
 | model | sbmlsim-core | libopencor | ratio |
 | --- | --- | --- | --- |
-| 01395 | 0.63 ms | 0.64 ms | 1.02 |
-| 01369 | 0.01 ms | 0.62 ms | 45.66 |
-| 01563 | 0.09 ms | 0.54 ms | 6.35 |
-| 00185 | 0.26 ms | 0.13 ms | 0.49 |
-| 01099 | 0.21 ms | 0.11 ms | 0.52 |
+| 01395 | 0.61 ms | 0.63 ms | 1.04 |
+| 01563 | 0.09 ms | 0.54 ms | 6.18 |
+| 00570 | 0.36 ms | 0.25 ms | 0.70 |
+| 00569 | 0.34 ms | 0.28 ms | 0.83 |
+| 00055 | 0.13 ms | 0.29 ms | 2.20 |
 
 ### BioModels
 
@@ -85,8 +85,8 @@ The 5 models of every check with the longest integration, by the longer of the t
 
 | model | name | sbmlsim-core | libopencor | ratio |
 | --- | --- | --- | --- | --- |
-| [139](https://models.physiomeproject.org/e/139) | An updated computational model of rabbit sinoatrial action potential to investigate the mechanisms of heart rate modulation. | 491 ms | 531 ms | 1.08 |
-| [594](https://models.physiomeproject.org/e/594) | Paci, Hyttinen, Aalto-Setala, Severi 2013 HiPSC models | 342 ms | 274 ms | 0.80 |
-| [2a6](https://models.physiomeproject.org/e/2a6) | Noble, 1962 | 81 ms | 71 ms | 0.88 |
-| [53](https://models.physiomeproject.org/e/53) | Schoeberl, Eichler-Jonsson, Gilles, Muller, 2002 | 12 ms | 20 ms | 1.74 |
-| [41](https://models.physiomeproject.org/e/41) | Bondarenko, Szigeti, Bett, Kim, Rasmusson, 2004 | 13 ms | 14 ms | 1.05 |
+| [139](https://models.physiomeproject.org/e/139) | An updated computational model of rabbit sinoatrial action potential to investigate the mechanisms of heart rate modulation. | 491 ms | 517 ms | 1.05 |
+| [594](https://models.physiomeproject.org/e/594) | Paci, Hyttinen, Aalto-Setala, Severi 2013 HiPSC models | 394 ms | 274 ms | 0.70 |
+| [2a6](https://models.physiomeproject.org/e/2a6) | Noble, 1962 | 78 ms | 74 ms | 0.95 |
+| [53](https://models.physiomeproject.org/e/53) | Schoeberl, Eichler-Jonsson, Gilles, Muller, 2002 | 12 ms | 20 ms | 1.75 |
+| [41](https://models.physiomeproject.org/e/41) | Bondarenko, Szigeti, Bett, Kim, Rasmusson, 2004 | 12 ms | 13 ms | 1.05 |

@@ -141,6 +141,8 @@ dependencies = [
  "pyo3",
  "sbml2cellml-cellml",
  "sbml2cellml-convert",
+ "sbml2cellml-tocellml",
+ "sbmlsim-sbml",
 ]
 
 [[package]]

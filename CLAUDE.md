@@ -73,14 +73,27 @@ uv run python scripts/cellml_parity.py       # the rust reader against libcellml
 uv run python scripts/cellml_write_parity.py # the rust writer against libcellml over the corpus
 uv run python scripts/cellml2sbml_parity.py  # the rust converter against the python converter
 uv run python scripts/sbml2cellml_parity.py  # the rust forward converter against the python converter (--corpus models|suite|biomodels|all)
-uv run python scripts/convert_benchmark.py   # the two engines over the corpus, writes docs/images/convert_benchmark*.svg
+uv run python scripts/convert_benchmark.py   # the two engines of cellml2sbml over the corpus, writes docs/images/convert_benchmark*.svg
+uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two engines of sbml2cellml, writes docs/images/convert_benchmark_cellml*.svg
 ```
 
 `develop` is the default branch and takes every change through a pull request; the rulesets in `.github/rulesets/` (applied with `apply.sh`) require the `tests`, `ruff`, `ty` and `docs` checks. Continuous integration is kept minimal: `tests` runs `py3.14` on linux, macos and windows, every workflow cancels a superseded run (`cancel-in-progress: true`), uv caches packages and interpreters, dependabot runs monthly. A workflow runs on a push to `develop` and `main` and on every pull request whatever its base, so a pull request stacked on another one is checked as well. `main` tracks the latest release and is fast-forwarded by the `sync-main` job of the release workflow. Release steps are in `docs/development.md`: release branch, `uvx bump-my-version bump [major|minor|patch]` (updates `__init__.py` and `CITATION.cff`, no tag), release notes in `docs/release-notes/`, pull request, tag on `develop` after the merge.
 
 ## Architecture
 
-- `sbml2cellml.py`: `convert_sbml2cellml(sbml_path, cellml_path=None, validate=True)`.
+- `sbml2cellml.py`: `convert_sbml2cellml(sbml_path, cellml_path=None,
+  validate=True, metadata=True, engine="auto")`. The engines are the ones of
+  `cellml2sbml` (`rust.Engine`/`rust.ENGINES`, `--engine` of both commands):
+  `"rust"` converts with `sbml2cellml.rust` (`_convert_with_rust`: the text
+  of the file, or the document libsbml wrote when it flattened a
+  hierarchical model, and the CellML text parsed back with libcellml),
+  `"python"` with libsbml, libcellml and this module
+  (`_convert_with_python`, which also gives the SBML element of every CellML
+  element for the metadata), and `"auto"`, the default, takes rust unless
+  `_without_rust` names what it does not do (the metadata of a model which
+  has any, `_has_metadata`: the rust converter writes no `id` for the RDF to
+  point at) and converts with python when the rust converter refuses the
+  model (a formula with a delay).
   A hierarchical model is flattened first (`sbml.flatten_comp`, with the
   directory of the file as the base path of an external model definition),
   so the submodels become part of the CellML model.
@@ -272,8 +285,10 @@ uv run python scripts/convert_benchmark.py   # the two engines over the corpus, 
 - `rust.py`: the wrapper of the module `sbml2cellml._rust`
   (`crates/python`, built by maturin into the package):
   `convert_cellml_to_sbml` (the SBML text and the warnings),
-  `cellml_version`, `has_imports`, `RustError` for a document the reader
-  or the converter refuses. `_rust.pyi` is the signature of the module for
+  `convert_sbml_to_cellml` (the CellML text and the warnings, with the name
+  of the model for a document whose model has no id), `cellml_version`,
+  `has_imports`, `RustError` for a document the reader or the converter
+  refuses, and `Engine`/`ENGINES`, the engines of both conversions. `_rust.pyi` is the signature of the module for
   the type checker.
 - `variables.py`: `VariableIds` gives one SBML id per equivalence set, a
   component prefix on name clashes; `ComponentIds` one namespace per
@@ -297,7 +312,8 @@ uv run python scripts/convert_benchmark.py   # the two engines over the corpus, 
   pointer into the document which was freed (libsbml segfaults in
   `setModelHistory` otherwise); `None` when the document does not use
   `comp`.
-- `cli.py`: argparse, `[project.scripts]` entry point.
+- `cli.py`: argparse, `[project.scripts]` entry point; `_build_parser` is
+  what both commands share, `--engine` among it.
 - `crates/` (rust, issue #68: the reader and the converter in rust, so a
   conversion is fast and runs in a browser next to sbmlsim-core, whose
   compiler takes SBML text). `crates/sbml` is the SBML level 3 version 2
@@ -418,7 +434,8 @@ uv run python scripts/convert_benchmark.py   # the two engines over the corpus, 
   suite and the BioModels cache (local only, as the other corpus checks).
   `crates/python` is the module `sbml2cellml._rust` (pyo3, `abi3-py314`,
   no default member of the workspace: a test binary would have to link
-  libpython). `crates/cellml` is the reader of CellML 2.0,
+  libpython) with both conversions, `convert_cellml_to_sbml` and
+  `convert_sbml_to_cellml`. `crates/cellml` is the reader of CellML 2.0,
   1.1 and 1.0 (`read` gives a `Document` with the version and the `Model`:
   unit definitions, components with their variables and their MathML
   (`math::Node`), connections, encapsulation and imports; a document of

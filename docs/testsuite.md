@@ -18,11 +18,11 @@ An `sbmlsim` failure means sbmlsim-core itself cannot simulate the case, it says
 | --- | --- | --- | --- | --- | --- |
 | sbmlsim | 1658 | 1656 | 2 | 0 | 99.9% |
 | sbml2cellml | 1658 | 1610 | 48 | 0 | 97.1% |
-| libopencor | 1658 | 1153 | 457 | 48 | 69.5% |
+| libopencor | 1658 | 1154 | 456 | 48 | 69.6% |
 | cellml2sbml | 1658 | 1610 | 0 | 48 | 97.1% |
-| roundtrip | 1658 | 1321 | 289 | 48 | 79.7% |
+| roundtrip | 1658 | 1322 | 288 | 48 | 79.7% |
 
-1008 of the 1153 cases with a passing libopencor stage are informative: the expected results move more than the tolerance band for at least one variable.
+1008 of the 1154 cases with a passing libopencor stage are informative: the expected results move more than the tolerance band for at least one variable.
 
 ## Timings
 
@@ -35,11 +35,11 @@ The two simulators integrate with the same relative tolerance and with an absolu
 
 | stage | simulator | model | simulations | setup median | integration median | integration p95 | integration slowest | integration total |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| sbmlsim | sbmlsim-core | SBML model | 1658 | 1.00 ms | 0.07 ms | 0.19 ms | 754 ms | 1.6 s |
-| libopencor | libopencor | CellML model | 1608 | 4.7 ms | 0.06 ms | 0.12 ms | 0.73 ms | 89 ms |
-| roundtrip | sbmlsim-core | roundtrip SBML model | 1609 | 1.1 ms | 0.07 ms | 0.17 ms | 2.1 s | 3.2 s |
+| sbmlsim | sbmlsim-core | SBML model | 1658 | 0.98 ms | 0.07 ms | 0.19 ms | 747 ms | 1.6 s |
+| libopencor | libopencor | CellML model | 1608 | 4.7 ms | 0.06 ms | 0.12 ms | 0.63 ms | 88 ms |
+| roundtrip | sbmlsim-core | roundtrip SBML model | 1609 | 1.1 ms | 0.07 ms | 0.17 ms | 2.0 s | 3.2 s |
 
-The two simulators integrate the same dynamics for 1153 cases, those whose CellML model reproduces the expected results. libopencor is 1.1 times faster than sbmlsim-core for the median of them and faster for 757; over these cases the medians are 0.07 ms for sbmlsim-core and 0.06 ms for libopencor.
+The two simulators integrate the same dynamics for 1154 cases, those whose CellML model reproduces the expected results. libopencor is 1.1 times faster than sbmlsim-core for the median of them and faster for 808; over these cases the medians are 0.07 ms for sbmlsim-core and 0.06 ms for libopencor.
 
 ## Failure reasons
 
@@ -229,9 +229,9 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 
 ### libopencor
 
-457 of 1658 cases fail.
+456 of 1658 cases fail.
 
-**453 cases, numerical mismatch**
+**452 cases, numerical mismatch**
 
 ```text
 00026: S1 exceeds the tolerance by 0.9; S2 exceeds the tolerance by 1.13
@@ -520,7 +520,6 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 01269: p2 exceeds the tolerance by 4
 01270: p2 exceeds the tolerance by 7.98
 01279: p1 exceeds the tolerance by 1; p2 exceeds the tolerance by 1; p3 exceeds the tolerance by 1; p4 exceeds the tolerance by 1
-01282: p1 exceeds the tolerance by 1
 01284: p1 exceeds the tolerance by 3
 01285: p1 exceeds the tolerance by 4
 01286: p1 exceeds the tolerance by 15
@@ -802,7 +801,6 @@ The test tags of the cases with a numerical mismatch:
 | Amount, NonConstantParameter, ReversibleReaction | 1 | 01340 |
 | AssignedVariableStoichiometry, EventIsNotPersistent, InitialValueReassigned, NonConstantParameter, NonUnityStoichiometry, RandomEventExecution, SpeciesReferenceInMath | 1 | 01626 |
 | BoolNumericSwap, EventT0Firing, NonConstantParameter | 1 | 01284 |
-| BoolNumericSwap, InitialValueReassigned | 1 | 01282 |
 | BoundaryCondition, Concentration, EventIsPersistent, EventUsesAssignmentTimeValues, InitialValueReassigned, UncommonMathML | 1 | 00936 |
 | Concentration, EventIsPersistent, NonUnityCompartment | 1 | 00764 |
 | Concentration, InitialValueReassigned, NonConstantCompartment, NonConstantParameter, NonUnityCompartment | 1 | 00948 |
@@ -840,9 +838,9 @@ The test tags of the cases with a numerical mismatch:
 
 ### roundtrip
 
-289 of 1658 cases fail.
+288 of 1658 cases fail.
 
-**286 cases, numerical mismatch**
+**285 cases, numerical mismatch**
 
 ```text
 00071: S1 exceeds the tolerance by 0.873; S2 exceeds the tolerance by 0.786
@@ -1000,7 +998,6 @@ The test tags of the cases with a numerical mismatch:
 01268: p2 exceeds the tolerance by 5
 01269: p2 exceeds the tolerance by 4
 01270: p2 exceeds the tolerance by 7.98
-01282: p1 exceeds the tolerance by 1
 01284: p1 exceeds the tolerance by 3
 01287: p1 exceeds the tolerance by 15
 01293: p2 exceeds the tolerance by 5
@@ -1236,7 +1233,6 @@ The test tags of the cases with a numerical mismatch:
 | Amount, ReversibleReaction | 1 | 01048 |
 | AssignedVariableStoichiometry, EventIsNotPersistent, InitialValueReassigned, NonConstantParameter, NonUnityStoichiometry, RandomEventExecution, SpeciesReferenceInMath | 1 | 01626 |
 | BoolNumericSwap, EventT0Firing, NonConstantParameter | 1 | 01284 |
-| BoolNumericSwap, InitialValueReassigned | 1 | 01282 |
 | BoolNumericSwap, NonConstantParameter | 1 | 01287 |
 | BoundaryCondition, Concentration, EventIsPersistent, EventUsesAssignmentTimeValues, InitialValueReassigned, UncommonMathML | 1 | 00936 |
 | Concentration, EventIsPersistent, NonUnityCompartment | 1 | 00764 |
@@ -2491,7 +2487,7 @@ The test tags of the cases with a numerical mismatch:
 | 01279 | AssignmentRule, CSymbolTime, Parameter | pass | pass | fail | pass | pass | yes |
 | 01280 | AssignmentRule, CSymbolTime, Parameter | pass | pass | fail | pass | pass | yes |
 | 01281 | AssignmentRule, CSymbolTime, Parameter | pass | pass | fail | pass | pass | yes |
-| 01282 | InitialAssignment, Parameter | pass | pass | fail | pass | fail | no |
+| 01282 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 01283 | InitialAssignment, Parameter | pass | pass | pass | pass | pass | no |
 | 01284 | EventNoDelay, Parameter | pass | pass | fail | pass | fail | no |
 | 01285 | CSymbolTime, EventNoDelay, Parameter | pass | pass | fail | pass | pass | yes |

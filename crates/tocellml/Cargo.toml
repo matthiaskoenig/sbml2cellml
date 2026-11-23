@@ -17,7 +17,7 @@ thiserror.workspace = true
 # the reader of every level and version of SBML core; the crate is not
 # published, so it is pinned to a commit of the default branch and bumped
 # when the conversion needs something new of it
-sbml = { package = "sbmlsim-sbml", git = "https://github.com/matthiaskoenig/sbmlsim-core", rev = "f8609ef" }
+sbml = { workspace = true }
 
 [lints]
 workspace = true

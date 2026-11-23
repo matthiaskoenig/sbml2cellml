@@ -1,6 +1,7 @@
 """Tests of the metadata in the conversions: the RDF file next to the CellML."""
 
 from pathlib import Path
+from typing import Any
 
 import libsbml
 
@@ -36,7 +37,7 @@ def described_model(mid: str = "described") -> libsbml.Model:
     return model
 
 
-def convert(model: libsbml.Model, tmp_path: Path, **kwargs: bool) -> Path:
+def convert(model: libsbml.Model, tmp_path: Path, **kwargs: Any) -> Path:
     """Convert to `<tmp_path>/model.cellml` and return the path of the RDF."""
     sbml_path = write_sbml(tmp_path / "model.xml", model)
     convert_sbml2cellml(sbml_path, cellml_path=tmp_path / "model.cellml", **kwargs)

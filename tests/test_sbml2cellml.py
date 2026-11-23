@@ -295,7 +295,7 @@ def test_assigned_compartment_without_size_converts_with_one(
     s2.setInitialConcentration(4.0)  # amount species, concentration given
     sbml_path = write_sbml(tmp_path / "assigned_size.xml", model_sbml)
     with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
-        v = variables(convert_sbml2cellml(sbml_path, validate=False))
+        v = variables(convert_sbml2cellml(sbml_path, validate=False, engine="python"))
     assert v["cell"].initialValue() == ""
     assert float(v["S2"].initialValue()) == 4.0
     assert "Size of compartment 'cell' is not set" in caplog.text
@@ -546,14 +546,14 @@ def test_default_stoichiometry_of_level_2_logs_no_warning(
     """A stoichiometry which is not set is 1 in level 2 and unknown in level 3."""
     sbml_path = MODELS_DIR / "repressilator.xml"  # level 2, no stoichiometries
     with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
-        convert_sbml2cellml(sbml_path)
+        convert_sbml2cellml(sbml_path, engine="python")
     assert "Stoichiometry" not in caplog.text
 
     model_sbml = simple_model("unset_stoichiometry")
     model_sbml.getReaction("r1").getReactant(0).unsetStoichiometry()
     sbml_path = write_sbml(tmp_path / "unset_stoichiometry.xml", model_sbml)
     with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
-        convert_sbml2cellml(sbml_path)
+        convert_sbml2cellml(sbml_path, engine="python")
     assert "Stoichiometry of 'S1' in reaction 'r1' is not set" in caplog.text
 
 
@@ -731,7 +731,7 @@ def test_initial_assignment_libsbml_cannot_evaluate_stays(
     _initial_assignment(model_sbml, "q", "2 * p")
     sbml_path = write_sbml(tmp_path / "not_evaluated.xml", model_sbml)
     with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
-        v = variables(convert_sbml2cellml(sbml_path, validate=False))
+        v = variables(convert_sbml2cellml(sbml_path, validate=False, engine="python"))
     assert "could not be expanded (2 of 2)" in caplog.text
     assert "InitialAssignment for 'p' not converted" in caplog.text
     assert "InitialAssignment for 'q' not converted" in caplog.text
@@ -749,7 +749,7 @@ def test_initial_assignment_without_math_has_no_effect(
     _initial_assignment(model_sbml, "k1", "2 * p")
     sbml_path = write_sbml(tmp_path / "no_math_assignment.xml", model_sbml)
     with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
-        v = variables(convert_sbml2cellml(sbml_path))
+        v = variables(convert_sbml2cellml(sbml_path, engine="python"))
     assert caplog.text == ""
     assert float(v["p"].initialValue()) == 3.0
     assert float(v["k1"].initialValue()) == 6.0
@@ -932,7 +932,7 @@ def test_algebraic_rule_without_a_free_variable_logs_warning(
     _algebraic_rule(model_sbml, "k1 - 0.5")  # k1 is constant
     sbml_path = write_sbml(tmp_path / "overdetermined.xml", model_sbml)
     with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
-        model = convert_sbml2cellml(sbml_path)
+        model = convert_sbml2cellml(sbml_path, engine="python")
     assert "AlgebraicRule 'k1 - 0.5' not converted, it determines no variable" in (
         caplog.text
     )
@@ -976,7 +976,7 @@ def test_event_with_a_delay_logs_warning(
     delay.setMath(libsbml.parseL3Formula("2"))
     sbml_path = write_sbml(tmp_path / "delayed.xml", model_sbml)
     with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
-        model = convert_sbml2cellml(sbml_path)
+        model = convert_sbml2cellml(sbml_path, engine="python")
     assert "Event 'e1' has a delay" in caplog.text
     assert model.component(0).resetCount() == 0
 
@@ -984,7 +984,9 @@ def test_event_with_a_delay_logs_warning(
 def test_convert_model_with_an_element_called_time(tmp_path: Path) -> None:
     """The variable of integration takes another name, the parameter keeps it."""
     sbml_path = write_sbml(tmp_path / "timeid.xml", time_id_model())
-    model = convert_sbml2cellml(sbml_path, cellml_path=tmp_path / "timeid.cellml")
+    model = convert_sbml2cellml(
+        sbml_path, cellml_path=tmp_path / "timeid.cellml", engine="python"
+    )
     component = model.component(0)
     names = {component.variable(k).name() for k in range(component.variableCount())}
     assert "time" in names
@@ -1015,7 +1017,7 @@ def test_event_with_math_which_is_no_cellml_is_not_converted(
     )
     sbml_path = write_sbml(tmp_path / "factorial.xml", model_sbml)
     with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
-        model = convert_sbml2cellml(sbml_path)
+        model = convert_sbml2cellml(sbml_path, engine="python")
     assert "Event 'e1' uses math CellML has no counterpart for" in caplog.text
     assert model.component(0).resetCount() == 0
     assert model.component(0).variable("S1") is not None

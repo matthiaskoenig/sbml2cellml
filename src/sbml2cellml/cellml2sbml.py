@@ -2,7 +2,7 @@
 
 The conversion runs in rust (`sbml2cellml.rust`, the crates of `crates/`),
 which reads the document and writes the SBML itself, and in python through
-libcellml, which this module implements; `ENGINES` names the two and
+libcellml, which this module implements; `rust.ENGINES` names the two and
 `convert_cellml2sbml` takes the one to use, `"auto"` by default: the rust
 engine, and the python engine for what rust does not do (the metadata of
 the elements and the hierarchical conversion). The document of a model
@@ -24,13 +24,14 @@ definitions and the model.
 import logging
 from collections.abc import Callable, Iterator
 from pathlib import Path
-from typing import Any, Literal, get_args
+from typing import Any
 
 import libcellml
 import libsbml
 
 from sbml2cellml import cellml, rust, sbml
 from sbml2cellml.metadata import Record, apply_metadata, read_metadata
+from sbml2cellml.rust import Engine
 from sbml2cellml.sbml import SBMLValidationError
 from sbml2cellml.sbmlmath import (
     MathConversionError,
@@ -77,14 +78,6 @@ METADATA_SUFFIX = ".rdf"
 
 #: name of the SBML package for the hierarchical model composition
 COMP_PACKAGE = "comp"
-
-#: engine of the conversion: the rust crates, the python code of this
-#: module through libcellml, or `"auto"`, which is the rust engine for
-#: everything it covers and the python engine for the rest
-Engine = Literal["auto", "rust", "python"]
-
-#: the values of `Engine`, for the command line
-ENGINES: tuple[str, ...] = get_args(Engine)
 
 
 def convert_cellml2sbml(

@@ -46,10 +46,34 @@ sbml2cellml model.xml                      # writes model.cellml next to the inp
 sbml2cellml model.xml -o out/model.cellml  # explicit output
 sbml2cellml model.xml --no-validate        # write even if libcellml reports errors
 sbml2cellml model.xml --no-metadata        # do not write model.rdf
+sbml2cellml model.xml --engine python      # convert with libcellml instead of rust
 sbml2cellml model.xml -v                   # log the conversion steps
 ```
 
 The command exits with 1 and the message on stderr when the input does not exist, has no model, or the validation fails.
+
+### Engines
+
+The conversion runs in rust: the crates of [`crates/`](development.md#rust) read the SBML document of any level and version, build the CellML model and write it themselves, which the module `sbml2cellml._rust` makes available in the process. The python engine, which reads the model with libsbml and builds the model with libcellml, writes the same model and stays available.
+
+| engine | what it converts |
+| --- | --- |
+| `auto` (the default) | the rust engine, and the python engine for a model whose metadata is written next to the CellML file (`<stem>.rdf`) and for a model the rust converter refuses |
+| `rust` | the rust engine only; a model it refuses raises `SBML2CellMLConversionError` |
+| `python` | libsbml, libcellml and the code of `sbml2cellml.sbml2cellml` |
+
+```python
+model = convert_sbml2cellml(Path("model.xml"), engine="python")
+```
+
+The rust converter writes no `id`, which the metadata of a model points at, so a model with a name, notes, an SBO term, annotations or a history is converted by the python engine unless `metadata=False` or `--no-metadata` says that no metadata is written. A hierarchical model is flattened with libsbml before the rust converter reads it, since the crates know no package; what the rust converter refuses is a formula with a `delay`, which CellML cannot express anyway, and `auto` converts such a model with the python engine.
+
+Of the 1692 cases of the SBML test suite, 1528 are converted by both engines and 1526 of them give the same CellML model; of the 1075 models of the BioModels check, 1063 are converted by both and 1061 give the same model (`scripts/sbml2cellml_parity.py`, see [development](development.md#rust)).
+
+The rust engine converts the median model of the BioModels check twice as fast as the python engine, which libsbml and libcellml dominate: the API reads the document with libsbml and parses the CellML text of the conversion with libcellml, which together take more than the conversion. The gain grows with the model, up to 214 times over that corpus, and the conversion alone, which is what a browser runs, is 21 times faster for the median model.
+
+![Conversion time of the two engines](images/convert_benchmark_cellml.svg#only-light)
+![Conversion time of the two engines](images/convert_benchmark_cellml_dark.svg#only-dark)
 
 ### Metadata
 

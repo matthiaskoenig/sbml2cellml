@@ -842,17 +842,17 @@ z
    </g>
    <g id="patch_12">
     <path d="M 73.367079 194.839906
-L 486.938186 194.839906
-L 486.938186 216.786224
+L 493.853859 194.839906
+L 493.853859 216.786224
 L 73.367079 216.786224
 z
 " clip-path="url(#pd5c375129e)" style="fill: #2a78d6"/>
    </g>
    <g id="patch_13">
-    <path d="M 488.307489 194.839906
+    <path d="M 495.223163 194.839906
 L 500.769533 194.839906
 L 500.769533 216.786224
-L 488.307489 216.786224
+L 495.223163 216.786224
 z
 " clip-path="url(#pd5c375129e)" style="fill: #eb6834"/>
    </g>
@@ -1188,10 +1188,10 @@ z
     </g>
    </g>
    <g id="text_27">
-    <!-- 60 -->
-    <g style="fill: #ffffff" transform="translate(273.790132 208.410721) scale(0.1 -0.1)">
+    <!-- 61 -->
+    <g style="fill: #ffffff" transform="translate(277.247969 208.410721) scale(0.1 -0.1)">
      <use xlink:href="#DejaVuSans-19"/>
-     <use xlink:href="#DejaVuSans-13" transform="translate(63.625 0)"/>
+     <use xlink:href="#DejaVuSans-14" transform="translate(63.625 0)"/>
     </g>
    </g>
    <g id="text_28">
@@ -1201,35 +1201,36 @@ z
     </g>
    </g>
    <g id="text_29">
-    <!-- 90.9% -->
+    <!-- 92.4% -->
     <g style="fill: #0b0b0b" transform="translate(534.594092 208.670487) scale(0.11 -0.11)">
      <defs>
-      <path id="DejaVuSans-Bold-13" d="M 2944 2338
-Q 2944 3213 2780 3570
-Q 2616 3928 2228 3928
-Q 1841 3928 1675 3570
-Q 1509 3213 1509 2338
-Q 1509 1453 1675 1090
-Q 1841 728 2228 728
-Q 2613 728 2778 1090
-Q 2944 1453 2944 2338
-z
-M 4147 2328
-Q 4147 1169 3647 539
-Q 3147 -91 2228 -91
-Q 1306 -91 806 539
-Q 306 1169 306 2328
-Q 306 3491 806 4120
-Q 1306 4750 2228 4750
-Q 3147 4750 3647 4120
-Q 4147 3491 4147 2328
+      <path id="DejaVuSans-Bold-15" d="M 1844 884
+L 3897 884
+L 3897 0
+L 506 0
+L 506 884
+L 2209 2388
+Q 2438 2594 2547 2791
+Q 2656 2988 2656 3200
+Q 2656 3528 2436 3728
+Q 2216 3928 1850 3928
+Q 1569 3928 1234 3808
+Q 900 3688 519 3450
+L 519 4475
+Q 925 4609 1322 4679
+Q 1719 4750 2100 4750
+Q 2938 4750 3402 4381
+Q 3866 4013 3866 3353
+Q 3866 2972 3669 2642
+Q 3472 2313 2841 1759
+L 1844 884
 z
 " transform="scale(0.015625)"/>
      </defs>
      <use xlink:href="#DejaVuSans-Bold-1c"/>
-     <use xlink:href="#DejaVuSans-Bold-13" transform="translate(69.578125 0)"/>
+     <use xlink:href="#DejaVuSans-Bold-15" transform="translate(69.578125 0)"/>
      <use xlink:href="#DejaVuSans-Bold-11" transform="translate(139.15625 0)"/>
-     <use xlink:href="#DejaVuSans-Bold-1c" transform="translate(177.140625 0)"/>
+     <use xlink:href="#DejaVuSans-Bold-17" transform="translate(177.140625 0)"/>
      <use xlink:href="#DejaVuSans-Bold-8" transform="translate(246.71875 0)"/>
     </g>
    </g>

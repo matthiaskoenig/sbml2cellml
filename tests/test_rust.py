@@ -5,12 +5,19 @@ from pathlib import Path
 import libsbml
 import pytest
 
-from sbml2cellml import rust
+from sbml2cellml import cellml, rust
 from sbml2cellml.cellml import write_model
 from sbml2cellml.cellml2sbml import CellML2SBMLConversionError, convert_cellml2sbml
 from sbml2cellml.sbml import validate_document
+from sbml2cellml.sbml2cellml import SBML2CellMLConversionError, convert_sbml2cellml
 from tests.cellml_models import multi_component_model, reset_model
 from tests.conftest import DATA_DIR, MODELS_DIR
+from tests.sbml_models import (
+    annotated_species,
+    event_model,
+    simple_model,
+    write_sbml,
+)
 
 TEST_MODEL_PATH = MODELS_DIR / "test_model.cellml"
 
@@ -155,3 +162,91 @@ def test_the_engines_give_a_quantity_the_same_id(tmp_path: Path) -> None:
     # `rate` of the component which uses it is `k` of the one which has its
     # value, as the analyser of libcellml names the set
     assert "k" in ids["rust"] and "rate" not in ids["rust"]
+
+
+def test_convert_sbml_to_cellml_writes_a_model() -> None:
+    sbml_path = MODELS_DIR / "repressilator.xml"
+    cellml_text, warnings = rust.convert_sbml_to_cellml(
+        sbml_path.read_text(encoding="utf-8"), "repressilator"
+    )
+    model = cellml.parse_model(cellml_text)
+    assert model.name() == "BIOMD0000000012"
+    assert cellml.errors(cellml.validate_model(model)) == []
+    assert any("unit annotation is incomplete" in warning for warning in warnings)
+
+
+def test_a_document_which_is_no_sbml_model_raises() -> None:
+    with pytest.raises(rust.RustError):
+        rust.convert_sbml_to_cellml("<not-a-model/>", "none")
+
+
+def test_the_engines_write_the_same_model(tmp_path: Path) -> None:
+    """Both engines give the variables of a model the same initial values."""
+    sbml_path = write_sbml(tmp_path / "simple.xml", simple_model())
+    values = {}
+    for engine in ("rust", "python"):
+        model = convert_sbml2cellml(sbml_path, engine=engine)
+        component = model.component(0)
+        values[engine] = {
+            component.variable(k).name(): (
+                component.variable(k).initialValue(),
+                component.variable(k).units().name(),
+            )
+            for k in range(component.variableCount())
+        }
+    assert values["rust"] == values["python"]
+
+
+def test_the_rust_engine_converts_the_events_of_a_model(tmp_path: Path) -> None:
+    sbml_path = write_sbml(tmp_path / "events.xml", event_model())
+    model = convert_sbml2cellml(sbml_path, engine="rust")
+    component = model.component(0)
+    assert component.resetCount() == 1
+    assert component.reset(0).testVariable().name() == "e1_trigger"
+
+
+def test_the_python_engine_writes_the_metadata_of_a_model(tmp_path: Path) -> None:
+    """A model with metadata is converted by python, which writes the RDF."""
+    model_sbml = simple_model("annotated")
+    annotated_species(model_sbml)
+    sbml_path = write_sbml(tmp_path / "annotated.xml", model_sbml)
+    cellml_path = tmp_path / "annotated.cellml"
+    model = convert_sbml2cellml(sbml_path, cellml_path)
+    assert model.component(0).variable("S1").id() == "S1"
+    assert cellml_path.with_suffix(".rdf").is_file()
+    with pytest.raises(SBML2CellMLConversionError, match="metadata"):
+        convert_sbml2cellml(sbml_path, cellml_path, engine="rust")
+
+
+def test_the_rust_engine_converts_an_annotated_model_without_the_metadata(
+    tmp_path: Path,
+) -> None:
+    model_sbml = simple_model("annotated")
+    annotated_species(model_sbml)
+    sbml_path = write_sbml(tmp_path / "annotated.xml", model_sbml)
+    cellml_path = tmp_path / "annotated.cellml"
+    model = convert_sbml2cellml(sbml_path, cellml_path, metadata=False, engine="rust")
+    assert model.component(0).variable("S1").id() == ""
+    assert not cellml_path.with_suffix(".rdf").is_file()
+
+
+def test_a_delay_is_refused_by_the_rust_engine_and_converted_by_python(
+    tmp_path: Path,
+) -> None:
+    """The rust converter refuses a delay, `auto` falls back to python."""
+    model_sbml = simple_model("delayed")
+    law: libsbml.KineticLaw = model_sbml.getReaction("r1").getKineticLaw()
+    law.setMath(libsbml.parseL3Formula("k1 * delay(S1, 1)"))
+    sbml_path = write_sbml(tmp_path / "delayed.xml", model_sbml)
+    with pytest.raises(SBML2CellMLConversionError, match="rust engine"):
+        convert_sbml2cellml(sbml_path, engine="rust", validate=False)
+    model = convert_sbml2cellml(sbml_path, validate=False)
+    assert model.component(0).variable("S1") is not None
+
+
+def test_the_rust_engine_flattens_the_submodels_with_libsbml() -> None:
+    """A hierarchical model is flattened before the rust converter reads it."""
+    model = convert_sbml2cellml(
+        MODELS_DIR / "glimepiride_body_flat.xml", metadata=False, engine="rust"
+    )
+    assert model.component(0).variableCount() > 0

@@ -17,10 +17,10 @@ from typing import Any
 from sbml2cellml import __version__, log
 from sbml2cellml.cellml import CellMLValidationError
 from sbml2cellml.cellml2sbml import (
-    ENGINES,
     CellML2SBMLConversionError,
     convert_cellml2sbml,
 )
+from sbml2cellml.rust import ENGINES
 from sbml2cellml.sbml import SBMLValidationError
 from sbml2cellml.sbml2cellml import SBML2CellMLConversionError, convert_sbml2cellml
 
@@ -47,6 +47,14 @@ def _build_parser(
         help="write the output even if the validation reports errors",
     )
     parser.add_argument("--no-metadata", action="store_true", help=metadata_help)
+    parser.add_argument(
+        "--engine",
+        choices=ENGINES,
+        default="auto",
+        help="engine of the conversion: rust (the crates of this package), "
+        "python (libsbml and libcellml), or auto, which is rust where it "
+        "covers the conversion and python for the rest (default: auto)",
+    )
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="log the conversion steps"
     )
@@ -90,14 +98,6 @@ def build_parser_cellml2sbml() -> argparse.ArgumentParser:
         action="store_true",
         help="write every component as a submodel of the hierarchical model "
         "composition package (comp) instead of one flat model",
-    )
-    parser.add_argument(
-        "--engine",
-        choices=ENGINES,
-        default="auto",
-        help="engine of the conversion: rust (the crates of this package), "
-        "python (libcellml), or auto, which is rust where it covers the "
-        "conversion and python for the rest (default: auto)",
     )
     return parser
 
@@ -155,8 +155,12 @@ def main(argv: list[str] | None = None) -> int:
     """
     return _run(
         build_parser(),
-        lambda sbml_path, cellml_path, validate, metadata, _args: convert_sbml2cellml(
-            sbml_path, cellml_path=cellml_path, validate=validate, metadata=metadata
+        lambda sbml_path, cellml_path, validate, metadata, args: convert_sbml2cellml(
+            sbml_path,
+            cellml_path=cellml_path,
+            validate=validate,
+            metadata=metadata,
+            engine=args.engine,
         ),
         ".cellml",
         argv,
