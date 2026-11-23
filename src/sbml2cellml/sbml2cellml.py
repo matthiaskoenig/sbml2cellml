@@ -47,7 +47,12 @@ from sbml2cellml import astnodes, cellml, mathml, rust, sbml
 from sbml2cellml import metadata as sbml_metadata
 from sbml2cellml.cellml import CellMLValidationError
 from sbml2cellml.cellmlunits import CellMLUnits
-from sbml2cellml.mathml import TIME_ID
+from sbml2cellml.mathml import (
+    TIME_ID,
+    UNSUPPORTED_OPERATORS,
+    simplify_operators,
+    unsupported_operator,
+)
 from sbml2cellml.rust import Engine
 from sbml2cellml.sbml import SBMLValidationError
 from sbml2cellml.variables import unique_sid
@@ -1739,16 +1744,22 @@ def _collect_events(model_sbml: libsbml.Model, used: set[str]) -> list[_Event]:
 #: operators of an SBML formula which no CellML model can express; a
 #: `rateOf` is not among them, `_expand_rate_of` replaces it by the rate it
 #: stands for, also in the formulas of an event
-_UNSUPPORTED_MATH = frozenset(
-    {
-        libsbml.AST_FUNCTION_FACTORIAL,
-        libsbml.AST_FUNCTION_DELAY,
-    }
-)
+_UNSUPPORTED_MATH = {
+    kind: name
+    for kind, name in UNSUPPORTED_OPERATORS.items()
+    if kind != libsbml.AST_FUNCTION_RATE_OF
+}
 
 
 def _unsupported_math(node: libsbml.ASTNode | None) -> bool:
     """Whether a formula uses an operator CellML has no counterpart for.
+
+    The formulas of an event are checked before the model is built, so an
+    event CellML cannot express is left out instead of refusing the whole
+    conversion. The check is the one of the formulas of the model
+    (`mathml.unsupported_operator`) over the simplified formula, so a
+    factorial of a constant, which becomes the number it stands for, is no
+    reason to leave an event out.
 
     Args:
         node: root of the formula, `None` for a formula which is not set.
@@ -1758,11 +1769,8 @@ def _unsupported_math(node: libsbml.ASTNode | None) -> bool:
     """
     if node is None:
         return False
-    if node.getType() in _UNSUPPORTED_MATH:
-        return True
-    return any(
-        _unsupported_math(node.getChild(k)) for k in range(node.getNumChildren())
-    )
+    simplified = simplify_operators(node.deepCopy())
+    return unsupported_operator(simplified, _UNSUPPORTED_MATH) is not None
 
 
 def _priority(event: libsbml.Event) -> float:

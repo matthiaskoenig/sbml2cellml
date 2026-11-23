@@ -158,7 +158,9 @@ fn without_counterpart(formula: &Sbml) -> Option<&'static str> {
         Sbml::Apply { op, args } => match op {
             Op::Delay => Some("delay"),
             Op::RateOf => Some("rateOf"),
-            Op::Factorial => Some("factorial"),
+            // the factorial of a constant is the number it stands for,
+            // which the mathematics of the event is written with
+            Op::Factorial if crate::eval::constant(formula).is_none() => Some("factorial"),
             _ => args.iter().filter_map(without_counterpart).next(),
         },
         Sbml::Piecewise { pieces, otherwise } => pieces

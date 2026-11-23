@@ -39,23 +39,28 @@ def test_missing_input(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> No
     assert "missing.xml" in capsys.readouterr().err
 
 
-def test_invalid_model_fails_with_validation(
+def test_a_model_cellml_cannot_express_is_refused(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
+    """A delay is named in the message, CellML has no counterpart for it."""
     out = tmp_path / "delay.cellml"
     path = write_sbml(tmp_path / "delay.xml", delay_model())
     code = main([str(path), "-o", str(out)])
     assert code == 1
-    assert "errors" in capsys.readouterr().err
+    assert "delay" in capsys.readouterr().err
     assert not out.exists()
 
 
-def test_invalid_model_written_without_validation(tmp_path: Path) -> None:
+def test_a_model_cellml_cannot_express_is_refused_without_validation(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`--no-validate` writes no document which libcellml cannot read."""
     out = tmp_path / "delay.cellml"
     path = write_sbml(tmp_path / "delay.xml", delay_model())
     code = main([str(path), "-o", str(out), "--no-validate"])
-    assert code == 0
-    assert out.is_file()
+    assert code == 1
+    assert "delay" in capsys.readouterr().err
+    assert not out.exists()
 
 
 def test_missing_output_directory(

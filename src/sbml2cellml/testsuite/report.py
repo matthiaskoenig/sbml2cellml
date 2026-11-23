@@ -13,6 +13,7 @@ from sbml2cellml.testsuite.figure import (
     write_timing_figures,
 )
 from sbml2cellml.testsuite.results import (
+    CaseResult,
     SuiteResult,
     cellml_first,
     comparison_stage,
@@ -75,6 +76,24 @@ def timed_stages(result: SuiteResult) -> tuple[tuple[str, str, str], ...]:
 
 #: reason of the cases whose values exceed the tolerance of the comparison
 MISMATCH = "numerical mismatch"
+#: reason of the cases whose CellML simulation exceeds the tolerance and
+#: whose model has events: libopencor does not apply the resets of a model,
+#: so the quantities an event sets keep their value (see the conversion
+#: issues of the documentation)
+RESETS = "numerical mismatch, the model has events which libopencor does not apply"
+#: reason of the cases whose model uses the delay symbol: an event whose
+#: trigger or assignment uses a `delay` is not converted, with a warning,
+#: so neither the CellML model nor the roundtrip SBML model has it (a rule
+#: or a kinetic law with a delay refuses the conversion, so a case which
+#: was converted uses the symbol in an event)
+DELAYED_EVENT = (
+    "numerical mismatch, an event whose formulas use a delay is not converted"
+)
+#: the stage which simulates the CellML model of a conversion, whose
+#: mismatch the resets of the model explain
+_CELLML_SIMULATION = "libopencor"
+#: component tag of a model which uses the delay symbol
+_DELAY_TAG = "CSymbolDelay"
 #: quoted text, e.g. the formula of an algebraic rule a simulator does not support
 _QUOTED = re.compile(r"'[^']*'")
 #: a number preceded by a space, `(`, `,` or `=`, so identifiers such as
@@ -279,11 +298,26 @@ def cell(text: str) -> str:
     return text.replace("|", "\\|")
 
 
-def _reason(message: str) -> str:
+def _has_events(case: CaseResult) -> bool:
+    """Whether the model of a case has events, which become resets.
+
+    Args:
+        case: the result of a case, with the component tags of its model.
+
+    Returns:
+        Whether a component tag of the case names an event
+        (`EventNoDelay`, `EventWithDelay` and the others).
+    """
+    return any(tag.startswith("Event") for tag in case.component_tags)
+
+
+def _reason(message: str, case: CaseResult, stage: str) -> str:
     """Group key of a failure message.
 
     Args:
         message: a stage failure message, possibly of several lines.
+        case: the result of the case, whose model explains a mismatch.
+        stage: the stage which failed.
 
     Returns:
         For a message containing `[ERROR]` (a `CellMLValidationError`, a
@@ -291,13 +325,21 @@ def _reason(message: str) -> str:
         type plus the first issue, so messages differing only in the model
         name, path and the number and the rest of the issues are one group.
         For a tolerance failure (`... exceeds the tolerance ...`), the single
-        reason `MISMATCH`, since the variable name is not the cause.
+        reason `MISMATCH`, since the variable name is not the cause;
+        `DELAYED_EVENT` when the model uses the delay symbol, whose event
+        the conversion leaves out, and `RESETS` when the CellML simulation
+        of a model with events is the one which differs, which the resets
+        libopencor does not apply explain.
         Otherwise the first line of the message. Quoted text and numbers
         (including `nan` and `inf`) are dropped from the key and whitespace
         is collapsed. The key only groups the cases, the report shows the
         complete messages.
     """
     if _TOLERANCE.search(message):
+        if _DELAY_TAG in case.component_tags:
+            return DELAYED_EVENT
+        if stage == _CELLML_SIMULATION and _has_events(case):
+            return RESETS
         return MISMATCH
     if "[ERROR]" in message:
         exception_type = message.split(":", 1)[0]
@@ -418,7 +460,7 @@ def render_report(
         for cid, case in sorted(result.cases.items()):
             stage_result = case.stages[stage]
             if stage_result.status == "fail":
-                groups[_reason(stage_result.message)].append(cid)
+                groups[_reason(stage_result.message, case, stage)].append(cid)
         if not groups:
             continue
         failed = sum(len(ids) for ids in groups.values())
@@ -427,10 +469,14 @@ def render_report(
             groups.items(), key=lambda item: (-len(item[1]), item[0])
         ):
             cases = "1 case" if len(ids) == 1 else f"{len(ids)} cases"
-            if reason == MISMATCH:
-                cases += f", {MISMATCH}"
+            if reason in (MISMATCH, RESETS, DELAYED_EVENT):
+                cases += f", {reason}"
             lines += [f"**{cases}**", "", *_errors(result, ids, stage), ""]
-        mismatch_ids = groups.get(MISMATCH, [])
+        mismatch_ids = (
+            groups.get(MISMATCH, [])
+            + groups.get(RESETS, [])
+            + groups.get(DELAYED_EVENT, [])
+        )
         if mismatch_ids:
             tag_groups: dict[str, list[str]] = defaultdict(list)
             for cid in mismatch_ids:

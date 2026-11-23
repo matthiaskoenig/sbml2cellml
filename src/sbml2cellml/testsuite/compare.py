@@ -17,7 +17,12 @@ import pandas as pd
 
 from sbml2cellml.testsuite.cases import Settings
 
-TIME = "time"
+#: name the time points carry during a comparison. The first column of a
+#: result and of the expected results is the variable of integration, which
+#: a model may name `time` itself (cases 01820 and 01821 of the suite
+#: declare a variable `time`), so the time points are taken by their
+#: position and carry a name no variable of a model can have.
+TIME_POINTS = "__time_points__"
 
 
 @dataclass(frozen=True)
@@ -55,6 +60,25 @@ def _failed(message: str) -> Comparison:
     return Comparison(variables=(), passed=False, message=message)
 
 
+def _with_time_points(frame: pd.DataFrame) -> pd.DataFrame:
+    """A frame whose first column, the time points, is named `TIME_POINTS`.
+
+    Args:
+        frame: a timecourse whose first column is the variable of
+            integration, which both simulators and the expected results of
+            a case carry first.
+
+    Returns:
+        The frame with that column renamed, so a variable of the model
+        named `time` keeps its own column.
+    """
+    renamed = frame.copy(deep=False)
+    names = list(renamed.columns)
+    names[0] = TIME_POINTS
+    renamed.columns = names
+    return renamed
+
+
 def compare(
     result: pd.DataFrame, expected: pd.DataFrame, settings: Settings
 ) -> Comparison:
@@ -69,16 +93,21 @@ def compare(
         The comparison; `passed` when every variable is within the tolerance
         at every time point.
     """
+    if result.shape[1] == 0 or expected.shape[1] == 0:
+        return _failed("no columns")
+    result = _with_time_points(result)
+    expected = _with_time_points(expected)
     if result.columns.duplicated().any() or expected.columns.duplicated().any():
         return _failed("duplicate column names")
     if len(result) != len(expected):
         return _failed(f"{len(result)} rows instead of {len(expected)}")
     if len(expected) == 0:
         return _failed("no rows")
-    if TIME not in result.columns:
-        return _failed("no time column")
     if not np.allclose(
-        result[TIME].to_numpy(), expected[TIME].to_numpy(), rtol=1e-6, atol=1e-9
+        result[TIME_POINTS].to_numpy(),
+        expected[TIME_POINTS].to_numpy(),
+        rtol=1e-6,
+        atol=1e-9,
     ):
         return _failed("time points differ from the expected results")
 
@@ -179,23 +208,24 @@ def requested_frame(
         settings: settings of the case.
 
     Returns:
-        `time` and the settings variables, species converted between amount
-        and concentration with their compartment column when needed. A
+        The time points (`TIME_POINTS`, the first column of `df`) and the
+        settings variables, species converted between amount and
+        concentration with their compartment column when needed. A
         variable missing in `df` is left out (the comparison reports it).
 
     Raises:
-        CompareError: `df` has no time column or duplicate column names (e.g.
-            a parameter with the id `time` next to the simulator's time), or a
+        CompareError: `df` has no columns or duplicate column names, or a
             variable needs converting between amount and concentration and
             its compartment column is missing from `df`.
     """
-    if TIME not in df.columns:
-        raise CompareError("no time column in the simulation result")
+    if df.shape[1] == 0:
+        raise CompareError("no columns in the simulation result")
+    df = _with_time_points(df)
     if df.columns.duplicated().any():
         raise CompareError("duplicate column names in the simulation result")
     # collected first and turned into a frame at once: inserting the columns
     # one by one fragments the frame (a PerformanceWarning of pandas)
-    columns: dict[str, np.ndarray] = {TIME: df[TIME].to_numpy()}
+    columns: dict[str, np.ndarray] = {TIME_POINTS: df[TIME_POINTS].to_numpy()}
     for variable in settings.variables:
         if variable not in df.columns:
             continue

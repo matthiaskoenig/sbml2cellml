@@ -321,7 +321,81 @@ pub fn convert(document: &Document, name: &str) -> Result<Conversion, ConvertErr
     let model = &document.model;
     let mut warnings = Vec::new();
     let formulas = collect(model, &mut warnings)?;
-    build(document, name, &formulas, &mut warnings)
+    let mut conversion = build(document, name, &formulas, &mut warnings)?;
+    warn_about_not(&mut conversion);
+    Ok(conversion)
+}
+
+/// Warns about every `not` of the model which libcellml 0.7.2 miscompiles.
+///
+/// The generator of libcellml writes the operand of a `not` without
+/// parentheses, so `not(t > 5.5)` becomes `!voi > 5.5`, which C reads as
+/// `(!voi) > 5.5`, and a simulation of the model with libopencor, which
+/// compiles that code, is wrong without an error. Only a `not` of a
+/// variable or a number is written correctly, and the python converter
+/// warns about the same formulas.
+fn warn_about_not(conversion: &mut Conversion) {
+    let mut targets = Vec::new();
+    for component in &conversion.model.components {
+        for equation in &component.math {
+            if has_miscompiled_not(equation) {
+                targets.push(equation_target(equation));
+            }
+        }
+    }
+    for target in targets {
+        conversion.warnings.push(format!(
+            "the equation of '{target}' uses 'not' of a formula: the generator \
+             of libcellml 0.7.2 writes its operand without parentheses, so a \
+             simulation of the CellML model with libopencor is wrong (see the \
+             conversion issues of the documentation)"
+        ));
+    }
+}
+
+/// Whether a formula holds a `not` of something which is no variable and no
+/// number, which libcellml writes without parentheses.
+fn has_miscompiled_not(node: &Node) -> bool {
+    match node {
+        Node::Apply {
+            operator,
+            arguments,
+        } => {
+            if matches!(operator, Operator::Other(name) if name == "not")
+                && let [operand] = arguments.as_slice()
+                && !matches!(operand, Node::Identifier(_) | Node::Number { .. })
+            {
+                return true;
+            }
+            arguments.iter().any(has_miscompiled_not)
+        }
+        Node::Piecewise { pieces, otherwise } => {
+            pieces.iter().any(|(value, condition)| {
+                has_miscompiled_not(value) || has_miscompiled_not(condition)
+            }) || otherwise.as_deref().is_some_and(has_miscompiled_not)
+        }
+        _ => false,
+    }
+}
+
+/// The variable an equation determines, for a warning about its formula.
+fn equation_target(equation: &Node) -> String {
+    if let Node::Apply {
+        operator: Operator::Eq,
+        arguments,
+    } = equation
+    {
+        match arguments.first() {
+            Some(Node::Identifier(name)) => return name.clone(),
+            Some(Node::Derivative { expression, .. }) => {
+                if let Node::Identifier(name) = expression.as_ref() {
+                    return name.clone();
+                }
+            }
+            _ => {}
+        }
+    }
+    String::new()
 }
 
 /// Refuses a model with what this stage does not convert, so that the python

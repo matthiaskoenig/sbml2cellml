@@ -66,7 +66,7 @@ The conversion runs in rust: the crates of [`crates/`](development.md#rust) read
 model = convert_sbml2cellml(Path("model.xml"), engine="python")
 ```
 
-The rust conversion also gives the SBML element of every element of the CellML model which stands for one, so both engines write the same metadata next to the same ids. A hierarchical model is flattened with libsbml before the rust converter reads it, since the crates know no package; what the rust converter refuses is a formula with a `delay`, which CellML cannot express anyway, and `auto` converts such a model with the python engine.
+The rust conversion also gives the SBML element of every element of the CellML model which stands for one, so both engines write the same metadata next to the same ids. A hierarchical model is flattened with libsbml before the rust converter reads it, since the crates know no package; what the rust converter refuses is a formula CellML cannot express (a `delay`, a `factorial` of a variable, a `rateOf` the conversion cannot replace), which the python engine refuses as well, so `auto` refuses such a model instead of writing a document libcellml cannot read.
 
 Of the 1692 cases of the SBML test suite, 1528 are converted by both engines and 1526 of them give the same CellML model; of the 1075 models of the BioModels check, 1063 are converted by both and 1061 give the same model (`scripts/sbml2cellml_parity.py`, see [development](development.md#rust)).
 

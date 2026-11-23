@@ -113,8 +113,14 @@ def test_load_case() -> None:
     assert skip_reason(case) is None
 
 
-def test_load_case_renames_time_column(tmp_path: Path) -> None:
+def test_load_case_keeps_the_name_of_the_time_column(tmp_path: Path) -> None:
+    """The comparison takes the time points of a case by their position.
 
+    The first column of the expected results is the variable of
+    integration, called `Time` in many cases and `time` in the others, and
+    a model may name a variable of its own `time` (01820, 01821), so the
+    column keeps the name the case gives it.
+    """
     case_dir = tmp_path / "10006"
     shutil.copytree(FIXTURES / "00001", case_dir)
     for f in list(case_dir.iterdir()):
@@ -125,7 +131,7 @@ def test_load_case_renames_time_column(tmp_path: Path) -> None:
     results.write_text("Time," + text.split(",", 1)[1])
     case = load_case(case_dir)
     assert case.expected is not None
-    assert list(case.expected.columns) == ["time", "S1", "S2"]
+    assert list(case.expected.columns) == ["Time", "S1", "S2"]
 
 
 def test_load_cases_sorted_and_filtered() -> None:

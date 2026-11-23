@@ -235,10 +235,49 @@ def test_tolerance_text() -> None:
     assert tolerance_text(2.5e-4) == "2.5e-4"
 
 
+def _case(*component_tags: str) -> CaseResult:
+    """A case result of the component tags, for the grouping of a failure."""
+    return CaseResult(
+        id="00001",
+        test_tags=[],
+        component_tags=list(component_tags),
+        stages={stage: StageResult(status="pass") for stage in STAGES},
+    )
+
+
 def test_reason_groups_tolerance_messages() -> None:
     a = error_message(RuntimeError("S1 exceeds the tolerance by 0.5"))
     b = error_message(RuntimeError("S2 exceeds the tolerance by nan"))
-    assert _reason(a) == _reason(b) == "numerical mismatch"
+    case = _case("Species", "Reaction")
+    assert (
+        _reason(a, case, "libopencor")
+        == _reason(b, case, "libopencor")
+        == "numerical mismatch"
+    )
+
+
+def test_reason_names_the_event_of_a_delay() -> None:
+    """An event whose formulas use a delay is not converted."""
+    message = error_message(RuntimeError("P2 exceeds the tolerance by 3"))
+    case = _case("CSymbolDelay", "EventWithDelay", "Parameter")
+    assert _reason(message, case, "roundtrip") == (
+        "numerical mismatch, an event whose formulas use a delay is not converted"
+    )
+    # the delay of the model is the reason in the CellML simulation as well
+    assert _reason(message, case, "libopencor") == _reason(message, case, "roundtrip")
+
+
+def test_reason_names_the_resets_of_a_cellml_simulation() -> None:
+    """libopencor does not apply resets, which a model with events needs."""
+    message = error_message(RuntimeError("S1 exceeds the tolerance by 0.5"))
+    with_events = _case("Species", "Reaction", "EventNoDelay")
+    assert _reason(message, with_events, "libopencor") == (
+        "numerical mismatch, the model has events which libopencor does not apply"
+    )
+    # the SBML model of the roundtrip has the events again, so a mismatch
+    # of that stage is none of the resets
+    assert _reason(message, with_events, "roundtrip") == "numerical mismatch"
+    assert _reason(message, _case("Species"), "libopencor") == "numerical mismatch"
 
 
 def test_reason_groups_cellml_validation_messages() -> None:
@@ -254,14 +293,17 @@ def test_reason_groups_cellml_validation_messages() -> None:
 
     a = message("00004", 8)
     b = message("00014", 12)
-    assert _reason(a) == _reason(b)
+    case = _case("Species")
+    assert _reason(a, case, "sbml2cellml") == _reason(b, case, "sbml2cellml")
     # the further issues of a model do not split the group
-    assert _reason(a + "\n[ERROR] Another issue.") == _reason(a)
+    assert _reason(a + "\n[ERROR] Another issue.", case, "sbml2cellml") == _reason(
+        a, case, "sbml2cellml"
+    )
 
 
 def test_reason_handles_message_ending_with_error_marker() -> None:
     # "[ERROR]" with no text after it must not raise IndexError
-    reason = _reason("CellMLValidationError: [ERROR]")
+    reason = _reason("CellMLValidationError: [ERROR]", _case("Species"), "sbml2cellml")
     assert isinstance(reason, str)
     assert reason == "CellMLValidationError:"
 

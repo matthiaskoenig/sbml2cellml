@@ -7,6 +7,7 @@ import pytest
 
 from sbml2cellml.testsuite.cases import Settings
 from sbml2cellml.testsuite.compare import (
+    TIME_POINTS,
     CompareError,
     compare,
     is_informative,
@@ -121,10 +122,24 @@ def test_compare_duplicate_columns_fails() -> None:
     assert "duplicate column names" in comparison.message
 
     dup_expected = expected().copy()
-    dup_expected.columns = ["time", "time", "S2"]
+    dup_expected.columns = ["time", "S2", "S2"]
     comparison = compare(expected(), dup_expected, SETTINGS)
     assert not comparison.passed
     assert "duplicate column names" in comparison.message
+
+
+def test_compare_takes_the_time_points_by_their_position() -> None:
+    """Cases 01820 and 01821: the model has a parameter with the id `time`.
+
+    The variable of integration is the first column of a result and of the
+    expected results, whatever it is called, so a variable named `time`
+    keeps its own column and is compared with the expected one.
+    """
+    result = pd.DataFrame({"time_2": [0.0, 1.0], "time": [10.0, 10.0]})
+    expected_frame = pd.DataFrame({"Time": [0.0, 1.0], "time": [10.0, 10.0]})
+    settings = Settings(0.0, 1.0, 1, ("time",), 0, 0, frozenset(), frozenset())
+    comparison = compare(result, expected_frame, settings)
+    assert comparison.passed, comparison.message
 
 
 def test_compare_zero_rows() -> None:
@@ -164,7 +179,7 @@ def test_species_quantities_and_requested_frame() -> None:
     )
     # S1 is an amount variable requested as amount, S2 a concentration variable requested as concentration
     same = requested_frame(df, quantities, SETTINGS)
-    assert list(same.columns) == ["time", "S1", "S2"]
+    assert list(same.columns) == [TIME_POINTS, "S1", "S2"]
     assert same["S1"].tolist() == [4.0, 2.0] and same["S2"].tolist() == [1.0, 3.0]
     # swapped requests convert with the compartment
     swapped = Settings(
@@ -202,7 +217,16 @@ def test_requested_frame_missing_compartment_raises() -> None:
         requested_frame(df, quantities, swapped)
 
 
-def test_requested_frame_no_time_column_raises() -> None:
+def test_requested_frame_separates_the_time_points_from_a_variable() -> None:
+    """Cases 01820 and 01821: the model has a parameter with the id `time`."""
+    df = pd.DataFrame({"time_2": [0.0, 1.0], "time": [10.0, 10.0]})
+    settings = Settings(0.0, 1.0, 1, ("time",), 0, 0, frozenset(), frozenset())
+    out = requested_frame(df, {}, settings)
+    assert list(out.columns) == [TIME_POINTS, "time"]
+    assert out["time"].tolist() == [10.0, 10.0]
+
+
+def test_requested_frame_without_columns_raises() -> None:
     doc = libsbml.SBMLDocument(3, 2)
     model = doc.createModel()
     c = model.createCompartment()
@@ -216,10 +240,10 @@ def test_requested_frame_no_time_column_raises() -> None:
     s.setConstant(False)
     s.setBoundaryCondition(False)
     quantities = species_quantities(model)
-    # an algebraic-only model: libopencor result without a variable of
-    # integration
-    df = pd.DataFrame({"S1": [4.0, 2.0]})
-    with pytest.raises(CompareError, match="no time column"):
+    # a result without any column, which no simulator writes: the first
+    # column of a result is the variable of integration
+    df = pd.DataFrame(index=[0, 1])
+    with pytest.raises(CompareError, match="no columns"):
         requested_frame(df, quantities, SETTINGS)
 
 
@@ -264,13 +288,13 @@ def test_requested_frame_many_variables_without_warning() -> None:
     with warnings.catch_warnings():
         warnings.simplefilter("error")
         out = requested_frame(df, {}, settings)
-    assert list(out.columns) == ["time", *names]
+    assert list(out.columns) == [TIME_POINTS, *names]
     assert out["p199"].tolist() == [1.0, 2.0]
 
 
 def test_requested_frame_duplicate_columns_raise() -> None:
-    """E.g. the time column of the simulator and a parameter with the id `time`."""
-    df = pd.DataFrame([[0.0, 10.0], [1.0, 10.0]], columns=["time", "time"])
-    settings = Settings(0.0, 1.0, 1, ("time",), 0, 0, frozenset(), frozenset())
+    """Two columns of one variable, which no comparison can read."""
+    df = pd.DataFrame([[0.0, 1.0, 2.0], [1.0, 1.0, 2.0]], columns=["time", "S1", "S1"])
+    settings = Settings(0.0, 1.0, 1, ("S1",), 0, 0, frozenset(), frozenset())
     with pytest.raises(CompareError, match="duplicate column names"):
         requested_frame(df, {}, settings)

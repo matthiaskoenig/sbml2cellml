@@ -376,3 +376,52 @@ fn factorial(value: f64) -> f64 {
     }
     product
 }
+
+/// The value of a formula which reads nothing of a model.
+///
+/// A formula of numbers and operators has a value without a model, which
+/// the conversion folds where CellML has no operator for it (the factorial
+/// of a constant, `math::apply`). A formula which reads a variable or a
+/// symbol of SBML has none: `is_constant` says which formulas are
+/// evaluated here, since the evaluation of a `Start` takes the time of the
+/// start for the time symbol, which is no constant of a formula.
+///
+/// Args:
+///     node: the formula.
+///
+/// Returns:
+///     Its value, `None` for a formula which is no constant or whose value
+///     is not finite.
+#[must_use]
+pub fn constant(node: &Sbml) -> Option<f64> {
+    if !is_constant(node) {
+        return None;
+    }
+    let model = Model::default();
+    let mut start = Start::new(&model, &[], &[], &[], HashMap::new());
+    start.eval(node).ok().filter(|value| value.is_finite())
+}
+
+/// Whether a formula is built of numbers and operators alone, which gives
+/// it a value without a model.
+///
+/// Args:
+///     node: the formula.
+///
+/// Returns:
+///     Whether it reads no variable, no constant and no symbol of SBML.
+fn is_constant(node: &Sbml) -> bool {
+    match node {
+        Sbml::Number { .. } => true,
+        Sbml::Apply { op, args } => {
+            !matches!(op, Op::Delay | Op::RateOf | Op::Function(_)) && args.iter().all(is_constant)
+        }
+        Sbml::Piecewise { pieces, otherwise } => {
+            pieces
+                .iter()
+                .all(|(value, condition)| is_constant(value) && is_constant(condition))
+                && otherwise.as_ref().is_none_or(|value| is_constant(value))
+        }
+        _ => false,
+    }
+}

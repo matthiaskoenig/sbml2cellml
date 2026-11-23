@@ -8,6 +8,7 @@ import pytest
 from sbml2cellml import cellml, rust
 from sbml2cellml.cellml import write_model
 from sbml2cellml.cellml2sbml import CellML2SBMLConversionError, convert_cellml2sbml
+from sbml2cellml.mathml import MathMLError
 from sbml2cellml.sbml import validate_document
 from sbml2cellml.sbml2cellml import SBML2CellMLConversionError, convert_sbml2cellml
 from tests.cellml_models import multi_component_model, reset_model
@@ -245,18 +246,24 @@ def test_the_rust_engine_writes_no_metadata_file_without_metadata(
     assert not cellml_path.with_suffix(".rdf").is_file()
 
 
-def test_a_delay_is_refused_by_the_rust_engine_and_converted_by_python(
-    tmp_path: Path,
-) -> None:
-    """The rust converter refuses a delay, `auto` falls back to python."""
+def test_a_delay_is_refused_by_both_engines(tmp_path: Path) -> None:
+    """CellML has no delay: neither engine writes such a model.
+
+    The rust converter refuses the document and the python converter
+    refuses the formula, so `auto`, which takes python for a model the rust
+    engine refuses, refuses it as well instead of writing a document
+    libcellml cannot read.
+    """
     model_sbml = simple_model("delayed")
     law: libsbml.KineticLaw = model_sbml.getReaction("r1").getKineticLaw()
     law.setMath(libsbml.parseL3Formula("k1 * delay(S1, 1)"))
     sbml_path = write_sbml(tmp_path / "delayed.xml", model_sbml)
     with pytest.raises(SBML2CellMLConversionError, match="rust engine"):
         convert_sbml2cellml(sbml_path, engine="rust", validate=False)
-    model = convert_sbml2cellml(sbml_path, validate=False)
-    assert model.component(0).variable("S1") is not None
+    with pytest.raises(MathMLError, match="delay"):
+        convert_sbml2cellml(sbml_path, engine="python", validate=False)
+    with pytest.raises(MathMLError, match="delay"):
+        convert_sbml2cellml(sbml_path, validate=False)
 
 
 def test_the_rust_engine_flattens_the_submodels_with_libsbml() -> None:

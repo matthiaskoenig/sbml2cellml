@@ -314,16 +314,12 @@ def load_case(case_dir: Path) -> Case:
     if sbml_path is not None and not sbml_path.is_file():
         sbml_path = None
     info = parse_model_info((case_dir / f"{cid}-model.m").read_text(encoding="utf-8"))
+    # the first column is the variable of integration, named "time" in most
+    # cases but "Time" (or another case) in many of them, and a model may
+    # name a variable of its own `time` as well (01820 and 01821), so the
+    # comparison takes the time points by their position
+    # (`compare.TIME_POINTS`) and every variable by its name
     expected = pd.read_csv(case_dir / f"{cid}-results.csv")
-    # the first column is always the variable of integration, named "time"
-    # in most cases but "Time" (or another case) in many of them; renamed
-    # only when no other column is already "time" so it does not collide
-    # with a variable of that name (e.g. 01820/01821, which declare a
-    # variable "time"/"Time"/"TIME" among their settings variables); those
-    # two cases fail with "duplicate column names" regardless, from
-    # the selection labels of the simulator colliding, not from this rename
-    if "time" not in expected.columns[1:]:
-        expected = expected.rename(columns={expected.columns[0]: "time"})
     return Case(
         id=cid,
         case_dir=case_dir,

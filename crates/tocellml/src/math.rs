@@ -22,6 +22,7 @@
 //! CellML has neither, and nothing is written which a simulator reads as
 //! something else.
 
+use crate::eval;
 use crate::units::{AVOGADRO_VALUE, DIMENSIONLESS, Units};
 use cellml::{Constant, Node, Operator};
 use sbml::FunctionDefinition;
@@ -39,6 +40,10 @@ pub enum MathError {
     /// right-hand side of the equation of its variable before.
     #[error("'rateOf' is replaced before the mathematics is written")]
     RateOf,
+    /// A factorial of something which is no constant: CellML has neither
+    /// factorial nor gamma, so only the value of a constant one is written.
+    #[error("'factorial' of a formula which is no constant has no counterpart in CellML")]
+    Factorial,
     /// A call of a function the model does not define.
     #[error("the model does not define the function '{0}'")]
     Unknown(String),
@@ -364,6 +369,19 @@ fn apply(op: &Op, args: &[Sbml], names: &Names, units: &mut Units) -> Result<Nod
         Op::Delay => return Err(MathError::Delay),
         Op::RateOf => return Err(MathError::RateOf),
         Op::Function(name) => return Err(MathError::Unknown(name.clone())),
+        // CellML has neither factorial nor gamma: the factorial of a
+        // constant is the number it stands for, one of a variable has no
+        // counterpart (the python converter folds the same formulas)
+        Op::Factorial => {
+            let node = Sbml::Apply {
+                op: op.clone(),
+                args: args.to_vec(),
+            };
+            return match eval::constant(&node) {
+                Some(value) => Ok(dimensionless(value)),
+                None => Err(MathError::Factorial),
+            };
+        }
         _ => {}
     }
     // a sum of sums and a product of products are written as one operator
@@ -379,6 +397,14 @@ fn apply(op: &Op, args: &[Sbml], names: &Names, units: &mut Units) -> Result<Nod
             Some(only) => expression(only, names, units),
             None => Ok(empty),
         };
+    }
+    // `max(a)` is `a`, and a unary min or max crashes the generator of
+    // libcellml 0.7.2, which libopencor simulates with; the two have no
+    // identity element, so an operator without arguments is none of them
+    if matches!(op, Op::Max | Op::Min)
+        && let [only] = args
+    {
+        return expression(only, names, units);
     }
     let mut arguments = args
         .iter()

@@ -187,7 +187,7 @@ fn an_event_without_a_trigger_is_not_converted() {
 
 #[test]
 fn an_event_of_mathematics_without_a_counterpart_is_not_converted() {
-    let factorial = "<apply><factorial/><cn>3</cn></apply>";
+    let factorial = "<apply><factorial/><ci>q</ci></apply>";
     let found = conversion(&with_events(&event("e", "<true/>", "p", factorial)));
     assert!(resets(&found).is_empty());
     assert!(
@@ -196,6 +196,23 @@ fn an_event_of_mathematics_without_a_counterpart_is_not_converted() {
             .iter()
             .any(|warning| warning.contains("'factorial', which has no counterpart")),
         "the warning says so: {:?}",
+        found.warnings
+    );
+}
+
+#[test]
+fn an_event_which_assigns_the_factorial_of_a_constant_is_converted() {
+    // the factorial of a constant is the number it stands for, which the
+    // reset of the assignment sets
+    let factorial = "<apply><factorial/><cn>3</cn></apply>";
+    let found = conversion(&with_events(&event("e", "<true/>", "p", factorial)));
+    assert_eq!(resets(&found), ["0: p = 6 when e_trigger = 1 [e_trigger]"]);
+    assert!(
+        !found
+            .warnings
+            .iter()
+            .any(|warning| warning.contains("factorial")),
+        "the event is converted: {:?}",
         found.warnings
     );
 }

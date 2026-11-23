@@ -9,8 +9,10 @@ import libsbml
 import pytest
 
 from sbml2cellml import convert_sbml2cellml
-from sbml2cellml.cellml import CellMLValidationError, errors, read_model, validate_model
+from sbml2cellml.cellml import errors, read_model, validate_model
+from sbml2cellml.mathml import MathMLError
 from sbml2cellml.metadata import read_metadata
+from sbml2cellml.rust import ENGINES, Engine
 from sbml2cellml.sbml import flatten_comp
 from sbml2cellml.sbml2cellml import COMPONENT_ID, TIME_ID, SBML2CellMLConversionError
 from tests.conftest import GLIMEPIRIDE_MODELS, MODELS_DIR
@@ -18,6 +20,7 @@ from tests.sbml_models import (
     analytic_time_model,
     delay_model,
     event_model,
+    factorial_model,
     growing_compartment_model,
     simple_model,
     stoichiometry_math_model,
@@ -81,17 +84,84 @@ def test_convert_glimepiride_valid(name: str) -> None:
     assert "dimensionless" in units and len(units) > 5
 
 
-def test_convert_delay_invalid(tmp_path: Path) -> None:
-    """Known conversion gap, see docs/conversion-issues.md: CellML has no delay."""
+@pytest.mark.parametrize("engine", ENGINES)
+def test_convert_delay_refused(tmp_path: Path, engine: Engine) -> None:
+    """Known conversion gap, see docs/conversion-issues.md: CellML has no delay.
+
+    The conversion refuses such a model instead of writing a document
+    libcellml cannot read, with or without the validation.
+    """
     path = write_sbml(tmp_path / "delay.xml", delay_model())
-    model = convert_sbml2cellml(path, validate=False)
-    assert errors(validate_model(model))
+    with pytest.raises((MathMLError, SBML2CellMLConversionError)) as refused:
+        convert_sbml2cellml(path, validate=False, engine=engine)
+    assert "delay" in str(refused.value)
 
 
 def test_validate_raises_for_invalid_model(tmp_path: Path) -> None:
     path = write_sbml(tmp_path / "delay.xml", delay_model())
-    with pytest.raises(CellMLValidationError):
+    with pytest.raises(MathMLError):
         convert_sbml2cellml(path, validate=True)
+
+
+@pytest.mark.parametrize("engine", ENGINES)
+def test_convert_warns_about_a_not_libcellml_miscompiles(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture, engine: Engine
+) -> None:
+    """The generator of libcellml 0.7.2 writes `!voi > 5.5` for `not(t > 5.5)`.
+
+    See the conversion issues of the documentation: the document is
+    valid and only the C code of libcellml is wrong, so the conversion
+    writes the `not` of the model and says that a simulation of it with
+    libopencor can be wrong.
+    """
+    model_sbml = simple_model("negated")
+    _with_rule(model_sbml, "p", "implies(S1 > 2, S1 > 1)")
+    sbml_path = write_sbml(tmp_path / "negated.xml", model_sbml)
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        convert_sbml2cellml(sbml_path, validate=True, engine=engine)
+    assert "'not'" in caplog.text
+    assert "libcellml" in caplog.text
+
+
+@pytest.mark.parametrize("engine", ENGINES)
+def test_convert_does_not_warn_about_a_not_of_a_variable(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture, engine: Engine
+) -> None:
+    """libcellml writes `!constants[0]` for the `not` of a variable."""
+    model_sbml = simple_model("negated_variable")
+    _parameter(model_sbml, "b", 1.0, constant=True)
+    _with_rule(model_sbml, "p", "not b")
+    sbml_path = write_sbml(tmp_path / "negated_variable.xml", model_sbml)
+    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
+        convert_sbml2cellml(sbml_path, validate=True, engine=engine)
+    assert "'not'" not in caplog.text
+
+
+@pytest.mark.parametrize("engine", ENGINES)
+def test_convert_factorial_of_a_constant(tmp_path: Path, engine: Engine) -> None:
+    """A factorial of a constant is the number it stands for.
+
+    CellML has neither factorial nor gamma, so a factorial which is no
+    constant is refused; the value of a constant one is what both engines
+    write.
+    """
+    path = write_sbml(tmp_path / "factorial.xml", factorial_model())
+    model = convert_sbml2cellml(path, validate=True, engine=engine)
+    assert not errors(validate_model(model))
+    math = model.component(0).math()
+    assert "factorial" not in math
+    assert "120" in math
+
+
+@pytest.mark.parametrize("engine", ENGINES)
+def test_convert_factorial_of_a_variable_refused(
+    tmp_path: Path, engine: Engine
+) -> None:
+    """A factorial of a variable has no counterpart in CellML."""
+    path = write_sbml(tmp_path / "factorial.xml", factorial_model(constant=False))
+    with pytest.raises((MathMLError, SBML2CellMLConversionError)) as refused:
+        convert_sbml2cellml(path, validate=False, engine=engine)
+    assert "factorial" in str(refused.value)
 
 
 def test_validate_passes_for_valid_model(tmp_path: Path) -> None:
@@ -883,21 +953,30 @@ def test_rate_of_its_own_equation_is_not_converted(
     rule.setVariable("x")
     rule.setMath(libsbml.parseL3Formula("rateOf(x)"))
     sbml_path = write_sbml(tmp_path / "cycle.xml", model_sbml)
-    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
-        convert_sbml2cellml(sbml_path, validate=False)
+    with (
+        caplog.at_level(logging.WARNING, logger="sbml2cellml"),
+        pytest.raises((MathMLError, SBML2CellMLConversionError)) as refused,
+    ):
+        convert_sbml2cellml(sbml_path, validate=False, engine="python")
     assert "rateOf(x) not converted, the rate of 'x' depends on itself" in caplog.text
+    assert "rateOf" in str(refused.value)
 
 
 def test_rate_of_an_assignment_rule_target_is_not_converted(
     tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:
+    """A rateOf the conversion cannot replace is refused, CellML has none."""
     model_sbml = simple_model("assigned_rate")
     _with_rule(model_sbml, "p", "k1 * S1")
     _with_rule(model_sbml, "q", "rateOf(p)")
     sbml_path = write_sbml(tmp_path / "assigned_rate.xml", model_sbml)
-    with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
-        convert_sbml2cellml(sbml_path, validate=False)
+    with (
+        caplog.at_level(logging.WARNING, logger="sbml2cellml"),
+        pytest.raises((MathMLError, SBML2CellMLConversionError)) as refused,
+    ):
+        convert_sbml2cellml(sbml_path, validate=False, engine="python")
     assert "rateOf(p) not converted, 'p' is computed by a rule" in caplog.text
+    assert "rateOf" in str(refused.value)
 
 
 def _algebraic_rule(model_sbml: libsbml.Model, formula: str) -> None:
@@ -1080,7 +1159,7 @@ def test_event_with_math_which_is_no_cellml_is_not_converted(
     """A factorial has no CellML counterpart, the model keeps its other equations."""
     model_sbml = event_model("factorial")
     model_sbml.getEvent("e1").getEventAssignment(0).setMath(
-        libsbml.parseL3Formula("factorial(3)")
+        libsbml.parseL3Formula("factorial(ceil(S1))")
     )
     sbml_path = write_sbml(tmp_path / "factorial.xml", model_sbml)
     with caplog.at_level(logging.WARNING, logger="sbml2cellml"):
@@ -1088,6 +1167,40 @@ def test_event_with_math_which_is_no_cellml_is_not_converted(
     assert "Event 'e1' uses math CellML has no counterpart for" in caplog.text
     assert model.component(0).resetCount() == 0
     assert model.component(0).variable("S1") is not None
+
+
+@pytest.mark.parametrize("engine", ENGINES)
+def test_event_which_assigns_the_factorial_of_a_constant(
+    tmp_path: Path, engine: Engine
+) -> None:
+    """The factorial of a constant is the number the reset sets."""
+    model_sbml = event_model("factorial")
+    model_sbml.getEvent("e1").getEventAssignment(0).setMath(
+        libsbml.parseL3Formula("factorial(3)")
+    )
+    sbml_path = write_sbml(tmp_path / "factorial.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path, engine=engine)
+    component = model.component(0)
+    assert component.resetCount() == 1
+    assert "6" in component.reset(0).resetValue()
+
+
+@pytest.mark.parametrize("engine", ENGINES)
+def test_event_which_assigns_a_rate_is_converted(
+    tmp_path: Path, engine: Engine
+) -> None:
+    """A `rateOf` of an event assignment is the rate it stands for.
+
+    The formulas of an event are checked for what CellML cannot express
+    before the conversion replaces a `rateOf`, so the check leaves it out.
+    """
+    model_sbml = event_model("rate_of")
+    model_sbml.getEvent("e1").getEventAssignment(0).setMath(
+        libsbml.parseL3Formula("rateOf(S1)")
+    )
+    sbml_path = write_sbml(tmp_path / "rate_of.xml", model_sbml)
+    model = convert_sbml2cellml(sbml_path, engine=engine)
+    assert model.component(0).resetCount() == 1
 
 
 def test_events_are_ordered_by_their_priority(tmp_path: Path) -> None:

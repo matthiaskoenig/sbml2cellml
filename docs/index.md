@@ -166,7 +166,7 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | time and avogadro symbols | the variable of integration `time` (another name when an element of the model is called `time`), the number 6.02214179e23 |
 | id which is a symbol of the formula syntax of libsbml (`avogadro`, `pi`, `NaN`, `true`) | variable of that name like every other id: the formulas are converted as the MathML trees of the model, never as text |
 | rateOf symbol | the right-hand side of the differential equation of its variable, 0 without one |
-| delay symbol | not yet |
+| delay symbol | no counterpart: CellML has no delay and a delay differential equation is no ODE system, so such a model is refused instead of written, see [Conversion issues](conversion-issues.md) |
 | rule or kinetic law without math | ignored, it has no effect |
 | initial assignment | evaluated to the initial value; without math it has no effect |
 | infinite or NaN value | the equation `x = INF` (or `-INF`, `NaN`), not for a state |
@@ -178,7 +178,7 @@ The converter puts every SBML compartment, parameter and species as a variable i
 | `plus`, `times`, `and`, `or`, `xor` with less than two arguments | their value (the argument or the identity element) |
 | relation of more than two arguments (`a < b < c`) | the conjunction of its pairs, `and(a < b, b < c)` |
 | `quotient`, `implies` | `piecewise(ceiling(a / b), a / b < 0, floor(a / b))`, the integer division which truncates towards zero, and `not a or b`: CellML has neither operator |
-| `factorial` | not converted, CellML has no counterpart; an event which uses it is skipped |
+| `factorial` | of a constant its value, of a variable not converted: CellML has no counterpart; an event which uses it is skipped |
 
 The reverse direction, [CellML to SBML](conversion.md#cellml-to-sbml), maps every variable to a parameter with rules and converts units and resets.
 
