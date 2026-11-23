@@ -6,7 +6,7 @@ build-backend = "maturin"
 
 [project]
 name = "sbml2cellml"
-version = "0.5.0"
+version = "0.6.0"
 description = "sbml2cellml converts between SBML and CellML."
 readme = "README.md"
 requires-python = ">=3.14"
