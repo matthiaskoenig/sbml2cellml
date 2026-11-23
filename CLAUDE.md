@@ -52,6 +52,16 @@ uv run sbml2cellml-physiome update      # refresh the committed selection physio
 uv run sbml2cellml-physiome report      # rerender docs/physiome.md and the figures from the results file
 
 uv run sbml2cellml-overview             # render docs/models.md, docs/benchmarks.md and docs/images/benchmarks*.svg from the three results files, rerun after any check
+
+# the rust workspace (issue #68), checked by the `rust` workflow
+cargo test                              # the tests of crates/cellml over the CellML fixtures
+cargo clippy --all-targets              # lints, denied in the workspace
+cargo fmt --check
+cargo build --release                   # target/release/cellml-info
+cargo build --target wasm32-unknown-unknown -p sbml2cellml-cellml
+
+# local only, needs the release build and the physiome cache
+uv run python scripts/cellml_parity.py  # the rust reader against libcellml over the corpus
 ```
 
 `develop` is the default branch and takes every change through a pull request; the rulesets in `.github/rulesets/` (applied with `apply.sh`) require the `tests`, `ruff`, `ty` and `docs` checks. Continuous integration is kept minimal: `tests` runs `py3.14` on linux, macos and windows, every workflow cancels a superseded run (`cancel-in-progress: true`), uv caches packages and interpreters, dependabot runs monthly. `main` tracks the latest release and is fast-forwarded by the `sync-main` job of the release workflow. Release steps are in `docs/development.md`: release branch, `uvx bump-my-version bump [major|minor|patch]` (updates `__init__.py` and `CITATION.cff`, no tag), release notes in `docs/release-notes/`, pull request, tag on `develop` after the merge.
@@ -261,6 +271,22 @@ uv run sbml2cellml-overview             # render docs/models.md, docs/benchmarks
   `setModelHistory` otherwise); `None` when the document does not use
   `comp`.
 - `cli.py`: argparse, `[project.scripts]` entry point.
+- `crates/` (rust, issue #68: the reader and the converter in rust, so a
+  conversion is fast and runs in a browser next to sbmlsim-core, whose
+  compiler takes SBML text): `crates/cellml` is the reader of CellML 2.0,
+  1.1 and 1.0 (`read` gives a `Document` with the version and the `Model`:
+  unit definitions, components with their variables and their MathML
+  (`math::Node`), connections, encapsulation and imports; a document of
+  CellML 1.0 is read with its `public_interface` and its groups and gives
+  the same model as the 2.0 document of the same system, the renamed built
+  in units `meter` and `liter` included; an imported component is a
+  component without a content and with an `ImportRef`, as libcellml reads
+  it; `equivalence_sets` is the union of the connections). It validates
+  nothing, resolves no import, does no file system and no network access
+  and builds for `wasm32-unknown-unknown`. `crates/cli` is `cellml-info`,
+  which prints what the reader reads as JSON, and
+  `scripts/cellml_parity.py` compares that with libcellml over the models
+  of the Physiome selection (local only, as the other corpus checks).
 - `console.py`, `log.py`: rich console for scripts and the CLI, opt-in rich
   logging. Library code logs with `logging.getLogger(__name__)` and lazy `%s`
   formatting (ruff `G`), it never prints.

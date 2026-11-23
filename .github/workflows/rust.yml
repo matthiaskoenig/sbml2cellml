@@ -1,0 +1,47 @@
+name: rust
+
+on:
+  push:
+    # feature branches are checked through their pull request
+    branches: [develop, main]
+  pull_request:
+    branches: [develop, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rust:
+    name: rust
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      # the toolchain, its components and its targets come from
+      # rust-toolchain.toml, which rustup reads on the first cargo call
+      - name: Cache the registry and the build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: rust-${{ runner.os }}-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml') }}
+          restore-keys: rust-${{ runner.os }}-
+      - name: Format
+        run: cargo fmt --check
+      - name: Lint
+        run: cargo clippy --all-targets --locked
+      - name: Test
+        run: cargo test --locked
+      # the reader runs in a browser next to sbmlsim-core, so it must
+      # build for the web
+      - name: Build for the web
+        run: cargo build --locked --target wasm32-unknown-unknown -p sbml2cellml-cellml

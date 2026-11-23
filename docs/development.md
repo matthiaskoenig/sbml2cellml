@@ -280,6 +280,30 @@ reads `testsuite/results.json`, `biomodels/results.json` and `physiome/results.j
 
 The two pages are generated and committed, and they are rendered from the results files alone: `tests/test_overview.py` renders both of them from the committed `results.json` files and fails when they differ from `docs/benchmarks.md` and `docs/models.md`, so a check which ran without the overview being rerun is caught by the unit tests. Rerun the command after any check wrote new results, and commit the pages and the figures with them.
 
+## Rust workspace { #rust }
+
+[Issue #68](https://github.com/matthiaskoenig/sbml2cellml/issues/68) moves the reader and the converter to rust, so that a conversion is fast and runs in a browser next to [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/), whose compiler takes SBML text and whose engine is WebAssembly: a CellML model converted to SBML in the browser is simulated there without a server. The first step is the reader, the python package keeps libcellml and libsbml until the rust path is measured against them.
+
+`crates/cellml` reads a document of CellML 2.0, 1.1 or 1.0 and gives the model with its unit definitions, its components with their variables and their mathematics, its connections, its encapsulation and its imports. A document of CellML 1.0 is read as it is written, with its `public_interface` and its groups of the relationship `encapsulation`, and gives the same model as the document of CellML 2.0 of the same system, so what reads the model afterwards does not know the version; the built in units CellML 2.0 renamed (`meter`, `liter`) are read as `metre` and `litre` unless the model defines units of that name, as libcellml reads them. The crate validates nothing and resolves nothing: an import keeps its `href`, there is no file system and no network access, and the crate builds for `wasm32-unknown-unknown`. `equivalence_sets` gives the variables a chain of connections makes one quantity, which the conversion to SBML needs. `crates/cli` is the command `cellml-info`, which prints what the reader reads of a document as JSON.
+
+```bash
+cargo test                  # the rust tests, over the CellML fixtures of the repository
+cargo clippy --all-targets  # the lints, denied in the workspace
+cargo fmt --check           # the formatting
+cargo build --release       # the cellml-info command in target/release
+cargo build --target wasm32-unknown-unknown -p sbml2cellml-cellml
+```
+
+The `rust` workflow runs these in continuous integration. `scripts/cellml_parity.py` measures the reader against libcellml over the models of the Physiome selection and the CellML files of the repository, which is run locally like the checks of BioModels and of the Physiome repository:
+
+```bash
+cargo build --release
+uv run python scripts/cellml_parity.py        # the corpus
+uv run python scripts/cellml_parity.py --count 10 -v
+```
+
+Of the 101 documents of the corpus, 96 are read identically (the version, the components with their variables, the units of a variable, its initial value and what it exposes, the encapsulation and the equivalence sets), 4 are read by the rust reader alone, since libcellml refuses them (a non whitespace text in a component, a namespace URI which is not absolute), and 1 differs in what a variable exposes: libcellml infers the interface of a variable which a connection maps onto an encapsulated component, the reader keeps what the document declares.
+
 ## Release
 
 A release is made from `develop`. Since `develop` only accepts pull requests,

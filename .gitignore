@@ -38,3 +38,6 @@ physiome/work/
 .vscode/
 *~
 .DS_Store
+
+# rust
+/target/
