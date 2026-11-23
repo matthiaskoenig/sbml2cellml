@@ -65,13 +65,17 @@ def test_amount_of_a_species_in_a_changing_compartment_has_substance_units(
 
 def test_every_element_has_a_unique_id(tmp_path: Path) -> None:
     """External metadata points at the ids of the model, variables and units."""
+    # the ids are the ones the python engine writes, which the metadata of
+    # the elements points at; the rust engine writes a model without ids
     model_sbml = annotated_model()
     p: libsbml.Parameter = model_sbml.createParameter()
     p.setId("units_mmole")  # the id the units `mmole` would get
     p.setValue(1.0)
     p.setConstant(True)
     p.setUnits("dimensionless")
-    model = convert(model_sbml, tmp_path)
+    model = convert_sbml2cellml(
+        write_sbml(tmp_path / "model.xml", model_sbml), engine="python"
+    )
     component = model.component(0)
     variable_ids = {
         component.variable(k).name(): component.variable(k).id()

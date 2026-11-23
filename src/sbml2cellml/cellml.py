@@ -127,6 +127,34 @@ def cellml_version(text: str) -> str | None:
     return None
 
 
+def parse_model(
+    text: str, source: str = "document", strict: bool = True
+) -> libcellml.Model:
+    """Parse a CellML document.
+
+    Args:
+        text: the CellML document.
+        source: what the document is, for the message of an error.
+        strict: parse CellML 2.0 only; a CellML 1.0 or 1.1 document needs
+            `strict=False`, where the parser reads it as a 2.0 model.
+
+    Returns:
+        The parsed model.
+
+    Raises:
+        CellMLValidationError: if the parser reports errors.
+    """
+    parser = libcellml.Parser()
+    parser.setStrict(strict)
+    model = parser.parseModel(text)
+    parser_errors = errors(_issues(parser))
+    if parser_errors:
+        raise CellMLValidationError(
+            f"CellML {source} could not be parsed:\n{format_issues(parser_errors)}"
+        )
+    return model
+
+
 def read_model(cellml_path: Path, strict: bool = True) -> libcellml.Model:
     """Read a CellML file.
 
@@ -141,16 +169,11 @@ def read_model(cellml_path: Path, strict: bool = True) -> libcellml.Model:
     Raises:
         CellMLValidationError: if the parser reports errors.
     """
-    parser = libcellml.Parser()
-    parser.setStrict(strict)
-    model = parser.parseModel(Path(cellml_path).read_text(encoding="utf-8"))
-    parser_errors = errors(_issues(parser))
-    if parser_errors:
-        raise CellMLValidationError(
-            f"CellML file '{cellml_path}' could not be parsed:\n"
-            f"{format_issues(parser_errors)}"
-        )
-    return model
+    return parse_model(
+        Path(cellml_path).read_text(encoding="utf-8"),
+        f"file '{cellml_path}'",
+        strict=strict,
+    )
 
 
 def validate_model(model: libcellml.Model) -> list[libcellml.Issue]:

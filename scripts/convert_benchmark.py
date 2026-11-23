@@ -1,29 +1,38 @@
-"""Benchmark of the two engines of the CellML to SBML conversion.
+"""Benchmark of the two engines of both conversions.
 
-The rust engine (`sbml2cellml.rust`, the crates of `crates/`) reads a
-CellML document and writes the SBML of it in the process; the python engine
-(`sbml2cellml.cellml2sbml`) reads the document with libcellml, asks its
-analyser what the equations determine and builds the document with libsbml.
-Both are measured over the models of the Physiome check and the CellML
-fixtures of the repository, three times each, the fastest run of the three
-per model:
+The rust engine (`sbml2cellml.rust`, the crates of `crates/`) converts a
+document in the process without libcellml and without libsbml; the python
+engine reads the document with libcellml or libsbml and builds the result
+with the other library. Both directions are measured, three runs each and
+the fastest of the three per model:
 
-* `python`: `convert_cellml2sbml(path, engine="python")`, the conversion
-  through libcellml, without the validation and without the metadata.
-* `rust`: `convert_cellml2sbml(path, engine="rust")`, the rust conversion
-  and the libsbml document read from its text, which the python API returns.
-* `text`: the rust conversion alone, which is what a browser runs and what
-  the compiler of sbmlsim-core takes.
+* `cellml2sbml`, the models of the Physiome check and the CellML fixtures
+  of the repository: `python` is `convert_cellml2sbml(path,
+  engine="python")`, which asks the analyser of libcellml what the
+  equations determine and builds the document with libsbml, `rust` the
+  same call with the rust engine, which reads the SBML text of the rust
+  conversion back with libsbml, and `text` the rust conversion alone.
+* `sbml2cellml`, the models of the repository and of the BioModels check:
+  `python` is `convert_sbml2cellml(path, engine="python")`, which reads the
+  model with libsbml and builds the CellML model with libcellml, `rust` the
+  same call with the rust engine, which parses the CellML text of the rust
+  conversion with libcellml, and `text` the rust conversion alone.
 
-The script writes the figure `docs/images/convert_benchmark.svg` and its
-dark variant, prints the medians and the slowest models, and keeps the
-measurements in `~/.cache/sbml2cellml/convert_benchmark.json`.
+The conversion alone is what a browser runs and what the compiler of
+sbmlsim-core takes; the validation and the metadata are off in every run.
+
+The script writes the figure `docs/images/convert_benchmark.svg` of the
+CellML to SBML direction or `docs/images/convert_benchmark_cellml.svg` of
+the SBML to CellML direction and their dark variants, prints the medians
+and the slowest models, and keeps the measurements in
+`~/.cache/sbml2cellml/convert_benchmark<direction>.json`.
 
 It is run locally, like the checks of BioModels and of the Physiome
 repository:
 
 ```bash
 uv run python scripts/convert_benchmark.py
+uv run python scripts/convert_benchmark.py --direction sbml2cellml
 uv run python scripts/convert_benchmark.py --count 10 --repeats 5
 ```
 """
@@ -36,12 +45,14 @@ from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from statistics import median
+from typing import Literal, get_args
 
 from matplotlib.figure import Figure
 
 from sbml2cellml import rust
 from sbml2cellml.cellml2sbml import convert_cellml2sbml
 from sbml2cellml.physiome.models import model_path, read_selection
+from sbml2cellml.sbml2cellml import convert_sbml2cellml
 from sbml2cellml.testsuite.figure import DARK, LIGHT, write_variants
 
 REPO = Path(__file__).parent.parent
@@ -49,10 +60,32 @@ REPO = Path(__file__).parent.parent
 FIXTURES = sorted((REPO / "tests" / "data").glob("*.cellml")) + sorted(
     (REPO / "examples" / "models").glob("*.cellml")
 )
-#: the figure of the benchmark
-FIGURE = REPO / "docs" / "images" / "convert_benchmark.svg"
-#: the measurements
-RESULTS = Path.home() / ".cache" / "sbml2cellml" / "convert_benchmark.json"
+#: the SBML models of the repository
+SBML_FIXTURES = sorted((REPO / "examples" / "models").glob("*.xml"))
+#: which conversion is measured
+Direction = Literal["cellml2sbml", "sbml2cellml"]
+#: the values of `Direction`, for the command line
+DIRECTIONS: tuple[str, ...] = get_args(Direction)
+#: the figure of the benchmark of every direction
+FIGURES: dict[str, Path] = {
+    "cellml2sbml": REPO / "docs" / "images" / "convert_benchmark.svg",
+    "sbml2cellml": REPO / "docs" / "images" / "convert_benchmark_cellml.svg",
+}
+#: the measurements of every direction
+RESULTS: dict[str, Path] = {
+    "cellml2sbml": Path.home() / ".cache" / "sbml2cellml" / "convert_benchmark.json",
+    "sbml2cellml": Path.home()
+    / ".cache"
+    / "sbml2cellml"
+    / "convert_benchmark_cellml.json",
+}
+#: what the size of a model is in every direction, for the figure
+SIZES: dict[str, str] = {
+    "cellml2sbml": "components of the model",
+    "sbml2cellml": "quantities of the model",
+}
+#: what one of them is, for the report
+SIZE: dict[str, str] = {"cellml2sbml": "components", "sbml2cellml": "quantities"}
 
 
 @dataclass(frozen=True)
@@ -61,7 +94,8 @@ class Measurement:
 
     #: the file of the model
     path: str
-    #: the number of components of the model, its size
+    #: the size of the model, the components of a CellML document and the
+    #: compartments, species, parameters and reactions of an SBML document
     components: int
     #: `convert_cellml2sbml` with the python engine, `None` when it refuses
     python: float | None
@@ -107,38 +141,73 @@ def fastest(call: Callable[[], object], repeats: int) -> float | None:
     return min(times)
 
 
-def measure(path: Path, repeats: int) -> Measurement:
+def measure(path: Path, repeats: int, direction: Direction) -> Measurement:
     """Measure both engines on one model.
 
     Args:
-        path: the CellML file.
+        path: the CellML or SBML file.
         repeats: how often every engine runs.
+        direction: which conversion is measured.
 
     Returns:
         The measurement of the model.
     """
     text = path.read_text(encoding="utf-8")
+    if direction == "cellml2sbml":
+        return Measurement(
+            path=str(path),
+            components=text.count("<component "),
+            python=fastest(
+                lambda: convert_cellml2sbml(
+                    path, validate=False, metadata=False, engine="python"
+                ),
+                repeats,
+            ),
+            rust=fastest(
+                lambda: convert_cellml2sbml(
+                    path, validate=False, metadata=False, engine="rust"
+                ),
+                repeats,
+            ),
+            text=fastest(lambda: rust.convert_cellml_to_sbml(text), repeats),
+        )
     return Measurement(
         path=str(path),
-        components=text.count("<component "),
+        components=sum(
+            text.count(element)
+            for element in ("<compartment ", "<species ", "<parameter ", "<reaction ")
+        ),
         python=fastest(
-            lambda: convert_cellml2sbml(
+            lambda: convert_sbml2cellml(
                 path, validate=False, metadata=False, engine="python"
             ),
             repeats,
         ),
         rust=fastest(
-            lambda: convert_cellml2sbml(
+            lambda: convert_sbml2cellml(
                 path, validate=False, metadata=False, engine="rust"
             ),
             repeats,
         ),
-        text=fastest(lambda: rust.convert_cellml_to_sbml(text), repeats),
+        text=fastest(lambda: rust.convert_sbml_to_cellml(text, path.stem), repeats),
     )
 
 
-def corpus() -> list[Path]:
-    """The documents of the corpus: the fixtures and the Physiome selection."""
+def corpus(direction: Direction) -> list[Path]:
+    """The documents of the corpus of a direction.
+
+    Args:
+        direction: which conversion is measured.
+
+    Returns:
+        The fixtures of the repository and the models of the Physiome check
+        for the CellML to SBML direction, the SBML models of the repository
+        and the models of the BioModels check for the other one.
+    """
+    if direction == "sbml2cellml":
+        from sbml2cellml.biomodels.models import biomodels_cache
+
+        return list(SBML_FIXTURES) + sorted(biomodels_cache().glob("*/*.xml"))
     paths = list(FIXTURES)
     for exposure in read_selection(REPO / "physiome" / "models.json").models:
         try:
@@ -148,7 +217,11 @@ def corpus() -> list[Path]:
     return paths
 
 
-def render(measurements: list[Measurement], dark: bool = False) -> Figure:
+def render(
+    measurements: list[Measurement],
+    size: str = SIZES["cellml2sbml"],
+    dark: bool = False,
+) -> Figure:
     """Render the figure of the benchmark.
 
     The left panel is the time of the python engine against the time of
@@ -159,6 +232,8 @@ def render(measurements: list[Measurement], dark: bool = False) -> Figure:
 
     Args:
         measurements: the measurements of the corpus.
+        size: what the size of a model is, the label of the x axis of the
+            right panel (`SIZES`).
         dark: whether the figure is for a dark background.
 
     Returns:
@@ -249,9 +324,7 @@ def render(measurements: list[Measurement], dark: bool = False) -> Figure:
             alpha=0.5,
             zorder=0,
         )
-    speedups.set_xlabel(
-        "components of the model", color=theme.text_secondary, fontsize=10
-    )
+    speedups.set_xlabel(size, color=theme.text_secondary, fontsize=10)
     speedups.set_ylabel(
         "times faster than the python engine", color=theme.text_secondary, fontsize=10
     )
@@ -279,11 +352,12 @@ def render(measurements: list[Measurement], dark: bool = False) -> Figure:
     return fig
 
 
-def report(measurements: list[Measurement]) -> None:
+def report(measurements: list[Measurement], size: str = SIZE["cellml2sbml"]) -> None:
     """Print the medians, the extremes and what one engine alone converts.
 
     Args:
         measurements: the measurements of the corpus.
+        size: what the size of a model is (`SIZE`).
     """
     times = [
         (m, m.python, m.rust, m.text)
@@ -312,7 +386,7 @@ def report(measurements: list[Measurement]) -> None:
         slowest, python, engine, _ = max(times, key=lambda row: row[1])
         print(
             f"  slowest model: {Path(slowest.path).name} "
-            f"({slowest.components} components), "
+            f"({slowest.components} {size}), "
             f"{python * 1e3:.0f} ms python, {engine * 1e3:.1f} ms rust"
         )
     for label, found in (
@@ -325,12 +399,18 @@ def report(measurements: list[Measurement]) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Measure both engines over the corpus and write the figure."""
+    """Measure both engines over the corpus of a direction and write the figure."""
     parser = argparse.ArgumentParser(
         prog="convert_benchmark",
-        description="Benchmark the rust and the python engine of cellml2sbml.",
+        description="Benchmark the rust and the python engine of both conversions.",
     )
-    parser.add_argument("files", nargs="*", help="CellML files, the corpus by default")
+    parser.add_argument("files", nargs="*", help="the files, the corpus by default")
+    parser.add_argument(
+        "--direction",
+        choices=DIRECTIONS,
+        default="cellml2sbml",
+        help="which conversion is measured (default: cellml2sbml)",
+    )
     parser.add_argument("--count", type=int, help="measure only the first N files")
     parser.add_argument(
         "--repeats", type=int, default=3, help="runs per engine and model (default: 3)"
@@ -340,12 +420,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    paths = [Path(file) for file in args.files] or corpus()
+    direction: Direction = args.direction
+    paths = [Path(file) for file in args.files] or corpus(direction)
     if args.count:
         paths = paths[: args.count]
     measurements = []
     for index, path in enumerate(paths, start=1):
-        measurement = measure(path, args.repeats)
+        measurement = measure(path, args.repeats, direction)
         measurements.append(measurement)
         speedup = measurement.speedup
         print(
@@ -353,15 +434,17 @@ def main(argv: list[str] | None = None) -> int:
             + (f"{speedup:.0f}x faster" if speedup else "one engine only"),
             file=sys.stderr,
         )
-    RESULTS.parent.mkdir(parents=True, exist_ok=True)
-    RESULTS.write_text(
+    results = RESULTS[direction]
+    results.parent.mkdir(parents=True, exist_ok=True)
+    results.write_text(
         json.dumps([asdict(m) for m in measurements], indent=2) + "\n",
         encoding="utf-8",
     )
-    report(measurements)
+    report(measurements, SIZE[direction])
     if not args.no_figure:
-        write_variants(render, FIGURE, measurements=measurements)
-        print(f"figure written to {FIGURE}")
+        figure = FIGURES[direction]
+        write_variants(render, figure, measurements=measurements, size=SIZES[direction])
+        print(f"figure written to {figure}")
     return 0
 
 

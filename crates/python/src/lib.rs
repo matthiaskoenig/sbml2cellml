@@ -1,8 +1,9 @@
 //! The python module of the rust reader and converter, `sbml2cellml._rust`.
 //!
 //! The module gives the python package the conversion of a CellML document
-//! to SBML in the process, without a command line and without libcellml:
-//! `sbml2cellml.rust` wraps it and `sbml2cellml.cellml2sbml` uses it.
+//! to SBML and of an SBML document to CellML in the process, without a
+//! command line and without libcellml and libsbml: `sbml2cellml.rust` wraps
+//! it, `sbml2cellml.cellml2sbml` and `sbml2cellml.sbml2cellml` use it.
 //! Every function takes and returns text, so nothing of the rust model
 //! crosses the boundary.
 
@@ -33,6 +34,36 @@ fn convert_cellml_to_sbml(py: Python<'_>, text: &str) -> PyResult<(String, Vec<S
         let conversion = convert::convert(&document.model)
             .map_err(|err| PyValueError::new_err(err.to_string()))?;
         Ok((conversion.document.to_xml(), conversion.warnings))
+    })
+}
+
+/// Convert an SBML document of any level and version to CellML 2.0.
+///
+/// # Arguments
+///
+/// * `text` - the SBML document, with its submodels flattened.
+/// * `name` - the name of the CellML model when the SBML model has no id.
+///
+/// # Returns
+///
+/// A tuple of the CellML document and what the conversion is told about,
+/// e.g. an initial value which is not set.
+///
+/// # Errors
+///
+/// Raises `ValueError` with the message of the reader or the converter for
+/// a document which cannot be read or converted.
+#[pyfunction]
+fn convert_sbml_to_cellml(
+    py: Python<'_>,
+    text: &str,
+    name: &str,
+) -> PyResult<(String, Vec<String>)> {
+    py.detach(|| {
+        let document = sbml::read(text).map_err(|err| PyValueError::new_err(err.to_string()))?;
+        let conversion = tocellml::convert(&document, name)
+            .map_err(|err| PyValueError::new_err(err.to_string()))?;
+        Ok((conversion.model.to_xml(), conversion.warnings))
     })
 }
 
@@ -77,6 +108,7 @@ fn has_imports(text: &str) -> PyResult<bool> {
 #[pymodule]
 fn _rust(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_function(wrap_pyfunction!(convert_cellml_to_sbml, module)?)?;
+    module.add_function(wrap_pyfunction!(convert_sbml_to_cellml, module)?)?;
     module.add_function(wrap_pyfunction!(cellml_version, module)?)?;
     module.add_function(wrap_pyfunction!(has_imports, module)?)?;
     Ok(())

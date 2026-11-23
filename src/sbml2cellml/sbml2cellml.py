@@ -23,7 +23,13 @@ by the bodies of the functions (libsbml's `expandFunctionDefinitions`
 conversion) before the conversion, and the initial assignments are evaluated
 to initial values (`expandInitialAssignments`).
 
-Not supported yet (logged as warning, see docs/conversion-issues.md): events.
+A formula with a delay has no counterpart in CellML and is not converted
+(logged as a warning, see docs/conversion-issues.md).
+
+The conversion runs in rust by default (`sbml2cellml.rust`, the crate
+`crates/tocellml`), which writes the same CellML model as this module
+without libsbml and without libcellml; `rust.ENGINES` are the engines of
+`convert_sbml2cellml`, and the python engine writes what rust does not do.
 """
 
 import dataclasses
@@ -37,11 +43,12 @@ from pathlib import Path
 import libcellml
 import libsbml
 
-from sbml2cellml import astnodes, cellml, mathml, sbml
+from sbml2cellml import astnodes, cellml, mathml, rust, sbml
 from sbml2cellml import metadata as sbml_metadata
 from sbml2cellml.cellml import CellMLValidationError
 from sbml2cellml.cellmlunits import CellMLUnits
 from sbml2cellml.mathml import TIME_ID
+from sbml2cellml.rust import Engine
 from sbml2cellml.sbml import SBMLValidationError
 from sbml2cellml.variables import unique_sid
 
@@ -66,6 +73,7 @@ def convert_sbml2cellml(
     cellml_path: Path | None = None,
     validate: bool = True,
     metadata: bool = True,
+    engine: Engine = "auto",
 ) -> libcellml.Model:
     """Convert an SBML file to a CellML model.
 
@@ -78,12 +86,17 @@ def convert_sbml2cellml(
             history of the SBML elements as RDF next to the CellML file
             (`<stem>.rdf`, see `sbml2cellml.metadata`); no file is written
             for a model without metadata.
+        engine: which converter writes the model, `"rust"` for the crates of
+            the repository (`sbml2cellml.rust`), `"python"` for libsbml,
+            libcellml and this module, and `"auto"` for rust wherever it
+            covers the conversion (`_without_rust`) and python otherwise.
 
     Returns:
         The CellML model.
 
     Raises:
-        SBML2CellMLConversionError: if the file does not exist or has no model.
+        SBML2CellMLConversionError: if the file does not exist, has no model
+            or cannot be converted by the engine which is asked for.
         CellMLValidationError: if `validate` is set and the model has errors.
     """
     sbml_path = Path(sbml_path)
@@ -107,6 +120,146 @@ def convert_sbml2cellml(
         model_sbml = doc.getModel()
     mid: str = model_sbml.getId() if model_sbml.isSetId() else Path(sbml_path).stem
     logger.info("Converting SBML model '%s' from '%s'", mid, sbml_path)
+
+    model: libcellml.Model | None = None
+    if engine != "python":
+        reason = _without_rust(model_sbml, metadata and cellml_path is not None)
+        if reason is not None and engine == "rust":
+            raise SBML2CellMLConversionError(
+                f"The rust engine cannot convert '{sbml_path}': {reason}"
+            )
+        if reason is not None:
+            logger.info("The python engine converts '%s': %s", sbml_path, reason)
+        else:
+            try:
+                # the text of the file unless libsbml wrote the flattened
+                # document, so that the model is not serialized again
+                text = (
+                    libsbml.writeSBMLToString(doc)
+                    if flattened is not None
+                    else sbml_path.read_text(encoding="utf-8")
+                )
+                model = _convert_with_rust(text, mid)
+            except rust.RustError as err:
+                if engine == "rust":
+                    raise SBML2CellMLConversionError(
+                        f"SBML model of '{sbml_path}' cannot be converted "
+                        f"by the rust engine: {err}"
+                    ) from err
+                logger.warning(
+                    "The rust engine refused '%s', converting with python: %s",
+                    sbml_path,
+                    err,
+                )
+    # the elements the metadata of the CellML model stands for, which only the
+    # python engine knows: the rust engine converts a model without metadata
+    # (`_without_rust`)
+    elements: dict[str, libsbml.SBase] = {}
+    if model is None:
+        model, elements = _convert_with_python(doc, mid)
+
+    if validate:
+        issues = cellml.errors(cellml.validate_model(model))
+        if issues:
+            raise CellMLValidationError(
+                f"CellML model '{mid}' converted from '{sbml_path}' has "
+                f"{len(issues)} errors:\n{cellml.format_issues(issues)}"
+            )
+
+    if cellml_path is not None:
+        cellml.write_model(model, cellml_path)
+        logger.info("CellML written to '%s'", cellml_path)
+        if metadata:
+            _write_metadata(elements, Path(cellml_path))
+
+    return model
+
+
+def _without_rust(model_sbml: libsbml.Model, metadata: bool) -> str | None:
+    """Why the rust engine cannot convert a model, or `None` when it can.
+
+    Args:
+        model_sbml: the SBML model.
+        metadata: whether the metadata of the elements is written, which the
+            rust converter does not write: it writes no `id` for the RDF to
+            point at.
+
+    Returns:
+        What the rust engine does not cover, `None` when it covers the
+        conversion.
+    """
+    if metadata and _has_metadata(model_sbml):
+        return "the metadata of the elements is written by python"
+    return None
+
+
+def _has_metadata(model_sbml: libsbml.Model) -> bool:
+    """Whether the model or one of its elements has metadata.
+
+    Args:
+        model_sbml: the SBML model.
+
+    Returns:
+        `True` if an element which becomes a CellML element has a name,
+        notes, an SBO term, CV terms or a history (`sbml2cellml.metadata`).
+    """
+    elements: list[libsbml.SBase] = [
+        model_sbml,
+        *model_sbml.getListOfCompartments(),
+        *model_sbml.getListOfSpecies(),
+        *model_sbml.getListOfParameters(),
+        *model_sbml.getListOfReactions(),
+        *model_sbml.getListOfUnitDefinitions(),
+    ]
+    reaction: libsbml.Reaction
+    for reaction in model_sbml.getListOfReactions():
+        law: libsbml.KineticLaw | None = reaction.getKineticLaw()
+        if law is not None:
+            elements.extend(law.getListOfParameters())
+        elements.extend([*reaction.getListOfReactants(), *reaction.getListOfProducts()])
+    return any(sbml_metadata.element_record(element) for element in elements)
+
+
+def _convert_with_rust(text: str, mid: str) -> libcellml.Model:
+    """Convert an SBML document with the rust converter.
+
+    The document is handed over as text, with the submodels of a hierarchical
+    model flattened by the caller, since the rust crates read no file and
+    know no package.
+
+    Args:
+        text: the SBML document, flattened.
+        mid: the name of the CellML model.
+
+    Returns:
+        The model, parsed from the CellML text the rust converter writes.
+
+    Raises:
+        RustError: if the document cannot be read or converted.
+        CellMLValidationError: if the CellML text cannot be parsed.
+    """
+    cellml_text, warnings = rust.convert_sbml_to_cellml(text, mid)
+    for warning in warnings:
+        logger.warning("%s", warning)
+    model = cellml.parse_model(cellml_text, f"model '{mid}' of the rust engine")
+    logger.info("Converted the model '%s' with the rust engine", mid)
+    return model
+
+
+def _convert_with_python(
+    doc: libsbml.SBMLDocument, mid: str
+) -> tuple[libcellml.Model, dict[str, libsbml.SBase]]:
+    """Convert an SBML document with libsbml, libcellml and this module.
+
+    Args:
+        doc: the SBML document, flattened.
+        mid: the name of the CellML model.
+
+    Returns:
+        The model and the SBML element of every CellML element which stands
+        for one, for the metadata of the model.
+    """
+    model_sbml: libsbml.Model = doc.getModel()
     # CellML has neither functions nor initial assignments: libsbml inlines the
     # function calls, the formulas are collected (they do not depend on the
     # initial values), the rateOf symbols of the initial assignments replaced,
@@ -142,23 +295,7 @@ def convert_sbml2cellml(
             "InitialAssignment for '%s' not converted, it was not evaluated.",
             assignment.getSymbol(),
         )
-
-    if validate:
-        issues = cellml.errors(cellml.validate_model(model))
-        if issues:
-            raise CellMLValidationError(
-                f"CellML model '{mid}' converted from '{sbml_path}' has "
-                f"{len(issues)} errors:\n{cellml.format_issues(issues)}"
-            )
-
-    if cellml_path is not None:
-        cellml.write_model(model, cellml_path)
-        logger.info("CellML written to '%s'", cellml_path)
-        if metadata:
-            elements = _metadata_elements(model_sbml, model, cellml_units, formulas)
-            _write_metadata(elements, Path(cellml_path))
-
-    return model
+    return model, _metadata_elements(model_sbml, model, cellml_units, formulas)
 
 
 def _set_ids(model: libcellml.Model) -> None:

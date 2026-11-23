@@ -312,7 +312,9 @@ The two pages are generated and committed, and they are rendered from the result
 
 The conversion evaluates every initial assignment to the value of its quantity and gives every compartment its size at the start, which converts the initial values of its species; an initial assignment which cannot be evaluated, a delay or a value which needs itself, is not converted, with a warning, as in the python converter, and a value which is infinite or NaN becomes an equation when the variable is no state.
 
-`crates/python` is the module `sbml2cellml._rust`, built with [pyo3](https://pyo3.rs) and the stable ABI of python 3.14 (`abi3-py314`), which gives the package the conversion in the process; `sbml2cellml.rust` wraps it, `src/sbml2cellml/_rust.pyi` is its signature for the type checker. maturin is the build backend of the package (`[tool.maturin]` of `pyproject.toml`), so `uv sync` and `uv build` compile the crates and put the module next to the python code. The crate is no default member of the workspace: a test binary of it would have to link libpython, so `cargo test` leaves it out and the `rust` workflow lints it on its own.
+`algebraic.rs` converts the algebraic rules of the model to the implicit equations `0 = formula` of CellML. An algebraic rule names no variable where libcellml needs to know which variable an equation determines: `match_rules` gives every rule a variable of its formula which nothing else determines - a compartment, parameter, species or species reference which is not constant, no target of another rule and no species a reaction changes - with a maximum matching when several rules share their candidates, and orders a rule after the rules which determine the other unknowns it uses, since the analyser of libcellml finds a model whose guesses come in another order overconstrained. `solve` solves the rules at the start with the secant method, which is the guess of the solver of the simulation and the size of a compartment an algebraic rule determines, and the other variables of a rule which are no states become the equations `y = value`, since libcellml takes any variable with an initial value in an implicit equation for its unknown.
+
+`crates/python` is the module `sbml2cellml._rust`, built with [pyo3](https://pyo3.rs) and the stable ABI of python 3.14 (`abi3-py314`), which gives the package both conversions in the process; `sbml2cellml.rust` wraps it, `src/sbml2cellml/_rust.pyi` is its signature for the type checker. maturin is the build backend of the package (`[tool.maturin]` of `pyproject.toml`), so `uv sync` and `uv build` compile the crates and put the module next to the python code. The crate is no default member of the workspace: a test binary of it would have to link libpython, so `cargo test` leaves it out and the `rust` workflow lints it on its own.
 
 ```bash
 cargo test                  # the rust tests, over the CellML fixtures of the repository
@@ -357,14 +359,17 @@ The resets of a model become the events of SBML, as they do in the python conver
 
 What the rust converter does not do yet: resolve the imports of a document, write the metadata of the CellML elements and write a hierarchical model. The python engine converts such a model, and the imports are flattened with libcellml before the rust converter reads the document.
 
-`scripts/convert_benchmark.py` measures the two engines over the same corpus, three runs per model and engine, the fastest of the three:
+`scripts/convert_benchmark.py` measures the two engines of a direction over its corpus, three runs per model and engine, the fastest of the three:
 
 ```bash
 uv run python scripts/convert_benchmark.py      # writes docs/images/convert_benchmark*.svg
+uv run python scripts/convert_benchmark.py --direction sbml2cellml  # docs/images/convert_benchmark_cellml*.svg
 uv run python scripts/convert_benchmark.py --count 10 --repeats 5
 ```
 
-Of the 102 documents, 68 are converted by both engines. The python engine takes 129 ms for the median model and 16.9 s for all of them, the rust engine 2.3 ms and 0.37 s, and the rust conversion alone, without the libsbml document the python API returns, 0.4 ms and 0.07 s. The rust engine is 48 times faster for the median model and between 13 and 193 times faster over the corpus; the conversion alone is 288 times faster. The largest model of the selection, `Schoeberl_EichlerJonsson_Gilles_Muller_2002` with 228 components, takes 2.3 s with the python engine and 12 ms with the rust engine.
+Of the 102 CellML documents, 68 are converted by both engines. The python engine takes 129 ms for the median model and 16.9 s for all of them, the rust engine 2.3 ms and 0.37 s, and the rust conversion alone, without the libsbml document the python API returns, 0.4 ms and 0.07 s. The rust engine is 48 times faster for the median model and between 13 and 193 times faster over the corpus; the conversion alone is 288 times faster. The largest model of the selection, `Schoeberl_EichlerJonsson_Gilles_Muller_2002` with 228 components, takes 2.3 s with the python engine and 12 ms with the rust engine.
+
+Of the 1081 SBML models of the other direction, the models of the repository and of the BioModels cache, 1065 are converted by both engines. The python engine takes 10.5 ms for the median model and 71.8 s for all of them, the rust engine 5.1 ms and 16.4 s, and the rust conversion alone 0.4 ms and 1.55 s. The rust engine is twice as fast for the median model, which libsbml and libcellml dominate: the API reads the document with libsbml and parses the CellML text of the conversion with libcellml, which together take more than the conversion. The gain grows with the model, up to 214 times for the whole corpus, and the conversion alone is 21 times faster for the median model. The largest model, `BIOMD0000000457` with 368 quantities, takes 5.9 s with the python engine and 66 ms with the rust engine.
 
 ## Release
 

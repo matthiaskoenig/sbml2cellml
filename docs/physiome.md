@@ -20,7 +20,7 @@ A `libopencor` failure means libopencor cannot simulate the model of the reposit
 | cellml2sbml | 66 | 62 | 0 | 4 | 93.9% |
 | sbmlsim | 66 | 57 | 5 | 4 | 86.4% |
 | sbml2cellml | 66 | 62 | 0 | 4 | 93.9% |
-| roundtrip | 66 | 60 | 2 | 4 | 90.9% |
+| roundtrip | 66 | 61 | 1 | 4 | 92.4% |
 
 57 of the 57 cases with a passing sbmlsim stage are informative: the expected results move more than the tolerance band for at least one variable.
 
@@ -35,11 +35,11 @@ The two simulators integrate with the same relative tolerance and with an absolu
 
 | stage | simulator | model | simulations | setup median | integration median | integration p95 | integration slowest | integration total |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| libopencor | libopencor | CellML model | 62 | 21 ms | 0.98 ms | 71 ms | 531 ms | 1.3 s |
-| sbmlsim | sbmlsim-core | SBML model | 60 | 5.7 ms | 1.1 ms | 81 ms | 491 ms | 1.4 s |
-| roundtrip | libopencor | roundtrip CellML model | 62 | 18 ms | 0.90 ms | 80 ms | 516 ms | 1.3 s |
+| libopencor | libopencor | CellML model | 62 | 21 ms | 0.82 ms | 74 ms | 517 ms | 1.3 s |
+| sbmlsim | sbmlsim-core | SBML model | 60 | 6.1 ms | 0.97 ms | 78 ms | 491 ms | 1.4 s |
+| roundtrip | libopencor | roundtrip CellML model | 62 | 18 ms | 0.87 ms | 81 ms | 511 ms | 1.3 s |
 
-The two simulators integrate the same dynamics for 57 cases, those whose SBML model reproduces the expected results. libopencor is 1.3 times faster than sbmlsim-core for the median of them and faster for 47; over these cases the medians are 0.92 ms for sbmlsim-core and 0.61 ms for libopencor.
+The two simulators integrate the same dynamics for 57 cases, those whose SBML model reproduces the expected results. libopencor is 1.3 times faster than sbmlsim-core for the median of them and faster for 51; over these cases the medians are 0.89 ms for sbmlsim-core and 0.59 ms for libopencor.
 
 ## Failure reasons
 
@@ -94,13 +94,12 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 
 ### roundtrip
 
-2 of 66 cases fail.
+1 of 66 cases fail.
 
-**2 cases, numerical mismatch**
+**1 case, numerical mismatch**
 
 ```text
-447: dmdt exceeds the tolerance by 0.00304
-594: tau_f1 exceeds the tolerance by 0.00086
+594: beta_K1 exceeds the tolerance by 0.000401; d_infinity exceeds the tolerance by 1.82e-06; tau_f1 exceeds the tolerance by 0.00279; Xr1_inf exceeds the tolerance by 4.81e-05
 ```
 
 ## Skipped cases
@@ -156,7 +155,7 @@ The cases which fail a stage, grouped by their error: errors which differ only i
 | 427 | Butera, Rinzel, Smith, 1999 | 12 components, DifferentialEquations, Units | pass | pass | pass | pass | pass | yes |
 | 42f | Novak, Tyson, 1993 | 14 components, DifferentialEquations, Units | pass | pass | pass | pass | pass | yes |
 | 44 | Tabak, Mascagni, Bertram, 2010 | 3 components, DifferentialEquations | pass | pass | pass | pass | pass | yes |
-| 447 | Cui, Kaandorp, 2006 | 8 components, DifferentialEquations, Units | pass | pass | fail | pass | fail | yes |
+| 447 | Cui, Kaandorp, 2006 | 8 components, DifferentialEquations, Units | pass | pass | fail | pass | pass | yes |
 | 449 | Vasalou, Henson, 2010 | 22 components, DifferentialEquations, Units | pass | pass | pass | pass | pass | yes |
 | 47 | Bornheimer, Maurya, Farquhar, Subramaniam, 2004 | 27 components, DifferentialEquations, Units | pass | pass | pass | pass | pass | yes |
 | 47f | Kholodenko, Demin, Moehren, Hoek, 1999 | 50 components, DifferentialEquations, Units | pass | pass | pass | pass | pass | yes |

@@ -13,6 +13,20 @@ def convert_cellml_to_sbml(text: str) -> tuple[str, list[str]]:
         ValueError: if the document cannot be read or converted.
     """
 
+def convert_sbml_to_cellml(text: str, name: str) -> tuple[str, list[str]]:
+    """Convert an SBML document to CellML 2.0.
+
+    Args:
+        text: the SBML document.
+        name: the name of the CellML model when the SBML model has no id.
+
+    Returns:
+        The CellML document and what the conversion is told about.
+
+    Raises:
+        ValueError: if the document cannot be read or converted.
+    """
+
 def cellml_version(text: str) -> str:
     """The version of CellML a document is written in.
 

@@ -32,6 +32,9 @@ repository = "https://github.com/matthiaskoenig/sbml2cellml"
 
 [workspace.dependencies]
 pyo3 = { version = "0.30", features = ["abi3-py314"] }
+# the reader of SBML of sbmlsim-core, which reads every level and version
+# into the model of level 3; the git pin goes once the crate is published
+sbml = { package = "sbmlsim-sbml", git = "https://github.com/matthiaskoenig/sbmlsim-core", rev = "f8609ef" }
 roxmltree = "0.20"
 thiserror = "2"
 
