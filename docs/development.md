@@ -202,11 +202,13 @@ that it is not available.
 
 The [interactive simulation](roundtrip.md#simulate-in-the-browser) of the
 roundtrip page simulates the CellML model with libopencor and the SBML model
-with sbmlsim-core in the browser. libopencor reads the CellML document itself,
-sbmlsim-core takes a model which is compiled ahead of time, so the script
-compiles the SBML model of the page and writes it with the runtime of the
-simulator and the versions of the two packages into `docs/roundtrip/simulation/`,
-which is not committed either:
+with sbmlsim-core in the browser, and the online converter simulates both
+sides of a conversion the same way. Both read the models they show:
+libopencor reads a CellML document itself and sbmlsim-core compiles an SBML
+document in the browser, so the script writes the three modules of
+sbmlsim-core the python package embeds (the compiler, the engine and the math
+library) and the versions of the two packages into
+`docs/roundtrip/simulation/`, which is not committed either:
 
 ```bash
 uv run python scripts/build_simulation.py
