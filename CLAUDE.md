@@ -36,6 +36,7 @@ uvx ty check
 
 uv run python scripts/build_wasm.py      # the module of the online converter into docs/converter/
 uv run python scripts/build_simulation.py # the modules of sbmlsim-core (compiler, engine, mathlib) into docs/roundtrip/simulation/
+uv run python scripts/build_simulator_models.py # the models of the online simulator into docs/simulator/ (local only, needs the caches of the BioModels and the Physiome check)
 uv run zensical build --clean --strict   # docs into site/
 uv run python scripts/llms_txt.py
 uv run zensical serve
@@ -583,7 +584,10 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   on the host, as the page does. `scripts/build_wasm.py` builds the
   module and copies it to the gitignored
   `docs/converter/sbml2cellml.wasm`, which the `documentation` workflow
-  does before the site is built; `docs/javascripts/converter.js` is the
+  does before the site is built; `docs/javascripts/wasm.js` loads the
+  module once per page and converts with it
+  (`window.sbml2cellmlWasm`, which the online converter and the online
+  simulator share); `docs/javascripts/converter.js` is the
   page (the tabs of the two directions and one `Panel` per direction with
   its own file, drop zone, example, status, result with its warnings,
   download and clipboard; the module is fetched once for both;
@@ -619,6 +623,30 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   compartment needs: the states of sbmlsim-core are amounts, which are far
   below the tolerance otherwise, and both simulators are run once more with
   the scaled tolerance, as the python packages do.
+  `docs/javascripts/simulator.js` is the online simulator of the landing
+  page, the section below the online converter: a published model of
+  `docs/simulator/models.json` is converted in the browser (`wasm.js`) and
+  both sides of the conversion are simulated next to each other, libopencor
+  the CellML side and sbmlsim-core the SBML side, with one set of sliders
+  for the parameters of both (`Cellml` and `Sbml` keep the document and the
+  compiled model of every model the visitor opens, so a slider runs the two
+  simulations again without a conversion or a compilation; every model is
+  read under its own URL, since libopencor keeps a file by its URL; a
+  generation counter drops the model which the visitor left while it was
+  built). `scripts/build_simulator_models.py` writes the selection and the
+  model files of `docs/simulator/`, which are committed since the caches of
+  the two checks are local: `CHOICES` is the curated selection (the first
+  one is the model the page opens with, the repressilator), and the script
+  takes the first six parameters of a model a slider can set (constant,
+  with a value and determined by nothing else), the first eight states as
+  the series of the plots and, for every one of them, the id of the SBML
+  parameter, the component and the variable of CellML and the selection of
+  sbmlsim-core, so the page needs no analysis of its own; it refuses a
+  model which does not pass every stage of its check, which the conversion
+  refuses, whose two simulations differ by more than the tolerance of the
+  checks, at the published values and with every slider moved, or whose
+  sliders do not change the simulation. `tests/test_simulator_models.py`
+  checks the committed manifest against the models and the two converters.
   `docs/javascripts/repressilator.js` is the interactive simulation of the
   roundtrip page (issue #101), which is its first section and loads the two
   simulators when the page opens (`Simulation.load`, a `Try again` button

@@ -106,6 +106,47 @@ Convert a model in either direction here, without an installation: the converter
 
 Both sides of a conversion are simulated here: the CellML model with [libopencor](https://opencor.ws/libopencor/) and the SBML model with [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/), which compiles it into a WebAssembly module in the browser, with the solver settings of the python package. The two plots are the same trajectories when the conversion keeps the model, and the line below them is the largest difference between them. A CellML model which imports a component or units, an SBML model which uses a package such as `comp`, and the metadata of a conversion need the [python package](installation.md), which converts and simulates the models of the [roundtrip example](roundtrip.md). The source code of the project is on [GitHub](https://github.com/matthiaskoenig/sbml2cellml).
 
+## Online simulator
+
+Simulate a published model and its conversion next to each other, with one set of sliders for both: [libopencor](https://opencor.ws/libopencor/) integrates the CellML model and [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/) the SBML model, which it compiles in the browser. A model of [BioModels](https://www.biomodels.org) is an SBML model and is converted to CellML here, a model of the [Physiome Model Repository](https://models.physiomeproject.org) is a CellML model and is converted to SBML, so the two plots are the two languages of the same model. Every model of the selection passes every stage of its check, see [Models](models.md); the simulators are loaded when this section comes into view.
+
+<div class="simulator" data-simulator
+  data-models="simulator/models.json"
+  data-module="converter/sbml2cellml.wasm"
+  data-compiler="roundtrip/simulation/compiler.wasm"
+  data-engine="roundtrip/simulation/engine.wasm"
+  data-mathlib="roundtrip/simulation/mathlib.wasm"
+  data-versions="roundtrip/simulation/versions.json">
+  <div class="simulator__bar">
+    <label class="simulator__field">Model
+      <select class="simulator__select" data-role="models" aria-label="The model of the simulation"></select>
+    </label>
+    <p class="simulator__about" data-role="about"></p>
+  </div>
+  <p class="simulator__status" data-role="status" data-kind="info" role="status">The simulators are loaded when this section comes into view.</p>
+  <div class="simulator__actions">
+    <button class="simulator__button" type="button" data-action="retry" hidden>Try again</button>
+  </div>
+  <div class="simulator__sliders" data-role="sliders"></div>
+  <div class="simulator__actions">
+    <button class="simulator__button" type="button" data-action="reset" disabled>Reset the parameters</button>
+  </div>
+  <div class="simulator__legend" data-role="legend"></div>
+  <div class="simulator__plots" data-role="plots" hidden>
+    <figure class="simulator__plot">
+      <figcaption>CellML with libopencor, <span data-role="cellml-timing">-</span></figcaption>
+      <canvas data-chart="cellml" aria-label="Timecourses of the states of the CellML model, simulated with libopencor" role="img"></canvas>
+    </figure>
+    <figure class="simulator__plot">
+      <figcaption>SBML with sbmlsim-core, <span data-role="sbml-timing">-</span></figcaption>
+      <canvas data-chart="sbml" aria-label="Timecourses of the states of the SBML model, simulated with sbmlsim-core" role="img"></canvas>
+    </figure>
+  </div>
+  <p class="simulator__difference" data-role="difference"></p>
+</div>
+
+The sliders set the first parameters of the model, the same values on both sides: libopencor changes the variable of the CellML model and sbmlsim-core the parameter of the SBML model which the conversion wrote it as. The plots show the states of the model, up to eight of them, and an item of the legend shows and hides its series in both plots. The line below them is the largest difference between the two simulations, which is the error of the conversion and of the two solvers together.
+
 ## Features
 
 - conversion of compartments, parameters, species, assignment and rate rules, reactions and events into a single CellML component
@@ -113,6 +154,7 @@ Both sides of a conversion are simulated here: the CellML model with [libopencor
 - names, notes, SBO terms, annotations and the model history as RDF next to the CellML model, restored in the conversion back to SBML
 - conversion of CellML models to SBML: parameters with rules, unit definitions and units of numbers, resets as events, imports resolved, CellML 1.0 and 1.1 read in the permissive mode of libcellml, the components optionally as `comp` submodels (`--hierarchical`)
 - the online converter of the documentation, which converts a model in either direction in the browser with a WebAssembly module of the rust converters, without an upload, and simulates the CellML side of the conversion there with libopencor ([Online converter](#online-converter))
+- the online simulator of the documentation, which converts a published model of BioModels or of the Physiome Model Repository in the browser and simulates both sides of the conversion next to each other, with one set of sliders for both ([Online simulator](#online-simulator))
 - the interactive simulation of the roundtrip example, which simulates the CellML model with libopencor and the SBML model with sbmlsim-core in the browser, with one set of sliders for both ([Roundtrip example](roundtrip.md#simulate-in-the-browser))
 - conversion of a hierarchical SBML model: the `comp` submodels are flattened before the model becomes CellML
 - validation of the result with [libcellml](https://libcellml.org/)

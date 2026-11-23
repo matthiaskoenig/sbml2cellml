@@ -1,0 +1,1307 @@
+{
+  "sliders": 6,
+  "series": 8,
+  "models": [
+    {
+      "id": "BIOMD0000000012",
+      "title": "Elowitz, Leibler, 2000: repressilator",
+      "source": "BioModels",
+      "url": "https://www.ebi.ac.uk/biomodels/BIOMD0000000012",
+      "direction": "sbml2cellml",
+      "file": "roundtrip/repressilator.xml",
+      "timecourse": {
+        "start": 0,
+        "end": 600,
+        "steps": 600
+      },
+      "parameters": [
+        {
+          "sbml": "eff",
+          "component": "sbml",
+          "variable": "eff",
+          "label": "eff",
+          "name": "translation efficiency",
+          "unit": "",
+          "value": 20.0,
+          "minimum": 0.0,
+          "maximum": 40.0,
+          "step": 0.4
+        },
+        {
+          "sbml": "n",
+          "component": "sbml",
+          "variable": "n",
+          "label": "n",
+          "name": "",
+          "unit": "",
+          "value": 2.0,
+          "minimum": 0.0,
+          "maximum": 4.0,
+          "step": 0.04
+        },
+        {
+          "sbml": "KM",
+          "component": "sbml",
+          "variable": "KM",
+          "label": "KM",
+          "name": "",
+          "unit": "",
+          "value": 40.0,
+          "minimum": 0.0,
+          "maximum": 80.0,
+          "step": 0.8
+        },
+        {
+          "sbml": "tau_mRNA",
+          "component": "sbml",
+          "variable": "tau_mRNA",
+          "label": "tau_mRNA",
+          "name": "mRNA half life",
+          "unit": "",
+          "value": 2.0,
+          "minimum": 0.0,
+          "maximum": 4.0,
+          "step": 0.04
+        },
+        {
+          "sbml": "tau_prot",
+          "component": "sbml",
+          "variable": "tau_prot",
+          "label": "tau_prot",
+          "name": "protein half life",
+          "unit": "",
+          "value": 10.0,
+          "minimum": 0.0,
+          "maximum": 20.0,
+          "step": 0.2
+        },
+        {
+          "sbml": "ps_a",
+          "component": "sbml",
+          "variable": "ps_a",
+          "label": "ps_a",
+          "name": "tps_active",
+          "unit": "",
+          "value": 0.5,
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "step": 0.01
+        }
+      ],
+      "series": [
+        {
+          "label": "X",
+          "cellml": "sbml/X",
+          "sbml": "X"
+        },
+        {
+          "label": "Y",
+          "cellml": "sbml/Y",
+          "sbml": "Y"
+        },
+        {
+          "label": "Z",
+          "cellml": "sbml/Z",
+          "sbml": "Z"
+        },
+        {
+          "label": "PX",
+          "cellml": "sbml/PX",
+          "sbml": "PX"
+        },
+        {
+          "label": "PY",
+          "cellml": "sbml/PY",
+          "sbml": "PY"
+        },
+        {
+          "label": "PZ",
+          "cellml": "sbml/PZ",
+          "sbml": "PZ"
+        }
+      ]
+    },
+    {
+      "id": "BIOMD0000000156",
+      "title": "Geva-Zatorsky, 2006: p53 oscillations",
+      "source": "BioModels",
+      "url": "https://www.ebi.ac.uk/biomodels/BIOMD0000000156",
+      "direction": "sbml2cellml",
+      "file": "simulator/models/BIOMD0000000156.xml",
+      "timecourse": {
+        "start": 0,
+        "end": 100,
+        "steps": 1000
+      },
+      "parameters": [
+        {
+          "sbml": "psi",
+          "component": "sbml",
+          "variable": "psi",
+          "label": "psi",
+          "name": "",
+          "unit": "",
+          "value": 1.0,
+          "minimum": 0.0,
+          "maximum": 2.0,
+          "step": 0.02
+        },
+        {
+          "sbml": "alpha_xy",
+          "component": "sbml",
+          "variable": "alpha_xy",
+          "label": "alpha_xy",
+          "name": "",
+          "unit": "",
+          "value": 3.7,
+          "minimum": 0.0,
+          "maximum": 7.4,
+          "step": 0.07400000000000001
+        },
+        {
+          "sbml": "beta_y",
+          "component": "sbml",
+          "variable": "beta_y",
+          "label": "beta_y",
+          "name": "",
+          "unit": "",
+          "value": 1.5,
+          "minimum": 0.0,
+          "maximum": 3.0,
+          "step": 0.03
+        },
+        {
+          "sbml": "alpha_y",
+          "component": "sbml",
+          "variable": "alpha_y",
+          "label": "alpha_y",
+          "name": "",
+          "unit": "",
+          "value": 0.9,
+          "minimum": 0.0,
+          "maximum": 1.8,
+          "step": 0.018000000000000002
+        },
+        {
+          "sbml": "alpha_0",
+          "component": "sbml",
+          "variable": "alpha_0",
+          "label": "alpha_0",
+          "name": "",
+          "unit": "",
+          "value": 1.1,
+          "minimum": 0.0,
+          "maximum": 2.2,
+          "step": 0.022000000000000002
+        },
+        {
+          "sbml": "Theta",
+          "component": "sbml",
+          "variable": "Theta",
+          "label": "Theta",
+          "name": "",
+          "unit": "",
+          "value": 2.0,
+          "minimum": 0.0,
+          "maximum": 4.0,
+          "step": 0.04
+        }
+      ],
+      "series": [
+        {
+          "label": "x",
+          "cellml": "sbml/x",
+          "sbml": "[x]"
+        },
+        {
+          "label": "y0",
+          "cellml": "sbml/y0",
+          "sbml": "[y0]"
+        },
+        {
+          "label": "y",
+          "cellml": "sbml/y",
+          "sbml": "[y]"
+        }
+      ]
+    },
+    {
+      "id": "BIOMD0000000098",
+      "title": "Goldbeter, 1990: calcium spikes",
+      "source": "BioModels",
+      "url": "https://www.ebi.ac.uk/biomodels/BIOMD0000000098",
+      "direction": "sbml2cellml",
+      "file": "simulator/models/BIOMD0000000098.xml",
+      "timecourse": {
+        "start": 0,
+        "end": 30,
+        "steps": 600
+      },
+      "parameters": [
+        {
+          "sbml": "v0",
+          "component": "sbml",
+          "variable": "v0",
+          "label": "v0",
+          "name": "",
+          "unit": "uM_per_sec",
+          "value": 1.0,
+          "minimum": 0.0,
+          "maximum": 2.0,
+          "step": 0.02
+        },
+        {
+          "sbml": "v1",
+          "component": "sbml",
+          "variable": "v1",
+          "label": "v1",
+          "name": "",
+          "unit": "uM_per_sec",
+          "value": 7.3,
+          "minimum": 0.0,
+          "maximum": 14.6,
+          "step": 0.146
+        },
+        {
+          "sbml": "beta",
+          "component": "sbml",
+          "variable": "beta",
+          "label": "beta",
+          "name": "",
+          "unit": "",
+          "value": 0.301,
+          "minimum": 0.0,
+          "maximum": 0.602,
+          "step": 0.00602
+        },
+        {
+          "sbml": "Vm2",
+          "component": "sbml",
+          "variable": "Vm2",
+          "label": "Vm2",
+          "name": "",
+          "unit": "uM_per_sec",
+          "value": 65.0,
+          "minimum": 0.0,
+          "maximum": 130.0,
+          "step": 1.3
+        },
+        {
+          "sbml": "n",
+          "component": "sbml",
+          "variable": "n",
+          "label": "n",
+          "name": "",
+          "unit": "",
+          "value": 2.0,
+          "minimum": 0.0,
+          "maximum": 4.0,
+          "step": 0.04
+        },
+        {
+          "sbml": "K2",
+          "component": "sbml",
+          "variable": "K2",
+          "label": "K2",
+          "name": "",
+          "unit": "uM",
+          "value": 1.0,
+          "minimum": 0.0,
+          "maximum": 2.0,
+          "step": 0.02
+        }
+      ],
+      "series": [
+        {
+          "label": "Z",
+          "cellml": "sbml/Z",
+          "sbml": "[Z]"
+        },
+        {
+          "label": "Y",
+          "cellml": "sbml/Y",
+          "sbml": "[Y]"
+        }
+      ]
+    },
+    {
+      "id": "BIOMD0000000206",
+      "title": "Wolf, 2000: glycolytic oscillations",
+      "source": "BioModels",
+      "url": "https://www.ebi.ac.uk/biomodels/BIOMD0000000206",
+      "direction": "sbml2cellml",
+      "file": "simulator/models/BIOMD0000000206.xml",
+      "timecourse": {
+        "start": 0,
+        "end": 5,
+        "steps": 600
+      },
+      "parameters": [
+        {
+          "sbml": "k0",
+          "component": "sbml",
+          "variable": "k0",
+          "label": "k0",
+          "name": "",
+          "unit": "mM_min_1",
+          "value": 50.0,
+          "minimum": 0.0,
+          "maximum": 100.0,
+          "step": 1.0
+        },
+        {
+          "sbml": "k1",
+          "component": "sbml",
+          "variable": "k1",
+          "label": "k1",
+          "name": "",
+          "unit": "mM_1_min_1",
+          "value": 550.0,
+          "minimum": 0.0,
+          "maximum": 1100.0,
+          "step": 11.0
+        },
+        {
+          "sbml": "k2",
+          "component": "sbml",
+          "variable": "k2",
+          "label": "k2",
+          "name": "",
+          "unit": "min_1",
+          "value": 9.8,
+          "minimum": 0.0,
+          "maximum": 19.6,
+          "step": 0.196
+        },
+        {
+          "sbml": "k31",
+          "component": "sbml",
+          "variable": "k31",
+          "label": "k31",
+          "name": "",
+          "unit": "mM_1_min_1",
+          "value": 323.8,
+          "minimum": 0.0,
+          "maximum": 647.6,
+          "step": 6.476
+        },
+        {
+          "sbml": "k33",
+          "component": "sbml",
+          "variable": "k33",
+          "label": "k33",
+          "name": "",
+          "unit": "mM_1_min_1",
+          "value": 57823.1,
+          "minimum": 0.0,
+          "maximum": 115646.2,
+          "step": 1156.462
+        },
+        {
+          "sbml": "k32",
+          "component": "sbml",
+          "variable": "k32",
+          "label": "k32",
+          "name": "",
+          "unit": "mM_1_min_1",
+          "value": 76411.1,
+          "minimum": 0.0,
+          "maximum": 152822.2,
+          "step": 1528.2220000000002
+        }
+      ],
+      "series": [
+        {
+          "label": "s1",
+          "cellml": "sbml/s1",
+          "sbml": "[s1]"
+        },
+        {
+          "label": "at",
+          "cellml": "sbml/at",
+          "sbml": "[at]"
+        },
+        {
+          "label": "s2",
+          "cellml": "sbml/s2",
+          "sbml": "[s2]"
+        },
+        {
+          "label": "s3",
+          "cellml": "sbml/s3",
+          "sbml": "[s3]"
+        },
+        {
+          "label": "na",
+          "cellml": "sbml/na",
+          "sbml": "[na]"
+        },
+        {
+          "label": "s4",
+          "cellml": "sbml/s4",
+          "sbml": "[s4]"
+        },
+        {
+          "label": "s5",
+          "cellml": "sbml/s5",
+          "sbml": "[s5]"
+        },
+        {
+          "label": "s6",
+          "cellml": "sbml/s6",
+          "sbml": "[s6]"
+        }
+      ]
+    },
+    {
+      "id": "BIOMD0000000299",
+      "title": "Leloup, 1999: circadian rhythms of Neurospora",
+      "source": "BioModels",
+      "url": "https://www.ebi.ac.uk/biomodels/BIOMD0000000299",
+      "direction": "sbml2cellml",
+      "file": "simulator/models/BIOMD0000000299.xml",
+      "timecourse": {
+        "start": 0,
+        "end": 100,
+        "steps": 1000
+      },
+      "parameters": [
+        {
+          "sbml": "vs",
+          "component": "sbml",
+          "variable": "vs",
+          "label": "vs",
+          "name": "",
+          "unit": "",
+          "value": 1.6,
+          "minimum": 0.0,
+          "maximum": 3.2,
+          "step": 0.032
+        },
+        {
+          "sbml": "vm",
+          "component": "sbml",
+          "variable": "vm",
+          "label": "vm",
+          "name": "",
+          "unit": "",
+          "value": 0.505,
+          "minimum": 0.0,
+          "maximum": 1.01,
+          "step": 0.0101
+        },
+        {
+          "sbml": "Km",
+          "component": "sbml",
+          "variable": "Km",
+          "label": "Km",
+          "name": "",
+          "unit": "",
+          "value": 0.5,
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "step": 0.01
+        },
+        {
+          "sbml": "KI",
+          "component": "sbml",
+          "variable": "KI",
+          "label": "KI",
+          "name": "",
+          "unit": "",
+          "value": 1.0,
+          "minimum": 0.0,
+          "maximum": 2.0,
+          "step": 0.02
+        },
+        {
+          "sbml": "n",
+          "component": "sbml",
+          "variable": "n",
+          "label": "n",
+          "name": "",
+          "unit": "",
+          "value": 4.0,
+          "minimum": 0.0,
+          "maximum": 8.0,
+          "step": 0.08
+        },
+        {
+          "sbml": "ks",
+          "component": "sbml",
+          "variable": "ks",
+          "label": "ks",
+          "name": "",
+          "unit": "",
+          "value": 0.5,
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "step": 0.01
+        }
+      ],
+      "series": [
+        {
+          "label": "FN",
+          "cellml": "sbml/FN",
+          "sbml": "[FN]"
+        },
+        {
+          "label": "FC",
+          "cellml": "sbml/FC",
+          "sbml": "[FC]"
+        },
+        {
+          "label": "M",
+          "cellml": "sbml/M",
+          "sbml": "[M]"
+        }
+      ]
+    },
+    {
+      "id": "BIOMD0000000521",
+      "title": "Ribba, 2012: low-grade glioma",
+      "source": "BioModels",
+      "url": "https://www.ebi.ac.uk/biomodels/BIOMD0000000521",
+      "direction": "sbml2cellml",
+      "file": "simulator/models/BIOMD0000000521.xml",
+      "timecourse": {
+        "start": 0,
+        "end": 100,
+        "steps": 500
+      },
+      "parameters": [
+        {
+          "sbml": "P0",
+          "component": "sbml",
+          "variable": "P0",
+          "label": "P0",
+          "name": "",
+          "unit": "",
+          "value": 7.13,
+          "minimum": 0.0,
+          "maximum": 14.26,
+          "step": 0.1426
+        },
+        {
+          "sbml": "Q0",
+          "component": "sbml",
+          "variable": "Q0",
+          "label": "Q0",
+          "name": "",
+          "unit": "",
+          "value": 41.2,
+          "minimum": 0.0,
+          "maximum": 82.4,
+          "step": 0.8240000000000001
+        },
+        {
+          "sbml": "lambda_P",
+          "component": "sbml",
+          "variable": "lambda_P",
+          "label": "lambda_P",
+          "name": "",
+          "unit": "",
+          "value": 0.121,
+          "minimum": 0.0,
+          "maximum": 0.242,
+          "step": 0.00242
+        },
+        {
+          "sbml": "k_PQ",
+          "component": "sbml",
+          "variable": "k_PQ",
+          "label": "k_PQ",
+          "name": "",
+          "unit": "",
+          "value": 0.00295,
+          "minimum": 0.0,
+          "maximum": 0.0059,
+          "step": 5.9e-05
+        },
+        {
+          "sbml": "k_Qp_P",
+          "component": "sbml",
+          "variable": "k_Qp_P",
+          "label": "k_Qp_P",
+          "name": "",
+          "unit": "",
+          "value": 0.0031,
+          "minimum": 0.0,
+          "maximum": 0.0062,
+          "step": 6.2e-05
+        },
+        {
+          "sbml": "delta_QP",
+          "component": "sbml",
+          "variable": "delta_QP",
+          "label": "delta_QP",
+          "name": "",
+          "unit": "",
+          "value": 0.0087,
+          "minimum": 0.0,
+          "maximum": 0.0174,
+          "step": 0.000174
+        }
+      ],
+      "series": [
+        {
+          "label": "Qp",
+          "cellml": "sbml/Qp",
+          "sbml": "[Qp]"
+        },
+        {
+          "label": "Q",
+          "cellml": "sbml/Q",
+          "sbml": "[Q]"
+        },
+        {
+          "label": "P",
+          "cellml": "sbml/P",
+          "sbml": "[P]"
+        },
+        {
+          "label": "C",
+          "cellml": "sbml/C",
+          "sbml": "[C]"
+        }
+      ]
+    },
+    {
+      "id": "3c",
+      "title": "Morris, Lecar, 1981: excitable membrane",
+      "source": "Physiome Model Repository",
+      "url": "https://models.physiomeproject.org/e/3c",
+      "direction": "cellml2sbml",
+      "file": "simulator/models/3c.cellml",
+      "timecourse": {
+        "start": 0,
+        "end": 50,
+        "steps": 1000
+      },
+      "parameters": [
+        {
+          "sbml": "C",
+          "component": "V",
+          "variable": "C",
+          "label": "C",
+          "name": "",
+          "unit": "microF_per_cm2",
+          "value": 20.0,
+          "minimum": 0.0,
+          "maximum": 40.0,
+          "step": 0.4
+        },
+        {
+          "sbml": "i_app",
+          "component": "V",
+          "variable": "i_app",
+          "label": "i_app",
+          "name": "",
+          "unit": "microA_per_cm2",
+          "value": 540.0,
+          "minimum": 0.0,
+          "maximum": 1080.0,
+          "step": 10.8
+        },
+        {
+          "sbml": "g_L",
+          "component": "i_L",
+          "variable": "g_L",
+          "label": "g_L",
+          "name": "",
+          "unit": "milliS_per_cm2",
+          "value": 2.0,
+          "minimum": 0.0,
+          "maximum": 4.0,
+          "step": 0.04
+        },
+        {
+          "sbml": "E_L",
+          "component": "i_L",
+          "variable": "E_L",
+          "label": "E_L",
+          "name": "",
+          "unit": "millivolt",
+          "value": -50.0,
+          "minimum": -100.0,
+          "maximum": 0.0,
+          "step": 1.0
+        },
+        {
+          "sbml": "E_Ca",
+          "component": "i_Ca",
+          "variable": "E_Ca",
+          "label": "E_Ca",
+          "name": "",
+          "unit": "millivolt",
+          "value": 100.0,
+          "minimum": 0.0,
+          "maximum": 200.0,
+          "step": 2.0
+        },
+        {
+          "sbml": "g_Ca",
+          "component": "i_Ca",
+          "variable": "g_Ca",
+          "label": "g_Ca",
+          "name": "",
+          "unit": "milliS_per_cm2",
+          "value": 4.0,
+          "minimum": 0.0,
+          "maximum": 8.0,
+          "step": 0.08
+        }
+      ],
+      "series": [
+        {
+          "label": "V",
+          "cellml": "V/V",
+          "sbml": "V"
+        },
+        {
+          "label": "m",
+          "cellml": "i_Ca_m_gate/m",
+          "sbml": "m"
+        },
+        {
+          "label": "n",
+          "cellml": "i_K_n_gate/n",
+          "sbml": "n"
+        }
+      ]
+    },
+    {
+      "id": "2a6",
+      "title": "Noble, 1962: cardiac action potential",
+      "source": "Physiome Model Repository",
+      "url": "https://models.physiomeproject.org/e/2a6",
+      "direction": "cellml2sbml",
+      "file": "simulator/models/2a6.cellml",
+      "timecourse": {
+        "start": 0,
+        "end": 10,
+        "steps": 1000
+      },
+      "parameters": [
+        {
+          "sbml": "Cm",
+          "component": "membrane",
+          "variable": "Cm",
+          "label": "Cm",
+          "name": "",
+          "unit": "microF",
+          "value": 12.0,
+          "minimum": 0.0,
+          "maximum": 24.0,
+          "step": 0.24
+        },
+        {
+          "sbml": "g_L",
+          "component": "leakage_current",
+          "variable": "g_L",
+          "label": "g_L",
+          "name": "",
+          "unit": "microS",
+          "value": 75.0,
+          "minimum": 0.0,
+          "maximum": 150.0,
+          "step": 1.5
+        },
+        {
+          "sbml": "E_L",
+          "component": "leakage_current",
+          "variable": "E_L",
+          "label": "E_L",
+          "name": "",
+          "unit": "millivolt",
+          "value": -60.0,
+          "minimum": -120.0,
+          "maximum": 0.0,
+          "step": 1.2
+        },
+        {
+          "sbml": "g_Na_max",
+          "component": "sodium_channel",
+          "variable": "g_Na_max",
+          "label": "g_Na_max",
+          "name": "",
+          "unit": "microS",
+          "value": 400000.0,
+          "minimum": 0.0,
+          "maximum": 800000.0,
+          "step": 8000.0
+        },
+        {
+          "sbml": "E_Na",
+          "component": "sodium_channel",
+          "variable": "E_Na",
+          "label": "E_Na",
+          "name": "",
+          "unit": "millivolt",
+          "value": 40.0,
+          "minimum": 0.0,
+          "maximum": 80.0,
+          "step": 0.8
+        }
+      ],
+      "series": [
+        {
+          "label": "V",
+          "cellml": "membrane/V",
+          "sbml": "V"
+        },
+        {
+          "label": "h",
+          "cellml": "sodium_channel_h_gate/h",
+          "sbml": "h"
+        },
+        {
+          "label": "m",
+          "cellml": "sodium_channel_m_gate/m",
+          "sbml": "m"
+        },
+        {
+          "label": "n",
+          "cellml": "potassium_channel_n_gate/n",
+          "sbml": "n"
+        }
+      ]
+    },
+    {
+      "id": "59",
+      "title": "Friel, 1995: calcium oscillations",
+      "source": "Physiome Model Repository",
+      "url": "https://models.physiomeproject.org/e/59",
+      "direction": "cellml2sbml",
+      "file": "simulator/models/59.cellml",
+      "timecourse": {
+        "start": 0,
+        "end": 200,
+        "steps": 1000
+      },
+      "parameters": [
+        {
+          "sbml": "kappa_P1",
+          "component": "rate_constants",
+          "variable": "kappa_P1",
+          "label": "kappa_P1",
+          "name": "",
+          "unit": "per_second",
+          "value": 0.132,
+          "minimum": 0.0,
+          "maximum": 0.264,
+          "step": 0.00264
+        },
+        {
+          "sbml": "kappa_P2",
+          "component": "rate_constants",
+          "variable": "kappa_P2",
+          "label": "kappa_P2",
+          "name": "",
+          "unit": "per_second",
+          "value": 3.78,
+          "minimum": 0.0,
+          "maximum": 7.56,
+          "step": 0.0756
+        },
+        {
+          "sbml": "kappa_L2_0",
+          "component": "rate_constants",
+          "variable": "kappa_L2_0",
+          "label": "kappa_L2_0",
+          "name": "",
+          "unit": "per_second",
+          "value": 0.054,
+          "minimum": 0.0,
+          "maximum": 0.108,
+          "step": 0.00108
+        },
+        {
+          "sbml": "kappa_L2_1",
+          "component": "rate_constants",
+          "variable": "kappa_L2_1",
+          "label": "kappa_L2_1",
+          "name": "",
+          "unit": "per_second",
+          "value": 2.4,
+          "minimum": 0.0,
+          "maximum": 4.8,
+          "step": 0.048
+        },
+        {
+          "sbml": "n",
+          "component": "rate_constants",
+          "variable": "n",
+          "label": "n",
+          "name": "",
+          "unit": "",
+          "value": 3.0,
+          "minimum": 0.0,
+          "maximum": 6.0,
+          "step": 0.06
+        },
+        {
+          "sbml": "Ca_o",
+          "component": "cytosolic_calcium",
+          "variable": "Ca_o",
+          "label": "Ca_o",
+          "name": "",
+          "unit": "nanomolar",
+          "value": 2000000.0,
+          "minimum": 0.0,
+          "maximum": 4000000.0,
+          "step": 40000.0
+        }
+      ],
+      "series": [
+        {
+          "label": "Ca_i",
+          "cellml": "cytosolic_calcium/Ca_i",
+          "sbml": "Ca_i"
+        },
+        {
+          "label": "Ca_s",
+          "cellml": "subspace_calcium/Ca_s",
+          "sbml": "Ca_s"
+        }
+      ]
+    },
+    {
+      "id": "3fe",
+      "title": "Goldbeter, Guilmot, 1995: mitotic oscillator",
+      "source": "Physiome Model Repository",
+      "url": "https://models.physiomeproject.org/e/3fe",
+      "direction": "cellml2sbml",
+      "file": "simulator/models/3fe.cellml",
+      "timecourse": {
+        "start": 0,
+        "end": 100,
+        "steps": 1000
+      },
+      "parameters": [
+        {
+          "sbml": "v_i",
+          "component": "C",
+          "variable": "v_i",
+          "label": "v_i",
+          "name": "",
+          "unit": "micromolar_per_minute",
+          "value": 0.05,
+          "minimum": 0.0,
+          "maximum": 0.1,
+          "step": 0.001
+        },
+        {
+          "sbml": "v_d",
+          "component": "C",
+          "variable": "v_d",
+          "label": "v_d",
+          "name": "",
+          "unit": "micromolar_per_minute",
+          "value": 0.25,
+          "minimum": 0.0,
+          "maximum": 0.5,
+          "step": 0.005
+        },
+        {
+          "sbml": "K_d",
+          "component": "C",
+          "variable": "K_d",
+          "label": "K_d",
+          "name": "",
+          "unit": "micromolar",
+          "value": 0.02,
+          "minimum": 0.0,
+          "maximum": 0.04,
+          "step": 0.0004
+        },
+        {
+          "sbml": "k_d",
+          "component": "C",
+          "variable": "k_d",
+          "label": "k_d",
+          "name": "",
+          "unit": "per_minute",
+          "value": 0.01,
+          "minimum": 0.0,
+          "maximum": 0.02,
+          "step": 0.0002
+        },
+        {
+          "sbml": "K_1",
+          "component": "M",
+          "variable": "K_1",
+          "label": "K_1",
+          "name": "",
+          "unit": "per_minute",
+          "value": 0.01,
+          "minimum": 0.0,
+          "maximum": 0.02,
+          "step": 0.0002
+        },
+        {
+          "sbml": "V_2",
+          "component": "M",
+          "variable": "V_2",
+          "label": "V_2",
+          "name": "",
+          "unit": "per_minute",
+          "value": 1.5,
+          "minimum": 0.0,
+          "maximum": 3.0,
+          "step": 0.03
+        }
+      ],
+      "series": [
+        {
+          "label": "C",
+          "cellml": "C/C",
+          "sbml": "C"
+        },
+        {
+          "label": "X",
+          "cellml": "X/X",
+          "sbml": "X"
+        },
+        {
+          "label": "M",
+          "cellml": "M/M",
+          "sbml": "M"
+        }
+      ]
+    },
+    {
+      "id": "4d",
+      "title": "Goldbeter, 1995: circadian oscillations of PER",
+      "source": "Physiome Model Repository",
+      "url": "https://models.physiomeproject.org/e/4d",
+      "direction": "cellml2sbml",
+      "file": "simulator/models/4d.cellml",
+      "timecourse": {
+        "start": 0,
+        "end": 100,
+        "steps": 1000
+      },
+      "parameters": [
+        {
+          "sbml": "Km",
+          "component": "M",
+          "variable": "Km",
+          "label": "Km",
+          "name": "",
+          "unit": "micromolar",
+          "value": 0.5,
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "step": 0.01
+        },
+        {
+          "sbml": "vs",
+          "component": "M",
+          "variable": "vs",
+          "label": "vs",
+          "name": "",
+          "unit": "flux",
+          "value": 0.76,
+          "minimum": 0.0,
+          "maximum": 1.52,
+          "step": 0.0152
+        },
+        {
+          "sbml": "vm",
+          "component": "M",
+          "variable": "vm",
+          "label": "vm",
+          "name": "",
+          "unit": "flux",
+          "value": 0.65,
+          "minimum": 0.0,
+          "maximum": 1.3,
+          "step": 0.013000000000000001
+        },
+        {
+          "sbml": "n",
+          "component": "M",
+          "variable": "n",
+          "label": "n",
+          "name": "",
+          "unit": "",
+          "value": 4.0,
+          "minimum": 0.0,
+          "maximum": 8.0,
+          "step": 0.08
+        },
+        {
+          "sbml": "KI",
+          "component": "M",
+          "variable": "KI",
+          "label": "KI",
+          "name": "",
+          "unit": "micromolar",
+          "value": 1.0,
+          "minimum": 0.0,
+          "maximum": 2.0,
+          "step": 0.02
+        },
+        {
+          "sbml": "ks",
+          "component": "P0",
+          "variable": "ks",
+          "label": "ks",
+          "name": "",
+          "unit": "first_order_rate_constant",
+          "value": 0.38,
+          "minimum": 0.0,
+          "maximum": 0.76,
+          "step": 0.0076
+        }
+      ],
+      "series": [
+        {
+          "label": "M",
+          "cellml": "M/M",
+          "sbml": "M"
+        },
+        {
+          "label": "PN",
+          "cellml": "PN/PN",
+          "sbml": "PN"
+        },
+        {
+          "label": "P1",
+          "cellml": "P1/P1",
+          "sbml": "P1"
+        },
+        {
+          "label": "P0",
+          "cellml": "P0/P0",
+          "sbml": "P0"
+        },
+        {
+          "label": "P2",
+          "cellml": "P2/P2",
+          "sbml": "P2"
+        }
+      ]
+    },
+    {
+      "id": "48",
+      "title": "Elowitz, Leibler, 2000: repressilator",
+      "source": "Physiome Model Repository",
+      "url": "https://models.physiomeproject.org/e/48",
+      "direction": "cellml2sbml",
+      "file": "simulator/models/48.cellml",
+      "timecourse": {
+        "start": 0,
+        "end": 200,
+        "steps": 1000
+      },
+      "parameters": [
+        {
+          "sbml": "n",
+          "component": "parameters",
+          "variable": "n",
+          "label": "n",
+          "name": "",
+          "unit": "",
+          "value": 2.0,
+          "minimum": 0.0,
+          "maximum": 4.0,
+          "step": 0.04
+        },
+        {
+          "sbml": "K_m",
+          "component": "parameters",
+          "variable": "K_m",
+          "label": "K_m",
+          "name": "",
+          "unit": "",
+          "value": 40.0,
+          "minimum": 0.0,
+          "maximum": 80.0,
+          "step": 0.8
+        },
+        {
+          "sbml": "efficiency",
+          "component": "parameters",
+          "variable": "efficiency",
+          "label": "efficiency",
+          "name": "",
+          "unit": "",
+          "value": 20.0,
+          "minimum": 0.0,
+          "maximum": 40.0,
+          "step": 0.4
+        },
+        {
+          "sbml": "mRNA_halflife",
+          "component": "parameters",
+          "variable": "mRNA_halflife",
+          "label": "mRNA_halflife",
+          "name": "",
+          "unit": "minute",
+          "value": 2.0,
+          "minimum": 0.0,
+          "maximum": 4.0,
+          "step": 0.04
+        },
+        {
+          "sbml": "prot_halflife",
+          "component": "parameters",
+          "variable": "prot_halflife",
+          "label": "prot_halflife",
+          "name": "",
+          "unit": "minute",
+          "value": 10.0,
+          "minimum": 0.0,
+          "maximum": 20.0,
+          "step": 0.2
+        },
+        {
+          "sbml": "tps_repr",
+          "component": "parameters",
+          "variable": "tps_repr",
+          "label": "tps_repr",
+          "name": "",
+          "unit": "per_sec",
+          "value": 0.0005,
+          "minimum": 0.0,
+          "maximum": 0.001,
+          "step": 1e-05
+        }
+      ],
+      "series": [
+        {
+          "label": "M_lacl",
+          "cellml": "M_lacl/M_lacl",
+          "sbml": "M_lacl"
+        },
+        {
+          "label": "P_cl",
+          "cellml": "P_cl/P_cl",
+          "sbml": "P_cl"
+        },
+        {
+          "label": "M_tetR",
+          "cellml": "M_tetR/M_tetR",
+          "sbml": "M_tetR"
+        },
+        {
+          "label": "P_lacl",
+          "cellml": "P_lacl/P_lacl",
+          "sbml": "P_lacl"
+        },
+        {
+          "label": "M_cl",
+          "cellml": "M_cl/M_cl",
+          "sbml": "M_cl"
+        },
+        {
+          "label": "P_tetR",
+          "cellml": "P_tetR/P_tetR",
+          "sbml": "P_tetR"
+        }
+      ]
+    }
+  ]
+}
