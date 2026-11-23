@@ -63,13 +63,14 @@ uv run sbml2cellml-overview             # render docs/models.md, docs/benchmarks
 cargo test                              # the tests of crates/cellml over the CellML fixtures
 cargo clippy --all-targets              # lints, denied in the workspace
 cargo fmt --check
-cargo build --release                   # target/release/cellml-info
+cargo build --release                   # target/release/cellml-info, cellml-convert, cellml-write
 cargo clippy -p sbml2cellml-python       # the module is no default member of the workspace
 cargo build --target wasm32-unknown-unknown -p sbml2cellml-cellml
 cargo build --profile wasm --target wasm32-unknown-unknown -p sbml2cellml-wasm   # the module of the online converter
 
 # local only, needs the release build and the physiome cache
 uv run python scripts/cellml_parity.py       # the rust reader against libcellml over the corpus
+uv run python scripts/cellml_write_parity.py # the rust writer against libcellml over the corpus
 uv run python scripts/cellml2sbml_parity.py  # the rust converter against the python converter
 uv run python scripts/convert_benchmark.py   # the two engines over the corpus, writes docs/images/convert_benchmark*.svg
 ```
@@ -341,12 +342,26 @@ uv run python scripts/convert_benchmark.py   # the two engines over the corpus, 
   component without a content and with an `ImportRef`, as libcellml reads
   it; `equivalence_sets` is the union of the connections). It validates
   nothing, resolves no import, does no file system and no network access
-  and builds for `wasm32-unknown-unknown`. `crates/cli` is `cellml-info`,
-  which prints what the reader reads as JSON, and
-  `cellml-convert`, which writes the SBML of a document;
+  and builds for `wasm32-unknown-unknown`. `Model::to_xml` of the same
+  crate writes a model as a CellML 2.0 document (`write.rs`), whatever
+  version it was read from, which the conversion of an SBML model writes
+  as well: the interfaces of CellML 1.0 become the `interface` of a
+  variable, a unit definition of a component becomes one of the model,
+  new base units become a `<units>` without a `<unit>`, the offset of a
+  unit is dropped, a number carries `dimensionless` when it has no units
+  and one which needs an exponent is written in the `e-notation` of
+  MathML (`<cn type="e-notation">1.5<sep/>-7</cn>`, the text `1.5e-7` is
+  no number of CellML), an infinity and a NaN as the elements of MathML,
+  and the metadata of the document (`cmeta:id`, RDF) is not written, as
+  CellML 2.0 has no place for it. `crates/cli` is `cellml-info`,
+  which prints what the reader reads as JSON,
+  `cellml-convert`, which writes the SBML of a document, and
+  `cellml-write`, which writes the document again as CellML 2.0;
   `scripts/cellml_parity.py` compares what the reader reads with
-  libcellml over the models of the Physiome selection (local only, as the
-  other corpus checks). `crates/wasm` is the module of the online
+  libcellml over the models of the Physiome selection and
+  `scripts/cellml_write_parity.py` validates what the writer writes with
+  libcellml and compares what libcellml reads of it with what it reads of
+  the original (local only, as the other corpus checks). `crates/wasm` is the module of the online
   converter of the landing page, built for `wasm32-unknown-unknown` with
   the cargo profile `wasm` (small, `panic = "abort"`): the interface is
   the C ABI of `allocate`, `convert_cellml_to_sbml` and `deallocate`,

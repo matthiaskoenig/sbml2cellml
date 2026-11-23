@@ -15,6 +15,10 @@
 //! [`equivalence_sets`] gives the variables a connection makes one
 //! quantity, which the conversion to SBML needs.
 //!
+//! [`Model::to_xml`] writes a model as a CellML 2.0 document, whatever
+//! version it was read from, so a model which is read and written again is
+//! the same model and the conversion of an SBML model has a writer.
+//!
 //! ```
 //! let text = r#"<model xmlns="http://www.cellml.org/cellml/2.0#" name="decay">
 //!   <component name="main">
@@ -29,6 +33,7 @@
 mod equivalence;
 pub mod math;
 mod model;
+mod write;
 
 pub use equivalence::{VariableRef, equivalence_sets};
 pub use math::{MathError, Node, Operator};
@@ -37,3 +42,4 @@ pub use model::{
     Document, Import, ImportRef, ImportedItem, Interface, Model, ReadError, Reset, Unit, Units,
     Variable, Version, XLINK_NS, read,
 };
+pub use write::{MATHML_NS, number_text};
