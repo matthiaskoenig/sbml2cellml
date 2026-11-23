@@ -53,6 +53,10 @@ jobs:
         # the toolchain and its wasm target come from rust-toolchain.toml,
         # which rustup reads on the first cargo call
         run: uv run python scripts/build_wasm.py
+      - name: Build the assets of the interactive simulation
+        # the compiled repressilator and the runtime of sbmlsim-core, which
+        # the roundtrip page simulates in the browser
+        run: uv run python scripts/build_simulation.py
       - name: Build the documentation
         # the API reference is rendered from the docstrings by mkdocstrings,
         # so the package has to be importable
