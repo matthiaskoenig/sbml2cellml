@@ -14,12 +14,15 @@ libcellml reads in permissive mode (`sbml2cellml.cellml.read_model`).
 
 import json
 import logging
+import os
 import shutil
+import stat
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
+from typing import Any
 
 import requests
 
@@ -184,6 +187,24 @@ def _exposure_or_none(url: str) -> Exposure | PhysiomeError | None:
         return err
 
 
+def remove_tree(path: Path) -> None:
+    """Remove a directory tree, read-only files included.
+
+    git marks the files of its object store read-only, which `os.unlink`
+    refuses on windows (`PermissionError: [WinError 5] Access is denied`),
+    so a file which cannot be removed is made writable and removed again.
+
+    Args:
+        path: the directory to remove.
+    """
+
+    def writable(function: Any, name: str, err: BaseException) -> None:
+        os.chmod(name, stat.S_IWRITE)
+        function(name)
+
+    shutil.rmtree(path, onexc=writable)
+
+
 def _git(arguments: list[str], cwd: Path) -> None:
     """Run a git command in a directory.
 
@@ -240,12 +261,12 @@ def workspace_dir(exposure: Exposure, cache: Path | None = None) -> Path:
     ):
         return root
     if root.is_dir():
-        shutil.rmtree(root)
+        remove_tree(root)
     root.parent.mkdir(parents=True, exist_ok=True)
     logger.info("Cloning workspace %s of exposure %s", exposure.workspace, exposure.id)
     clone = root.with_name(f"{root.name}.clone")
     if clone.is_dir():
-        shutil.rmtree(clone)
+        remove_tree(clone)
     clone.mkdir(parents=True)
     _git(["init", "--quiet", "."], clone)
     _git(["remote", "add", "origin", exposure.workspace], clone)

@@ -323,7 +323,9 @@ uv run sbml2cellml-physiome report      # rerender docs/physiome.md and the figu
   the commit and the CellML file of an exposure, clones the workspace of an
   exposure at that commit into the cache (the repository refuses a shallow
   fetch, so `git init`/`fetch`/`checkout` of the whole workspace, which also
-  gives a model the files it imports) and reads/writes the selection
+  gives a model the files it imports; `remove_tree` makes a read-only file
+  writable before it removes it, since git marks its objects read-only and
+  windows refuses to unlink them) and reads/writes the selection
   `physiome/models.json` (one exposure per workspace, the first 100 by id);
   `cases.py` builds the case with the generic timecourse (0 to 100 time
   units, 1000 steps: the models are stiff and switch their right-hand side

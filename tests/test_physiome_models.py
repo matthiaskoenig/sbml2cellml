@@ -1,6 +1,7 @@
 """Tests of the access to the Physiome Model Repository."""
 
 import json
+import stat
 import subprocess
 from pathlib import Path
 
@@ -18,6 +19,7 @@ from sbml2cellml.physiome.models import (
     physiome_cache,
     query_exposures,
     read_selection,
+    remove_tree,
     workspace_dir,
     write_selection,
 )
@@ -250,6 +252,17 @@ def test_workspace_of_another_commit_is_cloned_again(
         subprocess.run(["git", *arguments], cwd=remote, check=True, capture_output=True)
     second = Exposure(**{**vars(first), "commit": _head(remote)})
     assert model_path(second).read_text(encoding="utf-8") == "<model name='second'/>"
+
+
+def test_remove_tree_removes_a_read_only_file(tmp_path: Path) -> None:
+    """git marks its objects read-only, which windows refuses to unlink."""
+    root = tmp_path / "workspace"
+    (root / "objects").mkdir(parents=True)
+    read_only = root / "objects" / "ab12"
+    read_only.write_text("object", encoding="utf-8")
+    read_only.chmod(stat.S_IREAD)
+    remove_tree(root)
+    assert not root.exists()
 
 
 def test_model_path_of_a_missing_file_raises(
