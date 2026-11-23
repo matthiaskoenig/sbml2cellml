@@ -190,14 +190,14 @@
     }
 
     /**
-     * Give the simulation the CellML document of the panel.
+     * Give the simulation the two documents of the conversion of the panel.
      *
-     * @param {string|null} text The CellML document, `null` when the panel
-     *   has none (yet).
+     * @param {{cellml: string, sbml: string}|null} models The CellML and the
+     *   SBML document, `null` when the panel has none (yet).
      */
-    setModel(text) {
+    setModel(models) {
       if (this.simulator !== null) {
-        this.simulator.setModel(text);
+        this.simulator.setModel(models);
       }
     }
 
@@ -298,10 +298,12 @@
           name: `${stem(name)}${this.what.suffix}`,
           model: result[this.what.key],
         };
-        // the CellML side of the conversion, which libopencor simulates:
-        // the document of the panel, or the model the conversion wrote
+        // the two sides of the conversion, which the two simulators run:
+        // the document of the panel and the model the conversion wrote
         this.setModel(
-          this.what.simulates === "source" ? text : this.converted.model,
+          this.what.simulates === "source"
+            ? { cellml: text, sbml: this.converted.model }
+            : { cellml: this.converted.model, sbml: text },
         );
         this.show(name, result.warnings, seconds);
       } catch (err) {

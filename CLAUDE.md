@@ -568,23 +568,33 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   markup in `docs/index.md`, the example models in `docs/roundtrip/`).
   Without the module the converter says that
   it is not available and the rest of the page works.
-  `docs/javascripts/simulate.js` simulates the CellML side of a conversion
-  in the same page with libopencor (issue #68): the panel of a direction
-  gives its `Simulator` the document it holds (the file of the
-  `cellml2sbml` direction, the model the `sbml2cellml` direction wrote),
-  the module of npm `@opencor/libopencor` is loaded from a CDN when the
-  visitor simulates the first model, pinned to the version of
+  `docs/javascripts/simulate.js` simulates both sides of a conversion in the
+  same page (issue #68): the panel of a direction gives its `Simulator` the
+  two documents it holds (the file and the model the conversion wrote),
+  libopencor runs the CellML one and sbmlsim-core the SBML one, and the two
+  results are drawn as two plots of the same axes with one legend, with the
+  largest difference between them below (`largestDifference`). The modules
+  of npm `@opencor/libopencor` and `sbmlsim-core` are loaded from a CDN when
+  the visitor simulates the first model, pinned to the versions of
   `docs/roundtrip/simulation/versions.json` which
-  `scripts/build_simulation.py` writes, and the states of the result are
-  drawn on a canvas (`SERIES`, the first eight, the labels of the axes with
-  the units of the model, the name of a state with its component when
-  another state has that name as well) with the solver settings of the
-  python package; an item of the legend shows or hides its series, and the
-  axis follows the series which are shown.
-  The SBML side is not simulated there: sbmlsim-core compiles a model ahead
-  of time and its compiler is not part of its JavaScript host, so the
-  browser runs a model which is compiled for it, as the roundtrip page
-  does.
+  `scripts/build_simulation.py` writes, and the compiler of sbmlsim-core
+  (`createCompiler` of `sbmlsim-core/compile`, `compiler.wasm` of
+  sbmlsim-core 0.23.0 and newer, written next to the engine and the math
+  library by the same script) compiles the SBML document in the browser; a
+  release without it leaves the SBML side out, with a line in the status.
+  The states of the CellML result are the series (`SERIES`, the first
+  eight, the labels of the axes with the units of the model, the name of a
+  state with its component when another state has that name as well), which
+  `selectionOf` maps to the selections of sbmlsim-core (the concentration
+  `[species]` unless the variable is an amount, `<species>_amount` the
+  amount of the species), so both plots hold the same quantities; an item of
+  the legend shows or hides its series in both plots, and the axes follow
+  the series which are shown. Both simulations use the solver settings of
+  the python package and scale the absolute tolerance with the smallest
+  initial value of a state (`smallest`), which a model of a small
+  compartment needs: the states of sbmlsim-core are amounts, which are far
+  below the tolerance otherwise, and both simulators are run once more with
+  the scaled tolerance, as the python packages do.
   `docs/javascripts/repressilator.js` is the interactive simulation of the
   roundtrip page (issue #101), which is its first section and loads the two
   simulators when the page opens (`Simulation.load`, a `Try again` button

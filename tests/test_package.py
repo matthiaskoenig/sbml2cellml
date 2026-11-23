@@ -129,12 +129,13 @@ def test_the_scripts_of_the_pages_are_loaded_in_the_order_they_need() -> None:
 
 
 def test_the_panels_of_the_converter_have_a_simulation() -> None:
-    """Both directions of the online converter simulate the CellML model.
+    """Both directions of the online converter simulate both models.
 
     `docs/javascripts/simulate.js` gives every panel of the converter a
     `Simulator`, which needs the markup of the simulation in the page: the
-    button, the end and the steps of the timecourse, the status, the canvas
-    of the plot and its legend.
+    button, the end and the steps of the timecourse, the status, the legend,
+    the canvas of the CellML plot and of the SBML plot and the line of the
+    difference between the two results.
     """
     page = (ROOT / "docs" / "index.md").read_text(encoding="utf-8")
     for direction in ("cellml2sbml", "sbml2cellml"):
@@ -145,9 +146,12 @@ def test_the_panels_of_the_converter_have_a_simulation() -> None:
         'data-role="end"',
         'data-role="steps"',
         'data-role="simulation-status"',
-        'data-role="plot"',
+        'data-role="plots"',
+        'data-role="plot-cellml"',
+        'data-role="plot-sbml"',
+        'data-role="difference"',
         'data-role="legend"',
-        "<canvas></canvas>",
     )
     for role in roles:
         assert page.count(role) == 2, f"{role} is not in both panels"
+    assert page.count("<canvas></canvas>") == 4, "every panel plots both sides"
