@@ -1,13 +1,15 @@
 /* The online converter of the landing page.
  *
- * The conversion runs in the browser: `docs/converter/sbml2cellml.wasm` is
+ * Both conversions run in the browser: `docs/converter/sbml2cellml.wasm` is
  * the crate `crates/wasm` built for `wasm32-unknown-unknown`, which reads a
- * CellML document and writes the SBML of it. Nothing is uploaded, and the
+ * CellML document and writes the SBML of it and reads an SBML document of
+ * any level and writes the CellML of it. Nothing is uploaded, and the
  * module is fetched when the visitor converts the first model.
  *
  * The interface of the module is the C ABI of `allocate`,
- * `convert_cellml_to_sbml` and `deallocate`; the result is the JSON
- * `{"sbml": "...", "warnings": [...]}` or `{"error": "..."}`, see the
+ * `convert_cellml_to_sbml`, `convert_sbml_to_cellml` and `deallocate`; the
+ * result is the JSON `{"sbml": "...", "warnings": [...]}`,
+ * `{"cellml": "...", "warnings": [...]}` or `{"error": "..."}`, see the
  * documentation of the crate.
  */
 
@@ -20,11 +22,25 @@
   /** The lines of the result the page shows. */
   const PREVIEW_LINES = 400;
 
-  /** The module, fetched once. */
-  let instance = null;
+  /** What a direction of the conversion reads and writes. */
+  const DIRECTIONS = {
+    cellml2sbml: {
+      /** The key of the result in the JSON of the module. */
+      key: "sbml",
+      /** The suffix of the file of the result. */
+      suffix: ".xml",
+      /** What the result is, for the status line. */
+      result: "SBML level 3 version 2",
+    },
+    sbml2cellml: {
+      key: "cellml",
+      suffix: ".cellml",
+      result: "CellML 2.0",
+    },
+  };
 
-  /** The conversion of the file which is shown, for the download. */
-  let converted = null;
+  /** The module, fetched once for every direction of the page. */
+  let instance = null;
 
   /**
    * The module of the converter, fetched and instantiated once.
@@ -48,40 +64,68 @@
   }
 
   /**
-   * Convert a CellML document with the module.
+   * Write text into a buffer of the module.
+   *
+   * @param {WebAssembly.Exports} api The exports of the module.
+   * @param {string} text The text.
+   * @returns {{pointer: number, length: number}} The buffer of its UTF-8.
+   */
+  function write(api, text) {
+    const bytes = new TextEncoder().encode(text);
+    const pointer = api.allocate(bytes.length);
+    new Uint8Array(api.memory.buffer, pointer, bytes.length).set(bytes);
+    return { pointer, length: bytes.length };
+  }
+
+  /**
+   * Convert a document with the module.
    *
    * @param {WebAssembly.Instance} wasm The instance of the module.
-   * @param {string} text The CellML document.
-   * @returns {{sbml?: string, warnings?: string[], error?: string}} The result.
+   * @param {string} direction `"cellml2sbml"` or `"sbml2cellml"`.
+   * @param {string} text The document.
+   * @param {string} name The name of the model, for an SBML model without an id.
+   * @returns {{sbml?: string, cellml?: string, warnings?: string[], error?: string}}
+   *   The result of the conversion.
    */
-  function convert(wasm, text) {
+  function convert(wasm, direction, text, name) {
     const api = wasm.exports;
-    const document_ = new TextEncoder().encode(text);
-    const input = api.allocate(document_.length);
-    new Uint8Array(api.memory.buffer, input, document_.length).set(document_);
+    const document_ = write(api, text);
+    const model = direction === "sbml2cellml" ? write(api, name) : null;
     const out = api.allocate(8);
-    api.convert_cellml_to_sbml(input, document_.length, out);
+    if (model === null) {
+      api.convert_cellml_to_sbml(document_.pointer, document_.length, out);
+    } else {
+      api.convert_sbml_to_cellml(
+        document_.pointer,
+        document_.length,
+        model.pointer,
+        model.length,
+        out,
+      );
+    }
     const [pointer, length] = new Uint32Array(api.memory.buffer, out, 2);
     // the bytes are copied out of the memory of the module before it is
     // given back, since another conversion may grow and move that memory
     const json = new TextDecoder().decode(
       new Uint8Array(api.memory.buffer, pointer, length).slice(),
     );
-    api.deallocate(input, document_.length);
+    api.deallocate(document_.pointer, document_.length);
+    if (model !== null) {
+      api.deallocate(model.pointer, model.length);
+    }
     api.deallocate(out, 8);
     api.deallocate(pointer, length);
     return JSON.parse(json);
   }
 
   /**
-   * The name of the SBML file of a CellML file: the stem with `.xml`.
+   * The stem of a file name, without the suffix of a model.
    *
-   * @param {string} name The name of the CellML file.
-   * @returns {string} The name of the SBML file.
+   * @param {string} name The name of the file.
+   * @returns {string} The stem, `model` for a name which is only a suffix.
    */
-  function sbmlName(name) {
-    const stem = name.replace(/\.(cellml|xml)$/i, "");
-    return `${stem || "model"}.xml`;
+  function stem(name) {
+    return name.replace(/\.(cellml|sbml|xml)$/i, "") || "model";
   }
 
   /**
@@ -100,14 +144,17 @@
     return `${(size / (1024 * 1024)).toFixed(1)} MiB`;
   }
 
-  /** The converter of a page, its elements and what they do. */
-  class Converter {
+  /** The panel of one direction, its elements and what they do. */
+  class Panel {
     /**
-     * @param {HTMLElement} root The element of the converter.
+     * @param {HTMLElement} root The element of the panel.
+     * @param {string} url The URL of the module.
      */
-    constructor(root) {
+    constructor(root, url) {
       this.root = root;
-      this.url = root.dataset.module;
+      this.url = url;
+      this.direction = root.dataset.panel;
+      this.what = DIRECTIONS[this.direction];
       this.example = root.dataset.example;
       this.status = root.querySelector("[data-role=status]");
       this.result = root.querySelector("[data-role=result]");
@@ -118,6 +165,8 @@
       this.copy = root.querySelector("[data-action=copy]");
       this.input = root.querySelector("input[type=file]");
       this.drop = root.querySelector("[data-role=drop]");
+      /** The conversion which is shown, for the download and the clipboard. */
+      this.converted = null;
       this.connect();
     }
 
@@ -153,25 +202,6 @@
       }
       this.download.addEventListener("click", () => this.save());
       this.copy.addEventListener("click", () => this.toClipboard());
-      for (const tab of this.root.querySelectorAll("[data-direction]")) {
-        tab.addEventListener("click", () => this.select(tab.dataset.direction));
-      }
-    }
-
-    /**
-     * Show the panel of a direction.
-     *
-     * @param {string} direction The direction of the panel.
-     */
-    select(direction) {
-      for (const tab of this.root.querySelectorAll("[data-direction]")) {
-        const selected = tab.dataset.direction === direction;
-        tab.setAttribute("aria-selected", String(selected));
-        tab.classList.toggle("converter__tab--active", selected);
-      }
-      for (const panel of this.root.querySelectorAll("[data-panel]")) {
-        panel.hidden = panel.dataset.panel !== direction;
-      }
     }
 
     /**
@@ -206,7 +236,7 @@
      * @param {File|string} source The file or its text.
      */
     async run(name, source) {
-      converted = null;
+      this.converted = null;
       this.result.hidden = true;
       this.warnings.hidden = true;
       this.download.disabled = true;
@@ -226,14 +256,17 @@
           source instanceof File ? await source.text() : String(source);
         const wasm = await load(this.url);
         const start = performance.now();
-        const result = convert(wasm, text);
+        const result = convert(wasm, this.direction, text, stem(name));
         const seconds = performance.now() - start;
         if (result.error) {
           this.say(`${name} was not converted: ${result.error}`, "error");
           return;
         }
-        converted = { name: sbmlName(name), sbml: result.sbml };
-        this.show(name, result, seconds);
+        this.converted = {
+          name: `${stem(name)}${this.what.suffix}`,
+          model: result[this.what.key],
+        };
+        this.show(name, result.warnings, seconds);
       } catch (err) {
         this.say(
           `${name} was not converted: ${String(err.message || err)}`,
@@ -243,14 +276,14 @@
     }
 
     /**
-     * Show the SBML of a conversion and its warnings.
+     * Show the model of a conversion and its warnings.
      *
      * @param {string} name The name of the file.
-     * @param {{sbml: string, warnings: string[]}} result The conversion.
+     * @param {string[]} warnings The warnings of the conversion.
      * @param {number} seconds The time of the conversion in milliseconds.
      */
-    show(name, result, seconds) {
-      const lines = result.sbml.split("\n");
+    show(name, warnings, seconds) {
+      const lines = this.converted.model.split("\n");
       this.code.textContent = lines.slice(0, PREVIEW_LINES).join("\n");
       if (lines.length > PREVIEW_LINES) {
         this.code.textContent += `\n... ${
@@ -260,55 +293,89 @@
       this.result.hidden = false;
       this.download.disabled = false;
       this.copy.disabled = false;
-      this.download.textContent = `Download ${converted.name}`;
-      if (result.warnings.length > 0) {
+      this.download.textContent = `Download ${this.converted.name}`;
+      if (warnings.length > 0) {
         this.warningList.textContent = "";
-        for (const warning of result.warnings) {
+        for (const warning of warnings) {
           const item = document.createElement("li");
           item.textContent = warning;
           this.warningList.append(item);
         }
         this.warnings.hidden = false;
         this.warnings.querySelector("summary").textContent =
-          result.warnings.length === 1
+          warnings.length === 1
             ? "1 warning of the conversion"
-            : `${result.warnings.length} warnings of the conversion`;
+            : `${warnings.length} warnings of the conversion`;
       }
-      const size = formatSize(new Blob([result.sbml]).size);
+      const size = formatSize(new Blob([this.converted.model]).size);
       this.say(
-        `${name} was converted to SBML level 3 version 2 in ` +
+        `${name} was converted to ${this.what.result} in ` +
           `${seconds.toFixed(seconds < 10 ? 1 : 0)} ms, ${size}.`,
         "success",
       );
     }
 
-    /** Save the SBML of the conversion as a file. */
+    /** Save the model of the conversion as a file. */
     save() {
-      if (converted === null) {
+      if (this.converted === null) {
         return;
       }
-      const blob = new Blob([converted.sbml], { type: "application/xml" });
+      const blob = new Blob([this.converted.model], {
+        type: "application/xml",
+      });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = converted.name;
+      link.download = this.converted.name;
       link.click();
       URL.revokeObjectURL(url);
     }
 
-    /** Write the SBML of the conversion to the clipboard. */
+    /** Write the model of the conversion to the clipboard. */
     async toClipboard() {
-      if (converted === null) {
+      if (this.converted === null) {
         return;
       }
       try {
-        await navigator.clipboard.writeText(converted.sbml);
+        await navigator.clipboard.writeText(this.converted.model);
         this.copy.textContent = "Copied";
         setTimeout(() => {
           this.copy.textContent = "Copy";
         }, 2000);
       } catch (err) {
         this.say(`The clipboard is not available: ${err.message}`, "error");
+      }
+    }
+  }
+
+  /** The converter of a page: the tabs of the directions and their panels. */
+  class Converter {
+    /**
+     * @param {HTMLElement} root The element of the converter.
+     */
+    constructor(root) {
+      this.root = root;
+      for (const panel of root.querySelectorAll("[data-panel]")) {
+        new Panel(panel, root.dataset.module);
+      }
+      for (const tab of root.querySelectorAll("[data-direction]")) {
+        tab.addEventListener("click", () => this.select(tab.dataset.direction));
+      }
+    }
+
+    /**
+     * Show the panel of a direction.
+     *
+     * @param {string} direction The direction of the panel.
+     */
+    select(direction) {
+      for (const tab of this.root.querySelectorAll("[data-direction]")) {
+        const selected = tab.dataset.direction === direction;
+        tab.setAttribute("aria-selected", String(selected));
+        tab.classList.toggle("converter__tab--active", selected);
+      }
+      for (const panel of this.root.querySelectorAll("[data-panel]")) {
+        panel.hidden = panel.dataset.panel !== direction;
       }
     }
   }

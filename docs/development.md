@@ -188,7 +188,8 @@ uv run zensical serve
 ```
 
 The [online converter](index.md#online-converter) of the landing page needs the
-WebAssembly module of the crate `crates/wasm`, which is not committed. The
+WebAssembly module of the crate `crates/wasm`, which converts in both
+directions and is not committed. The
 script builds it with cargo and copies it to `docs/converter/`, where the site
 build picks it up; the `documentation` workflow runs it before the build:
 
@@ -322,7 +323,7 @@ cargo clippy --all-targets  # the lints, denied in the workspace
 cargo clippy -p sbml2cellml-python   # the lints of the python module
 cargo fmt --check           # the formatting
 cargo build --release       # the cellml-info, cellml-convert, cellml-write and sbml-convert commands in target/release
-cargo build --target wasm32-unknown-unknown -p sbml2cellml-cellml -p sbml2cellml-convert
+cargo build --target wasm32-unknown-unknown -p sbml2cellml-cellml -p sbml2cellml-convert -p sbml2cellml-tocellml
 
 target/release/cellml-convert model.cellml            # writes model.xml
 target/release/cellml-convert -o - model.cellml       # to the standard output
@@ -358,6 +359,8 @@ Of the 102 documents of the corpus, the rust converter converts 92, and libsbml 
 The resets of a model become the events of SBML, as they do in the python converter: the trigger is the equality of the test variable and the test value, or the condition of a test variable which is `piecewise(1, condition, 0)`, which is how the conversion of an SBML event writes it, and the priority is the negated order.
 
 What the rust converter does not do yet: resolve the imports of a document, write the metadata of the CellML elements and write a hierarchical model. The python engine converts such a model, and the imports are flattened with libcellml before the rust converter reads the document.
+
+`crates/wasm` is the module of the online converter, built for `wasm32-unknown-unknown` with the cargo profile `wasm` (small, without the unwinding of a panic). Its interface is the C ABI of `allocate`, `convert_cellml_to_sbml`, `convert_sbml_to_cellml` and `deallocate`, so the module needs no binding generator and no tool beyond cargo: every string crosses it as the bytes of its UTF-8 in the memory of the module, and a conversion gives the JSON `{"sbml": ..., "warnings": [...]}`, `{"cellml": ..., "warnings": [...]}` or `{"error": ...}`. `crates/wasm/tests/interface.rs` drives that ABI on the host, as the page does; `docs/javascripts/converter.js` is the page, one `Panel` per direction with its own file, drop zone, example, result and warnings, and the module is fetched once for both.
 
 `scripts/convert_benchmark.py` measures the two engines of a direction over its corpus, three runs per model and engine, the fastest of the three:
 

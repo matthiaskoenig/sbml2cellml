@@ -12,7 +12,7 @@ Features include
 - names, notes, SBO terms, annotations and the model history as RDF next to the CellML model, restored in the conversion back to SBML
 - conversion of CellML models to SBML: parameters with rules, unit definitions and units of numbers, resets as events, imports resolved, CellML 1.0 and 1.1 read in the permissive mode of libcellml, the components optionally as `comp` submodels (`--hierarchical`)
 - both conversions in rust (`crates/`, the module `sbml2cellml._rust`), which convert a model without libsbml and without libcellml and run in a browser; the conversion of a CellML model is about 48 times faster than the one through libcellml and converts models the analyser of libcellml refuses; `--engine python` converts with the libraries instead
-- the online converter of the documentation, which converts a CellML model to SBML in the browser with a WebAssembly module of the rust converter, without an upload ([online converter](https://matthiaskoenig.github.io/sbml2cellml/#online-converter))
+- the online converter of the documentation, which converts a model in either direction in the browser with a WebAssembly module of the rust converters, without an upload ([online converter](https://matthiaskoenig.github.io/sbml2cellml/#online-converter))
 - conversion of a hierarchical SBML model: the `comp` submodels are flattened before the model becomes CellML
 - validation of the result with libcellml
 - timecourse simulation of the SBML with sbmlsim-core and of the CellML with libopencor, both optional

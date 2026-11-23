@@ -63,3 +63,6 @@ def test_roundtrip_example_matches_the_documentation(
         "repressilator_roundtrip.xml",
     ):
         assert (results / name).read_text() == (documented / name).read_text()
+    # the SBML model of the example is the one of the online converter
+    source = EXAMPLES_DIR / "models" / "repressilator.xml"
+    assert source.read_text() == (documented / "repressilator.xml").read_text()

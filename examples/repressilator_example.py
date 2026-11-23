@@ -198,7 +198,15 @@ def main(update_docs: bool = False) -> None:
     if update_docs:
         (DOCS_DIR / "roundtrip").mkdir(exist_ok=True)
         rdf_path = cellml_path.with_suffix(".rdf")
-        for path in (cellml_path, rdf_path, roundtrip_path, differences_path):
+        # the SBML model is the example of the online converter of the
+        # landing page, which converts it to CellML in the browser
+        for path in (
+            sbml_path,
+            cellml_path,
+            rdf_path,
+            roundtrip_path,
+            differences_path,
+        ):
             shutil.copy(path, DOCS_DIR / "roundtrip" / path.name)
         for name, path in figures.items():
             shutil.copy(path, DOCS_DIR / "images" / name)
