@@ -14,8 +14,8 @@ from sbml2cellml.overview.checks import (
 )
 from sbml2cellml.overview.cli import main
 from sbml2cellml.overview.report import (
+    FIGURES,
     MEDIANS_FIGURE,
-    SCATTER_FIGURE,
     render_benchmarks,
     render_models,
     write_benchmarks,
@@ -188,18 +188,40 @@ def test_render_models_lists_the_models_which_do_not_run() -> None:
 def test_render_benchmarks_compares_the_two_simulators() -> None:
     text = render_benchmarks(runs())
     assert (
-        f"![Integration time of libopencor against sbmlsim-core]({SCATTER_FIGURE}"
-        in text
+        "![Integration time of libopencor against sbmlsim-core]"
+        f"({FIGURES['integration']}" in text
     )
     assert dark_path(Path(MEDIANS_FIGURE)).name in text
     # only the model whose converted model reproduces the expected results
-    assert "| [BioModels](biomodels.md) | 1 | 20 ms | 10 ms | 0.50 | 1 of 1 |" in text
+    assert (
+        "| [BioModels](biomodels.md) | 1 | 20 ms | 10 ms | 0.50 | 1 of 1 | "
+        "20 ms | 10 ms |" in text
+    )
     assert (
         "| [Physiome Model Repository](physiome.md) | 1 | 20 ms | 10 ms | 0.50 |"
         in text
     )
+
+
+def test_render_benchmarks_has_a_section_per_phase() -> None:
+    text = render_benchmarks(runs())
+    for heading, figure in (
+        ("## Setup", FIGURES["setup"]),
+        ("## Integration", FIGURES["integration"]),
+        ("## Total", FIGURES["total"]),
+    ):
+        assert heading in text
+        assert f"({figure}#only-light)" in text
     # the setup of the two simulators, 0.2 s and 0.4 s per model
-    assert "| [BioModels](biomodels.md) | 1 | 200 ms | 400 ms | 2.00 |" in text
+    assert (
+        "| [BioModels](biomodels.md) | 1 | 200 ms | 400 ms | 2.00 | 0 of 1 | "
+        "200 ms | 400 ms |" in text
+    )
+    # the setup and the integration of a model together
+    assert (
+        "| [BioModels](biomodels.md) | 1 | 220 ms | 410 ms | 1.86 | 0 of 1 | "
+        "220 ms | 410 ms |" in text
+    )
 
 
 def test_render_benchmarks_lists_the_slowest_models() -> None:
@@ -224,7 +246,7 @@ def test_write_benchmarks_writes_both_figures(tmp_path: Path) -> None:
     page = tmp_path / "benchmarks.md"
     write_benchmarks(runs(), page)
     assert page.is_file()
-    for figure in (SCATTER_FIGURE, MEDIANS_FIGURE):
+    for figure in (*FIGURES.values(), MEDIANS_FIGURE):
         light = tmp_path / figure
         assert light.is_file()
         assert dark_path(light).is_file()
@@ -266,7 +288,8 @@ def test_cli_writes_both_pages(
     assert code == 0
     assert benchmarks.is_file()
     assert models.is_file()
-    assert (tmp_path / "docs" / SCATTER_FIGURE).is_file()
+    for figure in (*FIGURES.values(), MEDIANS_FIGURE):
+        assert (tmp_path / "docs" / figure).is_file()
     assert "2 checks (biomodels, physiome)" in capsys.readouterr().out
 
 

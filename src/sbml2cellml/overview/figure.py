@@ -1,12 +1,13 @@
 """Figures which compare the two simulators over the checks.
 
-`render_scatter` draws the integration time of libopencor against the
-integration time of sbmlsim-core, one point per model and one color and
-marker per check, so a point below the diagonal is a model libopencor
-integrates faster. `render_medians` draws the median setup and the median
-integration time of the two simulators per check. Every figure is written
-twice, for light and for dark backgrounds, and is transparent, as the
-figures of the reports (`sbml2cellml.testsuite.figure`).
+`render_scatter` draws the wall time of libopencor against the wall time of
+sbmlsim-core, one point per model and one color and marker per check, so a
+point below the diagonal is a model libopencor is faster for; it draws one
+of the three phases, the setup of the simulator, the integration or the two
+together. `render_medians` draws the median of all three phases per check.
+Every figure is written twice, for light and for dark backgrounds, and is
+transparent, as the figures of the reports
+(`sbml2cellml.testsuite.figure`).
 """
 
 from pathlib import Path
@@ -21,6 +22,7 @@ from sbml2cellml.testsuite.figure import (
     duration_text,
     setup_pairs,
     timing_pairs,
+    total_pairs,
     write_variants,
 )
 
@@ -30,10 +32,20 @@ MARKERS = ("o", "^", "s")
 #: the two simulators, with the index of their color in `Theme.fills` and
 #: the index of their time in a pair of `timing_pairs`
 SIMULATORS = (("libopencor", 0, 1), ("sbmlsim-core", 1, 0))
+#: the phases of a simulation the figures compare, in the order of the
+#: panels of `render_medians`: the function which gives the seconds of the
+#: two simulators per model, and the start of the title of the scatter
+PHASES = {
+    "setup": (setup_pairs, "Setup time"),
+    "integration": (timing_pairs, "Integration time"),
+    "total": (total_pairs, "Total time"),
+}
 
 
-def render_scatter(runs: list[Run], dark: bool = False) -> Figure:
-    """Render the integration times of the two simulators, one point per model.
+def render_scatter(
+    runs: list[Run], phase: str = "integration", dark: bool = False
+) -> Figure:
+    """Render the wall times of the two simulators, one point per model.
 
     Only the models whose converted model reproduces the expected results
     are shown (`sbml2cellml.testsuite.figure.timing_pairs`): the two
@@ -41,13 +53,16 @@ def render_scatter(runs: list[Run], dark: bool = False) -> Figure:
 
     Args:
         runs: the runs of the checks.
+        phase: the phase of a simulation to compare, a key of `PHASES`:
+            `setup`, `integration` or `total`, the two together.
         dark: whether the figure is for a dark background.
 
     Returns:
         The figure with a transparent background.
     """
     theme = DARK if dark else LIGHT
-    pairs = {run.check.name: timing_pairs(run.result) for run in runs}
+    seconds, heading = PHASES[phase]
+    pairs = {run.check.name: seconds(run.result) for run in runs}
     values = [
         value for check in pairs.values() for pair in check.values() for value in pair
     ]
@@ -101,7 +116,7 @@ def render_scatter(runs: list[Run], dark: bool = False) -> Figure:
     )
     total = sum(len(check) for check in pairs.values())
     ax.set_title(
-        f"Integration time: libopencor faster for {faster} of {total}",
+        f"{heading}: libopencor faster for {faster} of {total}",
         loc="left",
         color=theme.text,
         fontsize=12,
@@ -132,10 +147,10 @@ def render_scatter(runs: list[Run], dark: bool = False) -> Figure:
 
 
 def render_medians(runs: list[Run], dark: bool = False) -> Figure:
-    """Render the median setup and integration time of the two simulators.
+    """Render the median wall time of the two simulators per phase.
 
-    One panel for the setup and one for the integration, in both of them one
-    pair of bars per check, over the models both simulators ran
+    One panel per phase of `PHASES`, in every one of them one pair of bars
+    per check, over the models both simulators ran
     (`sbml2cellml.testsuite.figure.timing_pairs`).
 
     Args:
@@ -146,9 +161,9 @@ def render_medians(runs: list[Run], dark: bool = False) -> Figure:
         The figure with a transparent background.
     """
     theme = DARK if dark else LIGHT
-    phases = (
-        ("setup", [setup_pairs(run.result) for run in runs]),
-        ("integration", [timing_pairs(run.result) for run in runs]),
+    phases = tuple(
+        (phase, [seconds(run.result) for run in runs])
+        for phase, (seconds, _) in PHASES.items()
     )
     values = [
         median([pair[index] for pair in check.values()])
@@ -161,9 +176,9 @@ def render_medians(runs: list[Run], dark: bool = False) -> Figure:
     # room for the value at the end of a bar
     high = max(values) * 6.0 if values else 1.0
 
-    fig = Figure(figsize=(8.6, 0.9 * (len(runs) or 1) + 1.9), layout="constrained")
+    fig = Figure(figsize=(11.4, 0.9 * (len(runs) or 1) + 1.9), layout="constrained")
     fig.patch.set_alpha(0.0)
-    axes = fig.subplots(1, 2, sharey=True)
+    axes = fig.subplots(1, len(phases), sharey=True)
     for ax, (phase, checks) in zip(axes, phases, strict=True):
         ax.patch.set_alpha(0.0)
         for offset, (simulator, color, index) in zip(
@@ -209,7 +224,7 @@ def render_medians(runs: list[Run], dark: bool = False) -> Figure:
     # the axes share the y axis, so one inversion puts the first check on top
     axes[0].invert_yaxis()
     axes[0].set_title(
-        "Wall time of the two simulators per check",
+        "Median wall time of the two simulators per check",
         loc="left",
         color=theme.text,
         fontsize=12,
@@ -231,16 +246,19 @@ def render_medians(runs: list[Run], dark: bool = False) -> Figure:
     return fig
 
 
-def write_scatter_figures(runs: list[Run], path: Path) -> None:
-    """Write the scatter of the integration times for light and dark backgrounds.
+def write_scatter_figures(
+    runs: list[Run], path: Path, phase: str = "integration"
+) -> None:
+    """Write the scatter of a phase for light and for dark backgrounds.
 
     Args:
         runs: the runs of the checks.
         path: SVG file of the figure for light backgrounds, overwritten; the
             figure for dark backgrounds goes next to it
             (`sbml2cellml.testsuite.figure.dark_path`).
+        phase: the phase of a simulation, a key of `PHASES`.
     """
-    write_variants(render_scatter, path, runs=runs)
+    write_variants(render_scatter, path, runs=runs, phase=phase)
 
 
 def write_median_figures(runs: list[Run], path: Path) -> None:

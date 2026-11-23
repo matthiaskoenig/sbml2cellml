@@ -265,6 +265,24 @@ def setup_pairs(result: SuiteResult) -> dict[str, tuple[float, float]]:
     }
 
 
+def total_pairs(result: SuiteResult) -> dict[str, tuple[float, float]]:
+    """Setup and integration time of the two simulators, together.
+
+    Args:
+        result: a suite run.
+
+    Returns:
+        The setup plus the integration seconds of the `sbmlsim` and of the
+        `libopencor` stage by case id, for the cases of `setup_pairs`: what
+        a simulator costs for a model which is simulated once.
+    """
+    integration = timing_pairs(result)
+    return {
+        cid: (setup[0] + integration[cid][0], setup[1] + integration[cid][1])
+        for cid, setup in setup_pairs(result).items()
+    }
+
+
 def _milliseconds(seconds: float) -> str:
     """A wall time in milliseconds, as the figures write it.
 

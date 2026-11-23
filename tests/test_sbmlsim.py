@@ -202,8 +202,10 @@ def test_run_timecourse_fills_the_timings(tmp_path: Path) -> None:
     assert timings["simulate"] > 0.0
     cached: dict[str, float] = {}
     run_timecourse(path, ["S1"], end=1.0, steps=10, timings=cached)
-    # the second run takes the model from the cache of `load_model`
-    assert cached["setup"] < timings["setup"]
+    assert sorted(cached) == ["setup", "simulate"]
+    # the second run takes the model from the cache of `load_model`, which
+    # `test_load_model_caches_the_compiled_model` asserts; the wall time of
+    # a cache hit is too small to compare with a compilation under load
 
 
 def test_run_timecourse_warmup_keeps_the_result(tmp_path: Path) -> None:
