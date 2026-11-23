@@ -1,0 +1,22 @@
+[package]
+name = "sbml2cellml-tocellml"
+description = "Conversion of an SBML model to a CellML 2.0 model"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+publish = false
+
+[lib]
+name = "tocellml"
+
+[dependencies]
+cellml = { package = "sbml2cellml-cellml", path = "../cellml" }
+# the reader of every level and version of SBML core; the crate is not
+# published, so it is pinned to a commit of the default branch and bumped
+# when the conversion needs something new of it
+sbml = { package = "sbmlsim-sbml", git = "https://github.com/matthiaskoenig/sbmlsim-core", rev = "37427c9" }
+
+[lints]
+workspace = true

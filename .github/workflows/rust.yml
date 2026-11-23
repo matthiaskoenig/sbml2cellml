@@ -49,4 +49,4 @@ jobs:
       # online converter is built with its own profile by
       # `scripts/build_wasm.py` in the `documentation` workflow
       - name: Build for the web
-        run: cargo build --locked --target wasm32-unknown-unknown -p sbml2cellml-cellml -p sbml2cellml-convert -p sbml2cellml-wasm
+        run: cargo build --locked --target wasm32-unknown-unknown -p sbml2cellml-cellml -p sbml2cellml-convert -p sbml2cellml-tocellml -p sbml2cellml-wasm
