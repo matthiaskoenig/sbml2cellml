@@ -27,6 +27,8 @@ pub struct Model {
     pub initial_assignments: Vec<InitialAssignment>,
     /// The rules of the equations.
     pub rules: Vec<Rule>,
+    /// The events of the resets of the CellML model.
+    pub events: Vec<Event>,
 }
 
 /// A unit definition, the units of the SBML model it references expanded to
@@ -100,6 +102,40 @@ pub enum Rule {
         /// The residual.
         math: Math,
     },
+}
+
+/// An event of the model, one per reset of the CellML model.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Event {
+    /// The id.
+    pub id: String,
+    /// When the event fires.
+    pub trigger: Trigger,
+    /// Which event fires first when several fire at the same time, the
+    /// highest first; the order of a reset, negated.
+    pub priority: Option<Math>,
+    /// What it assigns.
+    pub assignments: Vec<EventAssignment>,
+}
+
+/// The trigger of an event.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Trigger {
+    /// Whether the trigger stays true until the event fires.
+    pub persistent: bool,
+    /// Whether the trigger is taken to be true before the simulation.
+    pub initial_value: bool,
+    /// The condition.
+    pub math: Math,
+}
+
+/// What an event assigns when it fires.
+#[derive(Debug, Clone, PartialEq)]
+pub struct EventAssignment {
+    /// The id of the parameter it sets.
+    pub variable: String,
+    /// The value.
+    pub math: Math,
 }
 
 /// A base unit of SBML level 3, the `kind` of a unit.

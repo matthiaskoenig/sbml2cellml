@@ -23,7 +23,7 @@ The share of the models which pass a stage, the models which pass every stage an
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | [SBML test suite](testsuite.md) | 1658 | 99.9% | 97.1% | 69.5% | 97.1% | 79.6% | 1153 (69.5%) | 165 |
 | [BioModels](biomodels.md) | 1060 | 99.3% | 99.3% | 88.6% | 99.3% | 94.6% | 939 (88.6%) | 15 |
-| [Physiome Model Repository](physiome.md) | 66 | 93.9% | 93.9% | 87.9% | 93.9% | 90.9% | 57 (86.4%) | 34 |
+| [Physiome Model Repository](physiome.md) | 66 | 93.9% | 93.9% | 86.4% | 93.9% | 90.9% | 56 (84.8%) | 34 |
 
 ## BioModels
 
@@ -1094,7 +1094,7 @@ The share of the models which pass a stage, the models which pass every stage an
 
 ## Physiome Model Repository
 
-57 of the 66 models work, the errors of the others are in the [report](physiome.md).
+56 of the 66 models work, the errors of the others are in the [report](physiome.md).
 
 | model | name | libopencor | cellml2sbml | sbmlsim | sbml2cellml | roundtrip | works |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -1142,7 +1142,7 @@ The share of the models which pass a stage, the models which pass every stage an
 | [47](https://models.physiomeproject.org/e/47) | Bornheimer, Maurya, Farquhar, Subramaniam, 2004 | pass | pass | pass | pass | pass | yes |
 | [47f](https://models.physiomeproject.org/e/47f) | Kholodenko, Demin, Moehren, Hoek, 1999 | pass | pass | pass | pass | pass | yes |
 | [48](https://models.physiomeproject.org/e/48) | Elowitz, Leibler, 2000 | pass | pass | pass | pass | pass | yes |
-| [48a](https://models.physiomeproject.org/e/48a) | Computational analysis of the human sinus node action potential: model development and effects of mutations | pass | pass | pass | pass | pass | yes |
+| [48a](https://models.physiomeproject.org/e/48a) | Computational analysis of the human sinus node action potential: model development and effects of mutations | pass | pass | fail | pass | pass | no |
 | [4a7](https://models.physiomeproject.org/e/4a7) | A model of intracellular pH control | pass | pass | pass | pass | pass | yes |
 | [4bc](https://models.physiomeproject.org/e/4bc) | Varela - Canine Atrial Cell Models | pass | pass | pass | pass | pass | yes |
 | [4d](https://models.physiomeproject.org/e/4d) | Goldbeter, 1995 | pass | pass | pass | pass | pass | yes |

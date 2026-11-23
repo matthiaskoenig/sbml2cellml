@@ -1,5 +1,14 @@
 """Conversion of CellML 2.0 models to SBML level 3 version 2.
 
+The conversion runs in rust (`sbml2cellml.rust`, the crates of `crates/`),
+which reads the document and writes the SBML itself, and in python through
+libcellml, which this module implements; `ENGINES` names the two and
+`convert_cellml2sbml` takes the one to use, `"auto"` by default: the rust
+engine, and the python engine for what rust does not do (the metadata of
+the elements and the hierarchical conversion). The document of a model
+whose components are imported is flattened with libcellml before the rust
+converter reads it.
+
 The libcellml analyser classifies the variables and equations of the model
 and resolves the connections between components; the converter renders its
 model as SBML: every variable is a parameter, states get rate rules,
@@ -15,12 +24,12 @@ definitions and the model.
 import logging
 from collections.abc import Callable, Iterator
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal, get_args
 
 import libcellml
 import libsbml
 
-from sbml2cellml import cellml, sbml
+from sbml2cellml import cellml, rust, sbml
 from sbml2cellml.metadata import Record, apply_metadata, read_metadata
 from sbml2cellml.sbml import SBMLValidationError
 from sbml2cellml.sbmlmath import (
@@ -69,6 +78,14 @@ METADATA_SUFFIX = ".rdf"
 #: name of the SBML package for the hierarchical model composition
 COMP_PACKAGE = "comp"
 
+#: engine of the conversion: the rust crates, the python code of this
+#: module through libcellml, or `"auto"`, which is the rust engine for
+#: everything it covers and the python engine for the rest
+Engine = Literal["auto", "rust", "python"]
+
+#: the values of `Engine`, for the command line
+ENGINES: tuple[str, ...] = get_args(Engine)
+
 
 def convert_cellml2sbml(
     cellml_path: Path,
@@ -76,6 +93,7 @@ def convert_cellml2sbml(
     validate: bool = True,
     metadata: bool = True,
     hierarchical: bool = False,
+    engine: Engine = "auto",
 ) -> libsbml.SBMLDocument:
     """Convert a CellML file to an SBML document.
 
@@ -89,6 +107,12 @@ def convert_cellml2sbml(
         hierarchical: write every component as a submodel of the
             hierarchical model composition package (`comp`,
             `build_hierarchical_document`) instead of one flat model.
+        engine: `"rust"` converts with the rust crates
+            (`sbml2cellml.rust`), `"python"` with libcellml and the code of
+            this module, `"auto"` (the default) with rust where it covers
+            the conversion, which the metadata of the elements and the
+            hierarchical conversion are not part of, and with python for
+            the rest and for a model the rust converter refuses.
 
     Returns:
         The SBML document.
@@ -105,24 +129,32 @@ def convert_cellml2sbml(
         raise CellML2SBMLConversionError(
             f"CellML file does not exist: '{cellml_path}'."
         )
-    model = read_cellml_model(cellml_path)
-    logger.info("Converting CellML model '%s' from '%s'", model.name(), cellml_path)
-    analyser_model = analyse_model(model)
-    metadata_path = cellml_path.with_suffix(METADATA_SUFFIX)
-    records: dict[str, Record] = {}
-    if metadata and metadata_path.is_file():
-        try:
-            records = read_metadata(metadata_path, cellml_path.name)
-        except ValueError as err:
-            raise CellML2SBMLConversionError(str(err)) from err
-        logger.info("Metadata of %d elements in '%s'", len(records), metadata_path)
-    build = build_hierarchical_document if hierarchical else build_document
-    try:
-        doc = build(model, analyser_model, records)
-    except (MathConversionError, UnitsConversionError) as err:
-        raise CellML2SBMLConversionError(
-            f"CellML model '{model.name()}' cannot be converted: {err}"
-        ) from err
+    records = _read_records(cellml_path) if metadata else {}
+    doc = None
+    if engine != "python":
+        reason = _without_rust(records, hierarchical)
+        if reason is not None and engine == "rust":
+            raise CellML2SBMLConversionError(
+                f"The rust engine cannot convert '{cellml_path}': {reason}"
+            )
+        if reason is not None:
+            logger.info("The python engine converts '%s': %s", cellml_path, reason)
+        else:
+            try:
+                doc = _convert_with_rust(cellml_path)
+            except rust.RustError as err:
+                if engine == "rust":
+                    raise CellML2SBMLConversionError(
+                        f"CellML model of '{cellml_path}' cannot be converted "
+                        f"by the rust engine: {err}"
+                    ) from err
+                logger.warning(
+                    "The rust engine refused '%s', converting with python: %s",
+                    cellml_path,
+                    err,
+                )
+    if doc is None:
+        doc = _convert_with_python(cellml_path, records, hierarchical)
 
     if validate:
         errors = sbml.validate_document(doc)
@@ -135,6 +167,114 @@ def convert_cellml2sbml(
         sbml.write_document(doc, sbml_path)
         logger.info("SBML written to '%s'", sbml_path)
     return doc
+
+
+def _read_records(cellml_path: Path) -> dict[str, Record]:
+    """The metadata of the RDF file next to the CellML file, if it exists.
+
+    Args:
+        cellml_path: path of the CellML file.
+
+    Returns:
+        The record of every element, empty without the file.
+
+    Raises:
+        CellML2SBMLConversionError: if the RDF cannot be read.
+    """
+    metadata_path = cellml_path.with_suffix(METADATA_SUFFIX)
+    if not metadata_path.is_file():
+        return {}
+    try:
+        records = read_metadata(metadata_path, cellml_path.name)
+    except ValueError as err:
+        raise CellML2SBMLConversionError(str(err)) from err
+    logger.info("Metadata of %d elements in '%s'", len(records), metadata_path)
+    return records
+
+
+def _without_rust(records: dict[str, Record], hierarchical: bool) -> str | None:
+    """Why the rust engine cannot convert a model, or `None` when it can.
+
+    Args:
+        records: the metadata of the elements, which the rust converter
+            does not write.
+        hierarchical: whether the components become submodels of `comp`,
+            which the rust converter does not write either.
+
+    Returns:
+        What the rust engine does not cover, `None` when it covers the
+        conversion.
+    """
+    if hierarchical:
+        return "the hierarchical conversion is implemented in python only"
+    if records:
+        return f"the metadata of {len(records)} elements is applied by python"
+    return None
+
+
+def _convert_with_rust(cellml_path: Path) -> libsbml.SBMLDocument:
+    """Convert a CellML file with the rust converter.
+
+    The document is handed over as it is, unless it imports a component or
+    units: libcellml flattens such a model first, since the rust crates
+    resolve no import and read no file.
+
+    Args:
+        cellml_path: path of the CellML file.
+
+    Returns:
+        The SBML document, read from the text the rust converter writes.
+
+    Raises:
+        RustError: if the document cannot be read or converted.
+        CellML2SBMLConversionError: if the SBML text cannot be read back.
+    """
+    text = cellml_path.read_text(encoding="utf-8")
+    if rust.has_imports(text):
+        logger.info("Flattening the imports of '%s' with libcellml", cellml_path)
+        text = cellml.model_to_string(read_cellml_model(cellml_path))
+    sbml_text, warnings = rust.convert_cellml_to_sbml(text)
+    for warning in warnings:
+        logger.warning("%s", warning)
+    doc: libsbml.SBMLDocument = libsbml.readSBMLFromString(sbml_text)
+    if doc is None or doc.getModel() is None:
+        raise CellML2SBMLConversionError(
+            f"The SBML of the rust conversion of '{cellml_path}' cannot be read."
+        )
+    logger.info(
+        "Converted '%s' with the rust engine: model '%s'",
+        cellml_path,
+        doc.getModel().getId(),
+    )
+    return doc
+
+
+def _convert_with_python(
+    cellml_path: Path, records: dict[str, Record], hierarchical: bool
+) -> libsbml.SBMLDocument:
+    """Convert a CellML file with libcellml and the code of this module.
+
+    Args:
+        cellml_path: path of the CellML file.
+        records: the metadata of the elements.
+        hierarchical: whether the components become submodels of `comp`.
+
+    Returns:
+        The SBML document.
+
+    Raises:
+        CellML2SBMLConversionError: if the model cannot be converted.
+    """
+    model = read_cellml_model(cellml_path)
+    logger.info("Converting CellML model '%s' from '%s'", model.name(), cellml_path)
+    analyser_model = analyse_model(model)
+    build = build_hierarchical_document if hierarchical else build_document
+    try:
+        return build(model, analyser_model, records)
+    except (MathConversionError, UnitsConversionError) as err:
+        raise CellML2SBMLConversionError(
+            f"CellML model '{model.name()}' cannot be converted: {err}"
+        ) from err
 
 
 def read_cellml_model(cellml_path: Path) -> libcellml.Model:

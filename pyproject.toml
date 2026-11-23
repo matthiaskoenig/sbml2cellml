@@ -1,10 +1,12 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+# maturin builds the python module of the rust converter
+# (`sbml2cellml._rust`, crates/python) into the wheel next to the package
+requires = ["maturin>=1.16,<2"]
+build-backend = "maturin"
 
 [project]
 name = "sbml2cellml"
-dynamic = ["version"]
+version = "0.5.0"
 description = "sbml2cellml converts between SBML and CellML."
 readme = "README.md"
 requires-python = ">=3.14"
@@ -88,16 +90,22 @@ Issues = "https://github.com/matthiaskoenig/sbml2cellml/issues"
 Changelog = "https://matthiaskoenig.github.io/sbml2cellml/release-notes/"
 Download = "https://pypi.org/project/sbml2cellml"
 
-[tool.hatch.version]
-path = "./src/sbml2cellml/__init__.py"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/sbml2cellml"]
+[tool.maturin]
+# the python package is the src layout, the rust module is built from
+# crates/python and lands in it as `sbml2cellml._rust`
+python-source = "src"
+module-name = "sbml2cellml._rust"
+manifest-path = "crates/python/Cargo.toml"
 
 [tool.uv]
-# the version is dynamic (read from __init__.py by hatchling): rebuild the
-# editable install when it changes, so its metadata follows a version bump
-cache-keys = [{ file = "pyproject.toml" }, { file = "src/sbml2cellml/__init__.py" }]
+# rebuild the editable install when the version or the rust sources change,
+# so its metadata follows a version bump and the module follows the crates
+cache-keys = [
+	{ file = "pyproject.toml" },
+	{ file = "src/sbml2cellml/__init__.py" },
+	{ file = "crates/**/*.rs" },
+	{ file = "crates/**/Cargo.toml" },
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

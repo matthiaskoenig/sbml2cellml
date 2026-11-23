@@ -1,15 +1,33 @@
 [workspace]
 resolver = "3"
-members = ["crates/cellml", "crates/sbml", "crates/convert", "crates/cli"]
+members = [
+    "crates/cellml",
+    "crates/sbml",
+    "crates/convert",
+    "crates/cli",
+    "crates/python",
+]
+# the python module is built by maturin, which gives it the feature
+# `pyo3/extension-module`; a bare cargo command leaves it out, since a test
+# binary of it would have to link libpython
+default-members = [
+    "crates/cellml",
+    "crates/sbml",
+    "crates/convert",
+    "crates/cli",
+]
 
 [workspace.package]
-version = "0.5.0"
+# the crates are internal and never published; the version of the python
+# package lives in pyproject.toml and src/sbml2cellml/__init__.py
+version = "0.0.0"
 edition = "2024"
 license = "MIT"
 authors = ["Matthias König"]
 repository = "https://github.com/matthiaskoenig/sbml2cellml"
 
 [workspace.dependencies]
+pyo3 = { version = "0.30", features = ["abi3-py314"] }
 roxmltree = "0.20"
 thiserror = "2"
 

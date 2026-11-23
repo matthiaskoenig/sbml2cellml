@@ -6,8 +6,13 @@ This file provides guidance when working with code in this repository.
 
 `sbml2cellml` converts SBML models to CellML 2.0 and CellML models to SBML
 L3V2 with libsbml and libcellml and simulates the result with libopencor.
-Python 3.14 (`.python-version`), packaged with
-hatchling (version in `src/sbml2cellml/__init__.py`). Runtime dependencies:
+The CellML to SBML conversion runs in rust by default (`crates/`, the
+module `sbml2cellml._rust`), with the python engine for what it does not
+do. Python 3.14 (`.python-version`), packaged with
+maturin, which builds the rust module into the wheel (version in
+`pyproject.toml`, `src/sbml2cellml/__init__.py` and `CITATION.cff`,
+bumped together by bump-my-version; the crates are internal and keep the
+version `0.0.0`). Runtime dependencies:
 `python-libsbml`, `libcellml`, `rich`. The `simulate` extra adds `libopencor`
 (CellML), `sbmlsim-core` (SBML), `pandas` and `matplotlib`; the `testsuite`
 extra (in `dev`) adds `requests` for the download of the BioModels models,
@@ -58,11 +63,13 @@ cargo test                              # the tests of crates/cellml over the Ce
 cargo clippy --all-targets              # lints, denied in the workspace
 cargo fmt --check
 cargo build --release                   # target/release/cellml-info
+cargo clippy -p sbml2cellml-python       # the module is no default member of the workspace
 cargo build --target wasm32-unknown-unknown -p sbml2cellml-cellml
 
 # local only, needs the release build and the physiome cache
 uv run python scripts/cellml_parity.py       # the rust reader against libcellml over the corpus
 uv run python scripts/cellml2sbml_parity.py  # the rust converter against the python converter
+uv run python scripts/convert_benchmark.py   # the two engines over the corpus, writes docs/images/convert_benchmark*.svg
 ```
 
 `develop` is the default branch and takes every change through a pull request; the rulesets in `.github/rulesets/` (applied with `apply.sh`) require the `tests`, `ruff`, `ty` and `docs` checks. Continuous integration is kept minimal: `tests` runs `py3.14` on linux, macos and windows, every workflow cancels a superseded run (`cancel-in-progress: true`), uv caches packages and interpreters, dependabot runs monthly. `main` tracks the latest release and is fast-forwarded by the `sync-main` job of the release workflow. Release steps are in `docs/development.md`: release branch, `uvx bump-my-version bump [major|minor|patch]` (updates `__init__.py` and `CITATION.cff`, no tag), release notes in `docs/release-notes/`, pull request, tag on `develop` after the merge.
@@ -227,7 +234,16 @@ uv run python scripts/cellml2sbml_parity.py  # the rust converter against the py
   wall time of the phases, `setup` (conversion, compilation, loading,
   nothing of it for a cached model) and `simulate`.
 - `cellml2sbml.py`: `convert_cellml2sbml(cellml_path, sbml_path=None,
-  validate=True, metadata=True, hierarchical=False)`,
+  validate=True, metadata=True, hierarchical=False, engine="auto")`.
+  `Engine`/`ENGINES` are the engines of the conversion (`--engine` of the
+  CLI): `"rust"` converts with `sbml2cellml.rust` (`_convert_with_rust`:
+  the document text, flattened with libcellml first when
+  `rust.has_imports`, and the SBML text read back with libsbml),
+  `"python"` with libcellml and this module (`_convert_with_python`), and
+  `"auto"`, the default, takes rust unless `_without_rust` names what it
+  does not do (the metadata of the elements, the hierarchical conversion)
+  and converts with python when the rust converter refuses the model. The
+  python engine is
   analyser driven: parameters by variable type, rules by equation type, initial
   assignments for computed constants and variable-referenced initial values,
   implicit (NLA) equations as algebraic rules,
@@ -249,6 +265,12 @@ uv run python scripts/cellml2sbml_parity.py  # the rust converter against the py
   (`_replacement_path` nests the `SBaseRef` chain along the encapsulation).
   The flattened hierarchical model is the flat conversion of the same
   model, which `tests/test_hierarchical.py` asserts.
+- `rust.py`: the wrapper of the module `sbml2cellml._rust`
+  (`crates/python`, built by maturin into the package):
+  `convert_cellml_to_sbml` (the SBML text and the warnings),
+  `cellml_version`, `has_imports`, `RustError` for a document the reader
+  or the converter refuses. `_rust.pyi` is the signature of the module for
+  the type checker.
 - `variables.py`: `VariableIds` gives one SBML id per equivalence set, a
   component prefix on name clashes; `ComponentIds` one namespace per
   component for the hierarchical conversion, `components(parent)` iterates
@@ -279,7 +301,11 @@ uv run python scripts/cellml2sbml_parity.py  # the rust converter against the py
   assignments, rules; a CellML model has no reactions) and its XML, which
   it writes itself: no libsbml in the workspace. `crates/convert` is the
   conversion of a CellML model: `Ids` is one parameter per equivalence set
-  (the name of its first variable, the component as a prefix on a clash),
+  (`assign`, after the analysis: the name of the variable the equation of
+  the quantity is written next to, else one with an initial value, else
+  the first, which is the variable the analyser of libcellml takes, so
+  both converters give a quantity the same id; the component as a prefix
+  on a clash),
   `units` expands the custom units to the base units of SBML as
   `units.py` does, `analysis` reads what the equations determine where the
   python converter asks the analyser of libcellml (a `Candidate` per side
@@ -296,7 +322,14 @@ uv run python scripts/cellml2sbml_parity.py  # the rust converter against the py
   refused. `scripts/cellml2sbml_parity.py` compares the SBML of
   `cellml-convert` with the SBML of the python converter over the corpus
   (local only, as the other corpus checks) and validates it with libsbml.
-  `crates/cellml` is the reader of CellML 2.0,
+  The resets of a model become the events of SBML (`events.rs`: the
+  trigger is the equality of the test variable and the test value, or the
+  condition of a test variable which is `piecewise(1, condition, 0)` as
+  the conversion of an SBML event writes it; the priority is the negated
+  order, a variable which only a reset writes is no constant).
+  `crates/python` is the module `sbml2cellml._rust` (pyo3, `abi3-py314`,
+  no default member of the workspace: a test binary would have to link
+  libpython). `crates/cellml` is the reader of CellML 2.0,
   1.1 and 1.0 (`read` gives a `Document` with the version and the `Model`:
   unit definitions, components with their variables and their MathML
   (`math::Node`), connections, encapsulation and imports; a document of

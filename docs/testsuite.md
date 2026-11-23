@@ -35,11 +35,11 @@ The two simulators integrate with the same relative tolerance and with an absolu
 
 | stage | simulator | model | simulations | setup median | integration median | integration p95 | integration slowest | integration total |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| sbmlsim | sbmlsim-core | SBML model | 1658 | 0.94 ms | 0.07 ms | 0.19 ms | 779 ms | 1.6 s |
-| libopencor | libopencor | CellML model | 1608 | 4.6 ms | 0.06 ms | 0.11 ms | 0.60 ms | 85 ms |
-| roundtrip | sbmlsim-core | roundtrip SBML model | 1609 | 1.1 ms | 0.07 ms | 0.15 ms | 1.9 s | 3.0 s |
+| sbmlsim | sbmlsim-core | SBML model | 1658 | 2.8 ms | 0.16 ms | 3.3 ms | 814 ms | 2.5 s |
+| libopencor | libopencor | CellML model | 1608 | 11 ms | 0.12 ms | 0.31 ms | 31 ms | 361 ms |
+| roundtrip | sbmlsim-core | roundtrip SBML model | 1609 | 2.9 ms | 0.17 ms | 0.50 ms | 2.2 s | 3.9 s |
 
-The two simulators integrate the same dynamics for 1153 cases, those whose CellML model reproduces the expected results. libopencor is 1.1 times faster than sbmlsim-core for the median of them and faster for 818; over these cases the medians are 0.07 ms for sbmlsim-core and 0.06 ms for libopencor.
+The two simulators integrate the same dynamics for 1153 cases, those whose CellML model reproduces the expected results. libopencor is 1.2 times faster than sbmlsim-core for the median of them and faster for 785; over these cases the medians are 0.16 ms for sbmlsim-core and 0.13 ms for libopencor.
 
 ## Failure reasons
 
@@ -965,10 +965,10 @@ The test tags of the cases with a numerical mismatch:
 00962: S exceeds the tolerance by 100; error exceeds the tolerance by 0.97
 00963: R exceeds the tolerance by 9.99; Q2 exceeds the tolerance by 9.99
 00964: S exceeds the tolerance by 100
-00965: S exceeds the tolerance by 100
-00966: S exceeds the tolerance by 990
+00965: S exceeds the tolerance by 100; error exceeds the tolerance by 0.97
+00966: S exceeds the tolerance by 990; error exceeds the tolerance by 0.99
 00967: Q exceeds the tolerance by 4.99; R exceeds the tolerance by 4.94
-00978: x exceeds the tolerance by 5; y exceeds the tolerance by 1; z exceeds the tolerance by 3
+00978: x exceeds the tolerance by 4
 00980: x exceeds the tolerance by 2; p exceeds the tolerance by 3; q exceeds the tolerance by 1
 00995: p2 exceeds the tolerance by 1
 00996: p2 exceeds the tolerance by 1

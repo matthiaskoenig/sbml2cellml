@@ -4,6 +4,7 @@
 
 use convert::analysis::EquationKind;
 use convert::{analysis, convert};
+use sbml::Math;
 
 /// A fixture of the repository, `tests/data` of the python package.
 fn fixture(name: &str) -> String {
@@ -428,4 +429,219 @@ fn a_root_of_the_degree_two_is_the_square_root() {
     // the degree two is left out, every other degree is written
     assert_eq!(xml.matches("<degree>").count(), 1);
     assert!(xml.contains("<cn sbml:units=\"dimensionless\"> 3 </cn>"));
+}
+
+#[test]
+fn a_reset_becomes_an_event() {
+    let text = r#"<model xmlns="http://www.cellml.org/cellml/2.0#"
+                         xmlns:cellml="http://www.cellml.org/cellml/2.0#" name="growth">
+      <component name="c">
+        <variable name="t" units="second"/>
+        <variable name="m" units="dimensionless" initial_value="1"/>
+        <variable name="m_div" units="dimensionless" initial_value="7"/>
+        <variable name="count" units="dimensionless" initial_value="0"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply><eq/>
+            <apply><diff/><bvar><ci>t</ci></bvar><ci>m</ci></apply>
+            <cn cellml:units="dimensionless">1</cn>
+          </apply>
+        </math>
+        <reset variable="m" test_variable="m" order="0">
+          <test_value>
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+              <apply><eq/><ci>m</ci><ci>m_div</ci></apply>
+            </math>
+          </test_value>
+          <reset_value>
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+              <apply><eq/><ci>m</ci>
+                <apply><divide/><ci>m</ci>
+                  <cn cellml:units="dimensionless">2</cn></apply></apply>
+            </math>
+          </reset_value>
+        </reset>
+        <reset variable="count" test_variable="m" order="1">
+          <test_value>
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+              <apply><eq/><ci>m</ci><ci>m_div</ci></apply>
+            </math>
+          </test_value>
+          <reset_value>
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+              <apply><eq/><ci>count</ci>
+                <apply><plus/><ci>count</ci>
+                  <cn cellml:units="dimensionless">1</cn></apply></apply>
+            </math>
+          </reset_value>
+        </reset>
+      </component>
+    </model>"#;
+    let document = cellml::read(text).unwrap();
+    let conversion = convert::convert(&document.model).unwrap();
+    let events = &conversion.document.model.events;
+    assert_eq!(events.len(), 2);
+    assert_eq!(events[0].id, "reset_1");
+    assert_eq!(events[1].id, "reset_2");
+    // the trigger is the equality of the test variable and the test value,
+    // the priority the negated order
+    assert_eq!(
+        events[0].trigger.math,
+        Math::apply("eq", vec![Math::identifier("m"), Math::identifier("m_div")])
+    );
+    assert_eq!(
+        events[1].priority,
+        Some(Math::Number {
+            value: -1.0,
+            units: None
+        })
+    );
+    assert_eq!(events[0].assignments[0].variable, "m");
+    // `count` is written by a reset only, so it is no constant
+    let count = conversion
+        .document
+        .model
+        .parameters
+        .iter()
+        .find(|parameter| parameter.id == "count")
+        .unwrap();
+    assert!(!count.constant);
+    let xml = conversion.document.to_xml();
+    assert!(xml.contains("<event id=\"reset_1\" useValuesFromTriggerTime=\"true\">"));
+}
+
+#[test]
+fn a_reset_of_a_trigger_variable_gives_the_event_the_condition() {
+    // the CellML of an SBML event, as `sbml2cellml` writes it: the trigger
+    // is the variable `piecewise(1, condition, 0)` and the reset fires when
+    // it reaches 1
+    let text = r#"<model xmlns="http://www.cellml.org/cellml/2.0#"
+                         xmlns:cellml="http://www.cellml.org/cellml/2.0#" name="pulse">
+      <component name="c">
+        <variable name="t" units="second"/>
+        <variable name="x" units="dimensionless" initial_value="1"/>
+        <variable name="trigger" units="dimensionless"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply><eq/>
+            <apply><diff/><bvar><ci>t</ci></bvar><ci>x</ci></apply>
+            <cn cellml:units="dimensionless">1</cn>
+          </apply>
+          <apply><eq/>
+            <ci>trigger</ci>
+            <piecewise>
+              <piece>
+                <cn cellml:units="dimensionless">1</cn>
+                <apply><geq/><ci>t</ci><cn cellml:units="second">5</cn></apply>
+              </piece>
+              <otherwise><cn cellml:units="dimensionless">0</cn></otherwise>
+            </piecewise>
+          </apply>
+        </math>
+        <reset variable="x" test_variable="trigger" order="0">
+          <test_value>
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+              <apply><eq/><ci>trigger</ci>
+                <cn cellml:units="dimensionless">1</cn></apply>
+            </math>
+          </test_value>
+          <reset_value>
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+              <apply><eq/><ci>x</ci>
+                <cn cellml:units="dimensionless">10</cn></apply>
+            </math>
+          </reset_value>
+        </reset>
+      </component>
+    </model>"#;
+    let document = cellml::read(text).unwrap();
+    let conversion = convert::convert(&document.model).unwrap();
+    let trigger = &conversion.document.model.events[0].trigger.math;
+    assert_eq!(
+        trigger,
+        &Math::apply(
+            "geq",
+            vec![
+                Math::Time,
+                Math::Number {
+                    value: 5.0,
+                    units: Some("second".to_string())
+                }
+            ]
+        )
+    );
+}
+
+#[test]
+fn the_representative_of_a_set_is_the_variable_its_equation_computes() {
+    // `Istim` of the component which computes it, not `J_stim` of the one
+    // which uses it, as the analyser of libcellml picks it
+    let text = r#"<model xmlns="http://www.cellml.org/cellml/1.0#"
+                         xmlns:cellml="http://www.cellml.org/cellml/1.0#" name="stimulus">
+      <component name="membrane">
+        <variable name="t" units="second" public_interface="in"/>
+        <variable name="V" units="dimensionless" initial_value="0"/>
+        <variable name="J_stim" units="dimensionless" public_interface="in"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply><eq/>
+            <apply><diff/><bvar><ci>t</ci></bvar><ci>V</ci></apply>
+            <ci>J_stim</ci>
+          </apply>
+        </math>
+      </component>
+      <component name="stimulus_protocol">
+        <variable name="Istim" units="dimensionless" public_interface="out"/>
+        <variable name="amplitude" units="dimensionless" initial_value="2"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply><eq/><ci>Istim</ci><ci>amplitude</ci></apply>
+        </math>
+      </component>
+      <component name="environment">
+        <variable name="t" units="second" public_interface="out"/>
+      </component>
+      <connection>
+        <map_components component_1="membrane" component_2="stimulus_protocol"/>
+        <map_variables variable_1="J_stim" variable_2="Istim"/>
+      </connection>
+      <connection>
+        <map_components component_1="membrane" component_2="environment"/>
+        <map_variables variable_1="t" variable_2="t"/>
+      </connection>
+    </model>"#;
+    let document = cellml::read(text).unwrap();
+    let conversion = convert::convert(&document.model).unwrap();
+    let ids: Vec<&str> = conversion
+        .document
+        .model
+        .parameters
+        .iter()
+        .map(|parameter| parameter.id.as_str())
+        .collect();
+    assert!(ids.contains(&"Istim"), "{ids:?}");
+    assert!(!ids.contains(&"J_stim"), "{ids:?}");
+}
+
+#[test]
+fn an_n_ary_operator_of_one_argument_is_written_as_its_argument() {
+    // MathML allows `plus` with a single argument, which is the argument
+    let text = r#"<?xml version="1.0"?>
+    <model xmlns="http://www.cellml.org/cellml/2.0#" name="single">
+      <component name="main">
+        <variable name="x" units="dimensionless" initial_value="2"/>
+        <variable name="y" units="dimensionless"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply><eq/>
+            <ci>y</ci>
+            <apply><plus/>
+              <apply><plus/><ci>x</ci></apply>
+              <cn cellml:units="dimensionless" xmlns:cellml="http://www.cellml.org/cellml/2.0#">1</cn>
+            </apply>
+          </apply>
+        </math>
+      </component>
+    </model>"#;
+    let document = cellml::read(text).unwrap();
+    let conversion = convert::convert(&document.model).unwrap();
+    let xml = conversion.document.to_xml();
+    // the single argument of the inner `plus` is written in its place, so
+    // the sum of the formula is the only operator left
+    assert_eq!(xml.matches("<plus/>").count(), 1, "{xml}");
 }

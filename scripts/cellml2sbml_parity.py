@@ -13,12 +13,13 @@ sides, so an equation which differs is found whatever the two write it as.
 
 Of the 102 documents of the corpus, the rust converter converts 92, and
 libsbml validates every one of those without an error. 68 are converted by
-both: 35 give the same SBML model, 23 differ in the notation or in the
-nesting of a formula only, and 10 in which variable of an equivalence set
-gives its parameter the id. 24 are converted by the rust converter alone,
-since the analyser of libcellml refuses the model, 1 by the python
-converter alone (the fixture with an import, which the rust converter does
-not resolve yet), and 9 by neither.
+both: 38 give the same SBML model and 30 differ in the notation of a
+formula (`sqrt(x)` against `root(2, x)`, the exponent of a number) or in
+the nesting of its sums and products only, nothing in what an equation
+computes. 24 are converted by the rust converter alone, since the analyser
+of libcellml refuses the model, 1 by the python converter alone (the
+fixture with an import, which the rust converter does not resolve yet),
+and 9 by neither.
 
 The script is run locally, like the checks of BioModels and of the
 Physiome repository, and needs the command line of the rust workspace:
@@ -93,7 +94,9 @@ def python_sbml(path: Path, target: Path) -> str | None:
         `None` when the conversion worked, else the message of its failure.
     """
     try:
-        convert_cellml2sbml(path, target, validate=False, metadata=False)
+        convert_cellml2sbml(
+            path, target, validate=False, metadata=False, engine="python"
+        )
     except Exception as err:
         return str(err).splitlines()[0]
     return None

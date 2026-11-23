@@ -39,6 +39,7 @@
 //! ```
 
 pub mod analysis;
+pub mod events;
 pub mod ids;
 pub mod math;
 pub mod units;
@@ -76,6 +77,16 @@ pub enum ConvertError {
         /// The name of the component of that variable.
         component: String,
     },
+    /// A reset which cannot be converted to an event.
+    #[error("reset of variable '{variable}' in component '{component}' {reason}")]
+    Reset {
+        /// The name of the component the reset is written in.
+        component: String,
+        /// The name of the variable the reset sets.
+        variable: String,
+        /// What is wrong with it.
+        reason: String,
+    },
 }
 
 /// The SBML document of a CellML model and what the conversion found.
@@ -100,12 +111,17 @@ pub fn convert(model: &Model) -> Result<Conversion, ConvertError> {
     let mut ids = Ids::new(model);
     let (unit_definitions, unit_ids, mut warnings) = unit_definitions(model)?;
     let analysis = analyse(model, &ids)?;
+    ids.assign(model, &analysis);
     let name = if model.name.is_empty() {
         "model".to_string()
     } else {
         model.name.clone()
     };
     let model_id = ids.reserve(&name);
+    let event_ids: Vec<String> = (1..=events::resets(model).count())
+        .map(|index| ids.reserve(&format!("reset_{index}")))
+        .collect();
+    let reset_targets = events::targets(model, &ids);
     let context = Context {
         model,
         ids: &ids,
@@ -123,8 +139,15 @@ pub fn convert(model: &Model) -> Result<Conversion, ConvertError> {
         let reference = ids.set(quantity)[0];
         let variable = &model.components[reference.component].variables[reference.variable];
         let id = ids.id(quantity).to_string();
+        // the value of a variable an assignment rule determines is never
+        // read, the rule holds at every time: the initial value of such a
+        // variable is left out, with the warning of the analysis
+        let assigned = matches!(
+            analysis::equation_of(&analysis, quantity).map(|equation| equation.kind),
+            Some(EquationKind::Assignment { .. })
+        ) && !analysis.computed.contains(&quantity);
         let mut value = None;
-        if !analysis.computed.contains(&quantity) {
+        if !analysis.computed.contains(&quantity) && !assigned {
             if let Some((initial, member)) = initial_value(model, &ids, quantity) {
                 match initial.parse::<f64>() {
                     Ok(number) => value = Some(number),
@@ -162,7 +185,9 @@ pub fn convert(model: &Model) -> Result<Conversion, ConvertError> {
             id,
             value,
             units: Some(units),
-            constant: analysis.is_constant(quantity),
+            // a variable which only a reset writes has an initial value
+            // and no equation, but it is no constant of SBML
+            constant: analysis.is_constant(quantity) && !reset_targets.contains(&quantity),
         });
     }
 
@@ -215,6 +240,8 @@ pub fn convert(model: &Model) -> Result<Conversion, ConvertError> {
         }
     }
 
+    let events = events::events(&analysis, &event_ids, context)?;
+
     let time_units = match analysis.voi {
         Some(voi) => {
             let reference = ids.set(voi)[0];
@@ -238,6 +265,7 @@ pub fn convert(model: &Model) -> Result<Conversion, ConvertError> {
                 parameters,
                 initial_assignments,
                 rules,
+                events,
             },
         },
         warnings,
@@ -245,7 +273,11 @@ pub fn convert(model: &Model) -> Result<Conversion, ConvertError> {
 }
 
 /// The side of an equation which is not the one the test matches.
-fn other_side<'a>(left: &'a Node, right: &'a Node, matches: impl Fn(&Node) -> bool) -> &'a Node {
+pub(crate) fn other_side<'a>(
+    left: &'a Node,
+    right: &'a Node,
+    matches: impl Fn(&Node) -> bool,
+) -> &'a Node {
     if matches(left) { right } else { left }
 }
 
@@ -263,7 +295,8 @@ fn initial_value(model: &Model, ids: &Ids, quantity: usize) -> Option<(String, u
 /// What the analysis of a model found, for a caller which wants it without
 /// the document, e.g. a report over a corpus.
 pub fn analysis(model: &Model) -> Result<(Ids, Analysis), ConvertError> {
-    let ids = Ids::new(model);
+    let mut ids = Ids::new(model);
     let analysis = analyse(model, &ids)?;
+    ids.assign(model, &analysis);
     Ok((ids, analysis))
 }

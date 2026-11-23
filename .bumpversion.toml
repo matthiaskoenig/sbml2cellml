@@ -21,4 +21,8 @@ commit_args = ""
 filename = "./src/sbml2cellml/__init__.py"
 
 [[tool.bumpversion.files]]
+# the version of the wheel, which maturin reads from here
+filename = "./pyproject.toml"
+
+[[tool.bumpversion.files]]
 filename = "./CITATION.cff"

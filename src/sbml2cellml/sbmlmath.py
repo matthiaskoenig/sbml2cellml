@@ -285,6 +285,18 @@ def _type_name(node: Any) -> str:
     return libcellml.AnalyserEquationAst.typeAsString(node.type())
 
 
+# the operators of MathML which take any number of arguments
+_N_ARY = frozenset(
+    {
+        libsbml.AST_PLUS,
+        libsbml.AST_TIMES,
+        libsbml.AST_LOGICAL_AND,
+        libsbml.AST_LOGICAL_OR,
+        libsbml.AST_LOGICAL_XOR,
+    }
+)
+
+
 def _children(node: Any, ids: VariableIds, units: _Units) -> list[libsbml.ASTNode]:
     """Converted children of a node, one or two."""
     children = [ast_to_sbml(node.leftChild(), ids, units)]
@@ -294,7 +306,15 @@ def _children(node: Any, ids: VariableIds, units: _Units) -> list[libsbml.ASTNod
 
 
 def _apply(node_type: int, children: list[libsbml.ASTNode]) -> libsbml.ASTNode:
-    """Node with the given children."""
+    """Node with the given children.
+
+    An n-ary operator with a single child is that child: MathML allows
+    `plus(x)`, which is `x`, and the analyser keeps it as the CellML model
+    has it. The operator is left out, as `mathml.simplify_operators` leaves
+    it out on the way to CellML, so that no redundant operator reaches SBML.
+    """
+    if node_type in _N_ARY and len(children) == 1:
+        return children[0]
     node = libsbml.ASTNode(node_type)
     for child in children:
         node.addChild(child)

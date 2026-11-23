@@ -16,7 +16,11 @@ from typing import Any
 
 from sbml2cellml import __version__, log
 from sbml2cellml.cellml import CellMLValidationError
-from sbml2cellml.cellml2sbml import CellML2SBMLConversionError, convert_cellml2sbml
+from sbml2cellml.cellml2sbml import (
+    ENGINES,
+    CellML2SBMLConversionError,
+    convert_cellml2sbml,
+)
 from sbml2cellml.sbml import SBMLValidationError
 from sbml2cellml.sbml2cellml import SBML2CellMLConversionError, convert_sbml2cellml
 
@@ -86,6 +90,14 @@ def build_parser_cellml2sbml() -> argparse.ArgumentParser:
         action="store_true",
         help="write every component as a submodel of the hierarchical model "
         "composition package (comp) instead of one flat model",
+    )
+    parser.add_argument(
+        "--engine",
+        choices=ENGINES,
+        default="auto",
+        help="engine of the conversion: rust (the crates of this package), "
+        "python (libcellml), or auto, which is rust where it covers the "
+        "conversion and python for the rest (default: auto)",
     )
     return parser
 
@@ -169,6 +181,7 @@ def main_cellml2sbml(argv: list[str] | None = None) -> int:
             validate=validate,
             metadata=metadata,
             hierarchical=args.hierarchical,
+            engine=args.engine,
         ),
         ".xml",
         argv,

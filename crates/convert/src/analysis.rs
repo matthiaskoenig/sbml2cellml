@@ -369,8 +369,8 @@ pub fn analyse(model: &Model, ids: &Ids) -> Result<Analysis, AnalysisError> {
     }
     if let Some((first, second)) = first_cycle(&rate_edges) {
         return Err(AnalysisError::ImplicitRates {
-            first: ids.id(first).to_string(),
-            second: ids.id(second).to_string(),
+            first: variable_name(model, ids, first),
+            second: variable_name(model, ids, second),
         });
     }
 
@@ -509,12 +509,21 @@ pub fn analyse(model: &Model, ids: &Ids) -> Result<Analysis, AnalysisError> {
         if initialised && reported.insert(*quantity) {
             analysis.warnings.push(format!(
                 "variable '{}' has an initial value and an equation, the equation is used",
-                ids.id(*quantity)
+                variable_name(model, ids, *quantity)
             ));
         }
     }
     analysis.warnings.sort();
     Ok(analysis)
+}
+
+/// The name of the first variable of a quantity, for a message: the ids
+/// are assigned after the analysis (`Ids::assign`), which decides them.
+fn variable_name(model: &Model, ids: &Ids, quantity: usize) -> String {
+    let reference = ids.set(quantity)[0];
+    model.components[reference.component].variables[reference.variable]
+        .name
+        .clone()
 }
 
 /// The quantities of a dependency graph which no order resolves, the ones
