@@ -7,7 +7,7 @@
 
 ## Online converter
 
-Convert a model in either direction here, without an installation: the converter runs as a WebAssembly module in this page, nothing is uploaded and no server sees the model.
+Convert a model in either direction here, without an installation: the converter runs as a WebAssembly module in this page, nothing is uploaded and no server sees the model. `Simulate the CellML model` integrates the CellML side of the conversion in the same page with [libopencor](https://opencor.ws/libopencor/) and plots the states of the model, so a model is converted and run without leaving the browser.
 
 <div class="converter" data-converter data-module="converter/sbml2cellml.wasm">
   <div class="converter__tabs" role="tablist" aria-label="Direction of the conversion">
@@ -33,6 +33,22 @@ Convert a model in either direction here, without an installation: the converter
     <div class="converter__result" data-role="result" hidden>
       <pre class="converter__code"><code data-role="code"></code></pre>
     </div>
+    <div class="converter__simulation" data-role="simulation" hidden>
+      <div class="converter__simulation-head">
+        <button class="converter__button" type="button" data-action="simulate">Simulate the CellML model</button>
+        <label class="converter__field">end
+          <input class="converter__number" data-role="end" type="number" min="0.001" step="any" value="600">
+        </label>
+        <label class="converter__field">steps
+          <input class="converter__number" data-role="steps" type="number" min="1" max="10000" step="1" value="500">
+        </label>
+      </div>
+      <p class="converter__status" data-role="simulation-status" data-kind="info" role="status"></p>
+      <div class="converter__plot" data-role="plot" hidden>
+        <canvas></canvas>
+      </div>
+      <div class="converter__legend" data-role="legend"></div>
+    </div>
   </div>
   <div class="converter__panel" data-panel="sbml2cellml" data-example="roundtrip/repressilator.xml" hidden>
     <label class="converter__drop" data-role="drop">
@@ -53,10 +69,26 @@ Convert a model in either direction here, without an installation: the converter
     <div class="converter__result" data-role="result" hidden>
       <pre class="converter__code"><code data-role="code"></code></pre>
     </div>
+    <div class="converter__simulation" data-role="simulation" hidden>
+      <div class="converter__simulation-head">
+        <button class="converter__button" type="button" data-action="simulate">Simulate the CellML model</button>
+        <label class="converter__field">end
+          <input class="converter__number" data-role="end" type="number" min="0.001" step="any" value="600">
+        </label>
+        <label class="converter__field">steps
+          <input class="converter__number" data-role="steps" type="number" min="1" max="10000" step="1" value="500">
+        </label>
+      </div>
+      <p class="converter__status" data-role="simulation-status" data-kind="info" role="status"></p>
+      <div class="converter__plot" data-role="plot" hidden>
+        <canvas></canvas>
+      </div>
+      <div class="converter__legend" data-role="legend"></div>
+    </div>
   </div>
 </div>
 
-A CellML model which imports a component or units, an SBML model which uses a package such as `comp`, and the metadata of a conversion need the [python package](installation.md), which converts and simulates the models of the [roundtrip example](roundtrip.md). The source code of the project is on [GitHub](https://github.com/matthiaskoenig/sbml2cellml).
+A CellML model which imports a component or units, an SBML model which uses a package such as `comp`, and the metadata of a conversion need the [python package](installation.md), which converts and simulates the models of the [roundtrip example](roundtrip.md). The SBML side of a conversion is simulated with the python package as well: [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/) compiles an SBML model into a WebAssembly module ahead of time and its compiler is not part of the JavaScript host of the simulator yet, so the browser runs the models which are compiled for it, such as the one of the [roundtrip example](roundtrip.md#simulate-in-the-browser). The source code of the project is on [GitHub](https://github.com/matthiaskoenig/sbml2cellml).
 
 ## Features
 
@@ -64,7 +96,7 @@ A CellML model which imports a component or units, an SBML model which uses a pa
 - conversion of the units: unit definitions, the units of numbers and, for a model with a complete unit annotation, the units of every variable
 - names, notes, SBO terms, annotations and the model history as RDF next to the CellML model, restored in the conversion back to SBML
 - conversion of CellML models to SBML: parameters with rules, unit definitions and units of numbers, resets as events, imports resolved, CellML 1.0 and 1.1 read in the permissive mode of libcellml, the components optionally as `comp` submodels (`--hierarchical`)
-- the online converter of the documentation, which converts a model in either direction in the browser with a WebAssembly module of the rust converters, without an upload ([Online converter](#online-converter))
+- the online converter of the documentation, which converts a model in either direction in the browser with a WebAssembly module of the rust converters, without an upload, and simulates the CellML side of the conversion there with libopencor ([Online converter](#online-converter))
 - the interactive simulation of the roundtrip example, which simulates the CellML model with libopencor and the SBML model with sbmlsim-core in the browser, with one set of sliders for both ([Roundtrip example](roundtrip.md#simulate-in-the-browser))
 - conversion of a hierarchical SBML model: the `comp` submodels are flattened before the model becomes CellML
 - validation of the result with [libcellml](https://libcellml.org/)

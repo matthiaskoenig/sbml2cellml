@@ -31,11 +31,14 @@
       suffix: ".xml",
       /** What the result is, for the status line. */
       result: "SBML level 3 version 2",
+      /** Which document of the panel libopencor simulates. */
+      simulates: "source",
     },
     sbml2cellml: {
       key: "cellml",
       suffix: ".cellml",
       result: "CellML 2.0",
+      simulates: "result",
     },
   };
 
@@ -167,7 +170,35 @@
       this.drop = root.querySelector("[data-role=drop]");
       /** The conversion which is shown, for the download and the clipboard. */
       this.converted = null;
+      /** The simulation of the CellML side, `null` without libopencor. */
+      this.simulator = this.buildSimulator();
       this.connect();
+    }
+
+    /**
+     * The simulation of the panel, which libopencor runs in the browser.
+     *
+     * @returns {object|null} The simulator, `null` for a page without the
+     *   markup of a simulation or without `simulate.js`.
+     */
+    buildSimulator() {
+      const element = this.root.querySelector("[data-role=simulation]");
+      if (element === null || window.sbml2cellmlSimulate === undefined) {
+        return null;
+      }
+      return new window.sbml2cellmlSimulate.Simulator(element);
+    }
+
+    /**
+     * Give the simulation the CellML document of the panel.
+     *
+     * @param {string|null} text The CellML document, `null` when the panel
+     *   has none (yet).
+     */
+    setModel(text) {
+      if (this.simulator !== null) {
+        this.simulator.setModel(text);
+      }
     }
 
     /** Listen to the file input, the drop zone, the example and the buttons. */
@@ -241,6 +272,7 @@
       this.warnings.hidden = true;
       this.download.disabled = true;
       this.copy.disabled = true;
+      this.setModel(null);
       if (source instanceof File && source.size > MAXIMUM_SIZE) {
         this.say(
           `${name} is ${formatSize(source.size)}, which is larger than the ` +
@@ -266,6 +298,11 @@
           name: `${stem(name)}${this.what.suffix}`,
           model: result[this.what.key],
         };
+        // the CellML side of the conversion, which libopencor simulates:
+        // the document of the panel, or the model the conversion wrote
+        this.setModel(
+          this.what.simulates === "source" ? text : this.converted.model,
+        );
         this.show(name, result.warnings, seconds);
       } catch (err) {
         this.say(

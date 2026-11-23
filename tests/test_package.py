@@ -108,3 +108,46 @@ def test_the_sliders_of_the_page_set_parameters_of_the_model() -> None:
         assert parameter.getConstant(), f"{sid} is not a constant of the model"
         assert sid not in ruled, f"a rule determines {sid}"
         assert parameter.getValue() == value, f"{sid} starts at {parameter.getValue()}"
+
+
+def test_the_scripts_of_the_pages_are_loaded_in_the_order_they_need() -> None:
+    """Every script of `docs/javascripts/` is loaded, the chart first.
+
+    `chart.js` holds the chart and the helpers of the theme, which
+    `simulate.js` and `repressilator.js` take from `window.sbml2cellmlChart`
+    when they are evaluated, so it has to come first in `extra_javascript`.
+    """
+    scripts = [
+        f"javascripts/{path.name}"
+        for path in sorted((ROOT / "docs" / "javascripts").iterdir())
+        if path.suffix == ".js"
+    ]
+    configuration = (ROOT / "zensical.toml").read_text(encoding="utf-8")
+    loaded = re.findall(r'"(javascripts/[\w.-]+\.js)"', configuration)
+    assert sorted(loaded) == scripts, "a script of the documentation is not loaded"
+    assert loaded[0] == "javascripts/chart.js", "the chart is loaded after its users"
+
+
+def test_the_panels_of_the_converter_have_a_simulation() -> None:
+    """Both directions of the online converter simulate the CellML model.
+
+    `docs/javascripts/simulate.js` gives every panel of the converter a
+    `Simulator`, which needs the markup of the simulation in the page: the
+    button, the end and the steps of the timecourse, the status, the canvas
+    of the plot and its legend.
+    """
+    page = (ROOT / "docs" / "index.md").read_text(encoding="utf-8")
+    for direction in ("cellml2sbml", "sbml2cellml"):
+        assert f'data-panel="{direction}"' in page, f"no panel of {direction}"
+    roles = (
+        'data-role="simulation"',
+        'data-action="simulate"',
+        'data-role="end"',
+        'data-role="steps"',
+        'data-role="simulation-status"',
+        'data-role="plot"',
+        'data-role="legend"',
+        "<canvas></canvas>",
+    )
+    for role in roles:
+        assert page.count(role) == 2, f"{role} is not in both panels"

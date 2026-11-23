@@ -11,7 +11,12 @@ repo_name = "matthiaskoenig/sbml2cellml"
 edit_uri = "edit/develop/docs/"
 extra_css = ["stylesheets/extra.css"]
 # the online converter of the landing page, see `scripts/build_wasm.py`
-extra_javascript = ["javascripts/converter.js", "javascripts/repressilator.js"]
+extra_javascript = [
+  "javascripts/chart.js",
+  "javascripts/simulate.js",
+  "javascripts/converter.js",
+  "javascripts/repressilator.js",
+]
 
 nav = [
   { "Home" = "index.md" },
