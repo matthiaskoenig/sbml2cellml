@@ -14,6 +14,8 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 cellml = { package = "sbml2cellml-cellml", path = "../cellml" }
 convert = { package = "sbml2cellml-convert", path = "../convert" }
+tocellml = { package = "sbml2cellml-tocellml", path = "../tocellml" }
+sbml = { workspace = true }
 
 [lints]
 workspace = true

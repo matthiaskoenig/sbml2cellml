@@ -7,16 +7,16 @@
 
 ## Online converter
 
-Convert a CellML model to SBML level 3 version 2 here. The conversion runs in the browser: the page loads the converter as a WebAssembly module and reads the model locally, so nothing is uploaded and no server sees the model. A model which imports a component or units, and the conversion of SBML to CellML, need the [python package](installation.md).
+Convert a model in either direction here. The conversion runs in the browser: the page loads the converter as a WebAssembly module and reads the model locally, so nothing is uploaded and no server sees the model. A CellML model which imports a component or units, an SBML model which uses a package such as `comp`, and the metadata of a conversion need the [python package](installation.md).
 
-<div class="converter" data-converter data-module="converter/sbml2cellml.wasm" data-example="roundtrip/repressilator.cellml">
+<div class="converter" data-converter data-module="converter/sbml2cellml.wasm">
   <div class="converter__tabs" role="tablist" aria-label="Direction of the conversion">
     <button class="converter__tab converter__tab--active" type="button" role="tab" aria-selected="true" data-direction="cellml2sbml">CellML to SBML</button>
     <button class="converter__tab" type="button" role="tab" aria-selected="false" data-direction="sbml2cellml">SBML to CellML</button>
   </div>
-  <div class="converter__panel" data-panel="cellml2sbml">
+  <div class="converter__panel" data-panel="cellml2sbml" data-example="roundtrip/repressilator.cellml">
     <label class="converter__drop" data-role="drop">
-      <input id="converter-model" name="model" type="file" accept=".cellml,.xml" hidden>
+      <input id="converter-cellml" name="cellml" type="file" accept=".cellml,.xml" hidden>
       <span class="converter__prompt">Drop a CellML file here or <strong>choose a file</strong></span>
       <span class="converter__hint">CellML 2.0, 1.1 and 1.0, up to 32 MiB</span>
     </label>
@@ -34,10 +34,25 @@ Convert a CellML model to SBML level 3 version 2 here. The conversion runs in th
       <pre class="converter__code"><code data-role="code"></code></pre>
     </div>
   </div>
-  <div class="converter__panel" data-panel="sbml2cellml" hidden>
-    <p class="converter__prose">The conversion of SBML to CellML runs with libsbml and libcellml, which the browser does not have. Convert the model with the python package:</p>
-    <pre class="converter__code"><code>pip install sbml2cellml
-sbml2cellml model.xml -o model.cellml</code></pre>
+  <div class="converter__panel" data-panel="sbml2cellml" data-example="roundtrip/repressilator.xml" hidden>
+    <label class="converter__drop" data-role="drop">
+      <input id="converter-sbml" name="sbml" type="file" accept=".xml,.sbml" hidden>
+      <span class="converter__prompt">Drop an SBML file here or <strong>choose a file</strong></span>
+      <span class="converter__hint">SBML level 1, 2 and 3, up to 32 MiB</span>
+    </label>
+    <div class="converter__actions">
+      <button class="converter__button" type="button" data-action="example">Convert the repressilator</button>
+      <button class="converter__button" type="button" data-action="download" disabled>Download</button>
+      <button class="converter__button" type="button" data-action="copy" disabled>Copy</button>
+    </div>
+    <p class="converter__status" data-role="status" data-kind="info" role="status"></p>
+    <details class="converter__warnings" data-role="warnings" hidden>
+      <summary>Warnings of the conversion</summary>
+      <ul data-role="warning-list"></ul>
+    </details>
+    <div class="converter__result" data-role="result" hidden>
+      <pre class="converter__code"><code data-role="code"></code></pre>
+    </div>
   </div>
 </div>
 
@@ -47,7 +62,7 @@ sbml2cellml model.xml -o model.cellml</code></pre>
 - conversion of the units: unit definitions, the units of numbers and, for a model with a complete unit annotation, the units of every variable
 - names, notes, SBO terms, annotations and the model history as RDF next to the CellML model, restored in the conversion back to SBML
 - conversion of CellML models to SBML: parameters with rules, unit definitions and units of numbers, resets as events, imports resolved, CellML 1.0 and 1.1 read in the permissive mode of libcellml, the components optionally as `comp` submodels (`--hierarchical`)
-- the online converter of the documentation, which converts a CellML model to SBML in the browser with a WebAssembly module of the rust converter, without an upload ([Online converter](#online-converter))
+- the online converter of the documentation, which converts a model in either direction in the browser with a WebAssembly module of the rust converters, without an upload ([Online converter](#online-converter))
 - conversion of a hierarchical SBML model: the `comp` submodels are flattened before the model becomes CellML
 - validation of the result with [libcellml](https://libcellml.org/)
 - timecourse simulation of the SBML with [sbmlsim-core](https://matthiaskoenig.github.io/sbmlsim-core/) and of the CellML with [libopencor](https://opencor.ws/libopencor/), both optional, see [Simulation](simulation.md)

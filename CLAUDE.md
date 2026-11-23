@@ -466,21 +466,29 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   `scripts/cellml_write_parity.py` validates what the writer writes with
   libcellml and compares what libcellml reads of it with what it reads of
   the original (local only, as the other corpus checks). `crates/wasm` is the module of the online
-  converter of the landing page, built for `wasm32-unknown-unknown` with
+  converter of the landing page, both conversions, built for
+  `wasm32-unknown-unknown` with
   the cargo profile `wasm` (small, `panic = "abort"`): the interface is
-  the C ABI of `allocate`, `convert_cellml_to_sbml` and `deallocate`,
+  the C ABI of `allocate`, `convert_cellml_to_sbml`,
+  `convert_sbml_to_cellml` (with the name the CellML model takes when the
+  SBML model has no id) and `deallocate`,
   every string crosses it as the bytes of its UTF-8 in the memory of the
   module, and a conversion gives the JSON `{"sbml": ..., "warnings":
-  [...]}` or `{"error": ...}` (a document with an import is refused, the
-  module resolves none). `crates/wasm/tests/interface.rs` drives that ABI
+  [...]}`, `{"cellml": ..., "warnings": [...]}` or `{"error": ...}` (a
+  CellML document with an import is refused, the module resolves none, and
+  an SBML model which needs a package as well).
+  `crates/wasm/tests/interface.rs` drives that ABI
   on the host, as the page does. `scripts/build_wasm.py` builds the
   module and copies it to the gitignored
   `docs/converter/sbml2cellml.wasm`, which the `documentation` workflow
-  does before the site is built; `docs/javascripts/converter.js` is the page (the tabs of
-  the two directions, the file, the drop zone, the example, the result
-  with its warnings, the download and the clipboard; `extra_javascript`
+  does before the site is built; `docs/javascripts/converter.js` is the
+  page (the tabs of the two directions and one `Panel` per direction with
+  its own file, drop zone, example, status, result with its warnings,
+  download and clipboard; the module is fetched once for both;
+  `extra_javascript`
   of `zensical.toml`, the styles in `docs/stylesheets/extra.css`, the
-  markup in `docs/index.md`). Without the module the converter says that
+  markup in `docs/index.md`, the example models in `docs/roundtrip/`).
+  Without the module the converter says that
   it is not available and the rest of the page works.
 - `console.py`, `log.py`: rich console for scripts and the CLI, opt-in rich
   logging. Library code logs with `logging.getLogger(__name__)` and lazy `%s`
@@ -599,7 +607,9 @@ uv run python scripts/convert_benchmark.py --direction sbml2cellml  # the two en
   `examples/repressilator_example.py --docs` writes the models, the table and
   the figures of the documentation page `docs/roundtrip.md`
   (`docs/roundtrip/`, `docs/images/repressilator*.svg`, included with
-  `pymdownx.snippets`); `tests/test_examples.py` fails when
+  `pymdownx.snippets`; the SBML model and the CellML model of
+  `docs/roundtrip/` are the examples of the online converter);
+  `tests/test_examples.py` fails when
   the documented models differ from the ones the example writes. Generated
   CellML goes to the gitignored `examples/results/`. Small fixtures created
   for a test go to `tests/data/`.

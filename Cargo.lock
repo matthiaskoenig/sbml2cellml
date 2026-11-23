@@ -164,6 +164,8 @@ version = "0.0.0"
 dependencies = [
  "sbml2cellml-cellml",
  "sbml2cellml-convert",
+ "sbml2cellml-tocellml",
+ "sbmlsim-sbml",
 ]
 
 [[package]]
